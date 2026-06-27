@@ -1,8 +1,8 @@
 ---
 name: xentral-dashboards
 description: >
-  Build and edit per-tenant dashboards — pages of widgets visualizing live ERP
-  and operations data — with the xentral_dashboards tool. Covers built-in vs
+  Build and edit per-tenant dashboards — pages of widgets visualizing live
+  business and operations data — with the xentral_dashboards tool. Covers built-in vs
   custom dashboards, starting from the dashboard library instead of a blank
   page, the widget catalog, wiring widgets to KPIs, chart vs value widgets, and
   layout. Use when the user wants an overview page ("how is the business doing

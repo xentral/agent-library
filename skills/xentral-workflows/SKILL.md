@@ -6,7 +6,7 @@ description: >
   starting from the template library (init_from_template) instead of a blank
   graph, the workflow envelope/graph shape, trigger and schedule setup, node
   operation selection, stable varName references, and debugging failed runs.
-  Use when the user wants to automate a recurring ERP routine — dunning /
+  Use when the user wants to automate a recurring business routine — dunning /
   OPOS escalation, low-stock reorder, document validation, prepayment-order
   cleanup, return-to-credit-note, BOM cost rollup, invoice-after-shipment.
 ---
