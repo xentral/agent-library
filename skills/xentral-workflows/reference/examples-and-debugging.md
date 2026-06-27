@@ -1,7 +1,5 @@
 # Workflows — worked examples & debugging
 
-<!-- GENERATED from the 'workflows' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 ## Example skeleton — "cancel prepayment order if > 7 days unpaid"
 
 ```json

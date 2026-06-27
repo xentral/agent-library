@@ -1,7 +1,5 @@
 # Dashboards — widgets & data sources
 
-<!-- GENERATED from the 'dashboards' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 ## Widget structure
 
 Each widget declares:

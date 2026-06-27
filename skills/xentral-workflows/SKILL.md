@@ -11,8 +11,6 @@ description: >
   cleanup, return-to-credit-note, BOM cost rollup, invoice-after-shipment.
 ---
 
-<!-- GENERATED from the 'workflows' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 # Workflows
 
 ## Purpose

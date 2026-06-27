@@ -1,7 +1,5 @@
 # Dashboards — recipes
 
-<!-- GENERATED from the 'dashboards' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 ## Recipes (common flows)
 
 1. **First-time dashboards setup.**

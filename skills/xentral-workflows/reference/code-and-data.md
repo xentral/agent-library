@@ -1,7 +1,5 @@
 # Workflows — code nodes, helpers & data
 
-<!-- GENERATED from the 'workflows' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 ## Code node — what's allowed
 
 > Reaching for a `code` box means you've already ruled out every data and flow node above (see the node-first principle at the top of "Available node types") — Code is the exception, not the default. What follows is the sandbox contract for that exceptional case.

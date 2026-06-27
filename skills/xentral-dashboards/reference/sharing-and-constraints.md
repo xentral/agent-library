@@ -1,7 +1,5 @@
 # Dashboards — sharing, constraints & invariants
 
-<!-- GENERATED from the 'dashboards' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 ## Public access (share link)
 
 A dashboard can expose a public, login-free URL per tenant — useful

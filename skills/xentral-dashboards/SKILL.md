@@ -10,8 +10,6 @@ description: >
   analysing a single record or defining new metrics (use xentral-kpi for that).
 ---
 
-<!-- GENERATED from the 'dashboards' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 # Dashboards
 
 ## Purpose

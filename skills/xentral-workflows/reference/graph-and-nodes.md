@@ -1,7 +1,5 @@
 # Workflows — graph & node contract
 
-<!-- GENERATED from the 'workflows' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 ## Envelope shape
 
 A stored workflow is a JSON object:

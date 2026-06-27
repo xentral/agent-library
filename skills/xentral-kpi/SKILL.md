@@ -10,8 +10,6 @@ description: >
   computed value, or ask for the current value/history of a KPI.
 ---
 
-<!-- GENERATED from the 'kpi' agent guide — DO NOT EDIT. Run: make build-skills -->
-
 # KPI
 
 ## Purpose
