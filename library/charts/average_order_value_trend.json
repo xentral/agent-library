@@ -1,0 +1,24 @@
+{
+  "id": "average_order_value_trend",
+  "version": 1,
+  "icon": "invoice",
+  "category": "sales",
+  "order": 140,
+  "chart": {
+    "type": "LineChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Durchschnittlicher Auftragswert pro Monat aus Verkaufsaufträgen, letzte 12 Monate, als Zeitreihe",
+    "sql_string": "SELECT\n    TO_CHAR(DATE_TRUNC('month', so.date), 'yyyy-mm') AS \"Monat\",\n    COALESCE(ROUND(AVG(so.total_amount), 2), 0) AS \"Durchschnittlicher Auftragswert\"\nFROM sales_orders so\nWHERE so.status NOT IN ('created', 'canceled', 'unknown')\n  AND so.date >= DATEADD(month, -12, DATE_TRUNC('month', CURRENT_DATE))\n  AND so.date < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\nGROUP BY 1\nORDER BY 1;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Avg order value (monthly)",
+      "description": "Mean order value per month over the last twelve months — flags pricing erosion or basket-size growth."
+    },
+    "de": {
+      "title": "Ø Auftragswert (Monat)",
+      "description": "Mittlerer Auftragswert pro Monat über die letzten zwölf Monate — zeigt Preisentwicklung und Warenkorb-Größe."
+    }
+  }
+}

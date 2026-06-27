@@ -1,0 +1,24 @@
+{
+  "id": "top_customers_ytd",
+  "version": 1,
+  "icon": "users",
+  "category": "sales",
+  "order": 130,
+  "chart": {
+    "type": "HorizontalBarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Top 10 Kunden nach Umsatz aus Rechnungen seit Jahresanfang, absteigend",
+    "sql_string": "SELECT\n  i.customer_number AS \"Kundennummer\",\n  i.name AS \"Name\",\n  ROUND(SUM(i.net_revenue), 2) AS \"Nettoumsatz\"\nFROM invoices i\nLEFT JOIN projects p ON i.project_id = p.project_id\nWHERE i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.date >= DATE_TRUNC('year', CURRENT_DATE)\nGROUP BY 1, 2\nORDER BY \"Nettoumsatz\" DESC\nLIMIT 10;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Top 10 customers (YTD)",
+      "description": "The ten customers driving the most revenue year-to-date — concentration risk and account-management focus list in one view."
+    },
+    "de": {
+      "title": "Top-10 Kunden (YTD)",
+      "description": "Die zehn Kunden mit dem größten Umsatz seit Jahresbeginn — Kunden-Konzentrationsrisiko und Account-Management-Fokus in einem Blick."
+    }
+  }
+}

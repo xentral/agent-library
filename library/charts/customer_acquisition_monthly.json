@@ -1,0 +1,24 @@
+{
+  "id": "customer_acquisition_monthly",
+  "version": 1,
+  "icon": "users",
+  "category": "customers",
+  "order": 300,
+  "chart": {
+    "type": "BarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Anzahl neuer Kunden pro Monat (Kunden deren erste Rechnung in diesem Monat lag), letzte 12 Monate",
+    "sql_string": "WITH first_invoice_per_customer AS (\n    SELECT\n        i.customer_number,\n        MIN(i.date) AS first_invoice_date\n    FROM invoices i\n    LEFT JOIN projects p ON i.project_id = p.project_id\n    WHERE i.status NOT IN ('created', 'canceled', 'unknown')\n      AND i.customer_number IS NOT NULL\n      AND i.date >= DATEADD(month, -11, DATE_TRUNC('month', CURRENT_DATE))\n      AND i.date < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\n      AND ('' = '' OR LOWER(p.abbreviation) = LOWER(''))\n    GROUP BY 1\n),\nmonthly_new_customers AS (\n    SELECT\n        DATE_TRUNC('month', first_invoice_date) AS month_start,\n        COUNT(DISTINCT customer_number) AS new_customers\n    FROM first_invoice_per_customer\n    GROUP BY 1\n)\nSELECT\n    TO_CHAR(month_start, 'YYYY-MM') AS \"Monat\",\n    new_customers AS \"Anzahl neuer Kunden\"\nFROM monthly_new_customers\nORDER BY month_start;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "New customers per month",
+      "description": "Customers whose very first invoice was in this month — your acquisition cadence over the last year."
+    },
+    "de": {
+      "title": "Neukunden pro Monat",
+      "description": "Kunden deren erste Rechnung in diesem Monat lag — zeigt die Akquise-Kadenz des letzten Jahres."
+    }
+  }
+}

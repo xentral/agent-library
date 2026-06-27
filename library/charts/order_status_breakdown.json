@@ -1,0 +1,24 @@
+{
+  "id": "order_status_breakdown",
+  "version": 1,
+  "icon": "pie",
+  "category": "orders",
+  "order": 210,
+  "chart": {
+    "type": "DonutChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl offener Verkaufsaufträge gruppiert nach Status, alle Aufträge der letzten 30 Tage",
+    "sql_string": "SELECT\n    so.status AS \"Status\",\n    COUNT(*) AS \"Anzahl offener Verkaufsaufträge\"\nFROM sales_orders so\nWHERE so.date >= DATEADD(day, -30, CURRENT_DATE)\n  AND so.status NOT IN ('completed', 'canceled', 'created', 'unknown')\nGROUP BY so.status\nORDER BY \"Anzahl offener Verkaufsaufträge\" DESC, \"Status\";\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Order status breakdown",
+      "description": "Split of orders by status over the last 30 days — see how many are stuck in payment / picking / blocked."
+    },
+    "de": {
+      "title": "Auftrags-Status-Verteilung",
+      "description": "Verteilung der Aufträge nach Status über die letzten 30 Tage — sieht wieviele in Zahlung / Pick / blockiert hängen."
+    }
+  }
+}

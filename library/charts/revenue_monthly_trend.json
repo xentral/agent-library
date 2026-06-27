@@ -1,0 +1,24 @@
+{
+  "id": "revenue_monthly_trend",
+  "version": 1,
+  "icon": "trendUp",
+  "category": "sales",
+  "order": 100,
+  "chart": {
+    "type": "LineChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Umsatz pro Monat aus Rechnungen, letzte 12 Monate, als Zeitreihe",
+    "sql_string": "SELECT\n  TO_CHAR(DATE_TRUNC('month', i.date), 'YYYY-MM') AS \"Monat\",\n  ROUND(SUM(i.net_revenue), 2) AS \"Umsatz\"\nFROM invoices i\nWHERE i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.date >= DATEADD(month, -12, DATE_TRUNC('month', GETDATE()))\n  AND i.date < DATEADD(month, 1, DATE_TRUNC('month', GETDATE()))\nGROUP BY 1\nORDER BY 1;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Revenue (monthly trend)",
+      "description": "Net invoice revenue per month over the last twelve months — the canonical \"how are we doing\" line chart for every CEO board."
+    },
+    "de": {
+      "title": "Umsatz (Monatsverlauf)",
+      "description": "Nettoumsatz pro Monat aus Rechnungen über die letzten zwölf Monate — die kanonische „Wie laufen wir\"-Trendlinie fürs Geschäftsführungs-Cockpit."
+    }
+  }
+}

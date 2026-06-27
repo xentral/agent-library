@@ -1,0 +1,24 @@
+{
+  "id": "carrier_mix",
+  "version": 1,
+  "icon": "pie",
+  "category": "logistics",
+  "order": 410,
+  "chart": {
+    "type": "DonutChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": 3600,
+    "prompt": "Anteil der Versandbelege pro Carrier (shipping_method) im laufenden Monat",
+    "sql_string": "\nSELECT \n  COALESCE(dn.shipping_method, 'Unbekannt') AS \"Versandart\",\n  COUNT(dn.delivery_note_id) AS \"Anzahl_Versandbelege\"\nFROM delivery_notes dn\nWHERE DATE_TRUNC('month', dn.date) = DATE_TRUNC('month', CURRENT_DATE)\n  AND dn.status NOT IN ('canceled', 'created')\nGROUP BY dn.shipping_method\nORDER BY COUNT(dn.delivery_note_id) DESC\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Carrier mix",
+      "description": "Share of shipments per carrier (shipping method) for the current month — see which carrier dominates and the diversification level."
+    },
+    "de": {
+      "title": "Carrier-Mix",
+      "description": "Anteil der Versandbelege pro Carrier (Versandart) im laufenden Monat — zeigt welcher Carrier dominiert und wie diversifiziert versendet wird."
+    }
+  }
+}

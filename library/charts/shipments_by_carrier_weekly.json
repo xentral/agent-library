@@ -1,0 +1,24 @@
+{
+  "id": "shipments_by_carrier_weekly",
+  "version": 1,
+  "icon": "layers",
+  "category": "logistics",
+  "order": 420,
+  "chart": {
+    "type": "StackedBarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Anzahl Versandbelege pro Kalenderwoche, gruppiert nach Carrier (shipping_method), letzte 8 Wochen, gestapelt",
+    "sql_string": "\nSELECT \n  TO_CHAR(dn.date, 'YYYY-WW') AS \"Kalenderwoche\",\n  dn.shipping_method AS \"Carrier\",\n  COUNT(dn.delivery_note_id) AS \"Anzahl_Versandbelege\"\nFROM delivery_notes dn\nWHERE dn.date >= CURRENT_DATE - INTERVAL '56 days'\n  AND dn.shipping_method IS NOT NULL\nGROUP BY TO_CHAR(dn.date, 'YYYY-WW'), dn.shipping_method\nORDER BY TO_CHAR(dn.date, 'YYYY-WW') ASC, dn.shipping_method ASC\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Shipments by carrier (weekly)",
+      "description": "Weekly shipments stacked by carrier over the last eight weeks — shifts in carrier mix become obvious."
+    },
+    "de": {
+      "title": "Versand pro Woche & Carrier",
+      "description": "Wöchentliche Versandmenge gestapelt nach Carrier der letzten 8 Wochen — Verschiebungen im Carrier-Mix werden offensichtlich."
+    }
+  }
+}

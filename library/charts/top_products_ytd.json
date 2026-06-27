@@ -1,0 +1,24 @@
+{
+  "id": "top_products_ytd",
+  "version": 1,
+  "icon": "box",
+  "category": "sales",
+  "order": 135,
+  "chart": {
+    "type": "HorizontalBarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Top 10 Produkte nach Umsatz aus Rechnungspositionen seit Jahresanfang, absteigend",
+    "sql_string": "SELECT\n    p.product_number AS \"SKU\",\n    p.product_name_de AS \"Produkt\",\n    COALESCE(ROUND(SUM(ii.net_price::NUMERIC(23,8) * ii.quantity::NUMERIC(23,8) * (1 - COALESCE(ii.discount, 0)::NUMERIC(23,8))), 2), 0) AS \"Umsatz\"\nFROM invoices i\nJOIN invoice_items ii\n    ON i.invoice_id = ii.invoice_id\nLEFT JOIN products p\n    ON ii.product_id = p.product_id\nWHERE i.date >= DATE_TRUNC('year', CURRENT_DATE)\n  AND i.date <= CURRENT_DATE\n  AND i.status NOT IN ('canceled', 'created')\nGROUP BY\n    p.product_number,\n    p.product_name_de\nORDER BY \"Umsatz\" DESC\nLIMIT 10;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Top 10 products (YTD)",
+      "description": "Best-selling products by revenue year-to-date from invoice line items — assortment-management staple for ecommerce SMBs."
+    },
+    "de": {
+      "title": "Top-10 Produkte (YTD)",
+      "description": "Umsatzstärkste Produkte seit Jahresbeginn aus Rechnungspositionen — Sortiments-Management-Klassiker für E-Commerce-Mittelstand."
+    }
+  }
+}

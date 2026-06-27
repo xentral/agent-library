@@ -1,0 +1,24 @@
+{
+  "id": "dunning_levels",
+  "version": 1,
+  "icon": "alert",
+  "category": "finance",
+  "order": 610,
+  "chart": {
+    "type": "DonutChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl offener Kundenrechnungen gruppiert nach Mahnstufe (0 = keine Mahnung, 1, 2, 3+), nur Rechnungen mit Status nicht bezahlt",
+    "sql_string": "SELECT\n  CASE\n    WHEN i.dunning_type IS NULL OR TRIM(i.dunning_type) = '' THEN '0'\n    WHEN LOWER(i.dunning_type) IN ('payment reminder', 'zahlungserinnerung') THEN '0'\n    WHEN LOWER(i.dunning_type) IN ('dunning1', 'mahnung1', 'reminder1') THEN '1'\n    WHEN LOWER(i.dunning_type) IN ('dunning2', 'mahnung2', 'reminder2') THEN '2'\n    WHEN LOWER(i.dunning_type) IN ('dunning3', 'mahnung3', 'reminder3', 'collection', 'inkasso') THEN '3+'\n    ELSE '0'\n  END AS \"Mahnstufe\",\n  COUNT(*) AS \"Anzahl offener Rechnungen\"\nFROM invoices i\nWHERE\n  i.payment_status <> 'completed'\n  AND i.status NOT IN ('canceled', 'created')\nGROUP BY 1\nORDER BY\n  CASE\n    WHEN\n      CASE\n        WHEN i.dunning_type IS NULL OR TRIM(i.dunning_type) = '' THEN '0'\n        WHEN LOWER(i.dunning_type) IN ('payment reminder', 'zahlungserinnerung') THEN '0'\n        WHEN LOWER(i.dunning_type) IN ('dunning1', 'mahnung1', 'reminder1') THEN '1'\n        WHEN LOWER(i.dunning_type) IN ('dunning2', 'mahnung2', 'reminder2') THEN '2'\n        WHEN LOWER(i.dunning_type) IN ('dunning3', 'mahnung3', 'reminder3', 'collection', 'inkasso') THEN '3+'\n        ELSE '0'\n      END = '0' THEN 0\n    WHEN\n      CASE\n        WHEN i.dunning_type IS NULL OR TRIM(i.dunning_type) = '' THEN '0'\n        WHEN LOWER(i.dunning_type) IN ('payment reminder', 'zahlungserinnerung') THEN '0'\n        WHEN LOWER(i.dunning_type) IN ('dunning1', 'mahnung1', 'reminder1') THEN '1'\n        WHEN LOWER(i.dunning_type) IN ('dunning2', 'mahnung2', 'reminder2') THEN '2'\n        WHEN LOWER(i.dunning_type) IN ('dunning3', 'mahnung3', 'reminder3', 'collection', 'inkasso') THEN '3+'\n        ELSE '0'\n      END = '1' THEN 1\n    WHEN\n      CASE\n        WHEN i.dunning_type IS NULL OR TRIM(i.dunning_type) = '' THEN '0'\n        WHEN LOWER(i.dunning_type) IN ('payment reminder', 'zahlungserinnerung') THEN '0'\n        WHEN LOWER(i.dunning_type) IN ('dunning1', 'mahnung1', 'reminder1') THEN '1'\n        WHEN LOWER(i.dunning_type) IN ('dunning2', 'mahnung2', 'reminder2') THEN '2'\n        WHEN LOWER(i.dunning_type) IN ('dunning3', 'mahnung3', 'reminder3', 'collection', 'inkasso') THEN '3+'\n        ELSE '0'\n      END = '2' THEN 2\n    ELSE 3\n  END;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Dunning stages",
+      "description": "Open customer invoices split by current dunning level (0 / 1 / 2 / 3+) — see how the AR portfolio is escalating."
+    },
+    "de": {
+      "title": "Mahnstufen-Verteilung",
+      "description": "Offene Kundenrechnungen aufgeteilt nach Mahnstufe (0 / 1 / 2 / 3+) — sieht wie sich das Forderungsportfolio eskaliert."
+    }
+  }
+}

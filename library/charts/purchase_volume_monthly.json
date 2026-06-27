@@ -1,0 +1,24 @@
+{
+  "id": "purchase_volume_monthly",
+  "version": 1,
+  "icon": "cart",
+  "category": "purchasing",
+  "order": 500,
+  "chart": {
+    "type": "BarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Gesamtwert der Lieferantenbestellungen pro Monat, letzte 12 Monate",
+    "sql_string": "WITH monthly_purchase_orders AS (\n    SELECT\n        DATE_TRUNC('month', po.date) AS month_start,\n        SUM(po.total_amount) AS total_order_value_eur,\n        COUNT(DISTINCT po.purchase_order_id) AS number_purchase_orders\n    FROM purchase_orders po\n    WHERE po.status NOT IN ('created', 'canceled')\n      AND po.date BETWEEN DATEADD(month, -11, DATE_TRUNC('month', CURRENT_DATE)) AND CURRENT_DATE\n    GROUP BY 1\n)\nSELECT\n    TO_CHAR(month_start, 'YYYY-MM') AS \"Monat\",\n    ROUND(COALESCE(total_order_value_eur, 0), 2) AS \"Gesamtwert Lieferantenbestellungen (EUR)\",\n    COALESCE(number_purchase_orders, 0) AS \"# Bestellungen\"\nFROM monthly_purchase_orders\nORDER BY \"Monat\";\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Purchase volume (monthly)",
+      "description": "Total purchase-order value created per month over the last twelve months — sourcing-spend rhythm at a glance."
+    },
+    "de": {
+      "title": "Einkaufsvolumen (Monat)",
+      "description": "Gesamtwert der Lieferantenbestellungen pro Monat der letzten zwölf Monate — Einkaufs-Rhythmus auf einen Blick."
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "channel_mix_current_month",
+  "version": 1,
+  "icon": "pie",
+  "category": "sales",
+  "order": 125,
+  "chart": {
+    "type": "DonutChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Umsatzanteile pro Vertriebskanal (Projekt) im laufenden Monat",
+    "sql_string": "\nSELECT \n  p.name AS \"Projekt\",\n  SUM(soi.xen_net_revenue_item_total) AS \"Umsatz\"\nFROM sales_order_items soi\nJOIN sales_orders so ON soi.sales_order_id = so.sales_order_id\nJOIN projects p ON so.project_id = p.project_id\nWHERE EXTRACT(YEAR FROM so.date) = EXTRACT(YEAR FROM CURRENT_DATE)\n  AND EXTRACT(MONTH FROM so.date) = EXTRACT(MONTH FROM CURRENT_DATE)\n  AND so.status NOT IN ('canceled', 'created')\nGROUP BY p.project_id, p.name\nORDER BY \"Umsatz\" DESC\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Channel mix (current month)",
+      "description": "Share of revenue per sales channel for the running month — donut view of where today's revenue is coming from."
+    },
+    "de": {
+      "title": "Kanal-Mix (laufender Monat)",
+      "description": "Umsatzanteile pro Vertriebskanal im aktuellen Monat — Ringdiagramm wo der Umsatz heute herkommt."
+    }
+  }
+}

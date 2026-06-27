@@ -1,0 +1,24 @@
+{
+  "id": "top_suppliers_ytd",
+  "version": 1,
+  "icon": "briefcase",
+  "category": "purchasing",
+  "order": 510,
+  "chart": {
+    "type": "HorizontalBarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Top 5 Lieferanten nach Bestellvolumen seit Jahresanfang, absteigend",
+    "sql_string": "WITH purchase_volume AS (\n    SELECT\n        po.address_id AS supplier_address_id,\n        po.name AS supplier_name,\n        po.document_number,\n        po.purchase_order_id,\n        po.total_amount\n    FROM purchase_orders po\n    WHERE po.status NOT IN ('created', 'canceled', 'unknown')\n      AND po.date >= DATE_TRUNC('year', CURRENT_DATE)\n)\nSELECT\n    COALESCE(pv.supplier_name, CAST(pv.supplier_address_id AS VARCHAR)) AS \"Lieferant\",\n    COUNT(DISTINCT pv.purchase_order_id) AS \"Anzahl Bestellungen\",\n    ROUND(SUM(pv.total_amount), 2) AS \"Bestellvolumen\"\nFROM purchase_volume pv\nGROUP BY 1\nORDER BY \"Bestellvolumen\" DESC\nLIMIT 5;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Top 5 suppliers (YTD)",
+      "description": "The five suppliers carrying the most order volume year-to-date — supply-dependency indicator."
+    },
+    "de": {
+      "title": "Top-5 Lieferanten (YTD)",
+      "description": "Die fünf Lieferanten mit dem größten Bestellvolumen seit Jahresbeginn — Lieferanten-Abhängigkeits-Indikator."
+    }
+  }
+}

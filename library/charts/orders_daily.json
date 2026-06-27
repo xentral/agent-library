@@ -1,0 +1,24 @@
+{
+  "id": "orders_daily",
+  "version": 1,
+  "icon": "cart",
+  "category": "orders",
+  "order": 200,
+  "chart": {
+    "type": "BarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Verkaufsaufträge pro Tag der letzten 14 Tage",
+    "sql_string": "SELECT\n    TO_CHAR(DATE_TRUNC('day', so.date), 'yyyy-mm-dd') AS \"Tag\",\n    COUNT(DISTINCT so.sales_order_id) AS \"Anzahl Verkaufsaufträge\"\nFROM sales_orders so\nWHERE so.date >= DATEADD(day, -13, CURRENT_DATE)\n  AND so.date < DATEADD(day, 1, CURRENT_DATE)\n  AND so.status NOT IN ('created', 'canceled', 'unknown')\nGROUP BY 1\nORDER BY 1 ASC;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Orders per day",
+      "description": "Sales orders created per day over the last fourteen days — operational pulse for ecommerce SMBs."
+    },
+    "de": {
+      "title": "Aufträge pro Tag",
+      "description": "Verkaufsaufträge pro Tag der letzten 14 Tage — operativer Puls für E-Commerce-Mittelstand."
+    }
+  }
+}

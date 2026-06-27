@@ -1,0 +1,24 @@
+{
+  "id": "shipments_daily",
+  "version": 1,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 400,
+  "chart": {
+    "type": "BarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Versandbelege pro Tag in den letzten 14 Tagen",
+    "sql_string": "SELECT\n    TO_CHAR(DATE_TRUNC('day', s.sent_at::timestamp), 'yyyy-mm-dd') AS \"Tag\",\n    COUNT(DISTINCT s.shipment_id) AS \"Anzahl Versandbelege\"\nFROM shipments s\nWHERE s.sent_at::date >= DATEADD(day, -14, CURRENT_DATE)\n  AND s.sent_at::date < CURRENT_DATE + 1\nGROUP BY 1\nORDER BY 1;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Shipments per day",
+      "description": "Outgoing shipments per day over the last fourteen days — warehouse throughput at a glance."
+    },
+    "de": {
+      "title": "Versandbelege pro Tag",
+      "description": "Ausgehende Versandbelege pro Tag der letzten 14 Tage — Lager-Durchsatz auf einen Blick."
+    }
+  }
+}

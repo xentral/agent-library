@@ -1,0 +1,24 @@
+{
+  "id": "revenue_ytd_vs_last_year",
+  "version": 1,
+  "icon": "trendUp",
+  "category": "sales",
+  "order": 110,
+  "chart": {
+    "type": "AreaChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Umsatz pro Monat aktuelles Jahr (YTD) im Vergleich zum Vorjahr aus Rechnungen, zwei Serien",
+    "sql_string": "WITH monthly_sales AS (\n  SELECT\n    DATE_TRUNC('month', i.date) AS month_start,\n    EXTRACT(year FROM i.date) AS sales_year,\n    ROUND(SUM(i.net_revenue), 2) AS net_revenue\n  FROM invoices i\n  WHERE i.status NOT IN ('canceled', 'created', 'unknown')\n    AND i.date BETWEEN DATE_TRUNC('year', CURRENT_DATE) AND CURRENT_DATE\n       OR i.date BETWEEN DATEADD('year', -1, DATE_TRUNC('year', CURRENT_DATE))\n                    AND DATEADD('year', -1, CURRENT_DATE)\n  GROUP BY 1, 2\n)\nSELECT\n  TO_CHAR(month_start, 'MM') AS \"Monat\",\n  COALESCE(MAX(CASE WHEN sales_year = EXTRACT(year FROM CURRENT_DATE) THEN net_revenue END), 0) AS \"Umsatz aktuelles Jahr YTD\",\n  COALESCE(MAX(CASE WHEN sales_year = EXTRACT(year FROM CURRENT_DATE) - 1 THEN net_revenue END), 0) AS \"Umsatz Vorjahr\",\n  ROUND(\n    COALESCE(MAX(CASE WHEN sales_year = EXTRACT(year FROM CURRENT_DATE) THEN net_revenue END), 0)\n    - COALESCE(MAX(CASE WHEN sales_year = EXTRACT(year FROM CURRENT_DATE) - 1 THEN net_revenue END), 0),\n    2\n  ) AS \"Differenz\"\nFROM monthly_sales\nGROUP BY 1, month_start\nORDER BY month_start;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Revenue YTD vs. last year",
+      "description": "Year-to-date revenue per month compared to the same month last year — quickly spots growth or contraction vs. baseline."
+    },
+    "de": {
+      "title": "Umsatz YTD vs. Vorjahr",
+      "description": "Umsatz pro Monat seit Jahresbeginn im Vergleich zum gleichen Monat im Vorjahr — sieht Wachstum oder Rückgang gegen die Baseline."
+    }
+  }
+}

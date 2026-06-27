@@ -1,0 +1,24 @@
+{
+  "id": "revenue_by_channel",
+  "version": 1,
+  "icon": "layers",
+  "category": "sales",
+  "order": 120,
+  "chart": {
+    "type": "StackedBarChart",
+    "cache_mode": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Umsatz pro Monat gruppiert nach Vertriebskanal (Projekt), letzte 6 Monate, gestapelt",
+    "sql_string": "\nSELECT \n  TO_CHAR(i.date, 'YYYY-MM') AS \"Monat\",\n  COALESCE(p.name, 'Ohne Projekt') AS \"Vertriebskanal\",\n  SUM(i.xen_net_revenue) AS \"Umsatz\"\nFROM invoices i\nLEFT JOIN projects p ON i.project_id = p.project_id\nWHERE i.status NOT IN ('canceled', 'created')\n  AND i.date >= CURRENT_DATE - INTERVAL '6 months'\nGROUP BY TO_CHAR(i.date, 'YYYY-MM'), COALESCE(p.name, 'Ohne Projekt')\nORDER BY TO_CHAR(i.date, 'YYYY-MM') ASC, \"Vertriebskanal\" ASC\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Revenue by channel",
+      "description": "Monthly net revenue split by sales channel (project) over the last six months — see which channels carry the business."
+    },
+    "de": {
+      "title": "Umsatz pro Kanal",
+      "description": "Monatlicher Nettoumsatz aufgeteilt nach Vertriebskanal (Projekt) der letzten sechs Monate — zeigt welche Kanäle das Geschäft tragen."
+    }
+  }
+}
