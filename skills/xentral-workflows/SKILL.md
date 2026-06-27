@@ -11,6 +11,8 @@ description: >
   cleanup, return-to-credit-note, BOM cost rollup, invoice-after-shipment.
 ---
 
+<!-- GENERATED from the 'workflows' agent guide — DO NOT EDIT. Run: make build-skills -->
+
 # Workflows
 
 ## Purpose
@@ -80,11 +82,9 @@ Build a workflow when you could explain "step 1, then step 2, then …". Build a
 
 Load only the file you need for the step you are on:
 
-- **Graph & node contract** — envelope shape, trigger types, node shape, node
-  titles, referencing data between nodes, the full node-type catalog:
+- **Graph & node contract** — envelope, triggers, node shape, titles, data references, the node-type catalog:
   [reference/graph-and-nodes.md](reference/graph-and-nodes.md)
 - **Code nodes, date helpers, tool actions, fetch-vs-compute**:
   [reference/code-and-data.md](reference/code-and-data.md)
 - **Worked examples, idempotency, debugging a run**:
   [reference/examples-and-debugging.md](reference/examples-and-debugging.md)
-

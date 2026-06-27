@@ -1,6 +1,6 @@
 # Workflows — graph & node contract
 
-<!-- Sourced from backend/workflows/agent_guide/en.md — keep in sync. -->
+<!-- GENERATED from the 'workflows' agent guide — DO NOT EDIT. Run: make build-skills -->
 
 ## Envelope shape
 

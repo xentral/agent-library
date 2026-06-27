@@ -10,7 +10,7 @@ description: >
   computed value, or ask for the current value/history of a KPI.
 ---
 
-<!-- Sourced from backend/kpi/agent_guide/en.md — keep in sync. -->
+<!-- GENERATED from the 'kpi' agent guide — DO NOT EDIT. Run: make build-skills -->
 
 # KPI
 

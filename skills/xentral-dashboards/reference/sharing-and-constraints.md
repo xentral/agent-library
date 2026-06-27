@@ -1,6 +1,6 @@
 # Dashboards — sharing, constraints & invariants
 
-<!-- Sourced from backend/dashboards/agent_guide/en.md — keep in sync. -->
+<!-- GENERATED from the 'dashboards' agent guide — DO NOT EDIT. Run: make build-skills -->
 
 ## Public access (share link)
 

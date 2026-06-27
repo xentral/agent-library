@@ -10,7 +10,7 @@ description: >
   analysing a single record or defining new metrics (use xentral-kpi for that).
 ---
 
-<!-- Sourced from backend/dashboards/agent_guide/en.md — keep in sync. -->
+<!-- GENERATED from the 'dashboards' agent guide — DO NOT EDIT. Run: make build-skills -->
 
 # Dashboards
 
@@ -113,10 +113,11 @@ Before creating or modifying a dashboard:
 
 ## Detailed references — read on demand
 
-- **Widget structure, the full widget catalogue, and chart data sources**:
+Load only the file you need:
+
+- **Widget structure, the full widget catalogue, chart data sources**:
   [reference/widgets.md](reference/widgets.md)
 - **Public share links + constraints & invariants**:
   [reference/sharing-and-constraints.md](reference/sharing-and-constraints.md)
 - **Recipes (common end-to-end flows)**:
   [reference/recipes.md](reference/recipes.md)
-
