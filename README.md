@@ -1,8 +1,8 @@
 # Xentral Agent Library
 
-Public catalogue for the **Xentral Agent Hub**. This single repo serves two consumers:
+Public catalogue for the **Xentral Agent OS**. This single repo serves two consumers:
 
-1. **The Agent Hub backend** vendors `library/` and `skills/` at Docker build time (pinned to a
+1. **The Agent OS backend** vendors `library/` and `skills/` at Docker build time (pinned to a
    release tag — no runtime/CDN fetch). These power the in-product Library Pickers.
 2. **Customers' Claude Code** installs this repo as a **plugin marketplace**, getting the
    Xentral MCP connector and all skills in two commands.

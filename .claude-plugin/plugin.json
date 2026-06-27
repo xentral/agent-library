@@ -1,7 +1,7 @@
 {
   "name": "xentral-connector",
   "version": "2026.06.0",
-  "description": "Xentral Agent Hub — ERP connector and skills.",
+  "description": "Xentral Agent OS — ERP connector and skills.",
   "author": { "name": "Xentral" },
   "homepage": "https://github.com/xentral/agent-library",
   "mcpServers": {
