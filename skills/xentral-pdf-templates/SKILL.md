@@ -52,15 +52,22 @@ dates.
 
 Read the file that matches the task — do not load all of them:
 
+- **Building & editing a template** — structure-first-then-skin, the scaffolds,
+  granular edits (`set_block`/`set_style`/…), concepts/terminology →
+  [reference/building-and-editing.md](reference/building-and-editing.md)
+- **Authoring the HTML/CSS body, partials & engine** — the base layout,
+  partials, `@page` headers/footers, styling, engine selection →
+  [reference/authoring-and-styling.md](reference/authoring-and-styling.md)
 - **Transactional documents** (invoice, delivery note, order confirmation,
-  credit note): line items, totals, tax, the partials to use →
-  [reference/transactional-documents.md](reference/transactional-documents.md)
+  credit note) — mandatory content per document type + industry-specific rules →
+  [reference/document-types.md](reference/document-types.md)
 - **E-invoice compliance** (must be a legal ZUGFeRD / XRechnung / Peppol
-  e-invoice) → [reference/e-invoice-compliance.md](reference/e-invoice-compliance.md)
+  e-invoice) → [reference/compliance.md](reference/compliance.md)
 - **Free / non-transactional documents** (letters, certificates, custom
   one-offs) → [reference/free-documents.md](reference/free-documents.md)
-- **Layout, partials catalog & styling** (CSS tokens, `@page` headers/footers,
-  reusable blocks) → [reference/partials-and-styling.md](reference/partials-and-styling.md)
+- **Checking, constraints, recipes** — `action='check'`, pre-flight checks,
+  common pitfalls, recipes, public share link, debug payload →
+  [reference/checking-and-recipes.md](reference/checking-and-recipes.md)
 
 ## Don'ts
 
