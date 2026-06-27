@@ -311,7 +311,9 @@
     }
   },
   "skills": [
-    "skills/xentral-pdf-templates"
+    "skills/xentral-onboarding-coach",
+    "skills/xentral-pdf-templates",
+    "skills/xentral-workflows"
   ],
   "checksums": {
     "library/agents/address-change.json": "sha256-ddffeac7aba4a918c371f6d15f7b2d72089f0b6445a198ccbf37577bce77e35b",
