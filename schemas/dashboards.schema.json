@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "dashboards library item",
+  "type": "object",
+  "required": [
+    "category",
+    "icon",
+    "id",
+    "layout",
+    "linked_kpis",
+    "locales",
+    "order",
+    "version",
+    "widgets"
+  ],
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "default_briefings": {
+      "type": "array"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "layout": {
+      "type": "object"
+    },
+    "linked_kpis": {
+      "type": "array"
+    },
+    "locales": {
+      "type": "object"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "recommended_kpis": {
+      "type": "array"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "widgets": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}

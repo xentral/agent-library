@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "business-blocks library item",
+  "type": "object",
+  "required": [
+    "category",
+    "icon",
+    "id",
+    "integrations",
+    "locales",
+    "order",
+    "required_plan",
+    "verified",
+    "version"
+  ],
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "depends_on": {
+      "type": "array"
+    },
+    "handbook_url": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "integrations": {
+      "type": "array"
+    },
+    "locales": {
+      "type": "object"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "parent": {
+      "type": "string"
+    },
+    "popular": {
+      "type": "boolean"
+    },
+    "process_group": {
+      "type": "string"
+    },
+    "required_plan": {
+      "type": "string"
+    },
+    "subcards": {
+      "type": "array"
+    },
+    "type": {
+      "type": "string"
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "version": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

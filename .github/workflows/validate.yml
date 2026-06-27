@@ -11,6 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validator dependencies
+        run: pip install jsonschema
+
       - name: JSON is well-formed
         run: |
           fail=0
@@ -22,10 +29,17 @@ jobs:
           done < <(find library schemas .claude-plugin manifest.json -name '*.json' 2>/dev/null)
           exit $fail
 
-      # TODO: validate each library/<type>/*.json against schemas/<type>.schema.json
-      # TODO: secret scan (gitleaks) to enforce "no secrets / no tenant data"
+      - name: Validate library items against schemas
+        run: python scripts/validate_library.py
 
       - name: Plugin manifests present
         run: |
           test -f .claude-plugin/plugin.json
           test -f .claude-plugin/marketplace.json
+
+      - name: Secret scan (no secrets / no tenant data)
+        run: |
+          VER=8.18.4
+          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VER}/gitleaks_${VER}_linux_x64.tar.gz" \
+            | tar -xz gitleaks
+          ./gitleaks detect --source . --no-git --redact --exit-code 1

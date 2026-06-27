@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "pdf-templates library item",
+  "type": "object",
+  "required": [
+    "compliance",
+    "css",
+    "engine",
+    "example_data",
+    "filename_pattern",
+    "html",
+    "id",
+    "languages",
+    "locales"
+  ],
+  "properties": {
+    "assets": {
+      "type": "object"
+    },
+    "compliance": {
+      "type": "array"
+    },
+    "compliance_policy": {
+      "type": "object"
+    },
+    "constraints": {
+      "type": "array"
+    },
+    "css": {
+      "type": "string"
+    },
+    "engine": {
+      "type": "string"
+    },
+    "example_data": {
+      "type": "object"
+    },
+    "filename_pattern": {
+      "type": "string"
+    },
+    "html": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "languages": {
+      "type": "array"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "locales": {
+      "type": "object"
+    },
+    "schema": {
+      "type": "object"
+    },
+    "translations": {
+      "type": "object"
+    },
+    "v3_endpoint": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

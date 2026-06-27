@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "workflows library item",
+  "type": "object",
+  "required": [
+    "category",
+    "edges",
+    "icon",
+    "id",
+    "locales",
+    "nodes",
+    "order",
+    "orientation",
+    "trigger_type",
+    "version"
+  ],
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "edges": {
+      "type": "array"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "locales": {
+      "type": "object"
+    },
+    "nodes": {
+      "type": "array"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "orientation": {
+      "type": "string"
+    },
+    "popular": {
+      "type": "boolean"
+    },
+    "trigger_type": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

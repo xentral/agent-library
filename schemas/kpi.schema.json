@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "kpi library item",
+  "type": "object",
+  "required": [
+    "category",
+    "icon",
+    "id",
+    "kpi",
+    "locales",
+    "order",
+    "version"
+  ],
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "kpi": {
+      "type": "object"
+    },
+    "locales": {
+      "type": "object"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "version": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

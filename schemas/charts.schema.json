@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "charts library item",
+  "type": "object",
+  "required": [
+    "category",
+    "chart",
+    "icon",
+    "id",
+    "locales",
+    "order",
+    "version"
+  ],
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "chart": {
+      "type": "object"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "locales": {
+      "type": "object"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "version": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}
