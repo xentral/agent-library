@@ -1,0 +1,14 @@
+{
+  "name": "xentral-connector",
+  "version": "0.0.0-dev",
+  "description": "Xentral Agent Hub — ERP connector and skills.",
+  "author": { "name": "Xentral" },
+  "homepage": "https://github.com/xentral/agent-library",
+  "mcpServers": {
+    "xentral": {
+      "type": "http",
+      "url": "https://agent.xentral.com/mcp"
+    }
+  },
+  "skills": "./skills"
+}

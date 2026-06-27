@@ -1,0 +1,11 @@
+{
+  "name": "xentral",
+  "owner": { "name": "Xentral" },
+  "plugins": [
+    {
+      "name": "xentral-connector",
+      "source": "./",
+      "description": "Xentral ERP connector + skills"
+    }
+  ]
+}

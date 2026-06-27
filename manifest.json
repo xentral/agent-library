@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "version": "0.0.0-dev",
+  "types": {
+    "agents": { "count": 0, "files": [] },
+    "workflows": { "count": 0, "files": [] },
+    "dashboards": { "count": 0, "files": [] },
+    "kpi": { "count": 0, "files": [] },
+    "pdf-templates": { "count": 0, "files": [] },
+    "business-blocks": { "count": 0, "files": [] },
+    "business-plan": { "count": 0, "files": [] },
+    "connections": { "count": 0, "files": [] }
+  },
+  "skills": [],
+  "checksums": {}
+}

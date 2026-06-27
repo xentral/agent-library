@@ -1,0 +1,31 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JSON is well-formed
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            if ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f"; then
+              echo "::error file=$f::invalid JSON"
+              fail=1
+            fi
+          done < <(find library schemas .claude-plugin manifest.json -name '*.json' 2>/dev/null)
+          exit $fail
+
+      # TODO: validate each library/<type>/*.json against schemas/<type>.schema.json
+      # TODO: secret scan (gitleaks) to enforce "no secrets / no tenant data"
+
+      - name: Plugin manifests present
+        run: |
+          test -f .claude-plugin/plugin.json
+          test -f .claude-plugin/marketplace.json
