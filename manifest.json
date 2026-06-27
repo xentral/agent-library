@@ -310,7 +310,9 @@
       ]
     }
   },
-  "skills": [],
+  "skills": [
+    "skills/xentral-pdf-templates"
+  ],
   "checksums": {
     "library/agents/address-change.json": "sha256-ddffeac7aba4a918c371f6d15f7b2d72089f0b6445a198ccbf37577bce77e35b",
     "library/agents/b2b-quote.json": "sha256-9211205b3def55b28c9ea845b4aee1de85762465cb04230549ca7c460a2258df",
