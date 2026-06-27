@@ -1,0 +1,75 @@
+{
+  "order": 30,
+  "id": "daily-logistics-briefing",
+  "icon": "truck",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "logistics"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Logistik-Briefing",
+      "category": "Logistik",
+      "description": "Logistik-Tagesbriefing — Versand-Backlog, blockierte Aufträge, Bestände, Wareneingänge — täglich um 07:00.",
+      "tags": [
+        "Logistik",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Logistik-Briefing",
+        "description": "3-4 wichtigsten Logistik-Themen für den Tag — Versand, Bestände, Wareneingänge.",
+        "area": "Logistik",
+        "briefing": {
+          "bucket_title": "Logistik",
+          "angles": [
+            "Versand-Backlog (offene Lieferaufträge, älteste zuerst)",
+            "Blockierte / gesperrte Aufträge (Versand-Stops, Klärungsfälle)",
+            "Kritische Lagerbestände (Mindestbestand-Unterschreitungen)",
+            "Wareneingänge: ausstehend / unbestätigt / Verspätungen",
+            "Versanddienstleister-Themen (Trackings ohne Update, Carrier-Verzug)",
+            "Logistik-Agent-Jobs in requires_intervention (Tracking-Push, Versand-Verzögerungs-Mail, Wareneingang-Buchung hängen)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Logistics Briefing",
+      "category": "Logistics",
+      "description": "Logistics daily briefing — shipping backlog, blocked orders, stock levels, goods receipts — every day at 07:00.",
+      "tags": [
+        "Logistics",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Logistics Briefing",
+        "description": "Top 3-4 logistics topics for today — shipping, stock, goods receipts.",
+        "area": "Logistics",
+        "briefing": {
+          "bucket_title": "Logistics",
+          "angles": [
+            "Shipping backlog (open delivery orders, oldest first)",
+            "Blocked / locked orders (shipping holds, clarification cases)",
+            "Critical stock levels (minimum-stock breaches)",
+            "Goods receipts: pending / unconfirmed / delayed",
+            "Carrier topics (trackings without update, carrier delays)",
+            "Logistics agent jobs in requires_intervention (Tracking Push, Shipping Delay Notice, Goods Receipt Posting stuck)"
+          ]
+        }
+      }
+    }
+  }
+}

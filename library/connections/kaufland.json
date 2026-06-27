@@ -1,0 +1,16 @@
+{
+  "id": "kaufland",
+  "version": 1,
+  "name": "Kaufland.de",
+  "domain": "kaufland.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Marktplatz-Aufträge importieren, Bestand und Preise pushen."
+    },
+    "de": {
+      "description": "Marktplatz-Aufträge importieren, Bestand und Preise pushen."
+    }
+  },
+  "source": "https://marketplace.xentral.com/marktplaetze/kaufland"
+}

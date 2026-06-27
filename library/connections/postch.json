@@ -1,0 +1,15 @@
+{
+  "id": "postch",
+  "version": 1,
+  "name": "Schweizerische Post",
+  "domain": "post.ch",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Versandlabels und Sendungsstatus für die Schweiz."
+    },
+    "de": {
+      "description": "Versandlabels und Sendungsstatus für die Schweiz."
+    }
+  }
+}

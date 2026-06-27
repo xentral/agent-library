@@ -1,0 +1,27 @@
+{
+  "id": "purchase_orders_total",
+  "version": 1,
+  "icon": "purchase",
+  "category": "purchasing",
+  "order": 401,
+  "kpi": {
+    "key": "purchase_orders_total",
+    "unit": "count",
+    "value_type": "number",
+    "group": "purchasing",
+    "value_source": "cached",
+    "cache_ttl_seconds": 3600,
+    "prompt": "Gesamtzahl aller Lieferantenbestellungen über alle Status seit Jahresbeginn; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(*) AS \"Gesamtzahl Lieferantenbestellungen\"\nFROM purchase_orders po\nWHERE po.date >= DATE_TRUNC('year', CURRENT_DATE)\n  AND po.status NOT IN ('created', 'canceled', 'unknown');\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Purchase orders total",
+      "description": "All purchase orders across all states — open, sent, partially received, closed."
+    },
+    "de": {
+      "title": "Bestellungen gesamt",
+      "description": "Alle Lieferantenbestellungen über alle Status — offen, versendet, teilgeliefert, abgeschlossen."
+    }
+  }
+}

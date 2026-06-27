@@ -1,0 +1,15 @@
+{
+  "id": "amazonprime",
+  "version": 1,
+  "name": "Amazon Prime Versand",
+  "domain": "amazon.de",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Amazon-Prime-by-Merchant Versandintegration für Prime-Bestellungen."
+    },
+    "de": {
+      "description": "Amazon-Prime-by-Merchant Versandintegration für Prime-Bestellungen."
+    }
+  }
+}

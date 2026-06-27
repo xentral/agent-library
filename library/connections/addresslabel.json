@@ -1,0 +1,15 @@
+{
+  "id": "addresslabel",
+  "version": 1,
+  "name": "Adress-Etikett",
+  "domain": "",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Generisches Adress-Etikett — Versand ohne externen Carrier-Service."
+    },
+    "de": {
+      "description": "Generisches Adress-Etikett — Versand ohne externen Carrier-Service."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "order": 64,
+  "id": "quick-cockpit-now",
+  "icon": "bolt",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "workflow",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.5
+  },
+  "locales": {
+    "de": {
+      "name": "Cockpit jetzt",
+      "category": "Geschäftsleitung",
+      "description": "Ad-hoc Kurz-Cockpit — Umsatz heute, kritische Aufträge, hängende Agenten-Jobs, offene User-Tasks.",
+      "tags": [
+        "Geschäftsleitung",
+        "Schnell-Aufgabe"
+      ],
+      "prefill": {
+        "name": "Cockpit jetzt",
+        "description": "Manueller Schnell-Schuss-Statusbericht für die Geschäftsleitung — auf Knopfdruck.",
+        "area": "Geschäftsleitung",
+        "instructions": "Du bist ein Cockpit-Agent für die Geschäftsleitung. Wenn der User dich\nstartet, lieferst du eine Kurz-Übersicht in 4 Blöcken:\n\n1. Umsatz heute (über ERP-Co-Pilot): Anzahl Aufträge + Gesamt-Netto, kurz\n   verglichen mit dem Schnitt der letzten 7 Werktage.\n2. Kritisch: offene Aufträge ohne Versand älter als 5 Tage (Top 3).\n3. Agenten-Status: Anzahl Jobs in `requires_intervention` aus den\n   letzten 24h, gruppiert nach Bereich (Finance / CS / Logistik / …).\n4. Offene User-Tasks aus den letzten 48h, die mir (oder GL) zugeordnet\n   sind — Top 5 nach Erstellungsdatum.\n\nFormat: 4 Mini-Sektionen mit jeweils max. 5 Zeilen. Schließe mit einem\nSatz \"Heute Vormittag wichtig:\" und nenne die 1 dringende Sache.\n"
+      }
+    },
+    "en": {
+      "name": "Cockpit now",
+      "category": "Leadership",
+      "description": "Ad-hoc short cockpit — today's revenue, critical orders, stuck agent jobs, open user tasks.",
+      "tags": [
+        "Leadership",
+        "Quick task"
+      ],
+      "prefill": {
+        "name": "Cockpit now",
+        "description": "Manual snapshot status report for leadership — on demand.",
+        "area": "Leadership",
+        "instructions": "You are a leadership cockpit agent. When the user starts you, deliver\na short overview in 4 blocks:\n\n1. Today's revenue (via ERP copilot): order count + total net, briefly\n   compared to the average of the last 7 working days.\n2. Critical: open orders not yet shipped older than 5 days (top 3).\n3. Agent status: count of jobs in `requires_intervention` from the last\n   24h, grouped by area (Finance / CS / Logistics / …).\n4. Open user tasks from the last 48h assigned to me (or leadership) —\n   top 5 by creation date.\n\nFormat: 4 mini-sections with max. 5 lines each. Finish with one\nsentence \"Important this morning:\" and call out the single urgent item.\n"
+      }
+    }
+  }
+}

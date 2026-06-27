@@ -1,0 +1,15 @@
+{
+  "id": "lexoffice",
+  "version": 1,
+  "name": "lexoffice",
+  "domain": "lexoffice.de",
+  "category": "accounting",
+  "locales": {
+    "en": {
+      "description": "Rechnungen, Belege und Bank-Transaktionen mit lexoffice abgleichen."
+    },
+    "de": {
+      "description": "Rechnungen, Belege und Bank-Transaktionen mit lexoffice abgleichen."
+    }
+  }
+}

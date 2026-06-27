@@ -1,0 +1,16 @@
+{
+  "id": "amazon",
+  "version": 1,
+  "name": "Amazon Seller Central",
+  "domain": "sellercentral.amazon.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Amazon-Bestellungen abrufen, Versand zurückmelden, FBA-Bestand abgleichen."
+    },
+    "de": {
+      "description": "Amazon-Bestellungen abrufen, Versand zurückmelden, FBA-Bestand abgleichen."
+    }
+  },
+  "source": "https://marketplace.xentral.com/marktplaetze/amazon"
+}

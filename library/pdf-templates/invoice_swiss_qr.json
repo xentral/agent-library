@@ -1,0 +1,307 @@
+{
+  "id": "invoice_swiss_qr",
+  "version": 1,
+  "engine": "weasyprint",
+  "locales": {
+    "de": {
+      "title": "Rechnung (Schweiz, QR-Rechnung)",
+      "description": "Schweizer Rechnung im Xentral-Original-Stil mit QR-Rechnungs-Zahlteil (Einzahlungs-/Empfangsschein, Swiss Payment Standard 2022)."
+    },
+    "en": {
+      "title": "Invoice (Switzerland, QR-Bill)",
+      "description": "Swiss invoice with QR-Bill payment section at the bottom (Einzahlungs- /Empfangsschein layout per Swiss Payment Standard 2022). PDF layout is ready; the actual QR-code encoding (Swiss QR-IBAN, structured reference, exact 14×14mm Swiss-cross logo) needs a QR-code library and is left as a refinement step — the placeholder rectangle marks the spot.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Invoice-CH-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute",
+    "QR-Bill section MUST stay 105mm tall (Swiss Payment Standard 2022)",
+    "amounts MUST use tabular-nums and right-align",
+    "currency MUST default to CHF unless overridden"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "company",
+      "payment"
+    ],
+    "documentAddress": {
+      "required": [
+        "name",
+        "street",
+        "zipCode",
+        "city",
+        "country"
+      ]
+    },
+    "lineItems": {
+      "item": {
+        "required": [
+          "number",
+          "name",
+          "quantity",
+          "unit",
+          "price",
+          "lineItemRevenue"
+        ]
+      }
+    },
+    "totals": {
+      "required": [
+        "net",
+        "gross"
+      ]
+    },
+    "payment": {
+      "required": [
+        "iban",
+        "bankName"
+      ],
+      "optional": [
+        "reference",
+        "structuredReference"
+      ]
+    },
+    "company": {
+      "required": [
+        "name",
+        "address",
+        "vatId"
+      ],
+      "optional": [
+        "logo",
+        "ceo",
+        "registrationCourt",
+        "registrationNumber"
+      ]
+    },
+    "optional": [
+      "language",
+      "notes"
+    ]
+  },
+  "languages": [
+    "de",
+    "en",
+    "fr",
+    "it"
+  ],
+  "locale": "de-CH",
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{# Swiss invoice — gleicher Aufbau wie invoice_v1 + QR-Bill-Section am\n   Fußende. Locales decken DE/EN/FR/IT ab, Default DE-CH. #}\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer  = data.documentAddress | default({}) %}\n{% set items  = data.lineItems | default([]) %}\n{% set currency = (data.totals.gross.currency if data.totals and data.totals.gross else 'CHF') %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title='Empfänger' %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.invoice_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.reference }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n            {% if data.company.vatId %}<tr><th scope=\"row\">MWST</th><td>{{ data.company.vatId }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  {% with title=L.positions, caption=L.positions_caption, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','vat','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {# Swiss QR-Bill — 105mm hohe Section am Fuß. Linke Spalte =\n     Empfangsschein (62×105mm), rechte Spalte = Zahlteil (148×105mm).\n     QR-Platzhalter ist ein 46×46mm Quadrat — beim Echtbetrieb hier ein\n     base64-PNG aus einem QR-Library-Aufruf einsetzen, das den\n     SPC-codierten Zahltext enthält (siehe Swiss Payment Standard 2022). #}\n  <section class=\"qr-bill\" data-box=\"qr-bill\" aria-labelledby=\"qr-bill-heading\">\n    <h2 id=\"qr-bill-heading\" class=\"qr-bill__sr\">{{ L.qr_title }}</h2>\n\n    <div class=\"qr-bill__receipt\">\n      <div class=\"qr-bill__small-title\">{{ L.qr_receipt }}</div>\n      <div class=\"qr-bill__small-label\">{{ L.qr_recipient }}</div>\n      <div class=\"qr-bill__small-value\">\n        {{ data.company.name }}<br>\n        {{ data.company.address }}\n      </div>\n      {% if data.payment.iban %}\n      <div class=\"qr-bill__small-value\">{{ data.payment.iban }}</div>\n      {% endif %}\n      <div class=\"qr-bill__small-label\">{{ L.qr_payable_by }}</div>\n      <div class=\"qr-bill__small-value\">\n        {{ buyer.name }}<br>\n        {{ buyer.street }}<br>\n        {{ buyer.zipCode }} {{ buyer.city }}\n      </div>\n      <div class=\"qr-bill__currency-amount\">\n        <div>\n          <div class=\"qr-bill__small-label\">{{ L.qr_currency }}</div>\n          <div>{{ currency }}</div>\n        </div>\n        <div>\n          <div class=\"qr-bill__small-label\">{{ L.qr_amount }}</div>\n          {# QR-bill amount per SIX style guide: dot decimal, 2 digits,\n             no currency symbol (currency is its own field) — so a plain\n             %.2f, NOT the locale-aware money filter. #}\n          <div>{{ '%.2f' % (data.totals.gross.amount | default('0.00') | float) }}</div>\n        </div>\n      </div>\n      <div class=\"qr-bill__accept\">{{ L.qr_acceptance }}</div>\n    </div>\n\n    <div class=\"qr-bill__payment\">\n      <div class=\"qr-bill__title\">{{ L.qr_title }}</div>\n      <div class=\"qr-bill__qr-placeholder\" role=\"img\" aria-label=\"QR-Bill Code\">\n        <div class=\"qr-bill__qr-inner\">\n          <span class=\"qr-bill__qr-text\">QR</span>\n          <span class=\"qr-bill__qr-cross\" aria-hidden=\"true\">+</span>\n        </div>\n      </div>\n      <div class=\"qr-bill__amount-block\">\n        <div>\n          <div class=\"qr-bill__small-label\">{{ L.qr_currency }}</div>\n          <div class=\"qr-bill__amount-value\">{{ currency }}</div>\n        </div>\n        <div>\n          <div class=\"qr-bill__small-label\">{{ L.qr_amount }}</div>\n          <div class=\"qr-bill__amount-value\">{{ '%.2f' % (data.totals.gross.amount | default('0.00') | float) }}</div>\n        </div>\n      </div>\n      <div class=\"qr-bill__details\">\n        <div class=\"qr-bill__small-label\">{{ L.qr_recipient }}</div>\n        <div>{{ data.payment.iban }}</div>\n        <div>{{ data.company.name }}, {{ data.company.address }}</div>\n        {% if data.payment.structuredReference %}\n        <div class=\"qr-bill__small-label\" style=\"margin-top:6px\">{{ L.qr_reference }}</div>\n        <div>{{ data.payment.structuredReference }}</div>\n        {% endif %}\n        <div class=\"qr-bill__small-label\" style=\"margin-top:6px\">{{ L.qr_payable_by }}</div>\n        <div>{{ buyer.name }}<br>{{ buyer.street }}<br>{{ buyer.zipCode }} {{ buyer.city }}</div>\n      </div>\n    </div>\n  </section>\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 64mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n}\n\n/* Swiss QR-Bill — 105mm hohe Section am Seitenfuß, zweispaltig:\n   Empfangsschein 62mm | Zahlteil 148mm (Swiss Payment Standard 2022).\n   Schnittlinien zwischen den Spalten + zum oberen Beleg-Bereich.\n   Schriftgröße absichtlich klein (Standard: 8-10pt) damit alles\n   ins enge Postformular passt. */\n\n.qr-bill {\n  margin-top: 24mm;\n  page-break-inside: avoid;\n  border-top: 0.5mm dashed #6b7280;\n  display: grid;\n  grid-template-columns: 62mm 148mm;\n  min-height: 105mm;\n  font-size: 9pt;\n  line-height: 1.3;\n  color: #111827;\n}\n\n.qr-bill__sr {\n  position: absolute;\n  width: 1px; height: 1px;\n  overflow: hidden;\n  clip: rect(0 0 0 0);\n}\n\n.qr-bill__receipt {\n  padding: 5mm;\n  border-right: 0.5mm dashed #6b7280;\n  display: flex;\n  flex-direction: column;\n}\n\n.qr-bill__payment {\n  padding: 5mm;\n  display: grid;\n  grid-template-columns: 51mm 1fr;\n  gap: 5mm;\n  grid-template-areas:\n    \"title  title\"\n    \"qr     details\"\n    \"amount details\";\n  grid-template-rows: auto 51mm 1fr;\n}\n\n.qr-bill__small-title,\n.qr-bill__title {\n  font-weight: 700;\n  font-size: 11pt;\n  margin-bottom: 3mm;\n}\n.qr-bill__title { grid-area: title; }\n\n.qr-bill__small-label {\n  font-weight: 700;\n  font-size: 7pt;\n  text-transform: uppercase;\n  letter-spacing: 0.2px;\n  color: #4b5563;\n  margin-top: 2mm;\n}\n\n.qr-bill__small-value {\n  margin-bottom: 1.5mm;\n}\n\n.qr-bill__currency-amount {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 3mm;\n  margin-top: auto;\n  padding-top: 2mm;\n}\n\n.qr-bill__accept {\n  font-weight: 700;\n  font-size: 7pt;\n  text-transform: uppercase;\n  text-align: right;\n  margin-top: 3mm;\n  color: #4b5563;\n}\n\n/* QR-Code-Platzhalter — exakt 46×46mm laut Standard. Hier nur ein\n   Quadrat mit Hinweis-Buchstaben; bei Echtbetrieb wird das durch das\n   <img src=\"data:image/png;base64,...\"> mit dem real generierten\n   QR-Bild ersetzt. */\n.qr-bill__qr-placeholder {\n  grid-area: qr;\n  width: 46mm;\n  height: 46mm;\n  background:\n    repeating-linear-gradient(45deg,\n      rgba(15,23,42,0.06) 0 2mm,\n      rgba(15,23,42,0.03) 2mm 4mm);\n  border: 0.3mm solid #111827;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  position: relative;\n}\n.qr-bill__qr-inner {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 2mm;\n  color: #4b5563;\n}\n.qr-bill__qr-text {\n  font-weight: 700;\n  font-size: 14pt;\n  letter-spacing: 1pt;\n}\n.qr-bill__qr-cross {\n  /* Schweizer-Kreuz-Andeutung — Centro-Symbol. Echtes Logo ist\n     14×14mm und mittig im QR-Code, hier nur als Hinweis. */\n  width: 8mm;\n  height: 8mm;\n  background: #dc2626;\n  color: #fff;\n  font-weight: 900;\n  font-size: 10pt;\n  line-height: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 1mm;\n}\n\n.qr-bill__amount-block {\n  grid-area: amount;\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 3mm;\n  align-self: end;\n}\n.qr-bill__amount-value {\n  font-size: 12pt;\n  font-weight: 600;\n}\n\n.qr-bill__details {\n  grid-area: details;\n  border-left: 0.3mm solid #d1d5db;\n  padding-left: 5mm;\n  font-size: 9pt;\n}\n",
+  "example_data": {
+    "id": "ch-22001",
+    "documentNumber": "RG-2026-001234",
+    "documentDate": "2026-05-12",
+    "serviceDate": "2026-05-10",
+    "language": "de",
+    "customerNumber": "K-00428",
+    "customerOrderNumber": "Bestellung BST-77",
+    "documentAddress": {
+      "name": "Müller Handels AG",
+      "street": "Bahnhofstrasse 14",
+      "zipCode": "8001",
+      "city": "Zürich",
+      "country": "CH"
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-101",
+        "name": "Espressomaschine Modell Alpina",
+        "description": "2-Kreis, Edelstahl, 230 V",
+        "quantity": 1,
+        "unit": "Stk",
+        "effectiveTaxRate": 8.1,
+        "price": {
+          "net": {
+            "amount": "1850.00",
+            "currency": "CHF"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "1850.00",
+            "currency": "CHF"
+          },
+          "gross": {
+            "amount": "1999.85",
+            "currency": "CHF"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-102",
+        "name": "Service-Paket 12 Monate",
+        "quantity": 1,
+        "unit": "Pkt",
+        "effectiveTaxRate": 8.1,
+        "price": {
+          "net": {
+            "amount": "240.00",
+            "currency": "CHF"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "240.00",
+            "currency": "CHF"
+          },
+          "gross": {
+            "amount": "259.44",
+            "currency": "CHF"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 8.1,
+          "reduced": 2.6
+        }
+      },
+      "paymentTerms": {
+        "paymentTargetDays": 30
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "2090.00",
+        "currency": "CHF"
+      },
+      "gross": {
+        "amount": "2259.29",
+        "currency": "CHF"
+      }
+    },
+    "payment": {
+      "iban": "CH44 3199 9123 0008 8901 2",
+      "bankName": "Beispiel Kantonalbank, Zürich",
+      "structuredReference": "21 00000 00003 13947 14300 09017"
+    },
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Talstrasse 8, 8001 Zürich",
+      "vatId": "CHE-123.456.789 MWST",
+      "ceo": "Anna Beispiel"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Rechnung",
+      "invoice_date": "Rechnungsdatum",
+      "customer_number": "Kundennummer",
+      "reference": "Ihre Bestellnummer",
+      "positions": "Positionen",
+      "positions_caption": "Rechnungspositionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_vat": "MwSt",
+      "col_total": "Total",
+      "net_total": "Nettobetrag",
+      "vat_label": "MwSt",
+      "vat_on": "auf",
+      "gross_total": "Total",
+      "qr_title": "Zahlteil",
+      "qr_recipient": "Konto / Zahlbar an",
+      "qr_amount": "Betrag",
+      "qr_currency": "Währung",
+      "qr_reference": "Referenz",
+      "qr_payable_by": "Zahlbar durch",
+      "qr_receipt": "Empfangsschein",
+      "qr_acceptance": "Annahmestelle"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "invoice_date": "Invoice date",
+      "customer_number": "Customer no.",
+      "reference": "Your order no.",
+      "positions": "Items",
+      "positions_caption": "Invoice items",
+      "col_pos": "Pos",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_vat": "VAT",
+      "col_total": "Total",
+      "net_total": "Net",
+      "vat_label": "VAT",
+      "vat_on": "on",
+      "gross_total": "Total",
+      "qr_title": "Payment part",
+      "qr_recipient": "Account / Payable to",
+      "qr_amount": "Amount",
+      "qr_currency": "Currency",
+      "qr_reference": "Reference",
+      "qr_payable_by": "Payable by",
+      "qr_receipt": "Receipt",
+      "qr_acceptance": "Acceptance point"
+    },
+    "fr": {
+      "doc_title": "Facture",
+      "invoice_date": "Date de facture",
+      "customer_number": "No client",
+      "reference": "Votre commande",
+      "positions": "Postes",
+      "positions_caption": "Postes de facture",
+      "col_pos": "Pos",
+      "col_article": "Article",
+      "col_qty": "Qté",
+      "col_unit_price": "Prix unit.",
+      "col_vat": "TVA",
+      "col_total": "Total",
+      "net_total": "Net",
+      "vat_label": "TVA",
+      "vat_on": "sur",
+      "gross_total": "Total",
+      "qr_title": "Section paiement",
+      "qr_recipient": "Compte / Payable à",
+      "qr_amount": "Montant",
+      "qr_currency": "Monnaie",
+      "qr_reference": "Référence",
+      "qr_payable_by": "Payable par",
+      "qr_receipt": "Récépissé",
+      "qr_acceptance": "Point de dépôt"
+    },
+    "it": {
+      "doc_title": "Fattura",
+      "invoice_date": "Data fattura",
+      "customer_number": "N. cliente",
+      "reference": "Vostro ordine",
+      "positions": "Voci",
+      "positions_caption": "Voci della fattura",
+      "col_pos": "Pos",
+      "col_article": "Articolo",
+      "col_qty": "Quantità",
+      "col_unit_price": "Prezzo unit.",
+      "col_vat": "IVA",
+      "col_total": "Totale",
+      "net_total": "Netto",
+      "vat_label": "IVA",
+      "vat_on": "su",
+      "gross_total": "Totale",
+      "qr_title": "Sezione pagamento",
+      "qr_recipient": "Conto / Pagabile a",
+      "qr_amount": "Importo",
+      "qr_currency": "Valuta",
+      "qr_reference": "Riferimento",
+      "qr_payable_by": "Pagabile da",
+      "qr_receipt": "Ricevuta",
+      "qr_acceptance": "Punto di accettazione"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "shopapotheke",
+  "version": 1,
+  "name": "Shop Apotheke",
+  "domain": "shop-apotheke.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Shop-Apotheke-Marketplace — Aufträge und Tracking aus Xentral."
+    },
+    "de": {
+      "description": "Shop-Apotheke-Marketplace — Aufträge und Tracking aus Xentral."
+    }
+  }
+}

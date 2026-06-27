@@ -1,0 +1,15 @@
+{
+  "id": "activecampaign",
+  "version": 1,
+  "name": "ActiveCampaign",
+  "domain": "activecampaign.com",
+  "category": "crm",
+  "locales": {
+    "en": {
+      "description": "Marketing-Automation auf Basis von Auftrags- und Kundenevents."
+    },
+    "de": {
+      "description": "Marketing-Automation auf Basis von Auftrags- und Kundenevents."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "deutschepost",
+  "version": 1,
+  "name": "Deutsche Post",
+  "domain": "deutschepost.de",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Briefversand, Warenpost und Internetmarken erzeugen."
+    },
+    "de": {
+      "description": "Briefversand, Warenpost und Internetmarken erzeugen."
+    }
+  }
+}

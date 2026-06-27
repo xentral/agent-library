@@ -1,0 +1,27 @@
+{
+  "id": "open_receivables",
+  "version": 1,
+  "icon": "invoice",
+  "category": "finance",
+  "order": 420,
+  "kpi": {
+    "key": "open_receivables",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Summe aller offenen Forderungen aus unbezahlten Kundenrechnungen; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(\n    SUM(CASE\n      WHEN i.payment_status IN ('pending', 'partly_paid', 'loss_of_receivables', 'debited', 'payment_reminder', 'reminder1', 'reminder2', 'reminder3', 'collection')\n        THEN COALESCE(i.target_amount, 0) - COALESCE(i.current_amount_paid, 0)\n      ELSE 0\n    END),\n    2\n  ) AS \"Offene Forderungen\"\nFROM invoices i\nWHERE i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.payment_status != 'completed';\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Open receivables",
+      "description": "Sum of all unpaid customer invoices — cash sitting on the customer side."
+    },
+    "de": {
+      "title": "Offene Forderungen",
+      "description": "Summe aller unbezahlten Kundenrechnungen — gebundenes Kapital auf der Kundenseite."
+    }
+  }
+}

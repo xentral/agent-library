@@ -1,0 +1,188 @@
+{
+  "id": "document_blank",
+  "v3_endpoint": "",
+  "filename_pattern": "Document-{documentNumber}.pdf",
+  "engine": "gotenberg_chromium",
+  "languages": [
+    "de",
+    "en"
+  ],
+  "compliance": [],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute (or alt='' AND role='presentation')",
+    "tables MUST use <th scope='col'> or scope='row'",
+    "exactly one <h1> per document",
+    "amounts MUST use tabular-nums and right-align"
+  ],
+  "locales": {
+    "de": {
+      "title": "Beleg mit Positionen (Blanko-Struktur)",
+      "description": "Struktur-Startpunkt für jeden Beleg MIT Positionen (Rechnung, Auftrag, Lieferschein, Angebot, Gutschrift). Vollständige Struktur — Empfänger, Infoblock, Positionstabelle, Summen, Zahlung, Hinweise — bei bewusst neutraler Optik. Klonen und nur das CSS (den Skin) gestalten; die Struktur muss nicht neu erfunden werden."
+    },
+    "en": {
+      "title": "Line-item document (blank structure)",
+      "description": "Structure starter for any line-item document (invoice, order, delivery note, offer, credit note). Full structure — recipient, info block, items table, totals, payment, notes — with a deliberately neutral skin. Clone it and design only the CSS (the skin); the structure is done."
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Beleg",
+      "intro": "vielen Dank. Nachfolgend die Positionen dieses Belegs.",
+      "doc_date": "Belegdatum",
+      "customer_number": "Kundennummer",
+      "order_ref": "Ihre Bestellnummer",
+      "customer_vat": "Ihre USt-IdNr.",
+      "ship_to": "Abweichende Lieferadresse",
+      "positions": "Positionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_vat": "USt",
+      "col_total": "Gesamt",
+      "net_total": "Nettobetrag",
+      "vat_label": "zzgl.",
+      "vat_on": "USt auf",
+      "gross_total": "Gesamtbetrag",
+      "payment_heading": "Zahlung",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "notes_heading": "Hinweise"
+    },
+    "en": {
+      "doc_title": "Document",
+      "intro": "thank you. The line items of this document are listed below.",
+      "doc_date": "Document date",
+      "customer_number": "Customer no.",
+      "order_ref": "Your order no.",
+      "customer_vat": "Your VAT ID",
+      "ship_to": "Alternate shipping address",
+      "positions": "Items",
+      "col_pos": "No.",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_vat": "VAT",
+      "col_total": "Total",
+      "net_total": "Net total",
+      "vat_label": "plus",
+      "vat_on": "VAT on",
+      "gross_total": "Total amount",
+      "payment_heading": "Payment",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "notes_heading": "Notes"
+    }
+  },
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{#====================================================================\n  LINE-ITEM DOCUMENT STRUCTURE. This file is the STRUCTURE — regions,\n  data binding, partials, translations. To design a new look: clone this\n  document and edit ONLY the css (the skin). Text uses {{ L.<key> }}\n  (maintain via set_translation); layout classes live in css.\n  Available regions (data-box): recipient · info · subject · intro ·\n  items · totals · payment · notes · ship-to. Extra building blocks as\n  partials: contact_person, ship_to.\n====================================================================#}\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set sold  = ((data.effectiveAddresses or {}).soldTo) | default(buyer) %}\n{% set ship  = ((data.effectiveAddresses or {}).shipTo) | default({}) %}\n{% set items = data.lineItems | default([]) %}\n{% set pay   = data.payment | default({}) %}\n\n{% set _ship_differs = ship and ship.name and (\n     (ship.street or '') != (sold.street or '')\n     or (ship.zipCode or '') != (sold.zipCode or '')\n     or (ship.name or '') != (sold.name or '')\n) %}\n\n{#- HEADER (Briefkopf): Logo + Firmenblock. Das ist DIE Kopfzeile — hier\n   bearbeiten; KEINE zweite Kopfzeile im Inhalt zeichnen. Die Seitenzahl\n   steht im Footer (css @bottom-center), nie oben rechts. Dieser Block\n   ueberschreibt den Base-Default, damit der Header im Template sichtbar ist. -#}\n{% block letterhead %}\n  <div class=\"doc-header__brand\">\n    {% if assets.logo %}\n      <img src=\"{{ assets.logo }}\" alt=\"{{ data.company.name | default('') }}\" class=\"doc-header__logo\">\n    {% else %}\n      <div class=\"doc-header__wordmark\"><strong>{{ data.company.name | default('') }}</strong></div>\n    {% endif %}\n    {% if data.company.address %}<p class=\"doc-header__sender\">{{ data.company.address }}</p>{% endif %}\n  </div>\n  <div class=\"doc-header__contact\">\n    {% if data.company.phone %}<div>{{ data.company.phone }}</div>{% endif %}\n    {% if data.company.email %}<div>{{ data.company.email }}</div>{% endif %}\n    {% if data.company.website %}<div>{{ data.company.website }}</div>{% endif %}\n  </div>\n{% endblock %}\n\n{% block content %}\n\n  {#- Header row: recipient address left, document metadata right. -#}\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title=L.doc_title %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.doc_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.order_ref }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n            {% if buyer.vatId %}<tr><th scope=\"row\">{{ L.customer_vat }}</th><td>{{ buyer.vatId }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  {#- Subject (exactly one <h1> in the document). -#}\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  {#- Intro line. -#}\n  <section class=\"box-intro\" data-box=\"intro\"><p>{{ L.intro }}</p></section>\n\n  {#- Items table. `columns` picks the columns (order matters):\n      pos | sku | article | qty | unit | unit_price | vat | total.\n      This 6-column set matches the base.css default column widths. -#}\n  {% with title=L.positions, caption=L.positions, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','vat','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {#- Totals (net, VAT breakdown via groupby, gross). -#}\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {#- Payment details (only when an IBAN is present). -#}\n  {% if pay.iban %}\n  <section class=\"box-payment\" data-box=\"payment\" aria-labelledby=\"pay-heading\">\n    <h2 id=\"pay-heading\">{{ L.payment_heading }}</h2>\n    <dl class=\"pay-grid\">\n      <dt>{{ L.iban }}</dt><dd>{{ pay.iban }}</dd>\n      {% if pay.bic %}<dt>{{ L.bic }}</dt><dd>{{ pay.bic }}</dd>{% endif %}\n      {% if pay.bankName %}<dt>{{ L.bank }}</dt><dd>{{ pay.bankName }}</dd>{% endif %}\n    </dl>\n  </section>\n  {% endif %}\n\n  {#- Free-text notes / terms. -#}\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"notes-heading\">\n    <h2 id=\"notes-heading\">{{ L.notes_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n  {#- Alternate shipping address (only when it differs from the billing address). -#}\n  {% if _ship_differs %}\n    {% with ship=ship, title=L.ship_to %}\n      {% include \"_base/_partials/ship_to.html.j2\" %}\n    {% endwith %}\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ===================================================================\n   SKIN — this is where the LOOK is designed. This css cascades after\n   base.css and overrides its neutral defaults. Everything is free to\n   change: colors, type, tables, spacing. The STRUCTURE (html, regions,\n   data binding) stays untouched.\n\n   Fastest start: set the design tokens in :root, then add individual\n   .box-* / .positions-table / .totals-table rules.\n   =================================================================== */\n\n/* :root {\n     --fs-body: 10pt;\n     --col-qty: 20mm; --col-unit-price: 26mm; --col-vat: 14mm; --col-total: 28mm;\n   } */\n\n/* --- Header: address left, info block right (structural layout) --- */\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 64mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n/* --- Payment grid --- */\n.pay-grid { display: grid; grid-template-columns: 24mm 1fr; gap: 0.5mm 4mm; margin: 0; font-size: 9.5pt; }\n.pay-grid dt { color: #6b7280; }\n.pay-grid dd { margin: 0; }\n\n/* --- Page footer: every page gets a page number (BOTTOM, not top) plus the\n   mandatory legal/contact lines, via @page margin boxes. These are literal\n   placeholder strings — CSS is NOT Jinja-rendered, so fill them from the\n   tenant's company data (officeLines / identityLines / bankLines) at author\n   time, one line per \\A. Do not use position:fixed — margin boxes work on\n   both render engines, and never put the page number in @top-*. --- */\n@page {\n  @top-right { content: none; }\n  @bottom-left {\n    content: \"Beispiel Handels GmbH \\00b7 Marktplatz 1, 10115 Berlin \\A Amtsgericht Charlottenburg \\00b7 HRB 123456 \\A Gesch\\00e4ftsf\\00fchrer: Max Beispiel\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line; vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-right {\n    content: \"USt-IdNr. DE123456789 \\00b7 St.-Nr. 13/456/78901 \\A Commerzbank Berlin \\00b7 BIC COBADEFFXXX \\A IBAN DE89 3704 0044 0532 0130 00\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "10001",
+    "documentNumber": "DOC-2026-0001",
+    "documentDate": "20.06.2026",
+    "customerNumber": "10043",
+    "customerOrderNumber": "PO-MUS-4711",
+    "language": "de",
+    "documentAddress": {
+      "name": "Musterfirma GmbH",
+      "coName": "Einkauf",
+      "street": "Hauptstraße 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "country": "Deutschland",
+      "vatId": "DE298765432"
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "description": "Ergonomisch, schwarz, mit Armlehnen",
+        "quantity": 2,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "249.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "498.00000000",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "service",
+        "number": "DL-100",
+        "name": "Aufbau-Service",
+        "description": "Montage vor Ort",
+        "quantity": 3,
+        "unit": "h",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "65.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "195.00000000",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-205",
+        "name": "Schreibtischlampe LED",
+        "description": "Dimmbar, 5 W",
+        "quantity": 4,
+        "unit": "Stk",
+        "effectiveTaxRate": 7,
+        "price": {
+          "net": {
+            "amount": "29.50000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "118.00000000",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "totals": {
+      "net": {
+        "amount": "811.00000000",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "950.93000000",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "bic": "COBADEFFXXX",
+      "bankName": "Commerzbank Berlin"
+    },
+    "bodyOutroduction": "Vielen Dank für Ihren Auftrag. Bei Rückfragen nennen Sie bitte die Belegnummer.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "phone": "+49 30 1234567-0",
+      "email": "kontakt@beispiel-handel.de",
+      "website": "www.beispiel-handel.de",
+      "vatId": "DE123456789"
+    }
+  }
+}

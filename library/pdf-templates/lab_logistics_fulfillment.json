@@ -1,0 +1,136 @@
+{
+  "id": "lab_logistics_fulfillment",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Logistics & Fulfillment (Versandauftrag)",
+      "description": "Versandauftrag im Waybill-Stil: Carrier-Band, Routen-Timeline, Tracking-Stub mit QR + Master-Barcode, Paketliste mit Einzelbarcodes."
+    },
+    "en": {
+      "title": "Xentral Labs · Logistics & Fulfillment (Shipping Order)",
+      "description": "Waybill-style shipping order: carrier band, route timeline, tracking stub with QR + master barcode, package list with per-package barcodes."
+    }
+  },
+  "v3_endpoint": "/api/v3/deliveryNotes/{id}?include=all",
+  "filename_pattern": "Versandauftrag-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set pkgs = data.packages | default([]) %}\n\n{% block letterhead %}\n  <div class=\"lo-band\">\n    <div class=\"lo-brand\">\n      <svg class=\"lo-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <div><div class=\"lo-brandname\">{{ data.company.name | default('') }}</div><div class=\"lo-sub\">{{ L.fc }} {{ data.origin | default('Hamburg') }}</div></div>\n    </div>\n    <div class=\"lo-doc\"><span class=\"lo-eyebrow\">{{ L.doc_title }}</span><span class=\"lo-docno\">{{ data.documentNumber }}</span></div>\n  </div>\n{% endblock %}\n\n{% block content %}\n  <section class=\"lo-hero\">\n    <div class=\"lo-status\">{{ data.status | default(L.status_default) }}</div>\n    <div class=\"lo-hero__facts\">\n      <div><span class=\"lo-k\">Carrier</span><span class=\"lo-v\">{{ data.carrier }} · {{ data.service }}</span></div>\n      <div><span class=\"lo-k\">{{ L.eta_label }}</span><span class=\"lo-v\">{{ data.eta }}</span></div>\n    </div>\n  </section>\n\n  <div class=\"lo-main\">\n    <section class=\"lo-left\">\n      <h2 class=\"lo-h2\">{{ L.tracking_hist }}</h2>\n      <ol class=\"lo-route\">\n        {% for s in data.route | default([]) %}\n        <li class=\"lo-rstep lo-rstep--{{ s.state }}\">\n          <span class=\"lo-dot\"></span>\n          <div class=\"lo-rstep__body\"><span class=\"lo-rstep__place\">{{ s.place }}</span><span class=\"lo-rstep__time\">{{ s.time }}</span></div>\n        </li>\n        {% endfor %}\n      </ol>\n\n      <h2 class=\"lo-h2 lo-h2--mt\">{{ L.ship_addr }}</h2>\n      <div class=\"lo-addr\"><strong>{{ buyer.name }}</strong><br>{% if buyer.coName %}{{ buyer.coName }}<br>{% endif %}{{ buyer.street }}<br>{{ buyer.zipCode }} {{ buyer.city }}<br>{{ buyer.country }}</div>\n    </section>\n\n    <aside class=\"lo-stub\">\n      <div class=\"lo-stub__hd\">{{ L.shipment }}</div>\n      <div class=\"lo-qr\">{{ qr_code(data.trackingUrl | default('https://track.beispiel-handel.de'), dark='#0a2540') }}</div>\n      <div class=\"lo-stub__k\">{{ L.tracking_no }}</div>\n      <div class=\"lo-stub__track mono\">{{ data.tracking }}</div>\n      <div class=\"lo-stub__bc\">{{ barcode(data.tracking | default('JD'), kind='code128', module_color='#0a2540', background='#eef4ff') }}</div>\n      <div class=\"lo-stub__meta\"><span>{{ pkgs | length }} {{ L.parcels }}</span><span>{{ data.totalWeight }}</span></div>\n    </aside>\n  </div>\n\n  <h2 class=\"lo-h2 lo-h2--mt\">{{ L.parcels_h }}</h2>\n  <table class=\"lo-pkgs\">\n    <thead><tr><th>{{ L.col_pkg }}</th><th>{{ L.col_content }}</th><th>{{ L.col_dims }}</th><th>{{ L.col_weight }}</th><th>{{ L.col_tracking }}</th></tr></thead>\n    <tbody>\n      {% for p in pkgs %}\n      <tr>\n        <td class=\"lo-pno\">{{ '%02d' | format(loop.index) }}</td>\n        <td>{{ p.content }}</td>\n        <td class=\"mono\">{{ p.dims }}</td>\n        <td class=\"num\">{{ p.weight }}</td>\n        <td class=\"lo-pbc\">{{ barcode(p.tracking | default('PKG'), kind='code128', module_color='#0a2540', background='#ffffff') }}<span class=\"mono\">{{ p.tracking }}</span></td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n{% endblock %}",
+  "css": "@page {\n  size: A4; margin: 14mm 16mm 18mm 16mm;\n  @bottom-left { content: \"Beispiel Handels GmbH · Marktplatz 1 · 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; vertical-align: top; padding-top: 4mm; }\n  @bottom-center { content: \"Seite \" counter(page) \" von \" counter(pages); font-size: 6.5pt; color: #8a8a8a; white-space: nowrap; vertical-align: top; padding-top: 4mm; }\n  @bottom-right { content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm; }\n}\n\nbody { color: #0a2540; font-family: 'Helvetica', 'Arial', sans-serif; }\n.num { font-variant-numeric: tabular-nums; }\n.mono { font-family: 'Courier New', monospace; letter-spacing: -0.02em; }\n.doc-header { display: block; margin: 0; }\n\n/* Carrier band */\n.lo-band { display: flex; align-items: center; justify-content: space-between; background: #0a2540; color: #fff; border-radius: 2.5mm; padding: 5mm 6mm; }\n.lo-brand { display: flex; align-items: center; gap: 4mm; }\n.lo-mark { height: 11mm; width: 11mm; display: block; }\n.lo-brandname { font-size: 12pt; font-weight: 800; }\n.lo-sub { font-size: 8pt; color: #9db4d4; margin-top: 0.4mm; }\n.lo-doc { text-align: right; }\n.lo-eyebrow { display: block; font-size: 8pt; letter-spacing: 0.22em; text-transform: uppercase; color: #f97316; font-weight: 700; }\n.lo-docno { display: block; font-size: 15pt; font-weight: 800; margin-top: 0.6mm; }\n\n/* Hero */\n.lo-hero { display: flex; align-items: center; gap: 6mm; margin: 6mm 0; }\n.lo-status { background: #f97316; color: #fff; font-size: 12pt; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding: 2.5mm 6mm; border-radius: 999px; }\n.lo-hero__facts { display: flex; gap: 10mm; }\n.lo-k { display: block; font-size: 7pt; letter-spacing: 0.14em; text-transform: uppercase; color: #6b7c96; font-weight: 700; }\n.lo-v { font-size: 11pt; font-weight: 700; }\n\n/* Main */\n.lo-main { display: flex; gap: 7mm; align-items: stretch; }\n.lo-left { flex: 1 1 0; }\n.lo-h2 { font-size: 8.5pt; letter-spacing: 0.12em; text-transform: uppercase; color: #1d4ed8; font-weight: 700; margin: 0 0 3mm; }\n.lo-h2--mt { margin-top: 7mm; }\n\n/* Route */\n.lo-route { list-style: none; margin: 0; padding: 0; }\n.lo-rstep { display: flex; gap: 5mm; position: relative; padding-bottom: 5.5mm; }\n.lo-rstep::before { content: \"\"; position: absolute; left: 2.15mm; top: 3mm; bottom: -3.5mm; width: 0.7mm; background: #cdd9ee; z-index: 0; }\n.lo-rstep:last-child::before { display: none; }\n.lo-rstep--done::before { background: #1d4ed8; }\n.lo-dot { position: relative; z-index: 1; flex: 0 0 5mm; width: 5mm; height: 5mm; border-radius: 50%; background: #cdd9ee; margin-top: 0.5mm; }\n.lo-rstep--done .lo-dot { background: #1d4ed8; }\n.lo-rstep--current .lo-dot { background: #f97316; box-shadow: 0 0 0 1.3mm #fde3cf; }\n.lo-rstep__place { font-weight: 700; font-size: 10pt; display: block; }\n.lo-rstep--pending .lo-rstep__place { color: #93a1b8; }\n.lo-rstep__time { font-size: 8.5pt; color: #6b7c96; }\n.lo-addr { font-size: 10pt; line-height: 1.5; }\n\n/* Stub */\n.lo-stub { flex: 0 0 56mm; background: #eef4ff; border: 1.5px dashed #9db4d4; border-radius: 3mm; padding: 5mm; text-align: center; }\n.lo-stub__hd { font-size: 8pt; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 800; color: #0a2540; margin-bottom: 3mm; }\n.lo-qr { display: flex; justify-content: center; }\n.lo-qr svg { width: 30mm; height: 30mm; }\n.lo-stub__k { font-size: 7pt; letter-spacing: 0.12em; text-transform: uppercase; color: #6b7c96; font-weight: 700; margin-top: 3mm; }\n.lo-stub__track { font-size: 10pt; font-weight: 700; margin-top: 1mm; }\n.lo-stub__bc { margin: 3mm 0; }\n.lo-stub__bc svg { width: 100%; height: 12mm; }\n.lo-stub__meta { display: flex; justify-content: space-between; font-size: 9pt; font-weight: 700; border-top: 1px solid #cdd9ee; padding-top: 2.5mm; }\n\n/* Packages table */\n.lo-pkgs { width: 100%; border-collapse: collapse; }\n.lo-pkgs thead th { font-size: 7pt; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7c96; font-weight: 700; text-align: left; padding: 0 3mm 2.5mm; border-bottom: 1px solid #d4def0; }\n.lo-pkgs tbody td { padding: 2.6mm 3mm; border-bottom: 1px solid #e8eefa; vertical-align: middle; font-size: 9.5pt; }\n.lo-pno { color: #93a1b8; font-weight: 700; width: 14mm; }\n.lo-pbc svg { height: 7mm; width: 38mm; display: block; }\n.lo-pbc .mono { font-size: 7.5pt; color: #6b7c96; }",
+  "example_data": {
+    "id": "60120",
+    "eta": "23.06.2026, 08–12 Uhr",
+    "route": [
+      {
+        "time": "20.06. 16:40",
+        "place": "Abholung · FC Hamburg",
+        "state": "done"
+      },
+      {
+        "time": "20.06. 21:10",
+        "place": "Hub Hamburg",
+        "state": "done"
+      },
+      {
+        "time": "21.06. 03:25",
+        "place": "Hub Köln (Umschlag)",
+        "state": "current"
+      },
+      {
+        "time": "voraussichtlich 23.06.",
+        "place": "Zustellbasis Düsseldorf",
+        "state": "pending"
+      },
+      {
+        "time": "23.06. 08–12 Uhr",
+        "place": "Zustellung an Empfänger",
+        "state": "pending"
+      }
+    ],
+    "origin": "Hamburg",
+    "status": "Unterwegs",
+    "carrier": "DHL Express",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Versandstraße 2, 21079 Hamburg"
+    },
+    "service": "Express 12:00",
+    "packages": [
+      {
+        "dims": "60×40×38 cm",
+        "weight": "6,2 kg",
+        "content": "Display-Material POS",
+        "tracking": "JD014600123456789-1"
+      },
+      {
+        "dims": "40×30×20 cm",
+        "weight": "4,1 kg",
+        "content": "Produktproben",
+        "tracking": "JD014600123456789-2"
+      },
+      {
+        "dims": "35×25×15 cm",
+        "weight": "4,5 kg",
+        "content": "Schulungsunterlagen",
+        "tracking": "JD014600123456789-3"
+      }
+    ],
+    "tracking": "JD014600123456789",
+    "totalWeight": "14,8 kg",
+    "trackingUrl": "https://track.beispiel-handel.de/JD014600123456789",
+    "documentDate": "2026-06-20",
+    "documentNumber": "VS-2026-77120",
+    "documentAddress": {
+      "city": "Düsseldorf",
+      "name": "Aurelia Retail AG",
+      "coName": "Wareneingang",
+      "street": "Königsallee 92",
+      "country": "Deutschland",
+      "zipCode": "40212"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Versandauftrag",
+      "fc": "Fulfillment-Center",
+      "status_default": "Unterwegs",
+      "eta_label": "Zustellung erwartet",
+      "tracking_hist": "Sendungsverlauf",
+      "ship_addr": "Lieferadresse",
+      "shipment": "Sendung",
+      "tracking_no": "Sendungsnummer",
+      "parcels": "Pakete",
+      "parcels_h": "Pakete",
+      "col_pkg": "Paket",
+      "col_content": "Inhalt",
+      "col_dims": "Maße",
+      "col_weight": "Gewicht",
+      "col_tracking": "Paket-Tracking"
+    },
+    "en": {
+      "doc_title": "Shipping Order",
+      "fc": "Fulfillment center",
+      "status_default": "In transit",
+      "eta_label": "Delivery expected",
+      "tracking_hist": "Tracking history",
+      "ship_addr": "Delivery address",
+      "shipment": "Shipment",
+      "tracking_no": "Tracking number",
+      "parcels": "parcels",
+      "parcels_h": "Parcels",
+      "col_pkg": "Parcel",
+      "col_content": "Contents",
+      "col_dims": "Dimensions",
+      "col_weight": "Weight",
+      "col_tracking": "Parcel tracking"
+    }
+  }
+}

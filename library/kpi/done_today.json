@@ -1,0 +1,26 @@
+{
+  "id": "done_today",
+  "version": 1,
+  "icon": "check",
+  "category": "customer_service",
+  "order": 280,
+  "kpi": {
+    "key": "done_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 147,
+    "initial_tone": "positive"
+  },
+  "locales": {
+    "en": {
+      "title": "Done today",
+      "description": "Inquiries closed today."
+    },
+    "de": {
+      "title": "Heute erledigt",
+      "description": "Heute abgeschlossene Anfragen."
+    }
+  }
+}

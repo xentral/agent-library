@@ -1,0 +1,49 @@
+{
+  "order": 63,
+  "id": "quick-cs-pulse",
+  "icon": "lifeBuoy",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "workflow",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.4
+  },
+  "locales": {
+    "de": {
+      "name": "Kundenservice-Puls",
+      "category": "Customer Service",
+      "description": "Schneller Status — offene Tickets, hängende Aufträge, Top-Beschwerden gerade jetzt.",
+      "tags": [
+        "Customer Service",
+        "Schnell-Aufgabe"
+      ],
+      "prefill": {
+        "name": "CS-Puls",
+        "description": "Kurzer Lagebericht aus dem Kundenservice — was klemmt jetzt, wo brennt es?",
+        "area": "Kundenservice",
+        "instructions": "Du bist ein Kundenservice-Lead-Agent. Wenn der User dich startet:\n\n1. Frag den ERP-Co-Pilot nach offenen Aufträgen mit Status \"wartet\" oder\n   \"blockiert\", älter als 3 Tage. Liste die 5 ältesten.\n2. Frag nach offenen Reklamationen / Retouren der letzten 7 Tage,\n   gruppiert nach Grund (Beschädigt / Falsche Lieferung / Größe / sonstige).\n3. Schau in die Agenten-Jobs der Customer-Service-Agenten der letzten\n   24h: wie viele in `requires_intervention`? Liste die 3 ältesten\n   hängenden Jobs mit Titel + Grund.\n4. Liefere einen Lagebericht in 5 Sätzen: was läuft, was klemmt,\n   was sollte heute Vormittag gelöst werden?\n\nKeine Aktionen ausführen, nur den Bericht.\n"
+      }
+    },
+    "en": {
+      "name": "Customer service pulse",
+      "category": "Customer Service",
+      "description": "Quick status — open tickets, stuck orders, top complaints right now.",
+      "tags": [
+        "Customer Service",
+        "Quick task"
+      ],
+      "prefill": {
+        "name": "CS Pulse",
+        "description": "Short status report from customer service — what's stuck, what's burning?",
+        "area": "Customer Service",
+        "instructions": "You are a customer-service lead agent. When the user starts you:\n\n1. Ask the ERP copilot for open orders with status \"waiting\" or\n   \"blocked\" older than 3 days. List the 5 oldest.\n2. Ask for open complaints / returns from the last 7 days, grouped\n   by reason (Damaged / Wrong delivery / Size / Other).\n3. Check customer-service agent jobs from the last 24h: how many in\n   `requires_intervention`? List the 3 oldest stuck jobs with title\n   and reason.\n4. Deliver a status report in 5 sentences: what's running, what's\n   stuck, what should be solved this morning?\n\nDo not take action — report only.\n"
+      }
+    }
+  }
+}

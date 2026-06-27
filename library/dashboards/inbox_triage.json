@@ -1,0 +1,113 @@
+{
+  "id": "inbox_triage",
+  "version": 2,
+  "icon": "inbox",
+  "category": "ops",
+  "order": 220,
+  "recommended_kpis": [
+    "open_inquiries",
+    "sla_breaches",
+    "escalations_today"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "23 offene Anfragen warten auf Bearbeitung.",
+          "en": "23 open inquiries waiting for triage."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "open_inquiries",
+          "sla_breaches",
+          "escalations_today"
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "type": "AttentionBlock",
+      "config": {
+        "kind": "customer_service"
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_key": "dashboards.mockup.kpi.title",
+        "kpis": [
+          "automation_rate",
+          "avg_response_time",
+          "first_contact_resolution",
+          "done_today"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "cs",
+            "label_key": "workspace.inquiries",
+            "view": "inbox",
+            "scope": "customer_service"
+          },
+          {
+            "id": "finance",
+            "labelKey": "workspace.financeInbox",
+            "view": "inbox",
+            "scope": "finance"
+          },
+          {
+            "id": "purchase",
+            "labelKey": "workspace.purchaseInbox",
+            "view": "inbox",
+            "scope": "procurement"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "attention",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "open_inquiries",
+    "sla_breaches",
+    "escalations_today",
+    "automation_rate",
+    "avg_response_time",
+    "first_contact_resolution",
+    "done_today"
+  ],
+  "locales": {
+    "en": {
+      "title": "Inbox Triage",
+      "description": "State of incoming mail per category — waiting, running, requires_intervention, completed."
+    },
+    "de": {
+      "title": "Posteingang",
+      "description": "Zustand der eingehenden Mails pro Kategorie — wartend, läuft, Eingriff nötig, abgeschlossen."
+    }
+  }
+}

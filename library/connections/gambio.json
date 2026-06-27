@@ -1,0 +1,15 @@
+{
+  "id": "gambio",
+  "version": 1,
+  "name": "Gambio",
+  "domain": "gambio.de",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Gambio-Shopsystem — Aufträge, Artikel und Kunden synchronisieren."
+    },
+    "de": {
+      "description": "Gambio-Shopsystem — Aufträge, Artikel und Kunden synchronisieren."
+    }
+  }
+}

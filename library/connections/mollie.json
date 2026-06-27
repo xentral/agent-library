@@ -1,0 +1,16 @@
+{
+  "id": "mollie",
+  "version": 1,
+  "name": "Mollie",
+  "domain": "mollie.com",
+  "category": "payment",
+  "locales": {
+    "en": {
+      "description": "Mollie-Payments inkl. Refund-Workflow."
+    },
+    "de": {
+      "description": "Mollie-Payments inkl. Refund-Workflow."
+    }
+  },
+  "source": "https://marketplace.xentral.com/zahlungsanbieter/mollie"
+}

@@ -1,0 +1,112 @@
+{
+  "id": "daily_operations",
+  "version": 2,
+  "icon": "sun",
+  "category": "ops",
+  "order": 210,
+  "recommended_kpis": [
+    "revenue_today",
+    "revenue_mtd",
+    "open_receivables",
+    "open_purchase_orders",
+    "average_order_value",
+    "open_inquiries"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "Tagesgeschäft — alles wichtige auf einem Blick.",
+          "en": "Daily operations — everything important at a glance."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "open_inquiries",
+          "open_purchase_orders",
+          "open_receivables"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_key": "dashboards.mockup.kpi.title",
+        "kpis": [
+          "revenue_today",
+          "revenue_mtd",
+          "average_order_value",
+          "returns_today",
+          "sla_breaches",
+          "escalations_today"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "inbox",
+            "label_key": "workspace.inquiries",
+            "view": "inbox",
+            "scope": "customer_service"
+          },
+          {
+            "id": "orders",
+            "label_key": "workspace.salesOrders",
+            "view": "sales_orders",
+            "default_status_filter": "released"
+          },
+          {
+            "id": "po",
+            "label_key": "workspace.purchaseOrders",
+            "view": "purchase_orders",
+            "default_status_filter": "released,sent"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "open_inquiries",
+    "open_purchase_orders",
+    "open_receivables",
+    "revenue_today",
+    "revenue_mtd",
+    "average_order_value",
+    "returns_today",
+    "sla_breaches",
+    "escalations_today"
+  ],
+  "locales": {
+    "en": {
+      "title": "Daily Operations",
+      "description": "Today at a glance — open orders, incoming mail, pending deliveries, invoices due today."
+    },
+    "de": {
+      "title": "Tagesgeschäft",
+      "description": "Der heutige Tag auf einen Blick — offene Aufträge, eingehende Mails, ausstehende Lieferungen, heute fällige Rechnungen."
+    }
+  }
+}

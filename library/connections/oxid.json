@@ -1,0 +1,15 @@
+{
+  "id": "oxid",
+  "version": 1,
+  "name": "OXID eShop",
+  "domain": "oxid-esales.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "OXID eShop koppeln — Auftrags- und Artikelabgleich aus dem ERP."
+    },
+    "de": {
+      "description": "OXID eShop koppeln — Auftrags- und Artikelabgleich aus dem ERP."
+    }
+  }
+}

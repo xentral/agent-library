@@ -1,0 +1,16 @@
+{
+  "id": "shipcloud",
+  "version": 1,
+  "name": "shipcloud",
+  "domain": "shipcloud.io",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Carrier-Aggregator — DHL, DPD, GLS, UPS über eine API."
+    },
+    "de": {
+      "description": "Carrier-Aggregator — DHL, DPD, GLS, UPS über eine API."
+    }
+  },
+  "source": "https://marketplace.xentral.com/versanddienstleister/shipcloud"
+}

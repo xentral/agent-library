@@ -1,0 +1,16 @@
+{
+  "id": "shopware",
+  "version": 1,
+  "name": "Shopware",
+  "domain": "shopware.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Voll integriert — Aufträge, Lager, Preise, Kategorien zwischen Shop und ERP."
+    },
+    "de": {
+      "description": "Voll integriert — Aufträge, Lager, Preise, Kategorien zwischen Shop und ERP."
+    }
+  },
+  "source": "https://marketplace.xentral.com/onlineshops/shopware"
+}

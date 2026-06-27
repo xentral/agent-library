@@ -1,0 +1,15 @@
+{
+  "id": "amazonpay",
+  "version": 1,
+  "name": "Amazon Pay",
+  "domain": "pay.amazon.com",
+  "category": "payment",
+  "locales": {
+    "en": {
+      "description": "Amazon-Pay-Bestellungen und Auszahlungen synchronisieren."
+    },
+    "de": {
+      "description": "Amazon-Pay-Bestellungen und Auszahlungen synchronisieren."
+    }
+  }
+}

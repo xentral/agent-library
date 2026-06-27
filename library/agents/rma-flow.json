@@ -1,0 +1,170 @@
+{
+  "order": 210,
+  "id": "rma-flow",
+  "icon": "return",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "form",
+    "tools": [
+      "xentral_copilot",
+      "xentral_email",
+      "xentral_crm"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.3
+  },
+  "locales": {
+    "de": {
+      "name": "Retoure anmelden",
+      "category": "Kundenservice",
+      "description": "Externes Formular für Kunden — Bestellung + Artikel + Grund. Agent legt die Retoure in Xentral an und schickt das Versandlabel.",
+      "tags": [
+        "Kundenservice",
+        "Retouren"
+      ],
+      "prefill": {
+        "name": "Retoure anmelden",
+        "description": "Kunde meldet eine Retoure — Agent prüft Bestellung, legt Retoure in Xentral an und versendet das Label.",
+        "area": "Kundenservice",
+        "form_meta": {
+          "audience": "external",
+          "fields": [
+            {
+              "id": "order_number",
+              "label": "Bestellnummer",
+              "type": "text",
+              "placeholder": "z.B. AB-2026-12345",
+              "required": true
+            },
+            {
+              "id": "customer_email",
+              "label": "E-Mail",
+              "type": "email",
+              "required": true
+            },
+            {
+              "id": "items_to_return",
+              "label": "Welche Artikel zurück? (Artikelnummer + Menge pro Zeile)",
+              "type": "textarea",
+              "placeholder": "ART-001 × 1\nART-002 × 2",
+              "required": true
+            },
+            {
+              "id": "reason",
+              "label": "Grund",
+              "type": "select",
+              "options": [
+                "Größe passt nicht",
+                "Falscher Artikel geliefert",
+                "Beschädigt erhalten",
+                "Qualität nicht wie erwartet",
+                "Gefällt mir nicht",
+                "sonstiges"
+              ],
+              "required": true
+            },
+            {
+              "id": "defect_details",
+              "label": "Details / Mängel-Beschreibung (optional)",
+              "type": "textarea"
+            },
+            {
+              "id": "defect_photo",
+              "label": "Foto des Mangels (optional)",
+              "type": "file"
+            },
+            {
+              "id": "wants_exchange",
+              "label": "Wunsch",
+              "type": "select",
+              "options": [
+                "Rückerstattung",
+                "Tausch (gleicher Artikel)",
+                "Tausch (andere Größe / Variante)"
+              ],
+              "required": true
+            }
+          ]
+        },
+        "instructions": "Du bist der Retouren-Agent. Wenn ein Kunde das Formular\nabschickt:\n\n1. Hol die Bestellung via Co-Pilot. Match Kunde über die E-Mail.\n   Bei Mismatch: höflich abweisen + Hinweis auf CS.\n2. Prüfe pro angegebener Artikelposition:\n   - War der Artikel überhaupt Teil der Bestellung?\n   - Liegt die Lieferung innerhalb des Rückgabe-Fensters\n     (Standard: 30 Tage ab Lieferdatum)?\n   - Bei „Beschädigt\" / „Falsch geliefert\": auch außerhalb des\n     Fensters annehmen, Eskalation an CS.\n3. Lege eine Retouren-Position in Xentral an mit allen Daten\n   (Original-Bestellung verlinkt, Grund, Wunsch-Aktion).\n4. CRM-Notiz mit Defect-Foto-Link (falls hochgeladen).\n5. Bestätigungsmail an den Kunden mit:\n   - Retouren-Nummer (zur Referenz),\n   - Anhängendem oder verlinktem Versand-Label (DHL Retouren-\n     Schein bzw. tenant-spezifischer Carrier),\n   - Voraussichtlicher Bearbeitungszeit (5 Werktage nach\n     Wareneingang).\n6. Bei Wunsch „Tausch\": parallel eine neue Bestellung mit\n   Status „auf Tausch warten\" anlegen, die freigegeben wird,\n   sobald die Retoure beim Lager eintrifft. Keine\n   Vor-Versand-Buchung.\n\nInternes Schluss-Antwortformat: Retouren-Nr., Status (angelegt\n/ eskaliert), Aktionen.\n"
+      }
+    },
+    "en": {
+      "name": "Return / RMA request",
+      "category": "Customer Service",
+      "description": "External form for customers — order + items + reason. Agent creates the return in Xentral and dispatches the shipping label.",
+      "tags": [
+        "Customer Service",
+        "Returns"
+      ],
+      "prefill": {
+        "name": "Return / RMA request",
+        "description": "Customer reports a return — agent verifies the order, creates the RMA in Xentral, and sends the label.",
+        "area": "Customer Service",
+        "form_meta": {
+          "audience": "external",
+          "fields": [
+            {
+              "id": "order_number",
+              "label": "Order number",
+              "type": "text",
+              "placeholder": "e.g. AB-2026-12345",
+              "required": true
+            },
+            {
+              "id": "customer_email",
+              "label": "Email",
+              "type": "email",
+              "required": true
+            },
+            {
+              "id": "items_to_return",
+              "label": "Items to return (SKU × qty per line)",
+              "type": "textarea",
+              "placeholder": "ART-001 × 1\nART-002 × 2",
+              "required": true
+            },
+            {
+              "id": "reason",
+              "label": "Reason",
+              "type": "select",
+              "options": [
+                "Wrong size",
+                "Wrong item shipped",
+                "Damaged on arrival",
+                "Quality not as expected",
+                "Changed my mind",
+                "other"
+              ],
+              "required": true
+            },
+            {
+              "id": "defect_details",
+              "label": "Details / defect description (optional)",
+              "type": "textarea"
+            },
+            {
+              "id": "defect_photo",
+              "label": "Photo of the defect (optional)",
+              "type": "file"
+            },
+            {
+              "id": "wants_exchange",
+              "label": "Preferred outcome",
+              "type": "select",
+              "options": [
+                "Refund",
+                "Exchange (same item)",
+                "Exchange (different size / variant)"
+              ],
+              "required": true
+            }
+          ]
+        },
+        "instructions": "You are the returns agent. When the customer submits the form:\n\n1. Pull the order via copilot. Match the customer by email.\n   If it doesn't match: politely refuse + point to CS.\n2. For each requested item:\n   - Was it part of the original order?\n   - Is it within the return window (default: 30 days from\n     delivery)?\n   - For \"damaged\" / \"wrong item\": accept beyond the window,\n     escalate to CS.\n3. Create a return line in Xentral with all data (linked back\n   to the original order, reason, requested outcome).\n4. CRM note including the defect-photo link (if uploaded).\n5. Confirmation email to the customer with:\n   - RMA number (for reference),\n   - Attached or linked return label (DHL Return Slip or the\n     tenant's carrier),\n   - Expected processing time (5 business days after receipt).\n6. If \"exchange\" requested: in parallel, create a new order\n   with status \"awaiting return\" that's released once the\n   return arrives at the warehouse. No pre-ship booking.\n\nInternal final summary: RMA number, status (created /\nescalated), actions taken.\n"
+      }
+    }
+  }
+}

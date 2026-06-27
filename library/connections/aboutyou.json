@@ -1,0 +1,16 @@
+{
+  "id": "aboutyou",
+  "version": 1,
+  "name": "About You",
+  "domain": "aboutyou.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "About-You-Marketplace-Aufträge automatisiert abwickeln."
+    },
+    "de": {
+      "description": "About-You-Marketplace-Aufträge automatisiert abwickeln."
+    }
+  },
+  "source": "https://marketplace.xentral.com/marktplaetze/about-you"
+}

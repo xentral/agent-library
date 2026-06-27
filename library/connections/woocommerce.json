@@ -1,0 +1,16 @@
+{
+  "id": "woocommerce",
+  "version": 1,
+  "name": "WooCommerce",
+  "domain": "woocommerce.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "WordPress-Shop anbinden — Order-Sync, Stock-Sync, Tracking-Rückmeldung."
+    },
+    "de": {
+      "description": "WordPress-Shop anbinden — Order-Sync, Stock-Sync, Tracking-Rückmeldung."
+    }
+  },
+  "source": "https://marketplace.xentral.com/onlineshops/woocommerce"
+}

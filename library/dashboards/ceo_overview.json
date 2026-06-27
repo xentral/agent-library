@@ -1,0 +1,207 @@
+{
+  "id": "ceo_overview",
+  "version": 3,
+  "icon": "chart-bar",
+  "category": "management",
+  "order": 50,
+  "recommended_kpis": [
+    "revenue_mtd",
+    "open_receivables",
+    "average_order_value",
+    "dso"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "**Geschäftsführung — live aus Xentral.** Umsatz, Marge, Forderungen und der AI-Impact deiner Agenten auf einen Blick.",
+          "en": "**Executive view — live from Xentral.** Revenue, margin, receivables and your agents' AI impact at a glance."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_text": {
+          "de": "Heute auf einen Blick",
+          "en": "Today at a glance"
+        },
+        "kpis": [
+          "revenue_mtd",
+          "open_receivables",
+          "average_order_value"
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "type": "AttentionBlock",
+      "config": {
+        "kind": "dashboard"
+      }
+    },
+    {
+      "id": "revenue_trend",
+      "type": "LineChart",
+      "config": {
+        "title_text": {
+          "de": "Umsatz pro Monat",
+          "en": "Revenue per month"
+        },
+        "dataSource": "prompt",
+        "prompt": "Umsatz pro Monat aus Rechnungen, letzte 12 Monate, als Zeitreihe",
+        "sqlString": "SELECT\n  TO_CHAR(DATE_TRUNC('month', i.date), 'YYYY-MM') AS \"Monat\",\n  ROUND(SUM(i.net_revenue), 2) AS \"Umsatz\"\nFROM invoices i\nWHERE i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.date >= DATEADD(month, -12, DATE_TRUNC('month', CURRENT_DATE))\n  AND i.date < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\nGROUP BY 1\nORDER BY 1;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "revenue_vs_ly",
+      "type": "AreaChart",
+      "config": {
+        "title_text": {
+          "de": "Umsatz YTD vs. Vorjahr",
+          "en": "Revenue YTD vs. prior year"
+        },
+        "dataSource": "prompt",
+        "prompt": "Umsatz pro Monat aktuelles Jahr (YTD) im Vergleich zum Vorjahr aus Rechnungen, zwei Serien",
+        "sqlString": "WITH invoice_metrics AS (\n  SELECT\n    date_trunc('month', i.date) AS month_start,\n    EXTRACT(year FROM i.date) AS sales_year,\n    SUM(i.net_revenue) AS net_revenue\n  FROM invoices i\n  WHERE i.status NOT IN ('created', 'canceled', 'unknown')\n    AND i.date BETWEEN date_trunc('year', current_date) - interval '1 year'\n                   AND current_date\n  GROUP BY 1, 2\n),\nperiod_bounds AS (\n  SELECT\n    date_trunc('year', current_date) AS current_year_start,\n    current_date AS current_date,\n    date_trunc('year', current_date) - interval '1 year' AS last_year_start,\n    dateadd(day, -1, current_date) - interval '1 year' AS last_year_end\n)\nSELECT\n  to_char(m.month_start, 'YYYY-MM') AS \"Monat\",\n  ROUND(SUM(CASE WHEN m.sales_year = EXTRACT(year FROM current_date) THEN m.net_revenue ELSE 0 END), 2) AS \"Umsatz aktuelles Jahr (YTD)\",\n  ROUND(SUM(CASE WHEN m.sales_year = EXTRACT(year FROM current_date) - 1 THEN m.net_revenue ELSE 0 END), 2) AS \"Umsatz Vorjahr\",\n  ROUND(\n    SUM(CASE WHEN m.sales_year = EXTRACT(year FROM current_date) THEN m.net_revenue ELSE 0 END)\n    - SUM(CASE WHEN m.sales_year = EXTRACT(year FROM current_date) - 1 THEN m.net_revenue ELSE 0 END)\n  , 2) AS \"Differenz\"\nFROM invoice_metrics m\nCROSS JOIN period_bounds b\nWHERE\n  (\n    m.sales_year = EXTRACT(year FROM current_date)\n    AND m.month_start BETWEEN b.current_year_start AND date_trunc('month', b.current_date)\n  )\n  OR\n  (\n    m.sales_year = EXTRACT(year FROM current_date) - 1\n    AND m.month_start BETWEEN b.last_year_start AND date_trunc('month', b.last_year_end)\n  )\nGROUP BY 1\nORDER BY 1;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "revenue_by_channel",
+      "type": "StackedBarChart",
+      "config": {
+        "title_text": {
+          "de": "Umsatz nach Vertriebskanal (6 Monate)",
+          "en": "Revenue by sales channel (6 months)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Umsatz pro Monat gruppiert nach Vertriebskanal (Projekt), letzte 6 Monate, gestapelt",
+        "sqlString": "WITH relevant_sales AS (\n    SELECT\n        so.sales_order_id,\n        so.project_id,\n        so.date,\n        so.status,\n        so.net_revenue\n    FROM sales_orders so\n    LEFT JOIN projects p USING (project_id)\n    WHERE so.status <> 'created'\n      AND so.date >= DATEADD(month, -6, CURRENT_DATE)\n),\nmonthly_sales AS (\n    SELECT\n        DATE_TRUNC('month', date) AS month_start,\n        project_id,\n        SUM(net_revenue) AS revenue\n    FROM relevant_sales\n    GROUP BY 1, 2\n)\nSELECT\n    TO_CHAR(ms.month_start, 'YYYY-MM') AS \"Monat\",\n    p.name AS \"Projekt / Vertriebskanal\",\n    ROUND(ms.revenue, 2) AS \"Umsatz\"\nFROM monthly_sales ms\nLEFT JOIN projects p\n    ON ms.project_id = p.project_id\nORDER BY ms.month_start ASC, \"Umsatz\" DESC;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "channel_mix",
+      "type": "DonutChart",
+      "config": {
+        "title_text": {
+          "de": "Kanal-Mix (laufender Monat)",
+          "en": "Channel mix (current month)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Umsatzanteile pro Vertriebskanal (Projekt) im laufenden Monat",
+        "sqlString": "WITH order_revenue AS (\n    SELECT\n        so.project_id,\n        so.shop_id,\n        SUM(so.net_revenue) AS net_revenue\n    FROM sales_orders so\n    WHERE so.status != 'created'\n      AND so.date >= DATE_TRUNC('month', CURRENT_DATE)\n      AND so.date < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\n    GROUP BY 1, 2\n),\nchannel_revenue AS (\n    SELECT\n        COALESCE(s.designation, 'Unbekannt') AS vertriebskanal,\n        COALESCE(p.abbreviation, 'Kein Projekt') AS projektkuerzel,\n        SUM(orv.net_revenue) AS nettoumsatz\n    FROM order_revenue orv\n    LEFT JOIN shops s\n        ON s.shop_id = orv.shop_id\n    LEFT JOIN projects p\n        ON p.project_id = orv.project_id\n    GROUP BY 1, 2\n),\ntotal_revenue AS (\n    SELECT\n        SUM(nettoumsatz) AS gesamtumsatz\n    FROM channel_revenue\n)\nSELECT\n    cr.vertriebskanal AS \"Vertriebskanal\",\n    cr.projektkuerzel AS \"Projekt\",\n    ROUND(cr.nettoumsatz, 2) AS \"Nettoumsatz\",\n    ROUND(\n        100.0 * cr.nettoumsatz / NULLIF(tr.gesamtumsatz, 0),\n        2\n    ) AS \"Umsatzanteil in %\"\nFROM channel_revenue cr\nCROSS JOIN total_revenue tr\nORDER BY \"Nettoumsatz\" DESC, \"Vertriebskanal\", \"Projekt\";\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": 900
+      }
+    },
+    {
+      "id": "top_customers",
+      "type": "HorizontalBarChart",
+      "config": {
+        "title_text": {
+          "de": "Top 10 Kunden (YTD)",
+          "en": "Top 10 customers (YTD)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Top 10 Kunden nach Umsatz aus Rechnungen seit Jahresanfang, absteigend",
+        "sqlString": "\nSELECT\n  a.name AS \"Kunde\",\n  SUM(i.xen_net_revenue) AS \"Umsatz\"\nFROM invoices i\nLEFT JOIN addresses a ON i.address_id = a.address_id\nWHERE i.status NOT IN ('canceled', 'created')\n  AND i.date >= DATE_TRUNC('year', CURRENT_DATE)\nGROUP BY a.address_id, a.name\nORDER BY \"Umsatz\" DESC\nLIMIT 10\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "automation_gauge",
+      "type": "GaugeChart",
+      "config": {
+        "preset": "automation_rate"
+      }
+    },
+    {
+      "id": "sla_gauge",
+      "type": "GaugeChart",
+      "config": {
+        "preset": "sla_today"
+      }
+    },
+    {
+      "id": "margin_gauge",
+      "type": "GaugeChart",
+      "config": {
+        "title_text": {
+          "de": "Bruttomarge (laufender Monat)",
+          "en": "Gross margin (current month)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Bruttomarge im laufenden Monat in Prozent aus Rechnungen, ein einzelner Wert",
+        "sqlString": "WITH relevant_invoice_ids AS (\n    SELECT\n        i.invoice_id\n    FROM invoices i\n    LEFT JOIN credit_notes cn USING (invoice_id)\n    WHERE NOT (\n        i.status IN ('canceled', 'created')\n        AND (cn.status IS NULL OR cn.status IN ('created', 'canceled'))\n    )\n    GROUP BY 1\n),\ninvoice_metrics AS (\n    SELECT\n        i.invoice_id,\n        i.date,\n        i.customer_number,\n        SUM(i.net_revenue) AS net_revenue,\n        SUM(i.net_profit) AS cm1\n    FROM relevant_invoice_ids ids\n    LEFT JOIN invoices i USING (invoice_id)\n    WHERE i.date >= DATE_TRUNC('month', CURRENT_DATE)\n      AND i.date < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\n    GROUP BY 1, 2, 3\n)\nSELECT\n    ROUND(\n        (SUM(cm1)::NUMERIC(23, 8) / NULLIF(SUM(net_revenue)::NUMERIC(23, 8), 0)) * 100,\n        2\n    ) AS \"Bruttomarge in %\"\nFROM invoice_metrics;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": 900
+      }
+    },
+    {
+      "id": "top_products",
+      "type": "HorizontalBarChart",
+      "config": {
+        "title_text": {
+          "de": "Top 10 Produkte (YTD)",
+          "en": "Top 10 products (YTD)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Top 10 Produkte nach Umsatz aus Rechnungspositionen seit Jahresanfang, absteigend",
+        "sqlString": "SELECT\n    p.product_number AS \"SKU\",\n    COALESCE(p.product_name_de, p.product_name_en) AS \"Artikel\",\n    COALESCE(ROUND(SUM(ii.net_price::NUMERIC(23,8) * ii.quantity::NUMERIC(23,8) * (1 - COALESCE(ii.discount, 0)::NUMERIC(23,8))), 2), 0) AS \"Umsatz\"\nFROM invoice_items ii\nJOIN invoices i\n    ON ii.invoice_id = i.invoice_id\nLEFT JOIN products p\n    ON ii.product_id = p.product_id\nWHERE i.date >= DATE_TRUNC('year', CURRENT_DATE)\n  AND i.date < DATEADD(year, 1, DATE_TRUNC('year', CURRENT_DATE))\n  AND i.status NOT IN ('created', 'canceled')\nGROUP BY\n    1, 2\nORDER BY\n    \"Umsatz\" DESC\nLIMIT 10;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "attention"
+    ],
+    "side": [
+      "revenue_trend",
+      "revenue_vs_ly",
+      "revenue_by_channel",
+      [
+        "channel_mix",
+        "top_customers"
+      ],
+      [
+        "automation_gauge",
+        "sla_gauge",
+        "margin_gauge"
+      ],
+      "top_products"
+    ]
+  },
+  "linked_kpis": [
+    "revenue_mtd",
+    "open_receivables",
+    "average_order_value"
+  ],
+  "default_briefings": [
+    "daily-cockpit-briefing"
+  ],
+  "locales": {
+    "en": {
+      "title": "CEO Cockpit",
+      "description": "Executive cockpit with revenue, margin, channel mix, top customers and operations health — built for board presentations and sales demos."
+    },
+    "de": {
+      "title": "CEO-Cockpit",
+      "description": "Geschäftsführungs-Cockpit mit Umsatz, Marge, Kanalmix, Top-Kunden und Operations-Gesundheit — gebaut für Boardmeetings und Vertriebsdemos."
+    }
+  }
+}

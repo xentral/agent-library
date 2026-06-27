@@ -1,0 +1,15 @@
+{
+  "id": "rakuten",
+  "version": 1,
+  "name": "Rakuten",
+  "domain": "rakuten.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Rakuten-Marketplace-Aufträge abrufen, Bestand und Versand pflegen."
+    },
+    "de": {
+      "description": "Rakuten-Marketplace-Aufträge abrufen, Bestand und Versand pflegen."
+    }
+  }
+}

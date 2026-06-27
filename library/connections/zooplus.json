@@ -1,0 +1,15 @@
+{
+  "id": "zooplus",
+  "version": 1,
+  "name": "Zooplus",
+  "domain": "zooplus.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Zooplus-Marketplace — Tierbedarf-Sortiment einspielen."
+    },
+    "de": {
+      "description": "Zooplus-Marketplace — Tierbedarf-Sortiment einspielen."
+    }
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "id": "item_labels",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Artikeletiketten (A4-Bogen, 3×8-Raster)",
+      "description": "A4-Bogen mit 24 Produktetiketten im Raster aus 3 Spalten × 8 Zeilen (je 70×37 mm, nahe Avery 3475). Pro Etikett: SKU + Name + EAN-13-Barcode. Geeignet für Etiketten auf Druckerpapier (ablösbarer Kleber). Die Balken sind CSS-Gradient-Platzhalter; für echtes EAN-13-Scannen ein Barcode-Bild über den Editor einsetzen (Bild-Upload oder Barcode-Bibliothek auf dem Server).\n"
+    },
+    "en": {
+      "title": "Item labels (A4 sheet, 3×8 grid)",
+      "description": "A4 sheet of 24 product labels in a 3-column × 8-row grid (each 70×37mm, close to Avery 3475). Per label: SKU + name + EAN-13 barcode. Suitable for printer-paper labels (peelable adhesive). Bars are CSS gradient placeholders; for real EAN-13 scanning, swap in a barcode image via the editor (image upload or barcode library on the server).\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/products",
+  "filename_pattern": "ItemLabels-{batchNumber}.pdf",
+  "compliance": [],
+  "schema": {
+    "required": [
+      "items"
+    ],
+    "items": {
+      "item": {
+        "required": [
+          "number",
+          "name"
+        ],
+        "optional": [
+          "ean",
+          "price",
+          "unit"
+        ]
+      }
+    },
+    "optional": [
+      "language",
+      "batchNumber"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{# Etiketten-Bogen — überschreibt den Standard-Letterhead, weil das\n   bei Labels nur stört. Der Bogen selbst ist die ganze Seite. #}\n{% block letterhead %}{% endblock %}\n{% block letterhead_small_sender %}{% endblock %}\n\n{% block title %}Item labels {% if data.batchNumber %}#{{ data.batchNumber }}{% endif %}{% endblock %}\n\n{# data['items'], not data.items — attribute lookup wins in Jinja and\n   returns the dict's .items METHOD, which breaks the loop below. #}\n{% set items = data['items'] | default([]) %}\n\n{% block content %}\n\n  <section class=\"il-sheet\" aria-label=\"Item labels\">\n    {% for it in items %}\n    <div class=\"il-label\">\n      <div class=\"il-label__sku\">{{ it.number }}</div>\n      <div class=\"il-label__name\">{{ it.name }}</div>\n      <div class=\"il-label__bottom\">\n        <div class=\"il-label__barcode-wrap\">\n          <div class=\"barcode-ean\" data-code=\"{{ it.ean | default('') }}\"></div>\n          <div class=\"il-label__ean\">{{ it.ean | default('') }}</div>\n        </div>\n        {% if it.price %}\n        <div class=\"il-label__price\">{{ it.price }}{% if it.unit %}<span class=\"il-label__unit\">/ {{ it.unit }}</span>{% endif %}</div>\n        {% endif %}\n      </div>\n    </div>\n    {% endfor %}\n    {# Auffüllen auf 24 (3×8) damit das Grid nicht aufbricht — leere\n       Slots als Placeholder, druckbar als \"Reserve\" oder zum Per-Hand\n       beschriften. #}\n    {% for _ in range(24 - items|length if items|length < 24 else 0) %}\n    <div class=\"il-label il-label--empty\" aria-hidden=\"true\"></div>\n    {% endfor %}\n  </section>\n\n{% endblock %}\n",
+  "css": "/* A4-Etikettenbogen, 3 × 8 Labels à 70 × 37mm.\n   Räume: A4 = 210 × 297mm\n       - 3 × 70mm = 210mm (volle Breite, ohne Seitenrand)\n       - 8 × 37mm = 296mm  (nahezu volle Höhe — 0.5mm oben/unten Toleranz)\n   Avery-3475-kompatibel. */\n\n@page {\n  size: A4;\n  margin: 0;\n}\n\nbody {\n  margin: 0;\n  padding: 0;\n}\n\n/* Standard-Letterhead-Bereich wird vom Template per `block letterhead` geleert,\n   trotzdem dessen Margin-Reserve sicher killen falls der Base-Style noch was setzt. */\n.box-letterhead,\n.box-letterhead-small-sender {\n  display: none !important;\n}\n\n.il-sheet {\n  display: grid;\n  grid-template-columns: repeat(3, 70mm);\n  grid-template-rows: repeat(8, 37mm);\n  width: 210mm;\n  margin: 0;\n}\n\n.il-label {\n  width: 70mm;\n  height: 37mm;\n  padding: 3mm 4mm;\n  box-sizing: border-box;\n  border: 0.15mm dashed #d1d5db;\n  /* Border kommt erst beim Druck als Schnittlinien-Hilfe.\n     Echte Roll-Etiketten haben hier nichts. */\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  overflow: hidden;\n  font-size: 8.5pt;\n  line-height: 1.2;\n  color: #111827;\n}\n.il-label--empty {\n  background: repeating-linear-gradient(\n    45deg,\n    transparent 0 4mm,\n    rgba(15,23,42,0.02) 4mm 8mm\n  );\n}\n\n.il-label__sku {\n  font-family: monospace;\n  font-size: 8pt;\n  font-weight: 700;\n  letter-spacing: 0.3pt;\n  color: #4b5563;\n  text-transform: uppercase;\n}\n\n.il-label__name {\n  font-size: 10pt;\n  font-weight: 700;\n  line-height: 1.2;\n  max-height: 12mm;\n  overflow: hidden;\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n}\n\n.il-label__bottom {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n  gap: 2mm;\n}\n\n.il-label__barcode-wrap {\n  flex: 1;\n  min-width: 0;\n}\n\n/* EAN-13-Streifen — schmaler als Code-128 weil EAN feste Modul-Breite hat. */\n.barcode-ean {\n  height: 8mm;\n  background:\n    repeating-linear-gradient(\n      to right,\n      #111827 0 0.4mm,\n      transparent 0.4mm 0.7mm,\n      #111827 0.7mm 1.0mm,\n      transparent 1.0mm 1.6mm,\n      #111827 1.6mm 1.9mm,\n      transparent 1.9mm 2.5mm,\n      #111827 2.5mm 2.8mm,\n      transparent 2.8mm 3.5mm\n    );\n  border-bottom: 0.2mm solid #111827;\n}\n\n.il-label__ean {\n  font-family: monospace;\n  font-size: 7.5pt;\n  letter-spacing: 0.4pt;\n  margin-top: 0.5mm;\n}\n\n.il-label__price {\n  font-weight: 700;\n  font-size: 11pt;\n  white-space: nowrap;\n  text-align: right;\n  margin-left: auto;\n}\n.il-label__unit {\n  font-weight: 400;\n  font-size: 8pt;\n  color: #6b7280;\n  margin-left: 1mm;\n}\n",
+  "example_data": {
+    "batchNumber": "L-2026-05-12",
+    "language": "de",
+    "items": [
+      {
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "ean": "4012345678901",
+        "price": "249,00 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-002",
+        "name": "Bürostuhl Modell A · weiss",
+        "ean": "4012345678918",
+        "price": "249,00 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-007",
+        "name": "Schreibtisch 160×80 Eiche",
+        "ean": "4012345678949",
+        "price": "489,00 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-008",
+        "name": "Schreibtisch 180×80 Eiche",
+        "ean": "4012345678956",
+        "price": "549,00 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-019",
+        "name": "Tischlampe LED warmweiß",
+        "ean": "4012345679113",
+        "price": "39,90 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-020",
+        "name": "Tischlampe LED Tageslicht",
+        "ean": "4012345679120",
+        "price": "39,90 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-038",
+        "name": "Kabelkanal 1,5 m schwarz",
+        "ean": "4012345679519",
+        "price": "12,90 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-039",
+        "name": "Kabelkanal 1,5 m weiss",
+        "ean": "4012345679526",
+        "price": "12,90 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-045",
+        "name": "USB-C Hub 7-in-1",
+        "ean": "4012345679700",
+        "price": "59,00 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-046",
+        "name": "USB-C Hub 4-in-1 mini",
+        "ean": "4012345679717",
+        "price": "29,00 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-047",
+        "name": "Monitorhalter Single 32\"",
+        "ean": "4012345679724",
+        "price": "79,00 €",
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-048",
+        "name": "Monitorhalter Dual 27\"",
+        "ean": "4012345679731",
+        "price": "129,00 €",
+        "unit": "Stk"
+      }
+    ],
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin"
+    }
+  }
+}

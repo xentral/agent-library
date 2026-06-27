@@ -1,0 +1,281 @@
+{
+  "id": "invoice_zugferd_en16931",
+  "version": 1,
+  "engine": "weasyprint",
+  "locales": {
+    "de": {
+      "title": "Rechnung (ZUGFeRD / Factur-X EN 16931)",
+      "description": "Hybrid-Rechnung: PDF/A-3a mit eingebettetem Factur-X-XML (EN 16931 BASIC) und PDF/UA-1. Deckt die deutsche B2B-E-Rechnungspflicht und die Barrierefreiheit ab."
+    },
+    "en": {
+      "title": "Invoice (ZUGFeRD / Factur-X EN 16931)",
+      "description": "Hybrid invoice: PDF/A-3a with embedded Factur-X XML (EN 16931 BASIC profile) and PDF/UA-1 tagging. Covers both the German B2B mandatory structured e-invoice requirement (from 2025-01-01) AND the accessibility requirements from BFSG/EAA (from 2025-06-28) in a single file. Works equally well for consumer, business and public-sector recipients.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Invoice-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-a-3a",
+    "pdf-ua-1",
+    "zugferd-en16931"
+  ],
+  "constraints": [
+    "html lang attribute MUST be set on <html> (PDF/UA-1 requirement)",
+    "every <img> MUST have a non-empty alt attribute",
+    "exactly one <h1> per document",
+    "heading hierarchy MUST be contiguous",
+    "no color-only information",
+    "decorative elements MUST be marked class='decorative'",
+    "<title> in <head> MUST be set and non-empty",
+    "amounts MUST use tabular-nums and right-align",
+    "company footer MUST include vatId and taxId (UStG §14)",
+    "Factur-X XML attachment is generated from the same data object as the HTML body"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "financials",
+      "company"
+    ],
+    "documentAddress": {
+      "required": [
+        "name",
+        "street",
+        "zipCode",
+        "city",
+        "country"
+      ]
+    },
+    "lineItems": {
+      "item": {
+        "required": [
+          "number",
+          "name",
+          "quantity",
+          "unit",
+          "effectiveTaxRate",
+          "price",
+          "lineItemRevenue"
+        ]
+      }
+    },
+    "totals": {
+      "required": [
+        "net",
+        "gross"
+      ]
+    },
+    "financials": {
+      "required": [
+        "tax"
+      ]
+    },
+    "company": {
+      "required": [
+        "name",
+        "vatId",
+        "taxId"
+      ]
+    }
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "compliance_policy": {
+    "pdf_variant": "pdf/a-3a",
+    "xmp": {
+      "pdfuaid_part": 1
+    },
+    "attachments": [
+      {
+        "filename": "factur-x.xml",
+        "mime": "text/xml",
+        "relationship": "Alternative",
+        "description": "Factur-X invoice (EN 16931 BASIC)",
+        "content_template": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsm:CrossIndustryInvoice\n  xmlns:rsm=\"urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100\"\n  xmlns:ram=\"urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100\"\n  xmlns:udt=\"urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100\">\n\n  <rsm:ExchangedDocumentContext>\n    <ram:GuidelineSpecifiedDocumentContextParameter>\n      <ram:ID>urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:basic</ram:ID>\n    </ram:GuidelineSpecifiedDocumentContextParameter>\n  </rsm:ExchangedDocumentContext>\n\n  <rsm:ExchangedDocument>\n    <ram:ID>{{ data.documentNumber }}</ram:ID>\n    <!-- 380 = Commercial invoice (UNTDID 1001) -->\n    <ram:TypeCode>380</ram:TypeCode>\n    <ram:IssueDateTime>\n      <udt:DateTimeString format=\"102\">{{ data.documentDate|replace('-','') }}</udt:DateTimeString>\n    </ram:IssueDateTime>\n  </rsm:ExchangedDocument>\n\n  <rsm:SupplyChainTradeTransaction>\n    {% for li in data.lineItems %}\n    <ram:IncludedSupplyChainTradeLineItem>\n      <ram:AssociatedDocumentLineDocument>\n        <ram:LineID>{{ loop.index }}</ram:LineID>\n      </ram:AssociatedDocumentLineDocument>\n      <ram:SpecifiedTradeProduct>\n        <ram:SellerAssignedID>{{ li.number }}</ram:SellerAssignedID>\n        <ram:Name>{{ li.name }}</ram:Name>\n      </ram:SpecifiedTradeProduct>\n      <ram:SpecifiedLineTradeAgreement>\n        <ram:NetPriceProductTradePrice>\n          <ram:ChargeAmount>{{ li.price.net.amount }}</ram:ChargeAmount>\n        </ram:NetPriceProductTradePrice>\n      </ram:SpecifiedLineTradeAgreement>\n      <ram:SpecifiedLineTradeDelivery>\n        <!-- C62 = \"one\" / piece (UN/ECE Rec 20) -->\n        <ram:BilledQuantity unitCode=\"C62\">{{ li.quantity }}</ram:BilledQuantity>\n      </ram:SpecifiedLineTradeDelivery>\n      <ram:SpecifiedLineTradeSettlement>\n        <ram:ApplicableTradeTax>\n          <ram:TypeCode>VAT</ram:TypeCode>\n          <!-- S = Standard rate (UNTDID 5305) -->\n          <ram:CategoryCode>S</ram:CategoryCode>\n          <ram:RateApplicablePercent>{{ li.effectiveTaxRate }}</ram:RateApplicablePercent>\n        </ram:ApplicableTradeTax>\n        <ram:SpecifiedTradeSettlementLineMonetarySummation>\n          <ram:LineTotalAmount>{{ li.lineItemRevenue.net.amount }}</ram:LineTotalAmount>\n        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n      </ram:SpecifiedLineTradeSettlement>\n    </ram:IncludedSupplyChainTradeLineItem>\n    {% endfor %}\n\n    <ram:ApplicableHeaderTradeAgreement>\n      <ram:SellerTradeParty>\n        <ram:Name>{{ data.company.name }}</ram:Name>\n        <ram:PostalTradeAddress>\n          <ram:CountryID>DE</ram:CountryID>\n        </ram:PostalTradeAddress>\n        <ram:SpecifiedTaxRegistration>\n          <!-- VA = VAT registration number (UNTDID 1153) -->\n          <ram:ID schemeID=\"VA\">{{ data.company.vatId }}</ram:ID>\n        </ram:SpecifiedTaxRegistration>\n        <ram:SpecifiedTaxRegistration>\n          <!-- FC = Fiscal / tax number (UNTDID 1153) -->\n          <ram:ID schemeID=\"FC\">{{ data.company.taxId }}</ram:ID>\n        </ram:SpecifiedTaxRegistration>\n      </ram:SellerTradeParty>\n      <ram:BuyerTradeParty>\n        <ram:Name>{{ data.documentAddress.name }}</ram:Name>\n        <ram:PostalTradeAddress>\n          <ram:PostcodeCode>{{ data.documentAddress.zipCode }}</ram:PostcodeCode>\n          <ram:LineOne>{{ data.documentAddress.street }}</ram:LineOne>\n          <ram:CityName>{{ data.documentAddress.city }}</ram:CityName>\n          <ram:CountryID>{{ data.documentAddress.country }}</ram:CountryID>\n        </ram:PostalTradeAddress>\n      </ram:BuyerTradeParty>\n    </ram:ApplicableHeaderTradeAgreement>\n\n    <ram:ApplicableHeaderTradeDelivery>\n      <ram:ActualDeliverySupplyChainEvent>\n        <ram:OccurrenceDateTime>\n          <udt:DateTimeString format=\"102\">{{ (data.serviceDate or data.documentDate)|replace('-','') }}</udt:DateTimeString>\n        </ram:OccurrenceDateTime>\n      </ram:ActualDeliverySupplyChainEvent>\n    </ram:ApplicableHeaderTradeDelivery>\n\n    <ram:ApplicableHeaderTradeSettlement>\n      <ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>\n      {% set vat_amount = (data.totals.gross.amount|float) - (data.totals.net.amount|float) %}\n      <ram:ApplicableTradeTax>\n        <ram:CalculatedAmount>{{ '%.2f' % vat_amount }}</ram:CalculatedAmount>\n        <ram:TypeCode>VAT</ram:TypeCode>\n        <ram:BasisAmount>{{ data.totals.net.amount }}</ram:BasisAmount>\n        <ram:CategoryCode>S</ram:CategoryCode>\n        <ram:RateApplicablePercent>{{ data.financials.tax.taxRates.standard }}</ram:RateApplicablePercent>\n      </ram:ApplicableTradeTax>\n      <ram:SpecifiedTradeSettlementHeaderMonetarySummation>\n        <ram:LineTotalAmount>{{ data.totals.net.amount }}</ram:LineTotalAmount>\n        <ram:TaxBasisTotalAmount>{{ data.totals.net.amount }}</ram:TaxBasisTotalAmount>\n        <ram:TaxTotalAmount currencyID=\"EUR\">{{ '%.2f' % vat_amount }}</ram:TaxTotalAmount>\n        <ram:GrandTotalAmount>{{ data.totals.gross.amount }}</ram:GrandTotalAmount>\n        <ram:DuePayableAmount>{{ data.totals.gross.amount }}</ram:DuePayableAmount>\n      </ram:SpecifiedTradeSettlementHeaderMonetarySummation>\n    </ram:ApplicableHeaderTradeSettlement>\n  </rsm:SupplyChainTradeTransaction>\n</rsm:CrossIndustryInvoice>\n"
+      }
+    ]
+  },
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{# i18n — neue Sprachen hier + in meta.yaml.languages ergaenzen. #}\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer  = data.documentAddress | default({}) %}\n{% set items  = data.lineItems | default([]) %}\n{% set tax_pt = ((data.financials or {}).paymentTerms) | default({}) %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title='Empfänger' %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.invoice_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.serviceDate %}<tr><th scope=\"row\">{{ L.service_date }}</th><td>{{ data.serviceDate }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.reference }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n            {% if data.company.vatId %}<tr><th scope=\"row\">USt-IdNr.</th><td>{{ data.company.vatId }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  {# Positions-Tabelle. #}\n  {% with title=L.positions, caption=L.positions_caption, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','vat','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {# Summen mit USt-Aufgliederung. #}\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {# Zahlungsbedingungen + Bankverbindung. #}\n  {% if tax_pt.paymentTargetDays or data.payment %}\n  <section class=\"box-payment\" data-box=\"payment\" aria-labelledby=\"payment-heading\">\n    <h2 id=\"payment-heading\">{{ L.payment_heading }}</h2>\n    {% if tax_pt.paymentTargetDays %}\n    <p>\n      {{ L.pay_within }} <strong>{{ tax_pt.paymentTargetDays }} {{ L.pay_days }}</strong>\n      {% if tax_pt.paymentTargetDiscount and tax_pt.paymentTargetDiscountDays %}\n        ({{ L.pay_or_disc }} {{ tax_pt.paymentTargetDiscount }}&nbsp;% {{ L.pay_disc_within }}\n        {{ tax_pt.paymentTargetDiscountDays }} {{ L.pay_disc_days }})\n      {% endif %}\n      {{ L.pay_ref }} <strong>{{ data.documentNumber }}</strong>.\n    </p>\n    {% endif %}\n    {% if data.payment %}\n    <dl>\n      {% if data.payment.iban %}<dt>{{ L.iban }}</dt><dd>{{ data.payment.iban }}</dd>{% endif %}\n      {% if data.payment.bic %}<dt>{{ L.bic }}</dt><dd>{{ data.payment.bic }}</dd>{% endif %}\n      {% if data.payment.bankName %}<dt>{{ L.bank }}</dt><dd>{{ data.payment.bankName }}</dd>{% endif %}\n    </dl>\n    {% endif %}\n  </section>\n  {% endif %}\n\n  {# Hinweise / Outro. #}\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"notes-heading\">\n    <h2 id=\"notes-heading\">{{ L.notes_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 66mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n.box-payment dl { display: grid; grid-template-columns: 24mm 1fr; gap: 0.5mm 4mm; margin: 2mm 0 0; font-size: 9.5pt; }\n.box-payment dt { color: #6b7280; }\n.box-payment dd { margin: 0; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "11420",
+    "documentNumber": "RE-2026-00321",
+    "documentDate": "2026-05-10",
+    "serviceDate": "2026-05-08",
+    "language": "de",
+    "customerNumber": "10043",
+    "customerOrderNumber": "Bestellung MUS-4711",
+    "documentAddress": {
+      "name": "Musterfirma GmbH",
+      "street": "Hauptstraße 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "country": "DE"
+    },
+    "effectiveAddresses": {
+      "soldTo": {
+        "name": "Musterfirma GmbH",
+        "street": "Hauptstraße 12",
+        "zipCode": "70174",
+        "city": "Stuttgart",
+        "country": "DE"
+      }
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "description": "Ergonomisch, schwarz, mit Armlehnen",
+        "quantity": 2,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "249.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "498.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "592.62000000",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-007",
+        "name": "Schreibtisch 160x80",
+        "quantity": 1,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "489.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "489.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "581.91000000",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 19,
+          "reduced": 7
+        }
+      },
+      "paymentTerms": {
+        "paymentTargetDays": 14,
+        "paymentTargetDiscount": 2,
+        "paymentTargetDiscountDays": 7
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "987.00000000",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "1174.53000000",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "bic": "COBADEFFXXX",
+      "bankName": "Commerzbank Berlin"
+    },
+    "bodyOutroduction": "Vielen Dank für Ihren Auftrag.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "vatId": "DE123456789",
+      "taxId": "13/456/78901",
+      "ceo": "Max Beispiel"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Rechnung",
+      "invoice_date": "Rechnungsdatum",
+      "service_date": "Leistungsdatum",
+      "customer_number": "Kundennummer",
+      "reference": "Ihre Bestellnummer",
+      "positions": "Positionen",
+      "positions_caption": "Rechnungspositionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_vat": "USt",
+      "col_total": "Gesamt",
+      "net_total": "Nettobetrag",
+      "vat_label": "USt",
+      "vat_on": "auf",
+      "gross_total": "Gesamtbetrag",
+      "payment_heading": "Zahlungsbedingungen",
+      "pay_within": "Bitte überweisen Sie den Betrag innerhalb von",
+      "pay_days": "Tagen",
+      "pay_or_disc": "oder mit",
+      "pay_disc_within": "Skonto innerhalb von",
+      "pay_disc_days": "Tagen",
+      "pay_ref": "unter Angabe der Rechnungsnummer",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "notes_heading": "Hinweise"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "invoice_date": "Invoice date",
+      "service_date": "Service date",
+      "customer_number": "Customer no.",
+      "reference": "Your order no.",
+      "positions": "Items",
+      "positions_caption": "Invoice items",
+      "col_pos": "Pos",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_vat": "VAT",
+      "col_total": "Total",
+      "net_total": "Net total",
+      "vat_label": "VAT",
+      "vat_on": "on",
+      "gross_total": "Grand total",
+      "payment_heading": "Payment terms",
+      "pay_within": "Please transfer the amount within",
+      "pay_days": "days",
+      "pay_or_disc": "or with",
+      "pay_disc_within": "discount within",
+      "pay_disc_days": "days",
+      "pay_ref": "quoting invoice number",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "notes_heading": "Notes"
+    }
+  }
+}

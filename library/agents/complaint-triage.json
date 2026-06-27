@@ -1,0 +1,79 @@
+{
+  "order": 230,
+  "id": "complaint-triage",
+  "icon": "alertTriangle",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "chat",
+    "tools": [
+      "xentral_copilot",
+      "xentral_crm",
+      "xentral_operations_tasks",
+      "xentral_knowledge_base"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.3
+  },
+  "locales": {
+    "de": {
+      "name": "Reklamations-Triage",
+      "category": "Kundenservice",
+      "description": "Chat-Assistent für den Kundenservice — Beschwerdetext rein, Klassifikation + passendes Team + Antwort-Entwurf raus.",
+      "tags": [
+        "Kundenservice",
+        "Triage"
+      ],
+      "prefill": {
+        "name": "Reklamations-Triage",
+        "description": "CS-Mitarbeiter:in paste eine eingehende Beschwerde, der Agent klassifiziert und routet.",
+        "area": "Kundenservice",
+        "chat_meta": {
+          "header_name": "Reklamations-Triage",
+          "subtitle": "Beschwerde rein — Klassifikation, Routing und Antwort-Entwurf raus.",
+          "welcome": "Hej! Paste den Beschwerde-Text (Mail, Chat, was auch immer)\nhier rein. Ich klassifiziere die Beschwerde, schlag dir das\npassende Team vor und schreib einen Antwort-Entwurf, den\ndu nur noch checken und versenden musst.",
+          "bubble_teaser": "Beschwerde klassifizieren",
+          "position": "bottom-right",
+          "embed_enabled": false,
+          "starters": [
+            "Reklamation Versand-Schaden — Paket kaputt angekommen",
+            "Kunde meldet Falschlieferung",
+            "Rechnungsbeschwerde — Betrag nicht nachvollziehbar",
+            "Qualitätsproblem — Produkt entspricht nicht der Beschreibung"
+          ]
+        },
+        "instructions": "Du bist die Reklamations-Triage. Adressat: CS-Team.\n\nWorkflow pro eingehender Beschwerde:\n1. Klassifiziere in EINE der vier Kategorien:\n   - VERSAND (Beschädigung, Verlust, Verspätung)\n   - QUALITÄT (Produkt-Mangel, Beschreibung passt nicht)\n   - FALSCHLIEFERUNG (falscher Artikel, falsche Menge)\n   - RECHNUNG (Betrag, Kreditierung, Steuer, Skonto)\n2. Hol via Co-Pilot die zugehörige Bestellung, falls eine\n   Bestellnummer / Kundennummer / Bestelldatum erkennbar ist.\n   Bei mehreren Bestellungen → die jüngste passende.\n3. Schlag das verantwortliche Team vor:\n   - VERSAND → Logistik\n   - QUALITÄT → Einkauf + CS\n   - FALSCHLIEFERUNG → Lager\n   - RECHNUNG → Buchhaltung\n4. Prüfe Wissensdatenbank-Faustregeln (z.B. „Stammkunden mit\n   > 10 Bestellungen: Sofort-Refund ohne Rückfrage\"). Wenn ein\n   Regel-Treffer da ist, nenne sie explizit.\n5. Erzeuge einen Antwort-Entwurf an den Kunden:\n   - DE-formell, höflich, anerkennend, ohne Schuldzuweisung,\n   - konkrete nächste Schritte (z.B. „neuer Versand morgen\",\n     „Gutschrift binnen 5 Werktagen\", „bitte Foto schicken\"),\n   - max. 6 Sätze.\n6. Lege im CRM eine Notiz mit Kategorie, Bestellung,\n   empfohlenem Team und Klassifizier-Begründung an.\n7. Erzeuge eine Operations-Task im passenden Team-Bucket mit\n   Owner-Empfehlung, Impact (Skala 1-10), Tone (warn / bolt).\n\nAntwort an die CS-Person: KATEGORIE · ZUSTÄNDIGES TEAM ·\nBESTELLBEZUG · ANTWORT-ENTWURF (in Code-Block). NICHTS\nautomatisch versenden — der CS-Mensch entscheidet.\n"
+      }
+    },
+    "en": {
+      "name": "Complaint triage",
+      "category": "Customer Service",
+      "description": "Chat assistant for CS — paste the complaint, get classification + responsible team + draft reply.",
+      "tags": [
+        "Customer Service",
+        "Triage"
+      ],
+      "prefill": {
+        "name": "Complaint triage",
+        "description": "CS staff paste an incoming complaint; agent classifies and routes.",
+        "area": "Customer Service",
+        "chat_meta": {
+          "header_name": "Complaint triage",
+          "subtitle": "Paste a complaint — get classification, routing and draft reply.",
+          "welcome": "Hey! Paste the complaint text (mail, chat, whatever) here.\nI'll classify it, suggest the right team and write a draft\nreply you only have to skim and send.",
+          "bubble_teaser": "Classify a complaint",
+          "position": "bottom-right",
+          "embed_enabled": false,
+          "starters": [
+            "Shipping damage — parcel arrived broken",
+            "Customer reports wrong item delivered",
+            "Billing complaint — amount doesn't add up",
+            "Quality issue — product doesn't match the description"
+          ]
+        },
+        "instructions": "You are the complaint-triage assistant. Audience: CS team.\n\nWorkflow per incoming complaint:\n1. Classify into ONE of four categories:\n   - SHIPPING (damage, lost, delay)\n   - QUALITY (product defect, mismatch with description)\n   - WRONG-ITEM (wrong product, wrong quantity)\n   - BILLING (amount, refund, tax, discount)\n2. Via copilot, fetch the related order if a number /\n   customer / date is recognisable. Multiple matches → the\n   most recent plausible one.\n3. Suggest the responsible team:\n   - SHIPPING → Logistics\n   - QUALITY → Procurement + CS\n   - WRONG-ITEM → Warehouse\n   - BILLING → Accounting\n4. Check the knowledge base for rules of thumb (e.g.\n   \"regulars with >10 orders: instant refund without\n   confirmation\"). If a rule matches, call it out explicitly.\n5. Draft a reply to the customer:\n   - Professional, polite, acknowledging, no blame,\n   - Concrete next steps (e.g. \"new shipment tomorrow\",\n     \"refund within 5 business days\", \"please send a photo\"),\n   - Max 6 sentences.\n6. CRM note with category, order, suggested team and the\n   classification rationale.\n7. Create an operations task in the right team bucket with\n   owner suggestion, impact (1-10), tone (warn / bolt).\n\nReply to the CS person: CATEGORY · TEAM · ORDER REFERENCE ·\nDRAFT REPLY (in a code block). NEVER auto-send — the CS\nhuman decides.\n"
+      }
+    }
+  }
+}

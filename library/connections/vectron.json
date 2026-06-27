@@ -1,0 +1,15 @@
+{
+  "id": "vectron",
+  "version": 1,
+  "name": "Vectron",
+  "domain": "vectron.de",
+  "category": "pos",
+  "locales": {
+    "en": {
+      "description": "Klassisches Gastro-/Retail-POS — Tagesumsätze nach Xentral."
+    },
+    "de": {
+      "description": "Klassisches Gastro-/Retail-POS — Tagesumsätze nach Xentral."
+    }
+  }
+}

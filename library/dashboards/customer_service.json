@@ -1,0 +1,146 @@
+{
+  "id": "customer_service",
+  "version": 2,
+  "icon": "headset",
+  "category": "customer_service",
+  "order": 100,
+  "recommended_kpis": [
+    "open_inquiries",
+    "returns_today",
+    "sla_breaches",
+    "inbox_total",
+    "intervention_required",
+    "received_today",
+    "high_risk_count",
+    "spam_today",
+    "automation_rate",
+    "avg_response_time",
+    "csat",
+    "first_contact_resolution",
+    "escalations_today",
+    "done_today"
+  ],
+  "widgets": [
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "open_inquiries",
+          "returns_today",
+          "sla_breaches"
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "type": "AttentionBlock",
+      "config": {
+        "kind": "customer_service"
+      }
+    },
+    {
+      "id": "kpi_grid_ops",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Operativ",
+          "en": "Operational"
+        },
+        "kpis": [
+          "inbox_total",
+          "intervention_required",
+          "received_today",
+          "high_risk_count",
+          "done_today",
+          "spam_today"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_key": "dashboards.mockup.kpi.title",
+        "kpis": [
+          "automation_rate",
+          "avg_response_time",
+          "csat",
+          "first_contact_resolution",
+          "escalations_today",
+          "done_today"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "inbox",
+            "label_key": "workspace.inbox",
+            "view": "inbox",
+            "scope": "customer_service",
+            "count_kpi": "open_inquiries"
+          },
+          {
+            "id": "orders",
+            "label_key": "workspace.csTabSales",
+            "view": "sales_orders",
+            "default_status_filter": "released"
+          },
+          {
+            "id": "returns",
+            "label_key": "workspace.csTabReturns",
+            "view": "return_orders",
+            "default_status_filter": "released",
+            "count_kpi": "returns_today"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "hero",
+      "attention",
+      "kpi_grid_ops",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "open_inquiries",
+    "returns_today",
+    "sla_breaches",
+    "inbox_total",
+    "intervention_required",
+    "received_today",
+    "high_risk_count",
+    "spam_today",
+    "automation_rate",
+    "avg_response_time",
+    "csat",
+    "first_contact_resolution",
+    "escalations_today",
+    "done_today"
+  ],
+  "default_briefings": [
+    "daily-customer-service-briefing"
+  ],
+  "locales": {
+    "en": {
+      "title": "Customer Service",
+      "description": "Customer inquiries, returns and complaints — from inbox to reply."
+    },
+    "de": {
+      "title": "Kundenservice",
+      "description": "Kundenanfragen, Retouren und Reklamationen — vom Posteingang bis zur Antwort."
+    }
+  }
+}

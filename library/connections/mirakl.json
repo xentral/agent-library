@@ -1,0 +1,15 @@
+{
+  "id": "mirakl",
+  "version": 1,
+  "name": "Mirakl",
+  "domain": "mirakl.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Marketplace-Plattform für Enterprise — mehrere Mirakl-Operators koppeln."
+    },
+    "de": {
+      "description": "Marketplace-Plattform für Enterprise — mehrere Mirakl-Operators koppeln."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "etsy",
+  "version": 1,
+  "name": "Etsy",
+  "domain": "etsy.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Etsy-Shop-Bestellungen importieren und Lager pflegen."
+    },
+    "de": {
+      "description": "Etsy-Shop-Bestellungen importieren und Lager pflegen."
+    }
+  }
+}

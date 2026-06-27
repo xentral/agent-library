@@ -1,0 +1,15 @@
+{
+  "id": "tillhub",
+  "version": 1,
+  "name": "Tillhub",
+  "domain": "tillhub.de",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Tillhub-Kassensystem mit Shop-Funktion — Verkäufe in Xentral buchen."
+    },
+    "de": {
+      "description": "Tillhub-Kassensystem mit Shop-Funktion — Verkäufe in Xentral buchen."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "avg_response_time",
+  "version": 1,
+  "icon": "clock",
+  "category": "customer_service",
+  "order": 240,
+  "kpi": {
+    "key": "avg_response_time",
+    "unit": "h",
+    "value_type": "duration",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 1.7,
+    "initial_tone": "positive"
+  },
+  "locales": {
+    "en": {
+      "title": "Avg response time",
+      "description": "Average time between inquiry receipt and first response."
+    },
+    "de": {
+      "title": "Antwortzeit Ø",
+      "description": "Mittlere Zeit zwischen Anfrage und erster Antwort."
+    }
+  }
+}

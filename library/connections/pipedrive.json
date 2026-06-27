@@ -1,0 +1,15 @@
+{
+  "id": "pipedrive",
+  "version": 1,
+  "name": "Pipedrive",
+  "domain": "pipedrive.com",
+  "category": "crm",
+  "locales": {
+    "en": {
+      "description": "Sales-Pipeline mit Xentral-Aufträgen verknüpfen."
+    },
+    "de": {
+      "description": "Sales-Pipeline mit Xentral-Aufträgen verknüpfen."
+    }
+  }
+}

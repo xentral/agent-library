@@ -1,0 +1,1144 @@
+{
+  "id": "ecommerce_boutique_configuration",
+  "business_model": "ecommerce_boutique",
+  "locales": {
+    "en": {
+      "options": {
+        "legal_forms": [
+          {
+            "id": "gmbh",
+            "label": "GmbH"
+          },
+          {
+            "id": "ug",
+            "label": "UG (haftungsbeschränkt)"
+          },
+          {
+            "id": "gbr",
+            "label": "GbR"
+          },
+          {
+            "id": "einzel",
+            "label": "Einzelunternehmer / e. K."
+          },
+          {
+            "id": "freiberuflich",
+            "label": "Freiberufler"
+          }
+        ],
+        "carriers": [
+          {
+            "id": "dhl",
+            "label": "DHL Geschäftskunden",
+            "default_active": true,
+            "default_service": "Paket National"
+          },
+          {
+            "id": "dhl-express",
+            "label": "DHL Express",
+            "default_active": false,
+            "default_service": "Express International"
+          },
+          {
+            "id": "dpd",
+            "label": "DPD",
+            "default_active": true,
+            "default_service": "Classic"
+          },
+          {
+            "id": "ups",
+            "label": "UPS",
+            "default_active": false,
+            "default_service": "Standard / Express Saver"
+          },
+          {
+            "id": "gls",
+            "label": "GLS",
+            "default_active": false,
+            "default_service": "BusinessParcel"
+          },
+          {
+            "id": "hermes",
+            "label": "Hermes",
+            "default_active": false,
+            "default_service": "Päckchen / Paket"
+          },
+          {
+            "id": "fedex",
+            "label": "FedEx",
+            "default_active": false,
+            "default_service": "International Priority"
+          },
+          {
+            "id": "pickup",
+            "label": "Selbstabholung",
+            "default_active": false,
+            "default_service": "— (kein Versand)"
+          }
+        ],
+        "versand_routing_modes": [
+          {
+            "id": "priority",
+            "label": "Prioritätsliste",
+            "hint": "Erster aktiver Carrier wird genommen, Fallback bei Ausfall."
+          },
+          {
+            "id": "cheapest",
+            "label": "Günstigster pro Paket",
+            "hint": "Carrier nach Kosten je Paket — braucht aktive Tarif-API."
+          },
+          {
+            "id": "fastest",
+            "label": "Schnellster",
+            "hint": "Carrier nach Lead-Time, höhere Kosten in Kauf nehmen."
+          },
+          {
+            "id": "rules",
+            "label": "Regelbasiert",
+            "hint": "Pro Land / Gewicht eigene Carrier-Wahl (Standard im D2C)."
+          }
+        ],
+        "payment_methods": [
+          {
+            "id": "vorkasse",
+            "label": "Vorkasse / Banküberweisung"
+          },
+          {
+            "id": "sepa",
+            "label": "SEPA-Lastschrift"
+          },
+          {
+            "id": "cc",
+            "label": "Kreditkarte"
+          },
+          {
+            "id": "paypal",
+            "label": "PayPal"
+          },
+          {
+            "id": "klarna",
+            "label": "Klarna / BNPL"
+          },
+          {
+            "id": "rechnung",
+            "label": "Rechnungskauf"
+          },
+          {
+            "id": "apple-pay",
+            "label": "Apple Pay"
+          },
+          {
+            "id": "google-pay",
+            "label": "Google Pay"
+          }
+        ],
+        "payment_risk_rules": [
+          {
+            "id": "no-rechnung-first",
+            "label": "Kein Rechnungskauf bei Erstbestellung"
+          },
+          {
+            "id": "no-bnpl-drittland",
+            "label": "Kein BNPL für Drittland"
+          },
+          {
+            "id": "no-sepa-low",
+            "label": "SEPA erst ab 5 € (Bankgebühren)"
+          },
+          {
+            "id": "fraud-block",
+            "label": "Auto-Block bei Fraud-Score > 80"
+          }
+        ],
+        "payment_providers": [
+          {
+            "id": "stripe",
+            "label": "Stripe",
+            "default_active": true,
+            "default_refund": "auto"
+          },
+          {
+            "id": "paypal",
+            "label": "PayPal",
+            "default_active": true,
+            "default_refund": "auto"
+          },
+          {
+            "id": "klarna",
+            "label": "Klarna",
+            "default_active": true,
+            "default_refund": "auto"
+          },
+          {
+            "id": "mollie",
+            "label": "Mollie",
+            "default_active": false,
+            "default_refund": "auto"
+          },
+          {
+            "id": "adyen",
+            "label": "Adyen",
+            "default_active": false,
+            "default_refund": "auto"
+          },
+          {
+            "id": "amazonpay",
+            "label": "Amazon Pay",
+            "default_active": false,
+            "default_refund": "auto"
+          }
+        ]
+      },
+      "name": "E-commerce boutique",
+      "description": "Compact Xentral configuration for a single-channel online shop —\none webshop, one warehouse, classic payment mix (PayPal · Klarna ·\nSEPA · credit card), no marketplaces. Onboarding is the lightest\nof all D2C-style setups: a single morning of credentials + a\nhandful of business decisions and the system is live.\n",
+      "plan_timeline": {
+        "intro": "Mehrere Onboarding-Agenten arbeiten parallel. Mensch-Aufwand\nbündelt sich in zwei kompakten Slots — morgens Credentials +\nSetup-Fragen, nachmittags Validierung. Live noch am selben Tag.\n",
+        "hero": {
+          "title": "Du machst nur drei Sachen",
+          "items": [
+            "Credentials liefern (Tag 1 · 09:00–10:00)",
+            "Setup-Fragen beantworten (Tag 1 · 11:00–12:00)",
+            "Validieren + Go-Live freigeben (Tag 1 · 16:00)"
+          ],
+          "outcomes": [
+            "Shop synchronisiert — Bestellungen fließen automatisch ins ERP",
+            "DHL Versand angebunden — Etiketten + Tracking-Mails live",
+            "Stripe + PayPal + Klarna scharf, Auto-Reconciliation aktiv",
+            "Steuer-Defaults (19 / 7 %) gesetzt, Klein­unternehmer-Schalter geprüft",
+            "Beleg-Templates (AB · LS · RG) mit Logo + Footer generiert",
+            "Eigenes Lager + Pick & Pack über Etiketten-Drucker aktiv"
+          ]
+        },
+        "days": [
+          {
+            "num": 1,
+            "label": "Setup + Go-Live"
+          }
+        ],
+        "blocks": [
+          {
+            "id": "connect-phase",
+            "step": "Connect-Phase",
+            "day": 1,
+            "time": "09:00–10:00",
+            "start_min": 540,
+            "end_min": 600,
+            "mensch_min": 60,
+            "agent_min": 30,
+            "severity": "high",
+            "deadline": "Tag 1 — 10:00",
+            "effect": "sonst Daten-Import delayed",
+            "mensch_summary": "Credentials in einem Rutsch: Firma · Shop-OAuth · Provider-Keys · Carrier · IBAN · Logo",
+            "agent_summary": "3 Agenten parallel: USt-ID-VIES · SMTP/DNS-Check · IBAN-Lookup",
+            "mensch_items": [
+              "Firmenname · Rechtsform · USt-ID · Steuernummer · Anschrift bestätigen",
+              "Shop-OAuth (Shopify / Shopware / Woo / JTL) durchführen",
+              "Stripe + PayPal + Klarna API-Keys + Webhook-Secrets",
+              "DHL Geschäftskunden-EKP (Account-Nr.)",
+              "Hauptkonto IBAN, BIC, SEPA-Gläubiger-ID",
+              "Logo-PNG (≥ 600 px) + Brandfarbe"
+            ]
+          },
+          {
+            "id": "daten-import",
+            "step": "Daten-Import",
+            "day": 1,
+            "time": "10:00–12:00",
+            "start_min": 600,
+            "end_min": 720,
+            "mensch_min": 0,
+            "agent_min": 120,
+            "severity": "low",
+            "deadline": "läuft autonom",
+            "effect": "🚀 läuft parallel zu Setup-Fragen",
+            "agent_summary": "Shop-Sync · DHL-Tarif-Import · DE/EU-Steuersätze",
+            "agent_items": [
+              "Shop-Sync: Artikel · Kunden · Aufträge importieren",
+              "DHL-Tarif-Tabelle für Geschäftskunden laden",
+              "DE-Standardsätze (19 / 7 %) + OSS-EU-Länder vorbereiten"
+            ]
+          },
+          {
+            "id": "setup-fragen",
+            "step": "Setup-Fragen",
+            "day": 1,
+            "time": "11:00–12:00",
+            "start_min": 660,
+            "end_min": 720,
+            "mensch_min": 60,
+            "agent_min": 0,
+            "severity": "high",
+            "deadline": "Tag 1 — 12:00",
+            "effect": "sonst Auto-Setup delayed",
+            "mensch_summary": "Business-Entscheidungen: Versandkosten · Retouren-Modus · OSS · Marge",
+            "agent_summary": "Antworten fließen sofort in laufendes Auto-Setup",
+            "mensch_items": [
+              "Versandkosten — Frei ab welchem Bestellwert?",
+              "Retouren-Modus (prepaid / self-service / on-request)",
+              "OSS aktivieren? Welche EU-Länder?",
+              "Standard-Marge in % · Mindestbestellwert",
+              "Kleinunternehmer-Regelung (§ 19 UStG) ja/nein"
+            ]
+          },
+          {
+            "id": "auto-setup",
+            "step": "Auto-Setup (5 Domains)",
+            "day": 1,
+            "time": "12:00–16:00",
+            "start_min": 720,
+            "end_min": 960,
+            "mensch_min": 0,
+            "agent_min": 240,
+            "severity": "low",
+            "deadline": "läuft autonom",
+            "effect": "🚀 5 Workstreams gleichzeitig",
+            "agent_summary": "5 Agenten parallel: Steuersätze · Versand · Zahlungen · Beleg-Templates · Nummernkreise",
+            "agent_items": [
+              "Steuersätze pro Artikel + Versand setzen",
+              "Versand-Arten + DHL-Service-Mapping konfigurieren",
+              "Zahlungs-Webhooks (Stripe · PayPal · Klarna) registrieren",
+              "Beleg-Templates AB · LS · RG mit Logo + Footer generieren",
+              "Nummernkreise + Belegformate für 2026 setzen"
+            ]
+          },
+          {
+            "id": "simulation",
+            "step": "Simulation + Diff-Report",
+            "day": 1,
+            "time": "13:00–16:00",
+            "start_min": 780,
+            "end_min": 960,
+            "mensch_min": 0,
+            "agent_min": 180,
+            "severity": "low",
+            "deadline": "läuft autonom",
+            "effect": "🚀 noch am selben Tag",
+            "agent_summary": "20 Test-Orders · Buchungen · Versand-Preview · Beleg-Render",
+            "agent_items": [
+              "20 Test-Orders durch den Shop spielen",
+              "Buchungen pro Order erzeugen (SKR03-konform)",
+              "Versand-Preview + DHL-Etiketten-Sample",
+              "Beleg-Render in DE (+ EN wenn aktiviert)"
+            ]
+          },
+          {
+            "id": "mensch-validierung",
+            "step": "Mensch-Validierung",
+            "day": 1,
+            "time": "16:00–17:00",
+            "start_min": 960,
+            "end_min": 1020,
+            "mensch_min": 60,
+            "agent_min": 5,
+            "severity": "high",
+            "deadline": "Tag 1 — 17:00",
+            "effect": "Go-Live freigeben",
+            "mensch_summary": "Diff-Report + Sample-Belege durchsehen, Go/No-Go",
+            "agent_summary": "Plan vs Ist visualisiert · Auffälligkeiten priorisiert",
+            "mensch_items": [
+              "Diff-Report Plan vs Ist durchsehen",
+              "3-5 Sample-Belege auf Korrektheit prüfen",
+              "Go-Live freigeben"
+            ]
+          },
+          {
+            "id": "go-live",
+            "step": "Go-Live",
+            "day": 1,
+            "time": "17:00–18:00",
+            "start_min": 1020,
+            "end_min": 1080,
+            "mensch_min": 5,
+            "agent_min": 5,
+            "severity": "high",
+            "deadline": "Tag 1 — 17:00",
+            "effect": "✅ live",
+            "mensch_summary": "„Start\"-Klick — erste echten Bestellungen mitlesen",
+            "agent_summary": "Monitoring 24/7 · Auto-Alarme bei Drift"
+          }
+        ]
+      },
+      "sidebar": [
+        {
+          "id": "overview",
+          "label": "Overview"
+        },
+        {
+          "id": "sync",
+          "label": "Sync status"
+        },
+        {
+          "group": "Company",
+          "items": [
+            {
+              "id": "unternehmen:firma",
+              "label": "Company profile"
+            }
+          ]
+        },
+        {
+          "group": "Master data",
+          "items": [
+            {
+              "id": "stammdaten:artikel",
+              "label": "Articles"
+            }
+          ]
+        },
+        {
+          "group": "Shop & channels",
+          "items": [
+            {
+              "id": "channels:shop",
+              "label": "Shop connector"
+            }
+          ]
+        },
+        {
+          "group": "Payments",
+          "items": [
+            {
+              "id": "zahlungen:provider",
+              "label": "Payment providers"
+            },
+            {
+              "id": "zahlungen:arten",
+              "label": "Payment methods"
+            }
+          ]
+        },
+        {
+          "group": "Shipping",
+          "items": [
+            {
+              "id": "versand:carrier",
+              "label": "Carrier"
+            }
+          ]
+        },
+        {
+          "group": "Warehouse & logistics",
+          "items": [
+            {
+              "id": "lager:own",
+              "label": "Own warehouse"
+            }
+          ]
+        },
+        {
+          "group": "Finance & tax",
+          "items": [
+            {
+              "id": "finanzen:steuer",
+              "label": "Tax (DE)"
+            }
+          ]
+        }
+      ],
+      "modules": {
+        "unternehmen:firma": {
+          "title": "Company profile",
+          "group": "Company",
+          "description": "Legal name, registration number, tax IDs, address, contact\ndetails and brand assets — appear on every invoice/document\nand email footer.\n",
+          "human_inputs": 8,
+          "sections": [
+            {
+              "id": "company-form",
+              "title": "Company & legal form",
+              "hint": "Wer steht auf dem Beleg? Pflichtangaben aus Handelsregister + Steueranmeldung.",
+              "human": [
+                {
+                  "text": "Confirm official company name",
+                  "why": "Must match the commercial register exactly — legally binding on every document"
+                },
+                {
+                  "text": "Confirm correct legal form",
+                  "why": "Determines mandatory document fields and liability — wrong form = wrong invoices"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "company_name",
+                  "type": "text",
+                  "label": "Firmenname (offiziell)",
+                  "default": "Beispiel D2C GmbH",
+                  "human": true,
+                  "human_why": "Muss exakt dem HR-Eintrag entsprechen — auf jedem Beleg rechtsverbindlich."
+                },
+                {
+                  "id": "legal_form",
+                  "type": "radio",
+                  "label": "Rechtsform",
+                  "default": "gmbh",
+                  "options_ref": "legal_forms",
+                  "human": true,
+                  "human_why": "Bestimmt Pflichtangaben & Haftung. Falsche Form führt zu falschen Belegen."
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "hr_number",
+                      "type": "text",
+                      "label": "Handelsregister-Nr.",
+                      "placeholder": "HRB 12345",
+                      "default": "HRB 12345"
+                    },
+                    {
+                      "id": "hr_court",
+                      "type": "text",
+                      "label": "Registergericht",
+                      "placeholder": "Amtsgericht …",
+                      "default": "Amtsgericht München"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "tax-identification",
+              "title": "Steuer-Identifikation",
+              "hint": "USt-ID erscheint auf jeder Rechnung. VIES-Validierung schützt vor Tippfehlern.",
+              "human": [
+                {
+                  "text": "Provide VAT ID and tax number",
+                  "why": "Issued by the tax office, not publicly retrievable"
+                },
+                {
+                  "text": "Decide on small-business regulation (§19 UStG)",
+                  "why": "Legal choice tied to expected annual revenue"
+                }
+              ],
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "ust_id",
+                      "type": "text",
+                      "label": "USt-ID",
+                      "default": "DE123456789",
+                      "placeholder": "DE123456789"
+                    },
+                    {
+                      "id": "tax_number",
+                      "type": "text",
+                      "label": "Steuernummer",
+                      "default": "143/123/45678",
+                      "placeholder": "143/123/45678",
+                      "human": true,
+                      "human_why": "Wird vom Finanzamt vergeben, nirgendwo öffentlich abrufbar."
+                    }
+                  ]
+                },
+                {
+                  "layout": "toggle-group",
+                  "fields": [
+                    {
+                      "id": "ustid_validate",
+                      "type": "toggle",
+                      "label": "USt-ID per VIES validieren (empfohlen)",
+                      "default": true
+                    },
+                    {
+                      "id": "kleinunternehmer",
+                      "type": "toggle",
+                      "label": "Kleinunternehmer-Regelung (§ 19 UStG) — keine USt auf Belegen",
+                      "default": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "address",
+              "title": "Anschrift",
+              "hint": "Geschäftsadresse für Belege und Korrespondenz. Abweichende Versandadresse pro Lager separat.",
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "street",
+                      "type": "text",
+                      "label": "Straße",
+                      "default": "Musterstr."
+                    },
+                    {
+                      "id": "house_no",
+                      "type": "text",
+                      "label": "Hausnummer",
+                      "default": "1",
+                      "max_width": 120
+                    }
+                  ]
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "zip",
+                      "type": "text",
+                      "label": "PLZ",
+                      "default": "80331",
+                      "max_width": 140
+                    },
+                    {
+                      "id": "city",
+                      "type": "text",
+                      "label": "Ort",
+                      "default": "München"
+                    },
+                    {
+                      "id": "country",
+                      "type": "text",
+                      "label": "Land",
+                      "default": "DE",
+                      "placeholder": "DE",
+                      "max_width": 100
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "contact",
+              "title": "Kontakt",
+              "hint": "Adressen, die in Belegen, Bestellbestätigungen und im Impressum auftauchen.",
+              "human": [
+                {
+                  "text": "Set up mailboxes and assign recipients",
+                  "why": "Internal org decision — who reads what"
+                },
+                {
+                  "text": "Provide phone hotline number (or none)",
+                  "why": "Service policy decision"
+                }
+              ],
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "main_email",
+                      "type": "email",
+                      "label": "Hauptmail / Belege",
+                      "default": "hello@d2c.de",
+                      "human": true,
+                      "human_why": "Welche Inbox liest die Mails — interne Org-Entscheidung."
+                    },
+                    {
+                      "id": "service_email",
+                      "type": "email",
+                      "label": "Service / Customer Care",
+                      "default": "service@d2c.de",
+                      "human": true,
+                      "human_why": "Routing zur CS-Mailbox, kein Default ableitbar."
+                    }
+                  ]
+                },
+                {
+                  "id": "hotline",
+                  "type": "tel",
+                  "label": "Hotline / Telefon",
+                  "default": "+49 89 1234567",
+                  "max_width": 220,
+                  "human": true,
+                  "human_why": "Service-Policy — eigene Nummer oder leer lassen."
+                }
+              ]
+            },
+            {
+              "id": "branding",
+              "title": "Branding",
+              "hint": "Logo + Brandfarbe + Belegfußzeile — wird in jedem PDF (Rechnung, Lieferschein, Mahnung) verwendet.",
+              "human": [
+                {
+                  "text": "Upload logo asset (transparent PNG, ≥ 600 px wide)",
+                  "why": "Brand asset not retrievable from any public source"
+                },
+                {
+                  "text": "Confirm brand color",
+                  "why": "Brand identity decision, not machine-derivable"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "logo_url",
+                  "type": "url",
+                  "label": "Logo-URL",
+                  "hint": "HTTPS-URL eines transparenten PNG, mind. 600 px breit.",
+                  "default": "",
+                  "placeholder": "https://cdn.d2c.de/logo.png",
+                  "human": true,
+                  "human_why": "Brand-Asset, liegt nirgendwo öffentlich abrufbar."
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "brand_color",
+                      "type": "text",
+                      "label": "Brandfarbe (Hex)",
+                      "default": "#6D7CFF",
+                      "placeholder": "#6D7CFF",
+                      "max_width": 160,
+                      "human": true,
+                      "human_why": "Marken-Identität, nicht maschinell entscheidbar."
+                    }
+                  ]
+                },
+                {
+                  "id": "beleg_footer",
+                  "type": "textarea",
+                  "label": "Belegfußzeile",
+                  "hint": "Pflichtangaben fürs Impressum auf Rechnungen — Firma, Anschrift, HR, USt-ID, Geschäftsführung.",
+                  "default": "Beispiel D2C GmbH · Musterstr. 1 · 80331 München · HRB 12345 · USt-ID DE123456789 · Geschäftsführer: …",
+                  "min_height": 80
+                }
+              ]
+            }
+          ]
+        },
+        "stammdaten:artikel": {
+          "title": "Articles",
+          "group": "Master data",
+          "description": "Required fields + variants (size/color typical), images mandatory.",
+          "human_inputs": 4
+        },
+        "channels:shop": {
+          "title": "Shop connector",
+          "group": "Shop & channels",
+          "description": "Single shop OAuth — Shopify or Shopware most common. No marketplaces.",
+          "human_inputs": 2
+        },
+        "zahlungen:provider": {
+          "title": "Payment providers",
+          "group": "Payments",
+          "description": "Pro Provider Account-Daten + Webhook-URL + Refund-Berechtigung.\nProvider-Anbindung erfolgt mit den jeweiligen API-Keys aus\nder Schnittstellen-Sektion.\n",
+          "sections": [
+            {
+              "id": "providers",
+              "title": "Zahlungsanbieter",
+              "hint": "Welche Provider aktiv sind und ob Auto-Refund per API erlaubt ist.",
+              "human": [
+                {
+                  "text": "Provider-Accounts anlegen (Stripe / PayPal / Klarna)",
+                  "why": "KYC + Vertragsabschluss können nur Geschäftsführer",
+                  "inline": true
+                },
+                {
+                  "text": "API-Keys + Webhook-Secrets eintragen",
+                  "why": "Sensible Credentials, liegen nur im Provider-Dashboard",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "providers",
+                  "type": "matrix",
+                  "rows_ref": "payment_providers",
+                  "columns": [
+                    {
+                      "id": "active",
+                      "type": "checkbox",
+                      "label": "Aktiv"
+                    },
+                    {
+                      "id": "refund",
+                      "type": "select",
+                      "label": "Refund",
+                      "options": [
+                        {
+                          "id": "auto",
+                          "label": "Auto (per API)"
+                        },
+                        {
+                          "id": "manual",
+                          "label": "Manuell"
+                        },
+                        {
+                          "id": "none",
+                          "label": "Nicht möglich"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "auto-recon",
+              "title": "Auto-Reconciliation",
+              "hint": "Auto-Match gleicht Provider-Auszahlungen mit Bankkonto und offenen Forderungen ab.",
+              "fields": [
+                {
+                  "id": "auto_match",
+                  "type": "toggle",
+                  "label": "Auto-Match mit Bankkonto aktiv",
+                  "default": true
+                },
+                {
+                  "id": "match_toleranz",
+                  "type": "number",
+                  "label": "Match-Toleranz (€)",
+                  "hint": "Differenz unterhalb wird auto-akzeptiert.",
+                  "default": "0.02",
+                  "min": 0,
+                  "step": 0.01,
+                  "max_width": 120
+                }
+              ]
+            }
+          ]
+        },
+        "zahlungen:arten": {
+          "title": "Payment methods",
+          "group": "Payments",
+          "description": "Aktive Zahlungsarten im Checkout + Default-Mix pro Land +\nRisiko-Regeln gegen Fraud und Zahlungsausfälle.\n",
+          "sections": [
+            {
+              "id": "available-methods",
+              "title": "Verfügbare Zahlungsarten",
+              "hint": "Was im Checkout angeboten wird. Provider-Verfügbarkeit prüft der Agent automatisch.",
+              "fields": [
+                {
+                  "id": "methods",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "options_ref": "payment_methods",
+                  "default": [
+                    "vorkasse",
+                    "paypal",
+                    "klarna",
+                    "cc",
+                    "sepa"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "country-mix",
+              "title": "Pro-Land-Mix",
+              "hint": "Welche Zahlungsarten in welchem Land Default sind. Agent setzt Standard-Mix pro Land.",
+              "fields": [
+                {
+                  "id": "country_mix",
+                  "type": "auto-detect",
+                  "source": "Markt-Standard pro Land + aktive Provider",
+                  "items": [
+                    {
+                      "label": "DE",
+                      "value": "PayPal · SEPA · Klarna"
+                    },
+                    {
+                      "label": "AT",
+                      "value": "Klarna · PayPal"
+                    },
+                    {
+                      "label": "CH",
+                      "value": "Kreditkarte · Vorkasse"
+                    },
+                    {
+                      "label": "NL",
+                      "value": "iDEAL · PayPal"
+                    },
+                    {
+                      "label": "FR",
+                      "value": "Kreditkarte · PayPal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "risk-rules",
+              "title": "Risiko-Regeln",
+              "hint": "Schutz vor Fraud + Zahlungsausfällen.",
+              "fields": [
+                {
+                  "id": "rules",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "options_ref": "payment_risk_rules",
+                  "default": [
+                    "no-rechnung-first",
+                    "no-bnpl-drittland"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "versand:carrier": {
+          "title": "Carrier",
+          "group": "Shipping",
+          "description": "Active carriers + account numbers + service levels +\nmulti-carrier routing strategy.\n",
+          "human_inputs": 2,
+          "sections": [
+            {
+              "id": "active-carriers",
+              "title": "Aktive Versanddienstleister",
+              "hint": "Welche Carrier sind angebunden? Pro Carrier brauchst du Account-Nr + API-Zugang. API-Keys werden in „Schnittstellen → API & Webhooks\" gepflegt.",
+              "human": [
+                {
+                  "text": "Sign carrier contracts (DHL EKP, DPD, UPS)",
+                  "why": "Business-customer rates require contract negotiation"
+                },
+                {
+                  "text": "Provide account number + API keys",
+                  "why": "Contract data only known to the contract holder"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "carriers",
+                  "type": "matrix",
+                  "rows_ref": "carriers",
+                  "pick_one_column": "default",
+                  "default_pick": "dhl",
+                  "columns": [
+                    {
+                      "id": "active",
+                      "type": "checkbox",
+                      "label": "Aktiv"
+                    },
+                    {
+                      "id": "account_nr",
+                      "type": "text",
+                      "label": "Account-Nr.",
+                      "placeholder": "EKP / Account-Nr.",
+                      "human": true,
+                      "human_why": "Vertragsdaten sind nur dem Vertragspartner bekannt.",
+                      "disabled_when_inactive": true
+                    },
+                    {
+                      "id": "service",
+                      "type": "text",
+                      "label": "Service-Level",
+                      "disabled_when_inactive": true
+                    },
+                    {
+                      "id": "default",
+                      "type": "radio-pick",
+                      "label": "Default"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "multi-carrier-routing",
+              "title": "Multi-Carrier-Routing",
+              "hint": "Wie wird pro Auftrag der Carrier gewählt, wenn mehrere aktiv sind?",
+              "fields": [
+                {
+                  "id": "routing_mode",
+                  "type": "radio",
+                  "label": "Strategie",
+                  "default": "rules",
+                  "options_ref": "versand_routing_modes"
+                }
+              ]
+            }
+          ]
+        },
+        "lager:own": {
+          "title": "Own warehouse",
+          "group": "Warehouse & logistics",
+          "description": "Single warehouse, simple pick & pack with mobile app or paper.",
+          "human_inputs": 3
+        },
+        "finanzen:steuer": {
+          "title": "Tax (DE)",
+          "group": "Finance & tax",
+          "description": "DE-Standardsätze + OSS-Aktivierung + EU-Länderliste +\nReverse-Charge + Drittland-Handling.\n",
+          "sections": [
+            {
+              "id": "de-rates",
+              "title": "DE-Steuersätze",
+              "hint": "Pflicht-Defaults für deutsche Belege. Pro Artikel/Warengruppe kann der Satz überschrieben werden.",
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "standard_satz",
+                      "type": "number",
+                      "label": "Standard-Satz (%)",
+                      "default": "19",
+                      "min": 0,
+                      "max": 30,
+                      "max_width": 100
+                    },
+                    {
+                      "id": "reduziert_satz",
+                      "type": "number",
+                      "label": "Reduzierter Satz (%)",
+                      "default": "7",
+                      "min": 0,
+                      "max": 30,
+                      "max_width": 100
+                    }
+                  ]
+                },
+                {
+                  "id": "kleinunternehmer",
+                  "type": "toggle",
+                  "label": "Kleinunternehmer (§ 19 UStG) — keine USt auf Belegen, OSS nicht relevant",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "id": "oss",
+              "title": "OSS — One-Stop-Shop für EU-B2C",
+              "hint": "Pflicht ab 10.000 € EU-grenzüberschreitendem B2C-Umsatz pro Jahr. Du meldest in DE für alle EU-Länder, wir buchen pro Land den richtigen USt-Satz.",
+              "human": [
+                {
+                  "text": "OSS aktiv schalten + EU-Länder bedienen + beim BZSt anmelden",
+                  "why": "Rechtliche Anmeldung beim BZSt + Markteintritts-Strategie",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "oss_aktiv",
+                  "type": "toggle",
+                  "label": "OSS-Verfahren aktiv",
+                  "default": true,
+                  "show_if": {
+                    "field": "kleinunternehmer",
+                    "equals": false
+                  }
+                },
+                {
+                  "id": "oss_laender",
+                  "type": "checkbox-multi",
+                  "label": "Aktive EU-Länder",
+                  "default": [
+                    "at",
+                    "fr",
+                    "it",
+                    "es",
+                    "nl",
+                    "be"
+                  ],
+                  "show_if": {
+                    "field": "oss_aktiv",
+                    "equals": true
+                  },
+                  "options": [
+                    {
+                      "id": "at",
+                      "label": "Österreich"
+                    },
+                    {
+                      "id": "fr",
+                      "label": "Frankreich"
+                    },
+                    {
+                      "id": "it",
+                      "label": "Italien"
+                    },
+                    {
+                      "id": "es",
+                      "label": "Spanien"
+                    },
+                    {
+                      "id": "nl",
+                      "label": "Niederlande"
+                    },
+                    {
+                      "id": "be",
+                      "label": "Belgien"
+                    },
+                    {
+                      "id": "pl",
+                      "label": "Polen"
+                    },
+                    {
+                      "id": "cz",
+                      "label": "Tschechien"
+                    },
+                    {
+                      "id": "dk",
+                      "label": "Dänemark"
+                    },
+                    {
+                      "id": "se",
+                      "label": "Schweden"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "reverse-charge",
+              "title": "EU-B2B (Reverse-Charge)",
+              "hint": "Bei valider USt-ID des Empfängers wird die Rechnung netto ausgestellt — der Empfänger schuldet die Steuer. ZM-Meldung an Bundeszentralamt fällig.",
+              "fields": [
+                {
+                  "id": "reverse_charge",
+                  "type": "toggle",
+                  "label": "Reverse-Charge bei valider USt-ID automatisch anwenden",
+                  "default": true
+                },
+                {
+                  "id": "zm_frequenz",
+                  "type": "radio",
+                  "label": "ZM-Meldung Frequenz",
+                  "default": "quarterly",
+                  "options": [
+                    {
+                      "id": "monthly",
+                      "label": "Monatlich"
+                    },
+                    {
+                      "id": "quarterly",
+                      "label": "Quartalsweise (Standard)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "drittland",
+              "title": "Drittland",
+              "hint": "Wie wird mit Versand außerhalb der EU umgegangen? Bei Ausfuhr ist der Ausfuhrnachweis (Zoll-Beleg) Pflicht für Steuerfreiheit.",
+              "human": [
+                {
+                  "text": "Drittland-Strategie entscheiden (bedient/blockiert/IOSS)",
+                  "why": "Komplexitäts-Entscheidung — Zoll-Doku + Versand sind Aufwand",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "drittland_mode",
+                  "type": "radio",
+                  "label": "Modus",
+                  "default": "export-frei",
+                  "options": [
+                    {
+                      "id": "export-frei",
+                      "label": "Export steuerfrei + Ausfuhrnachweis (Standard)"
+                    },
+                    {
+                      "id": "ioss",
+                      "label": "IOSS für Kleinsendungen unter 150 €"
+                    },
+                    {
+                      "id": "blocked",
+                      "label": "Drittland blockieren (kein Versand außerhalb EU)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

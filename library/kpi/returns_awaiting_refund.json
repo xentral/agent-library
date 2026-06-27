@@ -1,0 +1,27 @@
+{
+  "id": "returns_awaiting_refund",
+  "version": 1,
+  "icon": "alertTriangle",
+  "category": "logistics",
+  "order": 321,
+  "kpi": {
+    "key": "returns_awaiting_refund",
+    "unit": "count",
+    "value_type": "number",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Retouren, deren Eingangsdatum länger als drei Tage zurückliegt und für die noch keine Erstattung gebucht wurde; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(DISTINCT rs.return_shipment_id) AS anzahl_retouren\nFROM return_shipments rs\nLEFT JOIN return_shipment_items rsi\n    ON rs.return_shipment_id = rsi.return_shipment_id\nWHERE\n    rs.status NOT IN ('created', 'canceled', 'unknown')\n    AND rs.progress_status = 'eingegangen'\n    AND rs.date < DATEADD(day, -3, CURRENT_DATE)\n    AND COALESCE(rsi.is_billed, FALSE) = FALSE\n    AND COALESCE(rsi.refund_quantity, 0) = 0;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Awaiting refund",
+      "description": "Returns open longer than three days without a refund being issued."
+    },
+    "de": {
+      "title": "Wartet auf Erstattung",
+      "description": "Retouren, die länger als drei Tage offen sind, ohne dass die Erstattung erfolgt ist."
+    }
+  }
+}

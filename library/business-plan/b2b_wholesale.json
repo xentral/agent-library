@@ -1,0 +1,186 @@
+{
+  "id": "b2b_wholesale",
+  "slugs": [
+    "overview",
+    "market",
+    "roadmap",
+    "risks",
+    "company",
+    "products",
+    "masterdata",
+    "channels",
+    "team",
+    "processes",
+    "custom_agents",
+    "logistics",
+    "systems",
+    "roles",
+    "migration",
+    "payment",
+    "financials",
+    "accounting",
+    "reporting"
+  ],
+  "locales": {
+    "de": {
+      "name": "B2B-Großhandel",
+      "description": "Geschäftskunden, größere Warenkörbe, Angebots- und Projektgeschäft,\nZahlungsziele + Skonto. Sales-Team + Außendienst statt Marketing-\nFunnel — Beziehungspflege und Konditionspflege sind der Hebel.\nKein D2C-Stack: Mahnwesen, Bonität, Approval-Workflows und EDI\ntragen das Geschäft, nicht Newsletter und CAC.\n",
+      "emphasis": {
+        "overview": "Wer sind eure Top-30-Kunden, welcher Anteil hängt an ihnen, wie\nläuft das Risk-Konzentrations-Profil? Bei Wegfall eines Top-Kunden\n— wo bricht's? Frame eures B2B-Geschäfts: Sortimentsbreite vs.\n-tiefe, Anteil Direkt vs. Reseller, Margen-Korridor pro\nKundenklasse.\n",
+        "market": "B2B-Markt = wenige große Player, längere Sales-Cycles. Erfasst\ndie Hauptwettbewerber + ihre USPs (Konditionen, Sortiment,\nLieferzeit). Branchen-Marktanteil wenn relevant — Wachstum kommt\naus Kunden-Akquise + Share-of-Wallet, nicht Werbedruck.\n",
+        "company": "B2B-Belegfluss ist Pflichtprogramm — Angebot → Auftrag → Lieferschein →\nRechnung. AGB-Footer, Mahnwesen-Texte, Skonto-Regeln und\nLieferbedingungen müssen sauber stehen. Reverse-Charge und\nDrittland-Export sind hier Standard, nicht Ausnahme.\n",
+        "products": "Listenpreis + Mengenstaffeln + Kundenpreise (Sonderkonditionen) +\nProjektpreise. Marge pro Kundenklasse explizit ausweisen — wer\nbekommt was zu welchem Preis und warum. Sortiments-Schnitt:\nKernsortiment (immer auf Lager) vs. Spezial (Bestellware) vs.\nDrop-Ship.\n",
+        "masterdata": "Stammdaten sind euer Geschäftskern — Kundengruppen + Preislisten +\nKonditionen + Kreditlimits + Zahlungsziele. Sauber gepflegte\nKundenklassen sind die Voraussetzung für korrekte Pricing- und\nMahnautomatik.\n",
+        "channels": "Anteil Direktvertrieb (Außendienst) vs. Innendienst vs. optionaler\nB2B-Shop. KEIN Marktplatz-Spiel. EDI-Anbindungen für Top-Kunden\nwenn relevant (EDIFACT, OpenTrans, REST).\n",
+        "processes": "Quote-to-Cash mit Approval-Workflow für Sonderpreise und\nKreditlimit-Überschreitungen. SLA pro Auftragsart (Eilauftrag,\nLagerauftrag, Streckengeschäft). Reklamationsprozess statt\nReturns-Portal.\n",
+        "payment": "Zahlungsziele 14/30/60/90 Tage netto, Skonto-Regeln, Vorkasse-\nSchwellen für Neukunden, Kreditlimit pro Kunde + automatische\nSperre bei Überschreitung. SEPA-Lastschrift wenn Mandate\nvorliegen.\n",
+        "accounting": "Mahnwesen + OPOS-Auswertung sind Tagesgeschäft. Pflichten:\nZM-Meldung monatlich für EU-B2B (Reverse-Charge), Drittland-\nAusfuhrnachweise, USt-Voranmeldung. Faktoring oder\nWarenkreditversicherung als Risikohedge prüfen.\n",
+        "roles": "Approval-Workflow für Sonderpreise und Kreditlimit-Erhöhungen.\nAußendienst sieht nur eigene Kunden + Provisionsbasis. 4-Augen-\nPrinzip ab Schwellenwerten.\n",
+        "custom_agents": "Mahnstufen automatisiert + zeitlich getriggert, OPOS-Reports an\nBuchhaltung wöchentlich, Kreditlimit-Check vor Auftragsfreigabe,\nProvisions-Abrechnung monatlich.\n",
+        "logistics": "Mix aus Paket (Carrier-API) und Spedition (Pallet, FTL). Pro Auftrag\nFracht-Logik. Lager-Picking eher batch/wave bei Großmengen, weniger\nSingle-Order. Streckengeschäft als Bypass.\n",
+        "systems": "ERP als zentrales System — angebunden an Buchhaltung (DATEV),\nggf. PIM, ggf. CRM (HubSpot, Salesforce, Pipedrive), EDI-Provider\nund Bonitätsdienst (Creditreform).\n",
+        "financials": "Kunden-Konzentrations-Risiko + DSO + OPOS-Stand sind die KPIs.\nMargenwasserfall pro Kundenklasse. Cash-Flow-Forecast aus\nZahlungszielen + erwarteten Skonto-Abzügen.\n",
+        "reporting": "Top-30-Kunden-Report, OPOS, DSO, Mahnstufen-Pipeline, Provisions-\nAuswertung. Pro Außendienst-Mitarbeiter eigene Sicht auf seine\nKunden + Pipeline.\n",
+        "migration": "Cutover-Plan mit Top-Kunden zuerst → mittlere Kunden → Long-Tail.\nEDI-Mappings vor Go-Live testen. Bestände sauber überleiten,\ndamit Kreditlimit-Check ab Tag 1 stimmt.\n"
+      },
+      "tasks": [
+        {
+          "title": "Top-30-Kundenliste mit Konditionen",
+          "hint": "Kundennummer · Zahlungsziel · Skonto · Kreditlimit · Vertreter · Preisgruppe"
+        },
+        {
+          "title": "Preislisten + Mengenstaffeln",
+          "hint": "Listenpreis · Staffeln pro Kundengruppe · Spezial-Sortiment-Kennzeichen"
+        },
+        {
+          "title": "Kundenspezifische Preise (Sonderkonditionen)",
+          "hint": "Pro Top-Kunde Excel mit Artikelnummer + Sonderpreis + Gültigkeit"
+        },
+        {
+          "title": "Rahmenverträge dokumentieren",
+          "hint": "Volumen · Abrufmenge · Laufzeit · Preisbindung · Kündigungsregeln"
+        },
+        {
+          "title": "Bonität & Kreditlimit-Policy",
+          "hint": "Standard-Limit · Sonderfreigaben · Creditreform-Anbindung · Sperr-Regeln"
+        },
+        {
+          "title": "Mahnwesen konfigurieren",
+          "hint": "3 Stufen + Mahntexte + Mahngebühren + Lieferstopp ab Stufe 2"
+        },
+        {
+          "title": "Approval-Workflow Sonderpreise",
+          "hint": "Wer darf bis welche Marge / Schwelle freigeben — schriftlich + im System"
+        },
+        {
+          "title": "Außendienst-Setup + Provisionsmodell",
+          "hint": "User-Accounts · Kunden-Zuordnung · Provisionssatz · Abrechnungs-Frequenz"
+        },
+        {
+          "title": "EDI-Anbindung Top-Kunden",
+          "hint": "GLN · EDIFACT/OpenTrans · Mapping-Tabelle · Test-Bestellung"
+        },
+        {
+          "title": "Bank-Login (FinAPI/EBICS) für OPOS",
+          "hint": "Auto-Match · Mahnstufen-Trigger · Sammelbuchungen"
+        },
+        {
+          "title": "Faktoring / Warenkreditversicherung",
+          "hint": "Vertrag · Limit-Datei-Format · Kommunikations-Workflow bei Limit-Reduktion"
+        },
+        {
+          "title": "DATEV-Berater-Zugang + ZM-Meldung",
+          "hint": "Beraternr · Mandantennr · ZM-Frequenz monatlich für EU-B2B"
+        },
+        {
+          "title": "Test-User Sales / Innendienst / Buchhaltung",
+          "hint": "Schulungs-Instanz · Approval-Test · Mahnstufen-Drill"
+        },
+        {
+          "title": "Roll-out-Plan Top-Kunden zuerst",
+          "hint": "Welcher Top-Kunde ab wann live · Hypercare-Plan · Eskalations-Kontakte"
+        }
+      ]
+    },
+    "en": {
+      "name": "B2B Wholesale",
+      "description": "Business customers, larger baskets, quote-and-project business,\npayment terms + early-payment discount. Sales team + field reps\ninstead of marketing funnel — relationship and terms management\nare the lever. Not a D2C stack: dunning, credit checks, approval\nworkflows and EDI run the business, not newsletters and CAC.\n",
+      "emphasis": {
+        "overview": "Who are your top-30 customers, what share rides on them, what\ndoes the risk-concentration profile look like? If a top customer\nchurns — where does it break? Frame your B2B business: range\nbreadth vs. depth, direct vs. reseller share, margin corridor\nper customer class.\n",
+        "market": "B2B market = a few large players, longer sales cycles. Capture\nthe main competitors + their USPs (terms, range, lead time).\nIndustry market share if relevant — growth comes from customer\nacquisition + share-of-wallet, not ad pressure.\n",
+        "company": "B2B document flow is mandatory — quote → order → delivery note →\ninvoice. T&C footers, dunning copy, early-payment rules and\ndelivery terms must be clean. Reverse-charge and third-country\nexports are standard, not exception.\n",
+        "products": "List price + volume tiers + customer-specific prices (special\nterms) + project prices. Margin per customer class explicit —\nwho gets what at what price and why. Range cut: core range\n(always in stock) vs. specials (made-to-order) vs. drop-ship.\n",
+        "masterdata": "Master data is the core of your business — customer groups +\nprice lists + terms + credit limits + payment terms. Clean\ncustomer classes are the prerequisite for correct pricing and\ndunning automation.\n",
+        "channels": "Share of direct sales (field reps) vs. inside sales vs. optional\nB2B shop. NO marketplace play. EDI integrations for top\ncustomers when relevant (EDIFACT, OpenTrans, REST).\n",
+        "processes": "Quote-to-cash with approval workflow for special prices and\ncredit-limit overrides. SLA per order type (rush, stock,\ndrop-ship). Complaint process instead of returns portal.\n",
+        "payment": "Payment terms 14/30/60/90 days net, early-payment discount\nrules, prepayment thresholds for new customers, credit limit\nper customer + automatic block on overage. SEPA direct debit\nwhen mandates are in place.\n",
+        "accounting": "Dunning + open-item analysis are daily business. Mandatory:\nEC sales list monthly for EU-B2B (reverse-charge), third-country\nexport proof, VAT pre-registration. Factoring or credit\ninsurance as risk hedge to consider.\n",
+        "roles": "Approval workflow for special prices and credit-limit\nincreases. Field reps see only their own customers + commission\nbase. Four-eyes principle above thresholds.\n",
+        "custom_agents": "Dunning levels automated and time-triggered, open-item reports\nto accounting weekly, credit-limit check before order release,\ncommission settlement monthly.\n",
+        "logistics": "Mix of parcel (carrier API) and freight (pallet, FTL). Per-order\nfreight logic. Warehouse picking more batch/wave for large\nvolumes, less single-order. Drop-ship as bypass.\n",
+        "systems": "ERP as the central system — connected to accounting (DATEV),\noptionally PIM, optionally CRM (HubSpot, Salesforce, Pipedrive),\nEDI provider and credit-rating service (Creditreform).\n",
+        "financials": "Customer concentration risk + DSO + open-item balance are the\nKPIs. Margin waterfall per customer class. Cash-flow forecast\nfrom payment terms + expected early-payment discounts.\n",
+        "reporting": "Top-30 customer report, open items, DSO, dunning-level\npipeline, commission analysis. Per field rep their own view on\ntheir customers + pipeline.\n",
+        "migration": "Cut-over plan with top customers first → mid-tier → long tail.\nTest EDI mappings before go-live. Migrate balances cleanly so\ncredit-limit check works from day 1.\n"
+      },
+      "tasks": [
+        {
+          "title": "Top-30 customer list with terms",
+          "hint": "Customer no. · payment term · early-payment discount · credit limit · rep · price group"
+        },
+        {
+          "title": "Price lists + volume tiers",
+          "hint": "List price · tiers per customer group · specials flag"
+        },
+        {
+          "title": "Customer-specific prices (special terms)",
+          "hint": "Per top customer Excel with SKU + special price + validity"
+        },
+        {
+          "title": "Document framework contracts",
+          "hint": "Volume · call-off quantity · term · price lock · termination rules"
+        },
+        {
+          "title": "Credit-rating & credit-limit policy",
+          "hint": "Default limit · special releases · Creditreform integration · block rules"
+        },
+        {
+          "title": "Configure dunning",
+          "hint": "3 levels + dunning copy + dunning fees + delivery stop from level 2"
+        },
+        {
+          "title": "Approval workflow for special prices",
+          "hint": "Who may approve up to what margin / threshold — written + in system"
+        },
+        {
+          "title": "Field-rep setup + commission model",
+          "hint": "User accounts · customer assignment · commission rate · settlement frequency"
+        },
+        {
+          "title": "EDI integration top customers",
+          "hint": "GLN · EDIFACT/OpenTrans · mapping table · test order"
+        },
+        {
+          "title": "Bank login (FinAPI/EBICS) for open items",
+          "hint": "Auto-match · dunning-level trigger · batch postings"
+        },
+        {
+          "title": "Factoring / credit insurance",
+          "hint": "Contract · limit file format · communication workflow on limit reduction"
+        },
+        {
+          "title": "DATEV tax-advisor access + EC sales list",
+          "hint": "Advisor no · client no · EC sales list frequency monthly for EU-B2B"
+        },
+        {
+          "title": "Test users sales / inside / accounting",
+          "hint": "Training instance · approval test · dunning-level drill"
+        },
+        {
+          "title": "Roll-out plan top customers first",
+          "hint": "Which top customer live from when · hypercare plan · escalation contacts"
+        }
+      ]
+    }
+  }
+}

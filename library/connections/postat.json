@@ -1,0 +1,15 @@
+{
+  "id": "postat",
+  "version": 1,
+  "name": "Österreichische Post",
+  "domain": "post.at",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Versandlabels und Sendungsstatus für Österreich."
+    },
+    "de": {
+      "description": "Versandlabels und Sendungsstatus für Österreich."
+    }
+  }
+}

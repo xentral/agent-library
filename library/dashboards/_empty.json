@@ -1,0 +1,24 @@
+{
+  "id": "_empty",
+  "version": 2,
+  "icon": "plus",
+  "category": "custom",
+  "order": 1000,
+  "widgets": [],
+  "layout": {
+    "type": "split",
+    "main": [],
+    "side": []
+  },
+  "linked_kpis": [],
+  "locales": {
+    "en": {
+      "title": "Empty dashboard",
+      "description": "Blank canvas with the standard split layout — left for KPIs, right for a table. Add widgets via the gallery."
+    },
+    "de": {
+      "title": "Leeres Dashboard",
+      "description": "Leere Leinwand mit dem Standard-Split-Layout — links KPIs, rechts Tabelle. Widgets über die Galerie hinzufügen."
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "overdue_dunning",
+  "version": 1,
+  "icon": "alert",
+  "category": "finance",
+  "order": 440,
+  "kpi": {
+    "key": "overdue_dunning",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Summe der offenen Forderungen mit Mahnstufe größer gleich 2; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(SUM(\n    CASE\n      WHEN payment_status IN ('reminder2', 'reminder3', 'collection')\n       AND payment_status <> 'completed'\n      THEN COALESCE(target_amount, 0) - COALESCE(current_amount_paid, 0)\n      ELSE 0\n    END\n  ), 2) AS \"Offene Forderungen ab Mahnstufe 2\"\nFROM invoices\nWHERE status NOT IN ('canceled', 'created', 'unknown')\n  AND payment_status IN ('reminder2', 'reminder3', 'collection')\n;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Receivables in dunning ≥ level 2",
+      "description": "Value of open receivables currently in dunning stage 2 or higher — at acute collection risk."
+    },
+    "de": {
+      "title": "Forderungen ab Mahnstufe 2",
+      "description": "Wert der offenen Forderungen ab Mahnstufe 2 — akutes Ausfallrisiko."
+    }
+  }
+}

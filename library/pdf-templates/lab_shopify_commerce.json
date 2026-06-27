@@ -1,0 +1,178 @@
+{
+  "id": "lab_shopify_commerce",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Shopify Commerce (Auftragsbestätigung)",
+      "description": "E-Commerce-Auftragsbestätigung mit Bestell-Timeline, Produktzeilen mit Thumbnails, dunkler Summen-Karte und Status-QR."
+    },
+    "en": {
+      "title": "Xentral Labs · Shopify Commerce (Order Confirmation)",
+      "description": "E-commerce order confirmation with order timeline, product rows with thumbnails, dark summary card and status QR."
+    }
+  },
+  "v3_endpoint": "/api/v3/salesOrders/{id}?include=all",
+  "filename_pattern": "Bestellbestaetigung-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data['products'] | default([]) %}\n{% set sum = data.summary | default({}) %}\n{% set shp = data.shipping | default({}) %}\n\n{% block letterhead %}\n  <div class=\"sh-top\">\n    <div class=\"sh-brand\">\n      <svg class=\"sh-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <span class=\"sh-brandname\">{{ data.company.name | default('') }}</span>\n    </div>\n    <span class=\"sh-badge\">{{ data.status | default(L.status_paid) }}</span>\n  </div>\n{% endblock %}\n\n{% block content %}\n  <section class=\"sh-hero\">\n    <div class=\"sh-hero__eyebrow\">{{ L.doc_title }} · {{ data.documentNumber }}</div>\n    <h1 class=\"sh-hero__title\">{{ L.thanks }}, {{ data.firstName | default('') }}!</h1>\n    <p class=\"sh-hero__sub\">{{ L.hero_pre }} {{ data.documentDate | date }} {{ L.hero_post }}</p>\n  </section>\n\n  <section class=\"sh-timeline\" aria-label=\"Bestellstatus\">\n    {% for step in data.timeline | default([]) %}\n    <div class=\"sh-step sh-step--{{ step.state }}\">\n      <div class=\"sh-step__dot\">{% if step.state == 'done' %}&#10003;{% endif %}</div>\n      <div class=\"sh-step__label\">{{ step.label }}</div>\n      <div class=\"sh-step__date\">{{ step.date }}</div>\n    </div>\n    {% endfor %}\n  </section>\n\n  <h2 class=\"sh-h2\">{{ L.your_items }}</h2>\n  <div class=\"sh-items\">\n    {% for p in items %}\n    <div class=\"sh-card\">\n      <div class=\"sh-thumb\" style=\"background: {{ p.thumb | default('#e3f1ea') }};\">{{ p.initials | default('') }}</div>\n      <div class=\"sh-card__body\">\n        <div class=\"sh-card__name\">{{ p.name }}</div>\n        {% if p.variant %}<div class=\"sh-card__variant\">{{ p.variant }}</div>{% endif %}\n        <div class=\"sh-card__sku\">{{ L.artno }} {{ p.number }}</div>\n      </div>\n      <div class=\"sh-card__qty\">{{ p.quantity }} ×</div>\n      <div class=\"sh-card__price\">{{ p.lineTotal | money }}</div>\n    </div>\n    {% endfor %}\n  </div>\n\n  <div class=\"sh-foot\">\n    <section class=\"sh-ship\">\n      <h2 class=\"sh-h2\">{{ L.delivery }}</h2>\n      <div class=\"sh-ship__addr\">\n        <strong>{{ buyer.name }}</strong><br>\n        {% if buyer.coName %}{{ buyer.coName }}<br>{% endif %}\n        {{ buyer.street }}<br>{{ buyer.zipCode }} {{ buyer.city }}<br>{{ buyer.country }}\n      </div>\n      <div class=\"sh-track\">\n        <div class=\"sh-track__row\"><span>{{ L.ship_method }}</span><strong>{{ shp.method }}</strong></div>\n        <div class=\"sh-track__row\"><span>{{ L.tracking_no }}</span><strong>{{ shp.tracking }}</strong></div>\n        <div class=\"sh-track__row\"><span>{{ L.eta }}</span><strong>{{ shp.eta | date }}</strong></div>\n      </div>\n      <div class=\"sh-qr\">\n        {{ qr_code(data.statusUrl | default('https://beispiel-handel.de'), dark='#008060') }}\n        <span>{{ L.track }}</span>\n      </div>\n    </section>\n\n    <section class=\"sh-summary\">\n      <h2 class=\"sh-h2\">{{ L.summary }}</h2>\n      <div class=\"sh-srow\"><span>{{ L.subtotal }}</span><span class=\"num\">{{ sum.subtotal | money }}</span></div>\n      <div class=\"sh-srow\"><span>{{ L.shipping }}</span><span class=\"num\">{{ sum.shipping | money }}</span></div>\n      {% if sum.discount %}<div class=\"sh-srow sh-srow--disc\"><span>{{ L.discount }} · {{ sum.discountCode }}</span><span class=\"num\">{{ sum.discount | money }}</span></div>{% endif %}\n      <div class=\"sh-srow sh-srow--total\"><span>{{ L.total }}</span><span class=\"num\">{{ sum.total | money }}</span></div>\n      <div class=\"sh-srow__note\">{{ L.summary_note }} {{ data.paymentMethod }}</div>\n    </section>\n  </div>\n{% endblock %}",
+  "css": "@page {\n  size: A4; margin: 15mm 16mm 22mm 16mm;\n  @bottom-left { content: \"Beispiel Handels GmbH · Marktplatz 1 · 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; vertical-align: top; padding-top: 4mm; }\n  @bottom-center { content: \"Seite \" counter(page) \" von \" counter(pages); font-size: 6.5pt; color: #8a8a8a; white-space: nowrap; vertical-align: top; padding-top: 4mm; }\n  @bottom-right { content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm; }\n}\n\nbody { color: #122019; font-family: 'Helvetica', 'Arial', sans-serif; }\n.num { font-variant-numeric: tabular-nums; }\n.doc-header { display: block; margin: 0 0 3mm; }\n\n/* Top bar */\n.sh-top { display: flex; align-items: center; justify-content: space-between; }\n.sh-brand { display: flex; align-items: center; gap: 3mm; }\n.sh-mark { height: 10mm; width: 10mm; display: block; }\n.sh-brandname { font-size: 12pt; font-weight: 700; letter-spacing: -0.01em; }\n.sh-badge { font-size: 8pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #ffffff; background: #008060; border-radius: 999px; padding: 1.4mm 4mm; }\n\n/* Hero */\n.sh-hero { margin: 5mm 0 6mm; }\n.sh-hero__eyebrow { font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase; color: #008060; font-weight: 700; margin-bottom: 1.5mm; }\n.sh-hero__title { font-size: 20pt; font-weight: 800; letter-spacing: -0.025em; line-height: 1.08; margin: 0 0 2.5mm; }\n.sh-hero__sub { color: #5a6b62; font-size: 9.5pt; max-width: 150mm; line-height: 1.45; }\n\n/* Timeline */\n.sh-timeline { display: flex; justify-content: space-between; margin: 0 0 8mm; }\n.sh-step { flex: 1 1 0; text-align: center; position: relative; }\n.sh-step::before { content: \"\"; position: absolute; top: 4.5mm; left: -50%; width: 100%; height: 1.2mm; background: #d7e6df; z-index: 0; }\n.sh-step:first-child::before { display: none; }\n.sh-step--done::before, .sh-step--current::before { background: #2bb783; }\n.sh-step__dot { position: relative; z-index: 1; width: 9mm; height: 9mm; border-radius: 50%; margin: 0 auto 2mm; background: #eef4f1; border: 1.4mm solid #d7e6df; color: #fff; font-size: 10pt; line-height: 6.2mm; font-weight: 700; }\n.sh-step--done .sh-step__dot { background: #008060; border-color: #008060; }\n.sh-step--current .sh-step__dot { background: #fff; border-color: #008060; }\n.sh-step__label { font-size: 9pt; font-weight: 700; }\n.sh-step--pending .sh-step__label { color: #9aa6a0; }\n.sh-step__date { font-size: 8pt; color: #9aa6a0; margin-top: 0.5mm; }\n\n/* Section headings */\n.sh-h2 { font-size: 9pt; letter-spacing: 0.12em; text-transform: uppercase; color: #008060; font-weight: 700; margin: 0 0 3mm; }\n\n/* Product rows (hairline list — robust height) */\n.sh-items { border-top: 1px solid #e5efe9; margin-bottom: 8mm; }\n.sh-card { display: flex; align-items: center; gap: 4mm; padding: 3mm 1mm; border-bottom: 1px solid #e5efe9; }\n.sh-thumb { flex: 0 0 11mm; height: 11mm; border-radius: 2.2mm; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 10pt; color: #1f5c47; }\n.sh-card__body { flex: 1 1 auto; min-width: 0; }\n.sh-card__name { font-weight: 700; font-size: 10.5pt; }\n.sh-card__variant { color: #5a6b62; font-size: 9pt; margin-top: 0.3mm; }\n.sh-card__sku { color: #9aa6a0; font-size: 8pt; margin-top: 0.4mm; }\n.sh-card__qty { flex: 0 0 auto; color: #5a6b62; font-size: 10pt; font-variant-numeric: tabular-nums; }\n.sh-card__price { flex: 0 0 28mm; text-align: right; font-weight: 800; font-size: 11pt; font-variant-numeric: tabular-nums; }\n\n/* Footer split */\n.sh-foot { display: flex; gap: 8mm; align-items: flex-start; }\n.sh-ship { flex: 1 1 0; }\n.sh-ship__addr { line-height: 1.45; font-size: 9.5pt; margin-bottom: 3.5mm; }\n.sh-track { background: #f6faf8; border: 1px solid #e5efe9; border-radius: 3mm; padding: 3mm 4mm; }\n.sh-track__row { display: flex; justify-content: space-between; padding: 1mm 0; font-size: 9.5pt; }\n.sh-track__row span { color: #5a6b62; }\n.sh-qr { display: flex; align-items: center; gap: 3mm; margin-top: 3.5mm; font-size: 9pt; color: #5a6b62; }\n.sh-qr svg { width: 17mm; height: 17mm; }\n\n.sh-summary { flex: 0 0 68mm; background: #103d30; color: #eafaf4; border-radius: 4mm; padding: 5mm 5.5mm; }\n.sh-summary .sh-h2 { color: #7fe3c3; }\n.sh-srow { display: flex; justify-content: space-between; padding: 1.4mm 0; font-size: 10pt; color: #cfe9df; }\n.sh-srow--disc span:last-child { color: #7fe3c3; }\n.sh-srow--total { margin-top: 2mm; padding-top: 2.5mm; border-top: 1px solid #2e5a4b; font-size: 14pt; font-weight: 800; color: #ffffff; }\n.sh-srow__note { margin-top: 2.5mm; font-size: 8pt; color: #8fb3a6; }",
+  "example_data": {
+    "id": "20114",
+    "status": "Bezahlt",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "email": "hallo@beispiel-handel.de",
+      "website": "www.beispiel-handel.de"
+    },
+    "summary": {
+      "total": {
+        "amount": "102.82",
+        "currency": "EUR"
+      },
+      "discount": {
+        "amount": "-10.88",
+        "currency": "EUR"
+      },
+      "shipping": {
+        "amount": "4.90",
+        "currency": "EUR"
+      },
+      "subtotal": {
+        "amount": "108.80",
+        "currency": "EUR"
+      },
+      "discountCode": "WELCOME10"
+    },
+    "language": "de",
+    "shipping": {
+      "eta": "2026-06-23",
+      "method": "DHL Paket",
+      "carrier": "DHL",
+      "tracking": "00 3404 3499 8821 0021"
+    },
+    "timeline": [
+      {
+        "date": "19.06.",
+        "label": "Bestellt",
+        "state": "done"
+      },
+      {
+        "date": "19.06.",
+        "label": "Bezahlt",
+        "state": "done"
+      },
+      {
+        "date": "in Kürze",
+        "label": "Versand",
+        "state": "current"
+      },
+      {
+        "date": "—",
+        "label": "Zugestellt",
+        "state": "pending"
+      }
+    ],
+    "firstName": "Lena",
+    "statusUrl": "https://shop.beispiel-handel.de/orders/AB-2026-10892",
+    "documentDate": "2026-06-19",
+    "paymentMethod": "Kreditkarte ···· 4242",
+    "customerNumber": "K-55210",
+    "documentNumber": "AB-2026-10892",
+    "documentAddress": {
+      "city": "Berlin",
+      "name": "Lena Brandt",
+      "street": "Kastanienallee 47",
+      "country": "Deutschland",
+      "zipCode": "10435"
+    },
+    "products": [
+      {
+        "name": "Aroma Roast — Bio Espressobohnen",
+        "thumb": "#d8c3b0",
+        "number": "COF-ESP-1000",
+        "variant": "1 kg · ganze Bohne",
+        "initials": "AR",
+        "quantity": 2,
+        "lineTotal": {
+          "amount": "44.00",
+          "currency": "EUR"
+        }
+      },
+      {
+        "name": "Pour-Over Handfilter-Set",
+        "thumb": "#cfe3dc",
+        "number": "ACC-POV-01",
+        "variant": "Keramik, weiß",
+        "initials": "PO",
+        "quantity": 1,
+        "lineTotal": {
+          "amount": "39.90",
+          "currency": "EUR"
+        }
+      },
+      {
+        "name": "Espressotassen 2er-Set",
+        "thumb": "#e6d7e8",
+        "number": "ACC-CUP-2",
+        "variant": "80 ml · Steingut",
+        "initials": "ET",
+        "quantity": 1,
+        "lineTotal": {
+          "amount": "24.90",
+          "currency": "EUR"
+        }
+      }
+    ]
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Bestellbestätigung",
+      "status_paid": "Bezahlt",
+      "thanks": "Danke für deine Bestellung",
+      "hero_pre": "Wir haben deine Bestellung vom",
+      "hero_post": "erhalten und bereiten alles für den Versand vor. Du erhältst eine E-Mail, sobald dein Paket unterwegs ist.",
+      "your_items": "Deine Artikel",
+      "artno": "Art.-Nr.",
+      "delivery": "Lieferung",
+      "ship_method": "Versandart",
+      "tracking_no": "Sendungsnummer",
+      "eta": "Voraussichtlich",
+      "track": "Sendung verfolgen",
+      "summary": "Zusammenfassung",
+      "subtotal": "Zwischensumme",
+      "shipping": "Versand",
+      "discount": "Rabatt",
+      "total": "Gesamt",
+      "summary_note": "inkl. MwSt · Zahlung:"
+    },
+    "en": {
+      "doc_title": "Order Confirmation",
+      "status_paid": "Paid",
+      "thanks": "Thanks for your order",
+      "hero_pre": "We received your order from",
+      "hero_post": "and are getting everything ready for shipment. You'll receive an email as soon as your parcel is on its way.",
+      "your_items": "Your items",
+      "artno": "Item no.",
+      "delivery": "Delivery",
+      "ship_method": "Shipping method",
+      "tracking_no": "Tracking number",
+      "eta": "Estimated",
+      "track": "Track shipment",
+      "summary": "Summary",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "discount": "Discount",
+      "total": "Total",
+      "summary_note": "incl. VAT · Payment:"
+    }
+  }
+}

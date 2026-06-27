@@ -1,0 +1,27 @@
+{
+  "id": "outbound_lead_time",
+  "version": 1,
+  "icon": "clock",
+  "category": "logistics",
+  "order": 305,
+  "kpi": {
+    "key": "outbound_lead_time",
+    "unit": "days",
+    "value_type": "duration",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Durchschnittliche Anzahl Tage zwischen Auftragseingang und Übergabe an den Versanddienstleister aus Versandbelegen der letzten 30 Tage; ein einzelner Datensatz.",
+    "sql_string": "\nSELECT \n  ROUND(AVG(EXTRACT(DAY FROM (dn.sent_at - so.date)))::numeric, 2) AS \"Durchschnittliche_Tage_bis_Versand\"\nFROM delivery_notes dn\nLEFT JOIN sales_orders so ON dn.sales_order_id = so.sales_order_id\nWHERE dn.sent_at IS NOT NULL\n  AND so.date IS NOT NULL\n  AND dn.sent_at >= CURRENT_DATE - INTERVAL '30 days'\nLIMIT 1\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Outbound lead time",
+      "description": "Average days between order receipt and parcel hand-off to the carrier."
+    },
+    "de": {
+      "title": "Lieferzeit Ø",
+      "description": "Mittlere Tage von Auftragseingang bis Paket-Übergabe an den Versanddienstleister."
+    }
+  }
+}

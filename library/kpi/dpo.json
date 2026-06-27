@@ -1,0 +1,27 @@
+{
+  "id": "dpo",
+  "version": 1,
+  "icon": "calendar",
+  "category": "finance",
+  "order": 410,
+  "kpi": {
+    "key": "dpo",
+    "unit": "days",
+    "value_type": "duration",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Days Payables Outstanding: durchschnittliche Anzahl Tage bis Eingangsrechnungen bezahlt werden, rollierendes 90-Tage-Fenster; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(AVG(DATEDIFF(day, date_trunc('day', l.invoice_date), date_trunc('day', COALESCE(l.paid_at_date, CURRENT_DATE))))::NUMERIC, 2) AS dpo_days\nFROM liabilities l\nWHERE l.status_document NOT IN ('canceled')\n  AND l.invoice_date >= DATEADD(day, -90, CURRENT_DATE)\n  AND l.invoice_date <= CURRENT_DATE\n  AND l.paid_at_date IS NOT NULL\n  AND l.is_paid = TRUE;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Days payables outstanding (DPO)",
+      "description": "Average days the business takes to pay suppliers — the longer, the better for working capital."
+    },
+    "de": {
+      "title": "Verbindlichkeitslaufzeit",
+      "description": "Durchschnittliche Tage, bis Lieferanten bezahlt werden — je länger, desto mehr Liquidität bleibt im Unternehmen."
+    }
+  }
+}

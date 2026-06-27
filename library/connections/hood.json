@@ -1,0 +1,15 @@
+{
+  "id": "hood",
+  "version": 1,
+  "name": "Hood.de",
+  "domain": "hood.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Hood-Marktplatz — Aufträge und Listings synchronisieren."
+    },
+    "de": {
+      "description": "Hood-Marktplatz — Aufträge und Listings synchronisieren."
+    }
+  }
+}

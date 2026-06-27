@@ -1,0 +1,174 @@
+{
+  "id": "judged_order_creation",
+  "version": 1,
+  "category": "customer_service",
+  "icon": "shield-check",
+  "order": 175,
+  "trigger_type": "manual",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Auftrag mit Prüf-Instanz anlegen",
+      "description": "Ein Agent entwirft aus einer Anfrage einen Verkaufsauftrag, und eine\nPrüf-Instanz beurteilt den Entwurf, bevor er ins ERP geschrieben wird.\nDie Prüf-Instanz ist der Sicherheitsgurt für die unzuverlässigen\nSchritte (Agenten und Menschen): Sie versteht die Aufgabe, schaut sich\nden Entwurf an, prüft optionale harte Regeln und fällt ein Urteil mit\nBegründung.\n\n**Was Schritt für Schritt passiert**\n\n1. Der Workflow wird per Hand mit einer Anfrage gestartet.\n2. Der Agent entwirft daraus einen Verkaufsauftrag (Kunde,\n   Positionen).\n3. Die Prüf-Instanz beurteilt den Entwurf. Reißt eine harte Regel,\n   ist das Urteil sofort „zweifelhaft\"; sonst entscheidet ein\n   LLM-Urteil anhand der eingestellten Strenge.\n4. Bei „bestätigt\" wird der Auftrag im ERP angelegt.\n5. Bei „zweifelhaft\" wird eine Aufgabe für einen Menschen erzeugt,\n   die die Begründungen der Prüf-Instanz auflistet.\n\n**Was verändert wird**\n\n- Nur im bestätigten Zweig entsteht ein neuer Verkaufsauftrag.\n- Im zweifelhaften Zweig wird nichts ins ERP geschrieben, sondern\n  eine Prüf-Aufgabe für einen Menschen erstellt.\n\n**Voraussetzungen und Grenzen**\n\n- Die Prüf-Instanz ersetzt kein Vier-Augen-Prinzip bei kritischen\n  Vorgängen, sondern filtert die offensichtlich zweifelhaften Fälle\n  heraus.\n- Die harten Regeln sind optional; ohne sie entscheidet allein das\n  LLM-Urteil.\n- Das Lernen aus Rückmeldungen ist noch nicht aktiv — die Prüf-\n  Instanz urteilt in dieser Fassung zustandslos je Lauf.\n",
+      "recommended_when": "Wenn ein Agenten- oder Menschen-Schritt vor dem Schreiben geprüft werden soll",
+      "tags": [
+        "Kundenservice",
+        "Auftrag",
+        "Prüfung"
+      ]
+    },
+    "en": {
+      "name": "Create order with a judgment gate",
+      "description": "An agent drafts a sales order from a request, and a judgment gate\nreviews the draft before it is written into the ERP. The judgment\ngate is the safety belt for the unreliable steps (agents and\npeople): it understands the task, inspects the draft, checks\noptional hard rules and returns a verdict with reasons.\n\n**What happens step by step**\n\n1. The workflow is started by hand with a request.\n2. The agent drafts a sales order from it (customer, positions).\n3. The judgment gate reviews the draft. If a hard rule fails the\n   verdict is immediately \"doubtful\"; otherwise an LLM verdict\n   decides based on the configured strictness.\n4. On \"confident\" the order is created in the ERP.\n5. On \"doubtful\" a task is raised for a human that lists the\n   judgment gate's reasons.\n\n**What gets changed**\n\n- Only the confident branch creates a new sales order.\n- The doubtful branch writes nothing into the ERP and instead\n  raises a review task for a human.\n\n**Prerequisites and limits**\n\n- The judgment gate does not replace a four-eyes principle on\n  critical operations; it filters out the obviously doubtful\n  cases.\n- The hard rules are optional; without them the LLM verdict\n  decides alone.\n- Learning from feedback is not active yet — in this version the\n  judgment gate judges statelessly per run.\n",
+      "recommended_when": "When an agent or human step should be checked before writing",
+      "tags": [
+        "Customer service",
+        "Order",
+        "Review"
+      ],
+      "node_titles": {
+        "n_trig": "Start by hand with a request",
+        "n_agent": "Draft a sales order from the request",
+        "n_judge": "Judge whether the draft is sound",
+        "n_create": "Create the sales order in the ERP",
+        "n_review": "Ask a human to review the draft"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-manual",
+        "config": {
+          "title": "Per Hand mit einer Anfrage starten"
+        }
+      }
+    },
+    {
+      "id": "n_agent",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "agent",
+        "config": {
+          "title": "Verkaufsauftrag aus der Anfrage entwerfen",
+          "varName": "draftOrder",
+          "model": "gpt-5.1",
+          "prompt": "Draft a sales order from this request: {{ trigger.request }}. Return the customer and the positions.\n"
+        }
+      }
+    },
+    {
+      "id": "n_judge",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "judgment",
+        "config": {
+          "title": "Beurteilen, ob der Entwurf stimmig ist",
+          "varName": "orderCheck",
+          "intent": "Prüfe, ob der vom Agenten entworfene Verkaufsauftrag fachlich stimmig und vollständig ist: ein Kunde ist genannt, mindestens eine Position ist vorhanden, und nichts wirkt unplausibel.",
+          "watch": "{{ draftOrder }}",
+          "threshold": "medium",
+          "rules": [
+            {
+              "label": "Der Entwurf darf nicht leer sein",
+              "expression": "bool(draftOrder)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "n_create",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Verkaufsauftrag im ERP anlegen",
+          "varName": "createOrder",
+          "entityKey": "SalesOrder",
+          "entityLabel": "Sales order",
+          "operations": [
+            "create"
+          ],
+          "params": {
+            "create": {
+              "body": {
+                "customer": {
+                  "mode": "ref",
+                  "from": "n_agent",
+                  "path": "customer"
+                },
+                "positions": {
+                  "mode": "ref",
+                  "from": "n_agent",
+                  "path": "positions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_review",
+      "type": "wfNode",
+      "position": {
+        "x": 420,
+        "y": 800
+      },
+      "data": {
+        "typeId": "human-task",
+        "config": {
+          "title": "Einen Menschen um Prüfung bitten",
+          "varName": "reviewTask",
+          "mode": "task",
+          "taskText": "Auftragsentwurf prüfen",
+          "taskDescription": "Die Prüf-Instanz hält den Auftragsentwurf für zweifelhaft. Gründe: {{ orderCheck.reasons }}\n"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_agent"
+    },
+    {
+      "id": "e2",
+      "source": "n_agent",
+      "target": "n_judge"
+    },
+    {
+      "id": "e3",
+      "source": "n_judge",
+      "target": "n_create",
+      "sourceHandle": "a",
+      "targetHandle": "in:create"
+    },
+    {
+      "id": "e4",
+      "source": "n_judge",
+      "target": "n_review",
+      "sourceHandle": "b"
+    }
+  ]
+}

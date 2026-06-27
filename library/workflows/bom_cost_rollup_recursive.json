@@ -1,0 +1,562 @@
+{
+  "id": "bom_cost_rollup_recursive",
+  "version": 1,
+  "category": "warehouse",
+  "icon": "warehouse",
+  "order": 168,
+  "popular": true,
+  "trigger_type": "manual",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Stücklisten-EK rekursiv kalkulieren (Self-Call)",
+      "description": "Berechnet den Einkaufspreis (EK) jeder Stückliste rekursiv von unten\nnach oben und schreibt das Ergebnis als kalkulierten EK an jedes\nProdukt zurück — auch bei beliebig tief verschachtelten Stücklisten.\nDafür ruft sich der Workflow pro Bauteil selbst auf: Jeder Aufruf\nkommt erst zurück, wenn alle seine Kinder gerechnet sind, also\nergibt sich die Reihenfolge von selbst — ganz ohne Arbeits-Stack,\nWhile oder Code. Nutzt die rohe Xentral-API (kein Business-Entity\nnötig).\n\n**So funktioniert der Algorithmus**\n\n```\nStart\n ├─ ohne Produkt-ID (Treiber)\n │    └─ für jedes Produkt → eigene Kalkulation starten (Selbstaufruf)\n └─ mit Produkt-ID (Rekursion)\n      ├─ hat Bauteile   → Σ ( EK(Bauteil) × Menge )\n      │                   → als kalkulierten EK speichern → Summe zurück\n      └─ keine Bauteile → Preis des STANDARD-Lieferanten\n                          (kleinste Staffelmenge) zurückgeben\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Ohne Produkt-ID gestartet, lädt der Workflow alle Produkte und\n   stößt für jedes einzelne eine eigene Kalkulation an — der\n   Workflow ruft sich dafür selbst auf.\n2. Mit Produkt-ID aufgerufen, lädt er die Bauteile dieses Produkts.\n3. Hat das Produkt Bauteile, ist es eine Stückliste: Für jedes\n   Bauteil wird der EK per Selbstaufruf berechnet, mit der\n   verbauten Menge multipliziert und aufsummiert.\n4. Die Summe wird als kalkulierter EK am Produkt gespeichert und an\n   den Aufrufer zurückgegeben.\n5. Hat es keine Bauteile, ist es ein zugekaufter Artikel: Seine\n   Lieferantenpreise werden geladen und der Preis des\n   STANDARD-Lieferanten in der kleinsten Staffelmenge (der\n   Einstiegspreis ab Menge 1) gewählt — bewusst nicht einfach die\n   erste Preiszeile, die auch von einem Alternativ-Lieferanten\n   stammen kann. Ist kein Standard-Lieferant hinterlegt, gilt der\n   günstigste Basis-Staffelpreis über alle Lieferanten.\n6. Bereits berechnete Baugruppen werden innerhalb eines Laufs nicht\n   doppelt gerechnet (cacheKey); zyklische Stücklisten (eine\n   Stückliste enthält sich selbst) werden über maxDepth erkannt\n   und gestoppt.\n\n**Was verändert wird**\n\n- Überschreibt das Feld „Kalkulierter EK\" an jeder Stückliste.\n- Zugekaufte Artikel werden nur gelesen, nie verändert.\n\n**Voraussetzungen und Grenzen**\n\n- Ein zugekaufter Artikel ohne hinterlegten Lieferantenpreis zählt\n  als 0 — die Einkaufspreise also gepflegt halten.\n- Wer stattdessen auf Basis des am Artikel gepflegten kalkulierten\n  EK rechnen will, nimmt die Schwester-Vorlage „Stücklisten-EK\n  rekursiv (nur kalkulierter EK)\".\n- Laufzeit: ~2 API-Aufrufe pro Artikel, streng nacheinander — grob\n  ~8 Min pro 1000 Artikel. Wegen des Lauf-Zeitlimits (Small 65 s /\n  Large 305 s) und möglichem API-Rate-Limit schafft EIN Lauf nur\n  ~100–200 Artikel. Große Kataloge portionsweise / seitenweise\n  abarbeiten (cacheKey wirkt nur innerhalb eines Laufs).\n",
+      "recommended_when": "Mehrstufige Stücklisten — EK von unten nach oben",
+      "tags": [
+        "Stückliste",
+        "Stücklisten",
+        "BOM",
+        "Einkaufspreis",
+        "EK",
+        "Kalkulation",
+        "Rekursion",
+        "Logistik",
+        "Fertigung",
+        "Produktion"
+      ]
+    },
+    "en": {
+      "name": "Recursive BOM cost rollup (self-call)",
+      "description": "Computes the purchase cost (EK) of every bill of materials bottom-up\nand writes the result back to each product as its calculated\npurchase price — including arbitrarily deep nesting. To do so the\nworkflow calls itself per component: each call returns only once all\nits children are costed, so the order falls out for free — with no\nwork stack, while loop or code. Uses the raw Xentral API (no\nBusiness-Entity required).\n\n**How the algorithm works**\n\n```\nStart\n ├─ without product ID (driver)\n │    └─ for each product → start its own calculation (self-call)\n └─ with product ID (recursion)\n      ├─ has components → Σ ( cost(component) × quantity )\n      │                   → save as calculated price → return the sum\n      └─ no components  → return the STANDARD supplier's price\n                          (smallest tier quantity)\n```\n\n**What happens step by step**\n\n1. Started without a product ID, the workflow loads all products\n   and kicks off a separate calculation for each one — the workflow\n   calls itself to do so.\n2. Called with a product ID, it loads that product's components.\n3. If the product has components, it is a bill of materials: for\n   each component the cost is computed via a self-call, multiplied\n   by the quantity used, and summed up.\n4. The total is saved as the product's calculated purchase price\n   and returned to the caller.\n5. If it has no components, it is a purchased article: its supplier\n   prices are loaded and the STANDARD supplier's price at the\n   smallest tier quantity (the qty-1 entry price) is picked —\n   deliberately not just the first price row, which may belong to\n   an alternative supplier. If no standard supplier is set, the\n   cheapest base tier across all suppliers is used.\n6. Sub-assemblies already computed in a run are not recalculated\n   (cacheKey); cyclic BOMs (an assembly containing itself) are\n   detected via maxDepth and stopped.\n\n**What gets changed**\n\n- Overwrites the \"calculated purchase price\" field on every bill of\n  materials.\n- Purchased articles are only read, never modified.\n\n**Prerequisites and limits**\n\n- A purchased article with no maintained supplier price counts as\n  0 — keep the purchase prices up to date.\n- To calculate on the basis of each article's stored calculated EK\n  instead, use the sibling template \"Recursive BOM cost rollup\n  (calculated EK only)\".\n- Runtime: ~2 API calls per article, strictly sequential — roughly\n  ~8 min per 1000 articles. Because of the per-run time limit\n  (Small 65 s / Large 305 s) and possible API rate limiting, ONE\n  run handles only ~100–200 articles. Process large catalogs in\n  batches / pages (cacheKey only dedupes within a single run).\n",
+      "recommended_when": "Multi-level bills of materials — bottom-up purchase cost",
+      "tags": [
+        "BOM",
+        "Bill of materials",
+        "Purchase price",
+        "Costing",
+        "Recursion",
+        "Logistics",
+        "Manufacturing"
+      ],
+      "node_titles": {
+        "n_trig": "Start — optionally with a product ID",
+        "n_pid": "Read the product ID from the start input",
+        "n_mode": "Was a specific product passed in?",
+        "n_all": "Load all products from Xentral",
+        "n_drive": "For each product, one by one",
+        "n_driveCall": "Start the cost calculation for this product",
+        "n_parts": "Load the BOM components of the product",
+        "n_has": "Is the product a bill of materials?",
+        "n_loop": "For each component: add up the cost",
+        "n_call": "Calculate the component's cost (self-call)",
+        "n_cpp": "Assemble the new calculated purchase price",
+        "n_write": "Save the calculated price on the product",
+        "n_out": "Return the calculated total to the caller",
+        "n_artikel": "Load the purchased article",
+        "n_price": "Load the article's supplier prices",
+        "n_leaf": "Pick the standard supplier's base-tier price",
+        "n_outLeaf": "Return the article's price to the caller"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "data": {
+        "typeId": "trigger-manual",
+        "config": {
+          "title": "Start — optional mit Produkt-ID"
+        }
+      }
+    },
+    {
+      "id": "n_pid",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 260
+      },
+      "data": {
+        "typeId": "expression",
+        "config": {
+          "title": "Produkt-ID aus dem Start übernehmen",
+          "varName": "pid",
+          "expression": "{{ trigger.produktId }}"
+        }
+      }
+    },
+    {
+      "id": "n_mode",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 440
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Wurde ein bestimmtes Produkt übergeben?",
+          "expression": "pid"
+        }
+      }
+    },
+    {
+      "id": "n_all",
+      "type": "wfNode",
+      "position": {
+        "x": 520,
+        "y": 640
+      },
+      "data": {
+        "typeId": "xentral-api",
+        "config": {
+          "title": "Alle Produkte aus Xentral laden",
+          "varName": "produkte",
+          "entityKey": "products",
+          "entityLabel": "Products",
+          "operations": [
+            {
+              "id": "product.listV2",
+              "kind": "list",
+              "method": "GET",
+              "path": "/api/v2/products",
+              "label": "List products"
+            }
+          ],
+          "params": {
+            "product.listV2": {
+              "query": {
+                "page[size]": 150
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_drive",
+      "type": "wfNode",
+      "position": {
+        "x": 520,
+        "y": 840
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jedes Produkt einzeln",
+          "varName": "Produkt",
+          "items": "{{ produkte.data }}"
+        }
+      }
+    },
+    {
+      "id": "n_driveCall",
+      "type": "wfNode",
+      "position": {
+        "x": 520,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "call-workflow",
+        "config": {
+          "title": "EK-Kalkulation für dieses Produkt starten",
+          "varName": "kalkulieren",
+          "workflowId": "self",
+          "input": [
+            {
+              "key": "produktId",
+              "value": "{{ Produkt.id }}"
+            }
+          ],
+          "cacheKey": "{{ Produkt.id }}",
+          "maxDepth": 50,
+          "onError": "propagate"
+        }
+      }
+    },
+    {
+      "id": "n_parts",
+      "type": "wfNode",
+      "position": {
+        "x": -160,
+        "y": 640
+      },
+      "data": {
+        "typeId": "xentral-api",
+        "config": {
+          "title": "Bauteile der Stückliste laden",
+          "varName": "bauteile",
+          "entityKey": "products",
+          "entityLabel": "Products",
+          "operations": [
+            {
+              "id": "product.listParts",
+              "kind": "list",
+              "method": "GET",
+              "path": "/api/v1/products/{id}/parts",
+              "label": "List parts"
+            }
+          ],
+          "params": {
+            "product.listParts": {
+              "path": {
+                "id": {
+                  "mode": "ref",
+                  "from": "n_pid",
+                  "path": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_has",
+      "type": "wfNode",
+      "position": {
+        "x": -160,
+        "y": 840
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Ist das Produkt eine Stückliste?",
+          "expression": "bool((bauteile or {}).get('data'))"
+        }
+      }
+    },
+    {
+      "id": "n_loop",
+      "type": "wfNode",
+      "position": {
+        "x": -380,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jedes Bauteil: Kosten aufsummieren",
+          "varName": "Bauteil",
+          "items": "{{ bauteile.data }}",
+          "rollupOp": "sum",
+          "rollupValue": "{{ ek }} * float({{ Bauteil.amount }})"
+        }
+      }
+    },
+    {
+      "id": "n_call",
+      "type": "wfNode",
+      "position": {
+        "x": -380,
+        "y": 1240
+      },
+      "data": {
+        "typeId": "call-workflow",
+        "config": {
+          "title": "EK des Bauteils berechnen (Selbstaufruf)",
+          "varName": "ek",
+          "workflowId": "self",
+          "input": [
+            {
+              "key": "produktId",
+              "value": "{{ Bauteil.product.id }}"
+            }
+          ],
+          "cacheKey": "{{ Bauteil.product.id }}",
+          "maxDepth": 50,
+          "onError": "propagate"
+        }
+      }
+    },
+    {
+      "id": "n_cpp",
+      "type": "wfNode",
+      "position": {
+        "x": -380,
+        "y": 1440
+      },
+      "data": {
+        "typeId": "expression",
+        "config": {
+          "title": "Neuen kalkulierten EK zusammenstellen",
+          "varName": "ekObjekt",
+          "expression": "{'hasCalculatedPurchasePrice': True, 'price': {'amount': str({{ Bauteil }}), 'currency': 'EUR'}}"
+        }
+      }
+    },
+    {
+      "id": "n_write",
+      "type": "wfNode",
+      "position": {
+        "x": -380,
+        "y": 1640
+      },
+      "data": {
+        "typeId": "xentral-api",
+        "config": {
+          "title": "Kalkulierten EK am Produkt speichern",
+          "varName": "ekSpeichern",
+          "entityKey": "products",
+          "entityLabel": "Products",
+          "operations": [
+            {
+              "id": "product.updateV2",
+              "kind": "update",
+              "method": "PATCH",
+              "path": "/api/v2/products/{id}",
+              "label": "Update product"
+            }
+          ],
+          "params": {
+            "product.updateV2": {
+              "path": {
+                "id": {
+                  "mode": "ref",
+                  "from": "n_pid",
+                  "path": ""
+                }
+              },
+              "body": {
+                "calculatedPurchasePrice": {
+                  "mode": "ref",
+                  "from": "n_cpp",
+                  "path": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_out",
+      "type": "wfNode",
+      "position": {
+        "x": -380,
+        "y": 1840
+      },
+      "data": {
+        "typeId": "output",
+        "config": {
+          "title": "Berechnete Summe an den Aufrufer zurückgeben",
+          "varName": "summe",
+          "value": "{{ Bauteil }}"
+        }
+      }
+    },
+    {
+      "id": "n_artikel",
+      "type": "wfNode",
+      "position": {
+        "x": 60,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "xentral-api",
+        "config": {
+          "title": "Zugekauften Artikel laden",
+          "varName": "artikel",
+          "entityKey": "products",
+          "entityLabel": "Products",
+          "operations": [
+            {
+              "id": "product.getV2",
+              "kind": "get",
+              "method": "GET",
+              "path": "/api/v2/products/{id}",
+              "label": "Get product"
+            }
+          ],
+          "params": {
+            "product.getV2": {
+              "path": {
+                "id": {
+                  "mode": "ref",
+                  "from": "n_pid",
+                  "path": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_price",
+      "type": "wfNode",
+      "position": {
+        "x": 60,
+        "y": 1240
+      },
+      "data": {
+        "typeId": "xentral-api",
+        "config": {
+          "title": "Lieferantenpreise des Artikels laden",
+          "varName": "preise",
+          "entityKey": "products",
+          "entityLabel": "Products",
+          "operations": [
+            {
+              "id": "product.listPurchasePrices",
+              "kind": "list",
+              "method": "GET",
+              "path": "/api/v1/products/{id}/purchasePrices",
+              "label": "List purchase prices"
+            }
+          ],
+          "params": {
+            "product.listPurchasePrices": {
+              "path": {
+                "id": {
+                  "mode": "ref",
+                  "from": "n_pid",
+                  "path": ""
+                }
+              },
+              "query": {
+                "page[number]": 1,
+                "page[size]": 50
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_leaf",
+      "type": "wfNode",
+      "position": {
+        "x": 60,
+        "y": 1440
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Standard-Lieferantenpreis (Basis-Staffel) ermitteln",
+          "varName": "leafEk",
+          "code": "rows = (preise.get('data') or []) if isinstance(preise, dict) else []\nsid = str(((artikel.get('data') or {}).get('standardSupplier') or {}).get('id') or '')\n# Prefer the standard supplier; if none matches, weigh all rows.\ncandidates = [r for r in rows if str((r.get('supplier') or {}).get('id')) == sid] or rows\n# Base tier = smallest staffel quantity (the qty-1 entry price).\nbest = min(candidates, key=lambda r: float(r.get('amount') or 1)) if candidates else {}\nresult = float((best.get('price') or {}).get('amount') or 0)\nlog(f\"EK {result} (standard supplier {sid or '?'}, {len(candidates)} of {len(rows)} row(s))\")\n"
+        }
+      }
+    },
+    {
+      "id": "n_outLeaf",
+      "type": "wfNode",
+      "position": {
+        "x": 60,
+        "y": 1640
+      },
+      "data": {
+        "typeId": "output",
+        "config": {
+          "title": "EK des Artikels an den Aufrufer zurückgeben",
+          "varName": "artikelEk",
+          "value": "{{ leafEk }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_pid"
+    },
+    {
+      "id": "e2",
+      "source": "n_pid",
+      "target": "n_mode"
+    },
+    {
+      "id": "e3",
+      "source": "n_mode",
+      "target": "n_all",
+      "sourceHandle": "b",
+      "targetHandle": "in:product.listV2"
+    },
+    {
+      "id": "e4",
+      "source": "n_all",
+      "target": "n_drive",
+      "sourceHandle": "data:product.listV2"
+    },
+    {
+      "id": "e5",
+      "source": "n_drive",
+      "target": "n_driveCall",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e6",
+      "source": "n_mode",
+      "target": "n_parts",
+      "sourceHandle": "a",
+      "targetHandle": "in:product.listParts"
+    },
+    {
+      "id": "e7",
+      "source": "n_parts",
+      "target": "n_has",
+      "sourceHandle": "data:product.listParts"
+    },
+    {
+      "id": "e8",
+      "source": "n_has",
+      "target": "n_loop",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e9",
+      "source": "n_loop",
+      "target": "n_call",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e10",
+      "source": "n_loop",
+      "target": "n_cpp",
+      "sourceHandle": "b"
+    },
+    {
+      "id": "e11",
+      "source": "n_cpp",
+      "target": "n_write",
+      "targetHandle": "in:product.updateV2"
+    },
+    {
+      "id": "e12",
+      "source": "n_write",
+      "target": "n_out"
+    },
+    {
+      "id": "e13",
+      "source": "n_has",
+      "target": "n_artikel",
+      "sourceHandle": "b",
+      "targetHandle": "in:product.getV2"
+    },
+    {
+      "id": "e14",
+      "source": "n_artikel",
+      "target": "n_price",
+      "sourceHandle": "data:product.getV2",
+      "targetHandle": "in:product.listPurchasePrices"
+    },
+    {
+      "id": "e15",
+      "source": "n_price",
+      "target": "n_leaf",
+      "sourceHandle": "data:product.listPurchasePrices"
+    },
+    {
+      "id": "e16",
+      "source": "n_leaf",
+      "target": "n_outLeaf"
+    }
+  ]
+}

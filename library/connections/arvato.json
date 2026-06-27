@@ -1,0 +1,15 @@
+{
+  "id": "arvato",
+  "version": 1,
+  "name": "Arvato Supply Chain",
+  "domain": "arvato-supply-chain.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "Konzern-Fulfillment für skalierende D2C-Brands — Order-Sync, Bestand, Tracking."
+    },
+    "de": {
+      "description": "Konzern-Fulfillment für skalierende D2C-Brands — Order-Sync, Bestand, Tracking."
+    }
+  }
+}

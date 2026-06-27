@@ -1,0 +1,168 @@
+{
+  "id": "picking_slip",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Kommissionierschein",
+      "description": "Formaler Kommissionierschein — stärker prozessorientiert als die einfache Pickliste: enthält Karton-/Behälterzuordnung, Teilkommissionierung, Sonderhinweise und einen abschließenden QS-Stempelbereich. Einsetzen, wenn die Kommissionierung über mehrere Stationen läuft (Pick → Pack → QS → Versand) und das Dokument mit der Ware mitläuft.\n"
+    },
+    "en": {
+      "title": "Picking slip (commissioning)",
+      "description": "Formal commissioning slip — more workflow-oriented than the bare pick list: includes box/carton assignment, partial-pick handling, special instructions, and a final QA stamp area. Use this when picking flows through multiple stations (pick → pack → QA → ship) and the document travels with the goods.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/salesOrders/{id}?include=all",
+  "filename_pattern": "PickingSlip-{documentNumber}.pdf",
+  "compliance": [],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "lineItems",
+      "documentAddress"
+    ],
+    "documentAddress": {
+      "required": [
+        "name"
+      ]
+    },
+    "lineItems": {
+      "item": {
+        "required": [
+          "number",
+          "name",
+          "quantity",
+          "unit"
+        ],
+        "optional": [
+          "storageLocation",
+          "weight",
+          "ean",
+          "boxNumber",
+          "isHazardous",
+          "requiresColdChain"
+        ]
+      }
+    },
+    "optional": [
+      "language",
+      "picker",
+      "packer",
+      "qa",
+      "instructions",
+      "boxCount"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set items = data.lineItems | default([]) %}\n\n{% block content %}\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  {# Workflow-Streifen — vier Stationen, eine pro Station Häkchen-Feld.\n     Macht den Status auf einen Blick sichtbar wenn der Schein durch\n     die Halle wandert. #}\n  <section class=\"ks-workflow\" aria-label=\"Workflow\">\n    {% for step in [\n      ('workflow_pick',  data.picker),\n      ('workflow_pack',  data.packer),\n      ('workflow_qa',    data.qa),\n      ('workflow_ship',  None),\n    ] %}\n    <div class=\"ks-workflow__step\">\n      <div class=\"ks-workflow__step-name\">{{ L[step[0]] }}</div>\n      <div class=\"ks-workflow__step-stamp\">{{ step[1] | default('') }}</div>\n    </div>\n    {% endfor %}\n  </section>\n\n  <section class=\"ks-meta\">\n    <dl class=\"ks-meta__dl\">\n      <div><dt>{{ L.order_no }}</dt><dd>{{ data.documentNumber }}</dd></div>\n      <div><dt>{{ L.date }}</dt><dd>{{ data.documentDate }}</dd></div>\n      {% if data.boxCount %}<div><dt>{{ L.box_count }}</dt><dd>{{ data.boxCount }}</dd></div>{% endif %}\n      <div class=\"ks-meta__addr\"><dt>{{ L.consignee }}</dt><dd>\n        {{ data.documentAddress.name }}<br>\n        {% if data.documentAddress.street %}{{ data.documentAddress.street }}<br>{% endif %}\n        {% if data.documentAddress.zipCode or data.documentAddress.city %}{{ data.documentAddress.zipCode }} {{ data.documentAddress.city }}{% endif %}\n      </dd></div>\n    </dl>\n  </section>\n\n  {% if data.instructions %}\n  <section class=\"ks-instructions\" aria-labelledby=\"ks-instr-heading\">\n    <h2 id=\"ks-instr-heading\">⚠ {{ L.instr_heading }}</h2>\n    <p>{{ data.instructions }}</p>\n  </section>\n  {% endif %}\n\n  <table class=\"ks-table\" aria-label=\"{{ L.doc_title }}\">\n    <thead>\n      <tr>\n        <th scope=\"col\" class=\"ks-table__col-loc\">{{ L.col_loc }}</th>\n        <th scope=\"col\" class=\"ks-table__col-sku\">{{ L.col_sku }}</th>\n        <th scope=\"col\" class=\"ks-table__col-name\">{{ L.col_name }}</th>\n        <th scope=\"col\" class=\"ks-table__col-qty\">{{ L.col_qty }}</th>\n        <th scope=\"col\" class=\"ks-table__col-picked\">{{ L.col_picked }}</th>\n        <th scope=\"col\" class=\"ks-table__col-box\">{{ L.col_box }}</th>\n      </tr>\n    </thead>\n    <tbody>\n      {% for it in items %}\n      <tr>\n        <td class=\"ks-table__col-loc\">{{ it.storageLocation | default('—') }}</td>\n        <td class=\"ks-table__col-sku\">\n          <div class=\"ks-sku\">{{ it.number }}</div>\n          {% if it.ean %}<div class=\"ks-ean\">{{ it.ean }}</div>{% endif %}\n        </td>\n        <td class=\"ks-table__col-name\">\n          {{ it.name }}\n          {% if it.isHazardous or it.requiresColdChain %}\n          <div class=\"ks-flags\">\n            {% if it.isHazardous %}<span class=\"ks-flag ks-flag--hazard\">⚠ {{ L.flags_hazard }}</span>{% endif %}\n            {% if it.requiresColdChain %}<span class=\"ks-flag ks-flag--cold\">❄ {{ L.flags_cold }}</span>{% endif %}\n          </div>\n          {% endif %}\n        </td>\n        <td class=\"ks-table__col-qty\"><strong>{{ it.quantity | number }}</strong> {{ it.unit }}</td>\n        <td class=\"ks-table__col-picked\">\n          <span class=\"ks-picked-box\"></span>\n        </td>\n        <td class=\"ks-table__col-box\">\n          <span class=\"ks-box-input\">{{ it.boxNumber | default('') }}</span>\n        </td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <section class=\"ks-sigs\" aria-labelledby=\"ks-sigs-heading\">\n    <h2 id=\"ks-sigs-heading\" class=\"sr-only\">Signatures</h2>\n    <table class=\"ks-sigs__table\">\n      <thead>\n        <tr>\n          <th></th>\n          <th>{{ L.sig_name }}</th>\n          <th>{{ L.sig_signature }}</th>\n          <th>{{ L.sig_time }}</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr><th>{{ L.picker }}</th><td>{{ data.picker | default('') }}</td><td></td><td></td></tr>\n        <tr><th>{{ L.packer }}</th><td>{{ data.packer | default('') }}</td><td></td><td></td></tr>\n        <tr><th>{{ L.qa }}</th><td>{{ data.qa | default('') }}</td><td></td><td></td></tr>\n      </tbody>\n    </table>\n  </section>\n\n{% endblock %}\n",
+  "css": "/* Kommissionierschein — Workflow-Streifen oben, Item-Tabelle mit Soll/\n   Ist + Karton-Spalte, Signaturen unten. Schwerpunkt: Status auf einen\n   Blick beim Durchlaufen Pick → Pack → QS → Versand. */\n\n.sr-only {\n  position: absolute;\n  width: 1px; height: 1px;\n  overflow: hidden;\n  clip: rect(0 0 0 0);\n}\n\n.ks-workflow {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: 3mm;\n  margin: 4mm 0 6mm;\n}\n.ks-workflow__step {\n  border: 0.3mm solid #d1d5db;\n  border-radius: 1mm;\n  padding: 3mm 4mm;\n  min-height: 14mm;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n}\n.ks-workflow__step-name {\n  font-size: 8pt;\n  font-weight: 700;\n  letter-spacing: 0.4px;\n  text-transform: uppercase;\n  color: #6b7280;\n}\n.ks-workflow__step-stamp {\n  font-size: 11pt;\n  font-weight: 600;\n  color: #111827;\n  min-height: 6mm;\n  border-bottom: 0.2mm dashed #d1d5db;\n}\n\n.ks-meta {\n  margin-bottom: 4mm;\n}\n.ks-meta__dl {\n  display: grid;\n  grid-template-columns: repeat(2, max-content 1fr);\n  gap: 1mm 4mm;\n  margin: 0;\n  font-size: 9.5pt;\n}\n.ks-meta__dl > div { display: contents; }\n.ks-meta__dl dt {\n  font-weight: 700;\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  color: #4b5563;\n}\n.ks-meta__dl dd { margin: 0; }\n.ks-meta__addr dd { line-height: 1.35; }\n\n.ks-instructions {\n  margin: 4mm 0 6mm;\n  padding: 3mm 5mm;\n  background: rgba(245, 158, 11, 0.10);\n  border: 0.3mm solid rgba(245, 158, 11, 0.4);\n  border-radius: 1mm;\n}\n.ks-instructions h2 {\n  margin: 0 0 1mm;\n  font-size: 10pt;\n  color: #92400e;\n}\n.ks-instructions p {\n  margin: 0;\n  font-size: 9.5pt;\n  line-height: 1.4;\n  color: #1f2937;\n}\n\n.ks-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 9.5pt;\n}\n.ks-table thead th {\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  text-align: left;\n  background: #f3f4f6;\n  border-bottom: 0.4mm solid #6b7280;\n  padding: 2mm 3mm;\n  color: #374151;\n}\n.ks-table tbody td {\n  padding: 2.5mm 3mm;\n  border-bottom: 0.2mm solid #e5e7eb;\n  vertical-align: middle;\n}\n.ks-table__col-loc {\n  width: 22mm;\n  font-weight: 700;\n  font-family: monospace;\n  font-size: 10pt;\n  letter-spacing: 0.5pt;\n}\n.ks-table__col-sku    { width: 30mm; }\n.ks-table__col-qty    {\n  width: 18mm;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n}\n.ks-table__col-picked { width: 14mm; text-align: center; }\n.ks-table__col-box    { width: 16mm; text-align: center; }\n\n.ks-sku {\n  font-family: monospace;\n  font-size: 10pt;\n  font-weight: 600;\n}\n.ks-ean {\n  font-family: monospace;\n  font-size: 8pt;\n  color: #6b7280;\n}\n.ks-flags {\n  display: flex;\n  gap: 2mm;\n  margin-top: 1mm;\n  flex-wrap: wrap;\n}\n.ks-flag {\n  font-size: 8pt;\n  font-weight: 700;\n  letter-spacing: 0.3px;\n  padding: 0.5mm 2mm;\n  border-radius: 1mm;\n}\n.ks-flag--hazard {\n  background: rgba(239, 68, 68, 0.12);\n  color: #991b1b;\n}\n.ks-flag--cold {\n  background: rgba(59, 130, 246, 0.12);\n  color: #1e40af;\n}\n\n.ks-picked-box {\n  display: inline-block;\n  width: 6mm;\n  height: 6mm;\n  border: 0.4mm solid #111827;\n  border-radius: 0.5mm;\n}\n.ks-box-input {\n  display: inline-block;\n  width: 14mm;\n  height: 6mm;\n  border-bottom: 0.3mm solid #111827;\n  font-family: monospace;\n  font-weight: 600;\n  padding-top: 1mm;\n}\n\n.ks-sigs {\n  margin-top: 12mm;\n}\n.ks-sigs__table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 9.5pt;\n}\n.ks-sigs__table th {\n  text-align: left;\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  color: #6b7280;\n  padding: 1mm 2mm;\n  font-weight: 700;\n  border-bottom: 0.2mm solid #d1d5db;\n}\n.ks-sigs__table tbody th {\n  width: 25mm;\n  text-transform: none;\n  font-size: 10pt;\n  color: #374151;\n}\n.ks-sigs__table tbody td {\n  border-bottom: 0.3mm solid #111827;\n  padding: 1mm 2mm;\n  height: 10mm;\n  vertical-align: bottom;\n}\n",
+  "example_data": {
+    "documentNumber": "AUF-2026-04412",
+    "documentDate": "2026-05-12",
+    "language": "de",
+    "picker": "M. Schulze",
+    "packer": "L. Hartmann",
+    "boxCount": 2,
+    "instructions": "Fragile — Karton 2 enthält Glaslampen, oben einlagern.",
+    "documentAddress": {
+      "name": "Beispiel Logistik GmbH",
+      "street": "Lagerstraße 45",
+      "zipCode": "70378",
+      "city": "Stuttgart"
+    },
+    "lineItems": [
+      {
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "ean": "4012345678901",
+        "storageLocation": "A-12-03",
+        "quantity": 2,
+        "unit": "Stk",
+        "boxNumber": "1"
+      },
+      {
+        "number": "ART-019",
+        "name": "Tischlampe LED warmweiß",
+        "ean": "4012345679113",
+        "storageLocation": "C-22-14",
+        "quantity": 4,
+        "unit": "Stk",
+        "boxNumber": "2"
+      },
+      {
+        "number": "ART-501",
+        "name": "Reinigungsspray (Aerosol)",
+        "ean": "4012345680010",
+        "storageLocation": "H-99-01",
+        "quantity": 6,
+        "unit": "Stk",
+        "boxNumber": "1",
+        "isHazardous": true
+      }
+    ],
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Kommissionierschein",
+      "order_no": "Auftrag",
+      "date": "Datum",
+      "consignee": "Lieferadresse",
+      "box_count": "Anzahl Kartons",
+      "picker": "Picker",
+      "packer": "Packer",
+      "qa": "QS",
+      "instr_heading": "Besondere Hinweise",
+      "col_loc": "Lagerort",
+      "col_sku": "Artikel",
+      "col_name": "Bezeichnung",
+      "col_qty": "Soll",
+      "col_picked": "Ist",
+      "col_unit": "Einheit",
+      "col_box": "Karton",
+      "flags_hazard": "Gefahrgut",
+      "flags_cold": "Kühlkette",
+      "workflow_pick": "Pick",
+      "workflow_pack": "Pack",
+      "workflow_qa": "QS",
+      "workflow_ship": "Versand",
+      "sig_name": "Name",
+      "sig_signature": "Unterschrift",
+      "sig_time": "Zeit"
+    },
+    "en": {
+      "doc_title": "Picking slip",
+      "order_no": "Order",
+      "date": "Date",
+      "consignee": "Ship-to",
+      "box_count": "Box count",
+      "picker": "Picker",
+      "packer": "Packer",
+      "qa": "QA",
+      "instr_heading": "Special instructions",
+      "col_loc": "Bin",
+      "col_sku": "Item",
+      "col_name": "Description",
+      "col_qty": "Target",
+      "col_picked": "Picked",
+      "col_unit": "Unit",
+      "col_box": "Box",
+      "flags_hazard": "Hazmat",
+      "flags_cold": "Cold chain",
+      "workflow_pick": "Pick",
+      "workflow_pack": "Pack",
+      "workflow_qa": "QA",
+      "workflow_ship": "Ship",
+      "sig_name": "Name",
+      "sig_signature": "Signature",
+      "sig_time": "Time"
+    }
+  }
+}

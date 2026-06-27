@@ -1,0 +1,272 @@
+{
+  "id": "xentral_classic_bestellung",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Classic (Bestellung)",
+      "description": "Bestellung an Lieferanten im Xentral-Classic-Stil (BLANCO-Skin) mit xentral-Logo, mehrsprachig."
+    },
+    "en": {
+      "title": "Xentral Classic (Purchase Order)",
+      "description": "Purchase order to suppliers in the Xentral Classic style (BLANCO skin) with xentral logo, multilingual."
+    }
+  },
+  "v3_endpoint": "/api/v3/purchaseOrders/{id}?include=all",
+  "filename_pattern": "Bestellung-{documentNumber}.pdf",
+  "compliance": [],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en",
+    "fr",
+    "nl"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% set SHOW_PRICES = (data.showPrices | default(true)) %}\n\n{% set buyer   = data.documentAddress | default({}) %}\n{% set sold    = ((data.effectiveAddresses or {}).soldTo) | default(buyer) %}\n{% set ship    = ((data.effectiveAddresses or {}).shipTo) | default({}) %}\n{% set items   = data.lineItems | default([]) %}\n{% set contact = data.contactPerson | default({}) %}\n{% set comp    = data.company | default({}) %}\n{% set pay     = data.payment | default({}) %}\n{% set terms   = data.financials.paymentTerms.paymentTargetDays %}\n\n{% set _ship_differs = ship and ship.name and ((ship.street or '') != (sold.street or '') or (ship.zipCode or '') != (sold.zipCode or '') or (ship.name or '') != (sold.name or '')) %}\n\n{%- macro eur(v) -%}\n{%- set cents = ((v | float) * 100 + 0.5) | int -%}\n{%- set euros = (cents // 100) -%}\n{%- set rem = cents - euros * 100 -%}\n{%- set digits = euros | string -%}\n{%- set n = digits | length -%}\n{%- set ns = namespace(out='') -%}\n{%- for i in range(n) -%}\n{%- if i > 0 and (n - i) % 3 == 0 -%}{%- set ns.out = ns.out ~ '.' -%}{%- endif -%}\n{%- set ns.out = ns.out ~ digits[i] -%}\n{%- endfor -%}\n{{ ns.out }},{{ '%02d' | format(rem) }}\n{%- endmacro -%}\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% block content %}\n<div class=\"bl-doc\">\n  <table class=\"bl-foot\"><tr>\n    <td class=\"bl-foot-col\">{{ comp.name }}<br>{{ comp.street | default(comp.address) }}<br>{% if comp.zipCity %}{{ comp.zipCity }}{% endif %}</td>\n    <td class=\"bl-foot-col\">{% if comp.vatId %}{{ L.vat_id_label }} {{ comp.vatId }}<br>{% endif %}{% if comp.hrb %}HRB {{ comp.hrb }}<br>{% endif %}{% if comp.phone %}Telefon {{ comp.phone }}{% endif %}</td>\n    <td class=\"bl-foot-col\">{% if comp.ceo %}{{ L.ceo_title }}:<br>{{ comp.ceo }}<br>{% endif %}E-Mail: {{ comp.email | default('') }}</td>\n  </tr></table>\n\n  <header class=\"bl-top\">\n    {% if assets.logo %}<img src=\"{{ assets.logo }}\" alt=\"{{ comp.name }}\" class=\"bl-logo\">{% endif %}\n  </header>\n  <p class=\"bl-sender\">{{ comp.name }}{% if comp.address %}, {{ comp.address }}{% endif %}</p>\n  <address class=\"bl-recipient\">{{ buyer.name }}<br>{% if buyer.coName %}{{ buyer.coName }}<br>{% endif %}{{ buyer.street }}<br>{{ buyer.zipCode }} {{ buyer.city }}</address>\n  <div class=\"bl-subject-row\">\n    <h1 class=\"bl-subject\">{{ L.doc_title }} {{ data.documentNumber }}</h1>\n    <table class=\"bl-info\"><tbody>\n      {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}:</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n      {% if data.documentDate %}<tr><th scope=\"row\">{{ L.invoice_date }}:</th><td>{{ data.documentDate | date }}</td></tr>{% endif %}\n      {% if data.deliveryDate %}<tr><th scope=\"row\">{{ L.service_date }}:</th><td>{{ data.deliveryDate | date }}</td></tr>{% endif %}\n      {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.order_ref }}:</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n      {% if contact.name %}<tr><th scope=\"row\">{{ L.processor }}:</th><td>{{ contact.name }}</td></tr>{% endif %}\n      {% if comp.email %}<tr><th scope=\"row\">E-Mail:</th><td>{{ comp.email }}</td></tr>{% endif %}\n    </tbody></table>\n  </div>\n  <div class=\"bl-intro\"><p>{{ L.salutation }}</p><p>{{ L.thank_you }}</p></div>\n  {% if SHOW_PRICES %}<table class=\"bl-items\">\n    <colgroup><col class=\"c-pos\"><col class=\"c-artno\"><col class=\"c-art\"><col class=\"c-qty\"><col class=\"c-vat\"><col class=\"c-unit\"><col class=\"c-total\"></colgroup>\n    <thead><tr><th scope=\"col\">{{ L.col_pos }}</th><th scope=\"col\">{{ L.col_artno }}</th><th scope=\"col\">{{ L.col_article }}</th><th scope=\"col\" class=\"num\">{{ L.col_qty }}</th><th scope=\"col\" class=\"num\">{{ L.col_vat }}</th><th scope=\"col\" class=\"num\">{{ L.col_unit_price }}</th><th scope=\"col\" class=\"num\">{{ L.col_total }}</th></tr></thead>\n    <tbody>\n      {% set pos = namespace(n=0) %}\n      {% for li in items %}\n        {% if li.type == 'heading' %}<tr class=\"bl-row-heading\"><td></td><td></td><td colspan=\"5\">{{ li.name }}</td></tr>\n        {% elif li.type in ['subtotal', 'group_total'] %}<tr class=\"bl-row-sub\"><td colspan=\"6\">{{ li.name }}</td><td class=\"num\">{% if li.lineItemRevenue %}{{ eur(li.lineItemRevenue.gross.amount if (li.lineItemRevenue.gross and li.lineItemRevenue.gross.amount) else li.lineItemRevenue.net.amount) }}{% endif %}</td></tr>\n        {% elif li.type == 'page_break' %}<tr><td colspan=\"7\"></td></tr>\n        {% else %}{% set pos.n = pos.n + 1 %}<tr><td>{{ pos.n }}</td><td>{{ li.number }}</td><td><span class=\"art-name{% if li.price %} is-main{% endif %}\">{{ li.name }}</span>{% if li.description %}<br><span class=\"art-desc\">{{ li.description }}</span>{% endif %}</td><td class=\"num\">{{ li.quantity }}{% if li.unit %} {{ li.unit }}{% endif %}</td><td class=\"num\">{% if li.price %}{{ li.effectiveTaxRate }}%{% endif %}</td><td class=\"num\">{% if li.price %}{{ eur(li.price.gross.amount if (li.price.gross and li.price.gross.amount) else li.price.net.amount) }}{% endif %}</td><td class=\"num\">{% if li.lineItemRevenue %}{{ eur(li.lineItemRevenue.gross.amount if (li.lineItemRevenue.gross and li.lineItemRevenue.gross.amount) else li.lineItemRevenue.net.amount) }}{% endif %}</td></tr>{% endif %}\n      {% endfor %}\n    </tbody>\n  </table>{% else %}<table class=\"bl-items\">\n    <colgroup><col class=\"c-pos\"><col class=\"c-artno\"><col class=\"c-art\"><col class=\"c-qty\"></colgroup>\n    <thead><tr><th scope=\"col\">{{ L.col_pos }}</th><th scope=\"col\">{{ L.col_artno }}</th><th scope=\"col\">{{ L.col_article }}</th><th scope=\"col\" class=\"num\">{{ L.col_qty }}</th></tr></thead>\n    <tbody>\n      {% set pos = namespace(n=0) %}\n      {% for li in items %}\n        {% if li.type == 'heading' %}<tr class=\"bl-row-heading\"><td></td><td></td><td colspan=\"2\">{{ li.name }}</td></tr>\n        {% else %}{% set pos.n = pos.n + 1 %}<tr><td>{{ pos.n }}</td><td>{{ li.number }}</td><td><span class=\"art-name is-main\">{{ li.name }}</span>{% if li.description %}<br><span class=\"art-desc\">{{ li.description }}</span>{% endif %}</td><td class=\"num\">{{ li.quantity }}{% if li.unit %} {{ li.unit }}{% endif %}</td></tr>{% endif %}\n      {% endfor %}\n    </tbody>\n  </table>{% endif %}\n  {% if SHOW_PRICES %}{% set net = (data.totals.net.amount | default('0')) | float %}\n  {% set gross = (data.totals.gross.amount | default('0')) | float %}\n  {% set vat = gross - net %}\n  {% set rate = (data.financials.tax.taxRates.standard) | default(19) %}\n  <table class=\"bl-totals\"><tbody>\n    <tr><th scope=\"row\">{{ L.net_total }}</th><td class=\"num\">{{ eur(net) }} EUR</td></tr>\n    <tr><th scope=\"row\">{{ L.vat_label }} {{ '%.2f' | format(rate | float) | replace('.', ',') }} %</th><td class=\"num\">{{ eur(vat) }} EUR</td></tr>\n    <tr class=\"bl-grand\"><th scope=\"row\">{{ L.gross_total }}</th><td class=\"num\">{{ eur(gross) }} EUR</td></tr>\n  </tbody></table>{% endif %}\n  <div class=\"bl-shipto\"><p class=\"bl-shipto__label\">{{ L.ship_to }}:</p>{% if _ship_differs %}<address>{{ ship.name }}<br>{% if ship.coName %}{{ ship.coName }}<br>{% endif %}{{ ship.street }}<br>{{ ship.zipCode }} {{ ship.city }}</address>{% else %}<p>{{ L.ship_same }}</p>{% endif %}</div>\n  {% if data.paymentNote or terms or pay.iban %}\n  <div class=\"bl-pay\">\n    <p class=\"bl-pay__label\">{{ L.pay_heading }}:</p>\n    {% if data.paymentNote %}<p>{{ data.paymentNote }}</p>{% endif %}\n    {% if terms %}<p>{{ L.pay_terms_pre }} {{ terms }} {{ L.pay_terms_post }}</p>{% endif %}\n    {% if pay.iban %}<p>{{ L.pay_bank_intro }}</p>\n    <table class=\"bl-bank\"><tbody>{% if pay.bankName %}<tr><th scope=\"row\">{{ L.bank }}</th><td>{{ pay.bankName }}</td></tr>{% endif %}<tr><th scope=\"row\">{{ L.iban }}</th><td>{{ pay.iban }}</td></tr>{% if pay.bic %}<tr><th scope=\"row\">{{ L.bic }}</th><td>{{ pay.bic }}</td></tr>{% endif %}</tbody></table>{% endif %}\n  </div>\n  {% endif %}\n  <div class=\"bl-notes\"><p>{{ L.machine_note }}</p></div>\n</div>\n{% endblock %}",
+  "css": "/* blanco draws its own header (.bl-top); suppress the base letterhead wrapper. */\n.doc-header { display: none !important; }\n@page {\n  size: A4; margin: 16mm 20mm 25mm 25mm;\n  @bottom-left { content: \"Beispiel Handels GmbH · Marktplatz 1 · 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; vertical-align: top; padding-top: 4mm; }\n  @bottom-center { content: \"Seite \" counter(page) \" von \" counter(pages); font-size: 6.5pt; color: #8a8a8a; white-space: nowrap; vertical-align: top; padding-top: 4mm; }\n  @bottom-right { content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm; }\n}\n.bl-doc { font-family: 'Helvetica', 'Arial', sans-serif; color: #111; font-size: 10pt; line-height: 1.4; }\n.bl-foot { display: none; }\n.bl-top { text-align: right; min-height: 16mm; }\n.bl-logo { max-height: 14mm; width: auto; }\n.bl-sender { font-size: 7pt; text-decoration: underline; margin: 10mm 0 5mm; color: #222; }\n.bl-recipient { font-style: normal; font-size: 10.5pt; line-height: 1.45; margin: 0 0 12mm; }\n.bl-subject-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin-bottom: 6mm; }\n.bl-subject { font-size: 12pt; font-weight: 700; margin: 0; white-space: nowrap; flex: 0 0 auto; }\n.bl-info { border-collapse: collapse; font-size: 9.5pt; }\n.bl-info th { font-weight: 400; text-align: left; padding: 0.3mm 6mm 0.3mm 0; white-space: nowrap; }\n.bl-info td { text-align: left; white-space: nowrap; }\n.bl-intro { margin: 0 0 6mm; line-height: 1.5; }\n.bl-intro p { margin: 0 0 1.5mm; }\n.bl-items { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 9pt; margin-bottom: 4mm; }\n.bl-items col.c-pos { width: 9mm; } .bl-items col.c-artno { width: 20mm; } .bl-items col.c-qty { width: 14mm; } .bl-items col.c-vat { width: 13mm; } .bl-items col.c-unit { width: 22mm; } .bl-items col.c-total { width: 24mm; }\n.bl-items thead th { border-bottom: 0.7pt solid #111; text-align: left; padding: 1.6mm 2mm; font-weight: 700; vertical-align: bottom; }\n.bl-items tbody td { padding: 1.4mm 2mm; vertical-align: top; }\n.bl-items tbody tr { page-break-inside: avoid; }\n.bl-items thead { display: table-header-group; }\n.bl-items .num { text-align: right; font-variant-numeric: tabular-nums; }\n.art-name.is-main { font-weight: 700; } .art-desc { font-size: 8pt; color: #555; }\n.bl-row-heading td { font-weight: 700; padding-top: 3mm; } .bl-row-sub td { font-weight: 700; border-top: 0.4pt solid #999; }\n.bl-totals { margin: 0 0 0 auto; border-collapse: collapse; font-size: 9.5pt; min-width: 72mm; page-break-inside: avoid; }\n.bl-totals th { font-weight: 400; text-align: left; padding: 0.8mm 8mm 0.8mm 0; white-space: nowrap; }\n.bl-totals td { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }\n.bl-totals .bl-grand th, .bl-totals .bl-grand td { font-weight: 700; border-top: 0.7pt solid #111; padding-top: 1.5mm; }\n.bl-shipto { margin: 8mm 0 0; font-size: 9.5pt; } .bl-shipto__label { font-weight: 700; margin: 0 0 1mm; } .bl-shipto address { font-style: normal; line-height: 1.4; }\n.bl-pay { margin: 6mm 0 0; font-size: 9.5pt; line-height: 1.5; } .bl-pay__label { font-weight: 700; margin: 0 0 1mm; } .bl-pay p { margin: 0 0 1mm; }\n.bl-bank { border-collapse: collapse; font-size: 9.5pt; margin-top: 1mm; } .bl-bank th { font-weight: 400; text-align: left; padding: 0.2mm 6mm 0.2mm 0; white-space: nowrap; } .bl-bank td { text-align: left; font-variant-numeric: tabular-nums; }\n.bl-notes { margin: 6mm 0 0; font-size: 9.5pt; line-height: 1.5; } .bl-notes p { margin: 0; }\n",
+  "example_data": {
+    "id": "55890",
+    "documentNumber": "BE-2026-00091",
+    "documentDate": "09.05.2026",
+    "desiredDeliveryDate": "23.05.2026",
+    "supplierNumber": "LF-2023-118",
+    "customerNumber": "K-88231",
+    "language": "de",
+    "documentAddress": {
+      "name": "Möbelwerk Nord GmbH",
+      "coName": "Auftragsannahme",
+      "street": "Industriestraße 5",
+      "zipCode": "24941",
+      "city": "Flensburg",
+      "country": "Deutschland",
+      "vatId": "DE211223344"
+    },
+    "effectiveAddresses": {
+      "shipTo": {
+        "name": "Beispiel Handels GmbH - Zentrallager",
+        "coName": "Wareneingang Tor 2",
+        "street": "Logistikweg 8",
+        "zipCode": "10963",
+        "city": "Berlin",
+        "country": "Deutschland"
+      }
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "description": "Ergonomisch, schwarz, mit Armlehnen",
+        "quantity": 20,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "139.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "2780.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "3308.20000000",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-007",
+        "name": "Schreibtisch 160x80",
+        "description": "Massivholz Eiche, höhenverstellbar 65-130 cm",
+        "quantity": 10,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "289.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "2890.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "3439.10000000",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 19,
+          "reduced": 7
+        }
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "5670.00000000",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "6747.30000000",
+        "currency": "EUR"
+      }
+    },
+    "bodyOutroduction": "Lieferung frei Haus an unser Zentrallager. Bitte bestätigen Sie den Liefertermin. Bestellnummer auf allen Belegen angeben.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "phone": "+49 30 1234567-0",
+      "email": "einkauf@beispiel-handel.de",
+      "website": "www.beispiel-handel.de",
+      "vatId": "DE123456789",
+      "taxId": "13/456/78901",
+      "ceo": "Max Beispiel"
+    },
+    "showPrices": true
+  },
+  "assets": {
+    "logo": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iI0U2NkRDQiIgZD0iTTE2LjMxIDExLjQ2N2gtLjA1NmMtMi4zNzEgMC00LjQ1Mi0xLjc2Ni02LjAwMi0zLjMxbC0xLjUyNS0xLjUyYTEuNTQgMS41NCAwIDAgMS0uMzM2LTEuNjg0IDEuNTU2IDEuNTU2IDAgMCAxIDIuNTMtLjUwMWwxLjUzIDEuNTIyYzEuMDM4IDEuMDMzIDIuNTYgMi40MDEgMy44MDggMi40MDFoLjA1N2MxLjI0NyAwIDIuNzc0LTEuMzcxIDMuODA4LTIuNDAxbDEuNTI0LTEuNTIyYTEuNTUgMS41NSAwIDAgMSAxLjY5MS0uMzM0IDEuNTUgMS41NSAwIDAgMSAuODQuODM1IDEuNTQgMS41NCAwIDAgMS0uMzM3IDEuNjgzbC0xLjUzIDEuNTIzYy0xLjU1IDEuNTQyLTMuNjMgMy4zMDgtNi4wMDEgMy4zMDgiPjwvcGF0aD48cGF0aCBmaWxsPSIjMjZFM0U0IiBkPSJNMjIuNzM3IDI3Ljk5YTEuNTUgMS41NSAwIDAgMS0xLjA5Ny0uNDVsLTEuNTI5LTEuNTIxYy0xLjAzOC0xLjAzMi0yLjU1OS0yLjQtMy44MDUtMi40aC0uMDU3Yy0xLjI0NiAwLTIuNzcyIDEuMzctMy44MDYgMi40bC0xLjUyOCAxLjUyM2ExLjU1NSAxLjU1NSAwIDAgMS0yLjUyNC0uNSAxLjU0IDEuNTQgMCAwIDEgLjMzNi0xLjY4MmwxLjUyOC0xLjUyMWMxLjU1NC0xLjU0OCAzLjYzNC0zLjMyIDYuMDI4LTMuMzA2aC4wMjdjMi4zNzIgMCA0LjQ1IDEuNzY1IDUuOTk5IDMuMzA2bDEuNTI4IDEuNTIxQTEuNTQgMS41NCAwIDAgMSAyMi43NDEgMjh6Ij48L3BhdGg+PHBhdGggZmlsbD0iIzVCNjRFRSIgZD0iTTUuNTQ3IDIzLjczNEExLjU0IDEuNTQgMCAwIDEgNCAyMi4xODZjMC0uNDEuMTYzLS44MDUuNDUzLTEuMDk1bDEuNTI0LTEuNTI3YzEuMDM5LTEuMDQgMi40Mi0yLjU2OSAyLjQwNS0zLjgxNnYtLjAyOGMuMDEtMS4yNDctMS4zNy0yLjc3LTIuNDA1LTMuODE2bC0xLjUyNC0xLjUyN2ExLjU1MSAxLjU1MSAwIDAgMSAxLjA5My0yLjY0M2MuNDEgMCAuODAzLjE2MyAxLjA5NC40NTNsMS41MjQgMS41MjdjMS41NSAxLjU1MyAzLjMyNyAzLjY0IDMuMzE0IDYuMDIuMDEzIDIuMzgxLTEuNzY0IDQuNDY4LTMuMzE1IDYuMDIyTDYuNjQgMjMuMjhhMS41NCAxLjU0IDAgMCAxLTEuMDkzLjQ1MyI+PC9wYXRoPjxwYXRoIGZpbGw9IiMyN0U3QTIiIGQ9Ik0yNi40NDkgMjMuNzcxYTEuNTMgMS41MyAwIDAgMS0xLjA5My0uNDU0bC0xLjUyMy0xLjUyNmMtMS41NS0xLjU1MS0zLjMyNS0zLjYzNy0zLjMxLTYuMDE4LS4wMTQtMi4zNzUgMS43NjEtNC40NjMgMy4zMS02LjAxNmwxLjUyMy0xLjUyNmExLjU0NCAxLjU0NCAwIDAgMSAyLjYzNyAxLjA5NGMwIC40MS0uMTYzLjgwNS0uNDUyIDEuMDk1bC0xLjUyMiAxLjUyNmMtMS4wNCAxLjA0LTIuNDE4IDIuNTY2LTIuNDAzIDMuODE1di4wMjZjLS4wMSAxLjI0OCAxLjM2NyAyLjc3NiAyLjQwMyAzLjgxNmwxLjUyMyAxLjUyNmExLjU1IDEuNTUgMCAwIDEtMS4wOTIgMi42NDh6Ij48L3BhdGg+PC9zdmc+"
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Bestellung",
+      "customer_number": "Kundennummer",
+      "invoice_date": "Bestelldatum",
+      "service_date": "Leistungsdatum",
+      "order_ref": "Auftragsnummer",
+      "processor": "Bearbeiter",
+      "salutation": "Sehr geehrte Damen und Herren,",
+      "thank_you": "wir bestellen bei Ihnen die folgenden Positionen:",
+      "col_pos": "Pos",
+      "col_artno": "Artikelnr",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_vat": "MwSt.",
+      "col_unit_price": "Stückpreis",
+      "col_total": "Gesamt",
+      "net_total": "Gesamt netto",
+      "vat_label": "zzgl. MwSt.",
+      "gross_total": "Gesamt brutto",
+      "ship_to": "Lieferadresse",
+      "ship_same": "entspricht Rechnungsadresse",
+      "pay_heading": "Zahlung",
+      "pay_terms_pre": "Zahlbar innerhalb",
+      "pay_terms_post": "Tagen ohne Abzug.",
+      "pay_bank_intro": "Bitte überweisen Sie den Betrag auf folgendes Konto:",
+      "bank": "Bank",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "ceo_title": "Geschäftsführer",
+      "vat_id_label": "USt-IdNr.",
+      "machine_note": "Dieses Formular wurde maschinell erstellt und ist ohne Unterschrift gültig."
+    },
+    "en": {
+      "doc_title": "Purchase Order",
+      "customer_number": "Customer no.",
+      "invoice_date": "Order date",
+      "service_date": "Service date",
+      "order_ref": "Order no.",
+      "processor": "Processed by",
+      "salutation": "Dear Sir or Madam,",
+      "thank_you": "we hereby order the following items from you:",
+      "col_pos": "Pos",
+      "col_artno": "Item no.",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_vat": "VAT",
+      "col_unit_price": "Unit price",
+      "col_total": "Total",
+      "net_total": "Net total",
+      "vat_label": "plus VAT",
+      "gross_total": "Grand total",
+      "ship_to": "Shipping address",
+      "ship_same": "same as billing address",
+      "pay_heading": "Payment",
+      "pay_terms_pre": "Payable within",
+      "pay_terms_post": "days net.",
+      "pay_bank_intro": "Please transfer the amount to the following account:",
+      "bank": "Bank",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "ceo_title": "Managing Director",
+      "vat_id_label": "VAT ID",
+      "machine_note": "This document was generated automatically and is valid without signature."
+    },
+    "fr": {
+      "doc_title": "Commande",
+      "customer_number": "Numero de client",
+      "invoice_date": "Date de commande",
+      "service_date": "Date de livraison",
+      "order_ref": "Numero de commande",
+      "processor": "Responsable",
+      "salutation": "Mesdames et Messieurs,",
+      "thank_you": "nous commandons les positions suivantes :",
+      "col_pos": "Pos",
+      "col_artno": "Article no.",
+      "col_article": "Article",
+      "col_qty": "Qte",
+      "col_vat": "TVA",
+      "col_unit_price": "Prix unitaire",
+      "col_total": "Total",
+      "net_total": "Total net",
+      "vat_label": "plus TVA",
+      "gross_total": "Total brut",
+      "ship_to": "Adresse de livraison",
+      "ship_same": "correspond a l adresse de facturation",
+      "pay_heading": "Paiement",
+      "pay_terms_pre": "Payable dans les",
+      "pay_terms_post": "jours sans deduction.",
+      "pay_bank_intro": "Veuillez virer le montant au compte suivant :",
+      "bank": "Banque",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "ceo_title": "Gerant",
+      "vat_id_label": "No TVA",
+      "machine_note": "Ce formulaire a ete genere automatiquement et est valable sans signature."
+    },
+    "nl": {
+      "doc_title": "Bestelling",
+      "customer_number": "Klantnummer",
+      "invoice_date": "Besteldatum",
+      "service_date": "Leveringsdatum",
+      "order_ref": "Uw bestelnummer",
+      "processor": "Behandeld door",
+      "salutation": "Geachte heer of mevrouw,",
+      "thank_you": "wij bestellen bij u de volgende posten:",
+      "col_pos": "Pos",
+      "col_artno": "Artikelnr",
+      "col_article": "Artikel",
+      "col_qty": "Qty",
+      "col_vat": "BTW",
+      "col_unit_price": "Stukprijs",
+      "col_total": "Totaal",
+      "net_total": "Totaal netto",
+      "vat_label": "plus BTW",
+      "gross_total": "Totaal bruto",
+      "ship_to": "Leveringsadres",
+      "ship_same": "komt overeen met factuuradres",
+      "pay_heading": "Betaling",
+      "pay_terms_pre": "Betaalbaar binnen",
+      "pay_terms_post": "dagen netto.",
+      "pay_bank_intro": "Gelieve het bedrag over te maken op de volgende rekening:",
+      "bank": "Bank",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "ceo_title": "Directeur",
+      "vat_id_label": "BTW-nr.",
+      "machine_note": "Dit formulier is automatisch gegenereerd en is geldig zonder handtekening."
+    }
+  }
+}

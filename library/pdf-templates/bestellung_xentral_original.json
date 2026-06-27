@@ -1,0 +1,220 @@
+{
+  "id": "bestellung_xentral_original",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Bestellung",
+      "description": "Klassische Bestellung (Purchase Order) an den Lieferanten im Xentral-Original-Stil: DIN-5008-Layout, Logo, Absenderzeile, Lieferantenanschrift im Anschriftenfeld, Infoblock rechts (Bestelldatum, Liefertermin, Lieferanten-Nr.), Positionstabelle, USt-Aufstellung je Satz, Lieferadresse, Pflichtangaben in der Fußzeile. Schwarz auf weiß, ohne Farbflächen. Rendert ausschließlich aus der Standard-V3-Payload (purchaseOrders)."
+    },
+    "en": {
+      "title": "Purchase Order",
+      "description": "Classic purchase order to the supplier in the Xentral original style: DIN 5008 layout, logo, sender line, supplier address in the address window, right info block (order date, delivery date, supplier no.), line-item table, per-rate VAT breakdown, delivery address, mandatory footer lines. Black on white, no colour fills. Renders purely from the standard V3 purchaseOrders payload."
+    }
+  },
+  "v3_endpoint": "/api/v3/purchaseOrders/{id}?include=all",
+  "filename_pattern": "Bestellung-{documentNumber}.pdf",
+  "compliance": [],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute (or alt='' AND role='presentation')",
+    "tables MUST use <th scope='col'> or scope='row'",
+    "exactly one <h1> per document",
+    "heading hierarchy MUST be contiguous (no jump from h1 to h3)",
+    "<title> in <head> MUST be set and non-empty",
+    "amounts MUST use tabular-nums and right-align"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "company"
+    ],
+    "company": {
+      "required": [
+        "name",
+        "address"
+      ],
+      "optional": [
+        "logo",
+        "phone",
+        "email",
+        "website",
+        "vatId",
+        "taxId",
+        "ceo"
+      ]
+    },
+    "optional": [
+      "language",
+      "desiredDeliveryDate",
+      "supplierNumber",
+      "customerNumber",
+      "effectiveAddresses",
+      "bodyOutroduction"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set supplier = data.documentAddress | default({}) %}\n{% set ship     = ((data.effectiveAddresses or {}).shipTo) | default({}) %}\n{% set items    = data.lineItems | default([]) %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=supplier, title='Lieferant' %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.order_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.desiredDeliveryDate %}<tr><th scope=\"row\">{{ L.delivery_date }}</th><td>{{ data.desiredDeliveryDate }}</td></tr>{% endif %}\n            {% if data.supplierNumber %}<tr><th scope=\"row\">{{ L.supplier_no }}</th><td>{{ data.supplierNumber }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.our_customer_no }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if supplier.vatId %}<tr><th scope=\"row\">{{ L.supplier_vat }}</th><td>{{ supplier.vatId }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  <section class=\"box-intro\" data-box=\"intro\"><p>{{ L.intro }}</p></section>\n\n  {% with title=L.positions, caption=L.positions, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {% if ship and ship.name %}\n    {% with ship=ship, title=L.ship_to %}\n      {% include \"_base/_partials/ship_to.html.j2\" %}\n    {% endwith %}\n  {% endif %}\n\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"terms-heading\">\n    <h2 id=\"terms-heading\">{{ L.terms_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 64mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n.box-ship-to { background: none; border-left: none; border-radius: 0; border-top: 0.4pt solid #d1d5db; padding: 2mm 0 0; }\n\n.positions-table thead th:nth-child(3) { width: 22mm; }\n.positions-table thead th:nth-child(4) { width: 30mm; }\n.positions-table thead th:nth-child(5) { width: 32mm; }\n.positions-table thead th:nth-child(6) { display: none; }\n.positions-table tbody td:nth-child(6) { display: none; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-left {\n    content: \"Beispiel Handels GmbH · Marktplatz 1, 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-right {\n    content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A Commerzbank Berlin · BIC COBADEFFXXX \\A IBAN DE89 3704 0044 0532 0130 00\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    text-align: right; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "55890",
+    "documentNumber": "BE-2026-00091",
+    "documentDate": "09.05.2026",
+    "desiredDeliveryDate": "23.05.2026",
+    "supplierNumber": "LF-2023-118",
+    "customerNumber": "K-88231",
+    "language": "de",
+    "documentAddress": {
+      "name": "Möbelwerk Nord GmbH",
+      "coName": "Auftragsannahme",
+      "street": "Industriestraße 5",
+      "zipCode": "24941",
+      "city": "Flensburg",
+      "country": "Deutschland",
+      "vatId": "DE211223344"
+    },
+    "effectiveAddresses": {
+      "shipTo": {
+        "name": "Beispiel Handels GmbH - Zentrallager",
+        "coName": "Wareneingang Tor 2",
+        "street": "Logistikweg 8",
+        "zipCode": "10963",
+        "city": "Berlin",
+        "country": "Deutschland"
+      }
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "description": "Ergonomisch, schwarz, mit Armlehnen",
+        "quantity": 20,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "139.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "2780.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "3308.20000000",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-007",
+        "name": "Schreibtisch 160x80",
+        "description": "Massivholz Eiche, höhenverstellbar 65-130 cm",
+        "quantity": 10,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "289.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "2890.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "3439.10000000",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 19,
+          "reduced": 7
+        }
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "5670.00000000",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "6747.30000000",
+        "currency": "EUR"
+      }
+    },
+    "bodyOutroduction": "Lieferung frei Haus an unser Zentrallager. Bitte bestätigen Sie den Liefertermin. Bestellnummer auf allen Belegen angeben.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "phone": "+49 30 1234567-0",
+      "email": "einkauf@beispiel-handel.de",
+      "website": "www.beispiel-handel.de",
+      "vatId": "DE123456789",
+      "taxId": "13/456/78901",
+      "ceo": "Max Beispiel"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Bestellung",
+      "intro": "hiermit bestellen wir bei Ihnen die folgenden Positionen zu den vereinbarten Konditionen.",
+      "order_date": "Bestelldatum",
+      "delivery_date": "Liefertermin",
+      "supplier_no": "Lieferanten-Nr.",
+      "our_customer_no": "Unsere Kundennummer",
+      "supplier_vat": "USt-IdNr.",
+      "ship_to": "Lieferadresse",
+      "positions": "Positionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_total": "Gesamt",
+      "net_total": "Nettobetrag",
+      "vat_label": "zzgl.",
+      "vat_on": "USt auf",
+      "gross_total": "Gesamtbetrag",
+      "terms_heading": "Konditionen"
+    },
+    "en": {
+      "doc_title": "Purchase Order",
+      "intro": "we hereby order the following items from you on the agreed terms.",
+      "order_date": "Order date",
+      "delivery_date": "Delivery date",
+      "supplier_no": "Supplier no.",
+      "our_customer_no": "Our customer no.",
+      "supplier_vat": "VAT-ID",
+      "ship_to": "Delivery address",
+      "positions": "Items",
+      "col_pos": "Pos",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_total": "Total",
+      "net_total": "Net total",
+      "vat_label": "plus",
+      "vat_on": "VAT on",
+      "gross_total": "Grand total",
+      "terms_heading": "Terms"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "due_today_amount",
+  "version": 1,
+  "icon": "payment",
+  "category": "finance",
+  "order": 421,
+  "kpi": {
+    "key": "due_today_amount",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Summe der offenen Eingangsrechnungen mit Zahlungsziel heute; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(COALESCE(SUM(l.amount_to_be_paid_total - l.amount_paid_currently), 0), 2) AS \"Offene Eingangsrechnungen mit Zahlungsziel heute\"\nFROM liabilities l\nWHERE l.status_document NOT IN ('canceled')\n  AND l.is_paid = FALSE\n  AND l.payment_due_date = CURRENT_DATE\n  AND l.status NOT IN ('canceled', 'created', 'unknown')\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Due today",
+      "description": "Open supplier invoices whose payment due date is today."
+    },
+    "de": {
+      "title": "Heute fällig",
+      "description": "Offene Eingangsrechnungen, deren Zahlungsziel auf heute fällt."
+    }
+  }
+}

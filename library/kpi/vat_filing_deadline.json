@@ -1,0 +1,27 @@
+{
+  "id": "vat_filing_deadline",
+  "version": 1,
+  "icon": "calendar",
+  "category": "finance",
+  "order": 423,
+  "kpi": {
+    "key": "vat_filing_deadline",
+    "unit": "days",
+    "value_type": "duration",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": 3600,
+    "prompt": "Anzahl Tage von heute bis zum nächsten Stichtag der Umsatzsteuer-Voranmeldung; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  DATEDIFF(\n    day,\n    CURRENT_DATE,\n    MIN(exceeded_date)\n  ) AS \"Tage bis zum nächsten Stichtag\"\nFROM delivery_thresholds\nWHERE exceeded_date >= CURRENT_DATE\n  AND is_active = TRUE;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "VAT filing due in",
+      "description": "Days until the next VAT pre-declaration has to be submitted."
+    },
+    "de": {
+      "title": "USt-Voranmeldung in",
+      "description": "Tage bis zur nächsten fälligen Umsatzsteuer-Voranmeldung."
+    }
+  }
+}

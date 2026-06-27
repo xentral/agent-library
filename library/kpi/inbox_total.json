@@ -1,0 +1,25 @@
+{
+  "id": "inbox_total",
+  "version": 1,
+  "icon": "inbox",
+  "category": "customer_service",
+  "order": 201,
+  "kpi": {
+    "key": "inbox_total",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 84
+  },
+  "locales": {
+    "en": {
+      "title": "Inbox total",
+      "description": "All non-spam inquiries currently open or in progress in the inbox."
+    },
+    "de": {
+      "title": "Vorgänge gesamt",
+      "description": "Alle Vorgänge in der Inbox (offen oder laufend), ohne Spam."
+    }
+  }
+}

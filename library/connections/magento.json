@@ -1,0 +1,16 @@
+{
+  "id": "magento",
+  "version": 1,
+  "name": "Adobe Commerce",
+  "domain": "business.adobe.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Magento-/Adobe-Commerce-Stores — Bestellungen, Lager, Produkte koppeln."
+    },
+    "de": {
+      "description": "Magento-/Adobe-Commerce-Stores — Bestellungen, Lager, Produkte koppeln."
+    }
+  },
+  "source": "https://marketplace.xentral.com/onlineshops/adobe-commerce-magento-2"
+}

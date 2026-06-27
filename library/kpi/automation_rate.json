@@ -1,0 +1,26 @@
+{
+  "id": "automation_rate",
+  "version": 1,
+  "icon": "bolt",
+  "category": "customer_service",
+  "order": 230,
+  "kpi": {
+    "key": "automation_rate",
+    "unit": "%",
+    "value_type": "percent",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 67,
+    "initial_tone": "positive"
+  },
+  "locales": {
+    "en": {
+      "title": "Automation rate",
+      "description": "Share of inquiries fully handled by an agent without escalation."
+    },
+    "de": {
+      "title": "Automatisierungsquote",
+      "description": "Anteil der Anfragen, die ein Agent ohne Eskalation komplett gelöst hat."
+    }
+  }
+}

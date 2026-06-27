@@ -1,0 +1,286 @@
+{
+  "id": "invoice_italy_fattura",
+  "version": 1,
+  "engine": "weasyprint",
+  "locales": {
+    "de": {
+      "title": "Rechnung (Italien, FatturaPA)",
+      "description": "Italienische Rechnung im Xentral-Original-Stil mit Partita IVA, Codice Fiscale, Codice Destinatario/PEC und optionalem Bollo-Hinweis."
+    },
+    "en": {
+      "title": "Invoice (Italy, FatturaPA)",
+      "description": "Italian invoice in the Xentral-Original clean style (black on white, no colour fills) with the fiscal fields FatturaPA / Fattura Elettronica requires — Codice Fiscale, Partita IVA, Codice Destinatario (or PEC) and an optional Bollo (stamp duty) note. DIN-5008 layout, fiscal IDs in the info block, seller fiscal footer. Full FatturaPA compliance still needs the structured XML (analog to ZUGFeRD) — left for a follow-up. Renders from the standard V3 invoices payload."
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Fattura-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "Partita IVA MUST be displayed for both buyer and seller",
+    "Codice Destinatario or PEC MUST be visible for B2B/B2G",
+    "amounts MUST use tabular-nums and right-align",
+    "currency defaults to EUR"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "company"
+    ],
+    "documentAddress": {
+      "required": [
+        "name",
+        "street",
+        "zipCode",
+        "city",
+        "country"
+      ],
+      "optional": [
+        "codiceFiscale",
+        "partitaIva",
+        "codiceDestinatario",
+        "pec"
+      ]
+    },
+    "company": {
+      "required": [
+        "name",
+        "address",
+        "partitaIva"
+      ],
+      "optional": [
+        "codiceFiscale",
+        "reaNumber",
+        "capitaleSociale"
+      ]
+    },
+    "optional": [
+      "language",
+      "bolloRequired",
+      "payment",
+      "bodyOutroduction"
+    ]
+  },
+  "languages": [
+    "it",
+    "en",
+    "de"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{# Italienischer Beleg im Xentral-Original-Stil: Clean-Layout (head-cols,\n   schwarz/weiss) plus die FatturaPA-Fiscal-Felder (Codice Fiscale,\n   Partita IVA, Codice Destinatario, PEC) im Infoblock, optionaler\n   Bollo-Hinweis und schlichter Aussteller-Footer. Default-Locale `it`. #}\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data.lineItems | default([]) %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title=L.buyer_block %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.invoice_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.reference }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n            {% if buyer.partitaIva %}<tr><th scope=\"row\">{{ L.partita_iva }}</th><td>{{ buyer.partitaIva }}</td></tr>{% endif %}\n            {% if buyer.codiceFiscale %}<tr><th scope=\"row\">{{ L.codice_fiscale }}</th><td>{{ buyer.codiceFiscale }}</td></tr>{% endif %}\n            {% if buyer.codiceDestinatario %}<tr><th scope=\"row\">{{ L.codice_dest }}</th><td>{{ buyer.codiceDestinatario }}</td></tr>{% endif %}\n            {% if buyer.pec %}<tr><th scope=\"row\">{{ L.pec }}</th><td>{{ buyer.pec }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  {% with title=L.positions, caption=L.positions_caption, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','vat','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {% if data.payment %}\n  <section class=\"box-payment\" data-box=\"payment\" aria-labelledby=\"payment-heading\">\n    <h2 id=\"payment-heading\">{{ L.payment_heading }}</h2>\n    <dl>\n      {% if data.payment.iban %}<dt>{{ L.iban }}</dt><dd>{{ data.payment.iban }}</dd>{% endif %}\n      {% if data.payment.bic %}<dt>{{ L.bic }}</dt><dd>{{ data.payment.bic }}</dd>{% endif %}\n      {% if data.payment.bankName %}<dt>{{ L.bank }}</dt><dd>{{ data.payment.bankName }}</dd>{% endif %}\n    </dl>\n  </section>\n  {% endif %}\n\n  {% if data.bolloRequired %}\n  <section class=\"legal-note\" data-box=\"bollo\"><p>{{ L.bollo_note }}</p></section>\n  {% endif %}\n\n  {# Aussteller-Fiscal-Footer — REA, Codice Fiscale, Partita IVA, Kapital. #}\n  <section class=\"seller-footer\" data-box=\"seller-fiscal\" aria-labelledby=\"seller-fiscal-heading\">\n    <h2 id=\"seller-fiscal-heading\" class=\"seller-footer__title\">{{ L.seller_block }}</h2>\n    <p class=\"seller-footer__line\">{{ data.company.name }} · {{ data.company.address }}</p>\n    <p class=\"seller-footer__line\">\n      {% if data.company.partitaIva %}{{ L.partita_iva }}: {{ data.company.partitaIva }}{% endif %}\n      {% if data.company.codiceFiscale %} · {{ L.codice_fiscale }}: {{ data.company.codiceFiscale }}{% endif %}\n      {% if data.company.reaNumber %} · {{ L.rea }}: {{ data.company.reaNumber }}{% endif %}\n      {% if data.company.capitaleSociale %} · {{ L.capitale_soc }}: {{ data.company.capitaleSociale }}{% endif %}\n    </p>\n  </section>\n\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"notes-heading\">\n    <h2 id=\"notes-heading\">{{ L.notes_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 72mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n.box-payment dl { display: grid; grid-template-columns: 24mm 1fr; gap: 0.5mm 4mm; margin: 0; font-size: 9.5pt; }\n.box-payment dt { color: #6b7280; }\n.box-payment dd { margin: 0; }\n\n.legal-note { margin: 6mm 0; padding: 3mm 4mm; border: 0.3pt solid #d1d5db; font-size: 9pt; color: #374151; }\n.legal-note p { margin: 0; }\n\n.seller-footer { margin-top: 10mm; padding-top: 3mm; border-top: 0.4pt solid #d1d5db; font-size: 8pt; color: #6b7280; }\n.seller-footer__title { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9ca3af; margin: 0 0 1mm; }\n.seller-footer__line { margin: 0.4mm 0; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "it-30115",
+    "documentNumber": "2026/00427",
+    "documentDate": "2026-05-12",
+    "serviceDate": "2026-05-10",
+    "language": "it",
+    "customerNumber": "CL-1042",
+    "customerOrderNumber": "Ord. 4711",
+    "documentAddress": {
+      "name": "Rossi & Figli S.r.l.",
+      "street": "Via Garibaldi 27",
+      "zipCode": "20121",
+      "city": "Milano",
+      "country": "IT",
+      "partitaIva": "IT01234567890",
+      "codiceFiscale": "01234567890",
+      "codiceDestinatario": "M5UXCR1",
+      "pec": "amministrazione@pec.rossi-figli.it"
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-201",
+        "name": "Tavolo da ufficio 160×80",
+        "description": "Rovere, base in acciaio nero",
+        "quantity": 2,
+        "unit": "pz",
+        "effectiveTaxRate": 22,
+        "price": {
+          "net": {
+            "amount": "489.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "978.00",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "1193.16",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-205",
+        "name": "Sedia ergonomica modello A",
+        "quantity": 4,
+        "unit": "pz",
+        "effectiveTaxRate": 22,
+        "price": {
+          "net": {
+            "amount": "249.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "996.00",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "1215.12",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 22,
+          "reduced": 10
+        }
+      },
+      "paymentTerms": {
+        "paymentTargetDays": 30
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "1974.00",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "2408.28",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "iban": "IT60 X054 2811 1010 0000 0123 456",
+      "bic": "UNCRITM1234",
+      "bankName": "UniCredit S.p.A. — Filiale Milano Centrale"
+    },
+    "bolloRequired": false,
+    "company": {
+      "name": "Esempio Commercio S.r.l.",
+      "address": "Via Verdi 4, 00187 Roma",
+      "partitaIva": "IT09876543210",
+      "codiceFiscale": "09876543210",
+      "reaNumber": "RM-1234567",
+      "capitaleSociale": "100.000,00 € i.v."
+    },
+    "bodyOutroduction": "Grazie per il vostro ordine."
+  },
+  "assets": {
+    "logo": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgNjAiIHJvbGU9ImltZyIKICAgICBhcmlhLWxhYmVsPSJCZWlzcGllbCBIYW5kZWxzIEdtYkggTG9nbyI+CiAgPHJlY3QgeD0iMCIgeT0iMTQiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjgiIGZpbGw9IiM2RDdDRkYiLz4KICA8cGF0aCBkPSJNOSAzOCBMMTYgMjQgTDIzIDM4IFoiIGZpbGw9IiNmZmYiLz4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjIyIiByPSIyLjUiIGZpbGw9IiNmZmYiLz4KICA8dGV4dCB4PSI0NCIgeT0iMzMiIGZpbGw9IiMwRjE3MkEiCiAgICAgICAgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTciCiAgICAgICAgZm9udC13ZWlnaHQ9IjcwMCI+QmVpc3BpZWw8L3RleHQ+CiAgPHRleHQgeD0iNDQiIHk9IjQ4IiBmaWxsPSIjNmI3MjgwIgogICAgICAgIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiCiAgICAgICAgbGV0dGVyLXNwYWNpbmc9IjAuMDZlbSI+SEFOREVMUyDCtyBHTUJIPC90ZXh0Pgo8L3N2Zz4K"
+  },
+  "translations": {
+    "it": {
+      "doc_title": "Fattura",
+      "invoice_date": "Data fattura",
+      "customer_number": "Codice cliente",
+      "reference": "Vostro ordine",
+      "positions": "Voci",
+      "positions_caption": "Voci della fattura",
+      "col_pos": "Pos",
+      "col_article": "Articolo",
+      "col_qty": "Quantità",
+      "col_unit_price": "Prezzo unit.",
+      "col_vat": "IVA",
+      "col_total": "Totale",
+      "net_total": "Imponibile",
+      "vat_label": "IVA",
+      "vat_on": "su",
+      "gross_total": "Totale documento",
+      "buyer_block": "Cliente / Cessionario",
+      "seller_block": "Cedente / Prestatore",
+      "codice_fiscale": "Codice Fiscale",
+      "partita_iva": "Partita IVA",
+      "codice_dest": "Codice Destinatario",
+      "pec": "PEC",
+      "rea": "Numero REA",
+      "capitale_soc": "Capitale sociale",
+      "payment_heading": "Modalità di pagamento",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Banca",
+      "bollo_note": "Imposta di bollo assolta in modo virtuale ai sensi del DM 28/12/2018.",
+      "notes_heading": "Note"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "invoice_date": "Invoice date",
+      "customer_number": "Customer no.",
+      "reference": "Your order no.",
+      "positions": "Items",
+      "positions_caption": "Invoice items",
+      "col_pos": "Pos",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_vat": "VAT",
+      "col_total": "Total",
+      "net_total": "Net",
+      "vat_label": "VAT",
+      "vat_on": "on",
+      "gross_total": "Grand total",
+      "buyer_block": "Buyer",
+      "seller_block": "Seller",
+      "codice_fiscale": "Tax code",
+      "partita_iva": "VAT no.",
+      "codice_dest": "SDI recipient code",
+      "pec": "Certified email (PEC)",
+      "rea": "REA no.",
+      "capitale_soc": "Share capital",
+      "payment_heading": "Payment",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "bollo_note": "Stamp duty paid electronically (DM 28/12/2018).",
+      "notes_heading": "Notes"
+    },
+    "de": {
+      "doc_title": "Rechnung",
+      "invoice_date": "Rechnungsdatum",
+      "customer_number": "Kundennummer",
+      "reference": "Ihre Bestellnummer",
+      "positions": "Positionen",
+      "positions_caption": "Rechnungspositionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_vat": "IVA",
+      "col_total": "Summe",
+      "net_total": "Netto",
+      "vat_label": "IVA",
+      "vat_on": "auf",
+      "gross_total": "Gesamtbetrag",
+      "buyer_block": "Empfänger",
+      "seller_block": "Aussteller",
+      "codice_fiscale": "Codice Fiscale",
+      "partita_iva": "Partita IVA",
+      "codice_dest": "Codice Destinatario",
+      "pec": "PEC",
+      "rea": "REA-Nr.",
+      "capitale_soc": "Stammkapital",
+      "payment_heading": "Zahlung",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "bollo_note": "Stempelsteuer virtuell entrichtet (DM 28/12/2018).",
+      "notes_heading": "Hinweise"
+    }
+  }
+}

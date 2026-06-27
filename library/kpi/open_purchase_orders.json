@@ -1,0 +1,27 @@
+{
+  "id": "open_purchase_orders",
+  "version": 1,
+  "icon": "purchase",
+  "category": "purchasing",
+  "order": 300,
+  "kpi": {
+    "key": "open_purchase_orders",
+    "unit": "count",
+    "value_type": "number",
+    "group": "purchasing",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Lieferantenbestellungen, die platziert aber noch nicht vollständig wareneingangsgebucht sind; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(DISTINCT po.purchase_order_id) AS \"Anzahl_Lieferantenbestellungen\"\nFROM purchase_orders po\nWHERE\n    po.status NOT IN ('canceled', 'created', 'unknown')\n    AND COALESCE(po.is_sent, FALSE) = TRUE\n    AND NOT (\n        COALESCE(po.status, '') = 'completed'\n        OR COALESCE(po.payment_status, '') = 'completed'\n    );\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Open purchase orders",
+      "description": "Number of supplier orders placed but not yet fully received."
+    },
+    "de": {
+      "title": "Offene Bestellungen",
+      "description": "Anzahl der Lieferantenbestellungen, die platziert aber noch nicht vollständig eingegangen sind."
+    }
+  }
+}

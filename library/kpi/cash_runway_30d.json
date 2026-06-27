@@ -1,0 +1,27 @@
+{
+  "id": "cash_runway_30d",
+  "version": 1,
+  "icon": "trendUp",
+  "category": "finance",
+  "order": 450,
+  "kpi": {
+    "key": "cash_runway_30d",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Erwarteter Kassenbestand in 30 Tagen: aktueller Bankbestand plus offene Forderungen mit Fälligkeit in 30 Tagen minus offene Verbindlichkeiten mit Fälligkeit in 30 Tagen; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(\n    COALESCE(bank_balance.current_bank_balance, 0)\n    + COALESCE(open_receivables.receivables_due_30d, 0)\n    - COALESCE(open_payables.payables_due_30d, 0),\n    2\n  ) AS expected_cash_position_30d\nFROM (\n  SELECT\n    SUM(COALESCE(credit_amount, 0) - COALESCE(debit_amount, 0)) AS current_bank_balance\n  FROM bank_statements\n  WHERE is_completed = TRUE\n) bank_balance\nCROSS JOIN (\n  SELECT\n    SUM(\n      CASE\n        WHEN i.payment_status != 'completed'\n         AND i.date <= DATEADD(day, 30, CURRENT_DATE)\n        THEN COALESCE(i.target_amount, 0) - COALESCE(i.current_amount_paid, 0)\n        ELSE 0\n      END\n    ) AS receivables_due_30d\n  FROM invoices i\n  WHERE i.payment_status != 'completed'\n) open_receivables\nCROSS JOIN (\n  SELECT\n    SUM(\n      CASE\n        WHEN c.payment_status != 'completed'\n         AND c.date <= DATEADD(day, 30, CURRENT_DATE)\n        THEN COALESCE(c.target_amount, 0) - COALESCE(c.current_amount_paid, 0)\n        ELSE 0\n      END\n    ) AS payables_due_30d\n  FROM credit_notes c\n  WHERE c.payment_status != 'completed'\n) open_payables;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Liquidity forecast 30 days",
+      "description": "Expected cash balance in 30 days given open receivables, payables and recurring outflows."
+    },
+    "de": {
+      "title": "Liquiditätsvorschau 30 Tage",
+      "description": "Erwarteter Kassenbestand in 30 Tagen unter Berücksichtigung offener Forderungen, Verbindlichkeiten und wiederkehrender Abflüsse."
+    }
+  }
+}

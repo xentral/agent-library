@@ -1,0 +1,15 @@
+{
+  "id": "byrd",
+  "version": 1,
+  "name": "byrd",
+  "domain": "getbyrd.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "EU-weites Fulfillment-Netzwerk — Bestand und Sendungen automatisiert."
+    },
+    "de": {
+      "description": "EU-weites Fulfillment-Netzwerk — Bestand und Sendungen automatisiert."
+    }
+  }
+}

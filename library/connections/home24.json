@@ -1,0 +1,15 @@
+{
+  "id": "home24",
+  "version": 1,
+  "name": "Home24",
+  "domain": "home24.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Home24-Marketplace — Möbel und Wohnaccessoires."
+    },
+    "de": {
+      "description": "Home24-Marketplace — Möbel und Wohnaccessoires."
+    }
+  }
+}

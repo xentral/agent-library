@@ -1,0 +1,158 @@
+{
+  "id": "manufacturer",
+  "slugs": [
+    "overview",
+    "market",
+    "roadmap",
+    "risks",
+    "company",
+    "products",
+    "masterdata",
+    "channels",
+    "team",
+    "processes",
+    "custom_agents",
+    "logistics",
+    "systems",
+    "roles",
+    "migration",
+    "payment",
+    "financials",
+    "accounting",
+    "reporting"
+  ],
+  "locales": {
+    "de": {
+      "name": "Hersteller / Eigenproduktion",
+      "description": "Ihr fertigt selbst — Stücklisten, Beschaffung, Lead-Times.\nMischkundschaft B2B + ggf. D2C-Direktverkauf. Lieferketten-\nRisiken sind real, Materialeinsatz steuert die Marge.\n",
+      "emphasis": {
+        "overview": "Eure Fertigungstiefe ist die strategische Achse — was macht ihr selbst, was kauft ihr zu?",
+        "risks": "Lieferketten + Materialpreise + Single-Source-Risiken explizit machen.",
+        "products": "Stücklisten (BOM) + Varianten + Lead-Time pro Artikel.",
+        "masterdata": "Artikel-Stammdaten mit Stücklisten, Charge/SN, MHD wo relevant.",
+        "channels": "Direktverkauf B2B + Händler-Stufen + ggf. Webshop für Endkunden.",
+        "processes": "Procure-to-Pay + Auftragsfertigung + Wareneingangsprüfung.",
+        "logistics": "Wareneingang + Eigenlager + Versand. Inventur-Strategie ist Pflicht.",
+        "systems": "Schnittstellen zu PPS/MES, ggf. CAD/PLM. Kassensoftware bei Showroom.",
+        "accounting": "Materialeinsatz + Lager-Bewertung. Steuerberater muss Bestandsführung verstehen.",
+        "custom_agents": "Bestellvorschläge, Wareneingangs-Prüfung, Inventur-Trigger — Cadence festlegen."
+      },
+      "tasks": [
+        {
+          "title": "Logo + Beleg-Footer",
+          "hint": "Logo (SVG/PNG) + AGB-Footer für AB · LS · RG"
+        },
+        {
+          "title": "Artikel-Stammdaten mit BOM",
+          "hint": "Stückliste pro Fertigprodukt + Halbfertigwaren + Lead-Time"
+        },
+        {
+          "title": "Lieferanten-CSV",
+          "hint": "Lieferanten + Einkaufspreise + Lead-Times + Mindestabnahmemengen"
+        },
+        {
+          "title": "Charge / SN / MHD-Strategie",
+          "hint": "Wo wird gepflegt — Pflichtfeld vs. optional — schriftlich festhalten"
+        },
+        {
+          "title": "Wareneingang-Prozess",
+          "hint": "Prüfschritte + Etikettendrucker für Lagerplätze + Reklamation"
+        },
+        {
+          "title": "Fertigungs-Stationen anlegen",
+          "hint": "Arbeitsplätze + Werker-Logins + Rückmeldungs-Workflow"
+        },
+        {
+          "title": "Versand für Großgüter",
+          "hint": "Speditionen für Paletten + Paketversand für Kleinteile"
+        },
+        {
+          "title": "Inventur-Plan",
+          "hint": "Stichtag oder rollende Inventur · Verantwortliche · Sperrfenster"
+        },
+        {
+          "title": "Bank-Login (FinAPI/EBICS)",
+          "hint": "Eingangsrechnungen-Matching + Zahlungsabgleich"
+        },
+        {
+          "title": "DATEV + Bestandsbewertung",
+          "hint": "Steuerberater muss Materialeinsatz + Bestandsführung verstehen"
+        },
+        {
+          "title": "Test-User Produktion/Lager/Einkauf/Buchhaltung",
+          "hint": "für rollenspezifische Schulung"
+        },
+        {
+          "title": "Go-Live-Datum bestätigen",
+          "hint": "Inkl. Inventur-Stichtag · Bestandsumstellung · Hypercare-Plan"
+        }
+      ]
+    },
+    "en": {
+      "name": "Manufacturer / In-House Production",
+      "description": "You produce yourselves — bills of materials, procurement, lead\ntimes. Mixed customer base B2B + optionally D2C direct sales.\nSupply-chain risks are real, material cost drives margin.\n",
+      "emphasis": {
+        "overview": "Your manufacturing depth is the strategic axis — what do you make yourselves, what do you buy in?",
+        "risks": "Supply chain + material prices + single-source risks made explicit.",
+        "products": "Bills of materials (BOM) + variants + lead time per item.",
+        "masterdata": "Product master data with BOMs, batch/serial, expiry where relevant.",
+        "channels": "Direct B2B sales + reseller tiers + optionally webshop for end customers.",
+        "processes": "Procure-to-pay + made-to-order + goods-inwards inspection.",
+        "logistics": "Goods inwards + own warehouse + outbound. Stocktake strategy is mandatory.",
+        "systems": "Interfaces to MES/PPS, optionally CAD/PLM. POS software at showroom.",
+        "accounting": "Material cost + inventory valuation. Tax advisor must understand stock accounting.",
+        "custom_agents": "Order proposals, goods-inwards check, stocktake triggers — set cadence."
+      },
+      "tasks": [
+        {
+          "title": "Logo + document footer",
+          "hint": "Logo (SVG/PNG) + T&C footer for order confirmation · delivery note · invoice"
+        },
+        {
+          "title": "Product master data with BOM",
+          "hint": "Bill of materials per finished product + sub-assemblies + lead time"
+        },
+        {
+          "title": "Supplier CSV",
+          "hint": "Suppliers + purchase prices + lead times + minimum order quantities"
+        },
+        {
+          "title": "Batch / serial / expiry strategy",
+          "hint": "Where it's maintained — mandatory vs. optional — written down"
+        },
+        {
+          "title": "Goods-inwards process",
+          "hint": "Inspection steps + label printer for bin locations + complaint handling"
+        },
+        {
+          "title": "Set up production stations",
+          "hint": "Workstations + operator logins + feedback workflow"
+        },
+        {
+          "title": "Shipping for bulky goods",
+          "hint": "Freight forwarders for pallets + parcel shipping for small parts"
+        },
+        {
+          "title": "Stocktake plan",
+          "hint": "Cut-off date or rolling stocktake · owners · freeze window"
+        },
+        {
+          "title": "Bank login (FinAPI/EBICS)",
+          "hint": "Supplier-invoice matching + payment reconciliation"
+        },
+        {
+          "title": "DATEV + inventory valuation",
+          "hint": "Tax advisor must understand material cost + stock accounting"
+        },
+        {
+          "title": "Test user production/warehouse/purchasing/accounting",
+          "hint": "For role-specific training"
+        },
+        {
+          "title": "Confirm go-live date",
+          "hint": "Incl. stocktake cut-off · stock migration · hypercare plan"
+        }
+      ]
+    }
+  }
+}

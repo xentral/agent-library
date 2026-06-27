@@ -1,0 +1,27 @@
+{
+  "id": "top_customer_share",
+  "version": 1,
+  "icon": "users",
+  "category": "sales",
+  "order": 150,
+  "kpi": {
+    "key": "top_customer_share",
+    "unit": "%",
+    "value_type": "percent",
+    "group": "sales",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Anteil des Umsatzes der zehn größten Kunden seit Jahresanfang am Gesamtumsatz seit Jahresanfang, in Prozent; ein einzelner Datensatz.",
+    "sql_string": "WITH customer_revenue AS (\n    SELECT\n        so.customer_number,\n        SUM(so.net_revenue) AS revenue\n    FROM sales_orders so\n    LEFT JOIN projects p\n        ON so.project_id = p.project_id\n    WHERE so.status NOT IN ('created', 'canceled', 'unknown')\n      AND so.date >= date_trunc('year', current_date)\n      AND so.date < dateadd(year, 1, date_trunc('year', current_date))\n      AND (p.abbreviation IS NULL OR p.abbreviation <> '')\n    GROUP BY 1\n),\ntop10 AS (\n    SELECT\n        customer_number,\n        revenue\n    FROM customer_revenue\n    ORDER BY revenue DESC\n    LIMIT 10\n),\ntotal_revenue AS (\n    SELECT SUM(revenue) AS revenue\n    FROM customer_revenue\n)\nSELECT\n    ROUND(\n        100.0 * COALESCE((SELECT SUM(revenue) FROM top10), 0)\n        / NULLIF((SELECT revenue FROM total_revenue), 0),\n        2\n    ) AS top10_customer_revenue_share_percent;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Top-10 customer share",
+      "description": "Share of YTD revenue concentrated in the ten largest customers — proxy for customer dependency risk."
+    },
+    "de": {
+      "title": "Top-10-Kunden-Anteil",
+      "description": "Anteil des Umsatzes seit Jahresbeginn auf die zehn größten Kunden — Indikator für Kundenkonzentrations-Risiko."
+    }
+  }
+}

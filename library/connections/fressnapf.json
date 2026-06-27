@@ -1,0 +1,15 @@
+{
+  "id": "fressnapf",
+  "version": 1,
+  "name": "Fressnapf",
+  "domain": "fressnapf.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Fressnapf-Marketplace — Heimtier-Sortiment koppeln."
+    },
+    "de": {
+      "description": "Fressnapf-Marketplace — Heimtier-Sortiment koppeln."
+    }
+  }
+}

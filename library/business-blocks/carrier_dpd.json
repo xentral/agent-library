@@ -1,0 +1,534 @@
+{
+  "id": "carrier_dpd",
+  "version": 1,
+  "type": "connector",
+  "category": "logistics",
+  "process_group": "Versand",
+  "icon": "truck",
+  "order": 23,
+  "popular": true,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral",
+    "DPD"
+  ],
+  "handbook_url": "https://help.xentral.com/hc/de/articles/22351504676252",
+  "depends_on": [
+    {
+      "card": "printer_setup",
+      "required": false,
+      "reason": "Label printer assignment — card can be saved without it but label printing will be blocked"
+    }
+  ],
+  "locales": {
+    "en": {
+      "name": "DPD (API)",
+      "description": "Connect Xentral to DPD Cloud for domestic and EU parcel shipping. One card\ncovers all DPD Classic services — no product-level splitting required.\n",
+      "tags": [
+        "Carrier",
+        "Connector",
+        "Shipping",
+        "Logistics"
+      ],
+      "documentation": {
+        "overview": "Sets up DPD (API) as a Versandart in Xentral via the DPD Cloud integration.\nOnce active, the pack station can generate DPD labels directly from delivery\nnotes, and customers receive live tracking via DPD Predict.\n\nUnlike DHL, a single DPD card instance covers all standard services (Classic,\nClassic Predict, domestic and EU). Non-standard services (e.g. Saturday\ndelivery, express) are added via the optional Alternativer Versandservice\nfield — a separate card instance is not required.\n\nDPD credentials differ by customer tier:\n  - myDPD Pro (under 500 packages/month): contact your DPD depot directly\n    to receive CloudUser ID and CloudUser Token.\n  - myDPD Business (500+ packages/month): find credentials at\n    www.mydpdbusiness.de under your account settings.\n\nReturns (Retouren) are supported natively by DPD — enable the toggle in\nthe returns section. No separate return card is required (unlike DHL).\n\nLabel printer is pre-filled from printer_setup once that card is configured.\nPrinter Setup is currently a stub (MVP out of scope) — fill manually for now.\n",
+        "capabilities": [
+          "DPD Classic and Classic Predict label generation from Versandzentrum",
+          "DPD Cloud credential authentication via Connect",
+          "Live tracking (Predict) enabled by default",
+          "Return labels supported natively — no separate card needed",
+          "Label format selection (A4 / A6)",
+          "Weight-based defaults for label generation",
+          "Optional reference text printed on label"
+        ],
+        "inputs": [
+          "CloudUser ID (from DPD depot or mydpdbusiness.de)",
+          "CloudUser Token (from DPD depot or mydpdbusiness.de)",
+          "Label printer (pre-filled from printer_setup, overridable)"
+        ],
+        "outputs": [
+          "DPD Versandart active in Xentral → Einstellungen → Versandarten",
+          "DPD Predict live tracking enabled for all outbound shipments",
+          "Label printer assigned for DPD labels",
+          "Connect authentication entry for DPD Cloud"
+        ],
+        "notes": "Classic Predict is the default service and should remain on unless the\ncustomer has explicitly booked a different DPD service. Turning it off\nwithout an Alternativer Versandservice configured can result in DPD\ncharging additional fees per shipment.\n\nDPD does not require a sender address at setup — shipping address on\nlabels is pulled from the Xentral company master data (company_basics)\nat label generation time, not configured here.\n"
+      },
+      "sections": [
+        {
+          "id": "authentication",
+          "title": "DPD authentication",
+          "hint": "DPD Cloud credentials. Submitted via Connect — not stored in this card.",
+          "human": [
+            {
+              "text": "CloudUser ID",
+              "why": "Provided by DPD after Cloud access is activated. myDPD Pro (<500 packages/month): request from your DPD depot. myDPD Business (500+ packages/month): find at www.mydpdbusiness.de.\n"
+            },
+            {
+              "text": "CloudUser Token",
+              "why": "Same source as CloudUser ID — submitted via Connect authenticate action; never stored in this card."
+            },
+            {
+              "text": "Click Authenticate after entering credentials above",
+              "why": "Pushes credentials to Connect → Versandanbieter. Card should not be saved until authentication returns success."
+            }
+          ],
+          "fields": [
+            {
+              "id": "clouduserid",
+              "type": "text",
+              "label": "CloudUser ID",
+              "placeholder": "Your DPD Cloud user ID",
+              "default": "",
+              "human": true,
+              "human_why": "Provided by DPD after Cloud access activation. myDPD Pro: contact your DPD depot. myDPD Business: find at www.mydpdbusiness.de.\n"
+            },
+            {
+              "id": "cloudusertoken",
+              "type": "secret",
+              "label": "CloudUser Token",
+              "placeholder": "••••••••",
+              "default": "",
+              "human": true,
+              "human_why": "DPD Cloud token — submitted via Connect authenticate action and passed directly to Connect → Versandanbieter. Never stored in this card or visible in the onboarding plan.\n"
+            },
+            {
+              "id": "connect_authenticate",
+              "type": "action",
+              "label": "Connect with DPD",
+              "action": "connect_authenticate",
+              "provider": "dpd",
+              "triggers": [
+                "clouduserid",
+                "cloudusertoken"
+              ],
+              "human": true,
+              "human_why": "Operator clicks Authenticate after entering credentials. Submits CloudUser ID and Token to Connect → Versandanbieter. Do not save the card until authentication returns a success status.\n"
+            }
+          ]
+        },
+        {
+          "id": "label_config",
+          "title": "Label configuration",
+          "hint": "Label format and printer for the pack station.",
+          "human": [
+            {
+              "text": "Label format (A6 recommended for thermal printers)",
+              "why": "Hardware-specific — depends on the printer at the pack station"
+            },
+            {
+              "text": "Label printer",
+              "why": "Pre-filled from printer_setup once configured — currently a stub; fill manually"
+            }
+          ],
+          "fields": [
+            {
+              "id": "druck_format",
+              "type": "radio",
+              "label": "Label format",
+              "options": [
+                {
+                  "value": "A6",
+                  "label": "A6 — thermal printer (recommended)"
+                },
+                {
+                  "value": "A4",
+                  "label": "A4 — laser printer"
+                }
+              ],
+              "default": "A6",
+              "human": true,
+              "human_why": "Hardware-specific. Pre-fill A6 as recommendation for thermal printers (most common at pack stations) — operator confirms based on actual printer model.\n"
+            },
+            {
+              "id": "drucker_versandlabel",
+              "type": "text",
+              "label": "Label printer",
+              "placeholder": "e.g. Zebra ZD421 — Pack Station 1",
+              "default": "",
+              "human": false,
+              "human_why": "Pre-filled from printer_setup.printer_name once that card is configured. Currently a stub (MVP out of scope) — operator must enter the printer name manually.\n",
+              "source": "printer_setup.printer_name",
+              "overwritable": true
+            },
+            {
+              "id": "versand_email",
+              "type": "radio",
+              "label": "Shipping notification email",
+              "options": [
+                {
+                  "value": "Standard",
+                  "label": "Standard — inherit project settings"
+                },
+                {
+                  "value": "Keine",
+                  "label": "None"
+                },
+                {
+                  "value": "Eigene Textvorlage",
+                  "label": "Custom template"
+                }
+              ],
+              "default": "Standard",
+              "human": false,
+              "human_why": "Defaults to Standard (inherits project logistics settings). Only surface this field if the operator explicitly asks about shipping notification behaviour.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "service_options",
+          "title": "DPD service",
+          "hint": "Classic Predict (live tracking) is on by default. Only change if a different service is booked.",
+          "human": [],
+          "fields": [
+            {
+              "id": "classic_predict",
+              "type": "toggle",
+              "label": "Classic Predict (live tracking)",
+              "default": true,
+              "human": false,
+              "human_why": "Enables DPD Predict live tracking for all shipments — customers receive status updates and can choose delivery window. Recommended on by default. Turning this off without booking an alternative service can result in additional DPD charges.\n"
+            },
+            {
+              "id": "alternativer_versandservice",
+              "type": "text",
+              "label": "Alternative service code",
+              "placeholder": "e.g. service code from DPD contract",
+              "default": "",
+              "human": false,
+              "human_why": "Only required if the customer has booked a non-Classic DPD service (e.g. Saturday delivery, express). Enter the service code provided by DPD. Leave blank for Classic and Classic Predict.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "weight_defaults",
+          "title": "Default shipment weight",
+          "hint": "Used by Xentral for DPD label generation. Pre-set to a typical D2C default — adjust to match your average shipment.",
+          "human": [],
+          "fields": [
+            {
+              "id": "standardgewicht_kg",
+              "type": "number",
+              "label": "Standard weight (kg)",
+              "default": 1.0,
+              "human": false,
+              "human_why": "Pre-set to 1.0 kg (typical D2C small parcel). Operator should override if their average shipment weight differs significantly. Used when individual item weights are not recorded in Xentral.\n",
+              "overwritable": true
+            },
+            {
+              "id": "gewicht_anpassen_in",
+              "type": "radio",
+              "label": "Packaging weight adjustment unit",
+              "options": [
+                {
+                  "value": "kg",
+                  "label": "kg (fixed weight addition)"
+                },
+                {
+                  "value": "percent",
+                  "label": "% (percentage of item weight)"
+                }
+              ],
+              "default": "kg",
+              "human": false,
+              "human_why": "Optional. Adds a fixed packaging weight to each shipment weight calculation. Only configure if the customer wants Xentral to automatically account for box/padding weight in DPD declarations.\n",
+              "advanced": true
+            },
+            {
+              "id": "gewicht_anpassen_um",
+              "type": "number",
+              "label": "Packaging weight adjustment amount",
+              "default": 0,
+              "human": false,
+              "human_why": "Amount to add per the unit selected above. Leave 0 if not needed. Pair with gewicht_anpassen_in.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "returns",
+          "title": "Return labels",
+          "hint": "DPD supports returns natively — no separate card needed unlike DHL.",
+          "human": [],
+          "fields": [
+            {
+              "id": "retouren_unterstuetzt",
+              "type": "toggle",
+              "label": "Returns supported",
+              "default": true,
+              "human": false,
+              "human_why": "Enables return label creation for orders shipped with this DPD Versandart. DPD supports this natively — no separate return card required. Enable by default for B2C setups.\n"
+            },
+            {
+              "id": "bevorzugte_ruecksendemethode",
+              "type": "text",
+              "label": "Preferred return method",
+              "placeholder": "e.g. DPD (API) — leave blank to use this carrier",
+              "default": "",
+              "human": false,
+              "human_why": "Optional. Pre-selects a specific return Versandart when a return is created manually in Xentral. Leave blank to default to this DPD Versandart for returns.\n",
+              "advanced": true
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "name": "DPD (API)",
+      "description": "Xentral mit DPD Cloud für nationalen und EU-weiten Paketversand verbinden. Eine Karte\ndeckt alle DPD Classic-Dienste ab — keine produktspezifische Aufteilung erforderlich.\n",
+      "tags": [
+        "Spediteur",
+        "Anbindung",
+        "Versand",
+        "Logistik"
+      ],
+      "documentation": {
+        "overview": "Richtet DPD (API) als Versandart in Xentral über die DPD Cloud-Integration ein.\nSobald aktiv, kann die Packstation DPD-Labels direkt aus Lieferscheinen generieren,\nund Kunden erhalten Live-Tracking über DPD Predict.\n\nIm Gegensatz zu DHL deckt eine einzelne DPD-Karteninstanz alle Standarddienste ab (Classic,\nClassic Predict, national und EU). Nicht-Standarddienste (z.B. Samstagszustellung,\nExpress) werden über das optionale Feld Alternativer Versandservice hinzugefügt —\neine separate Karteninstanz ist nicht erforderlich.\n\nDPD-Zugangsdaten unterscheiden sich je nach Kundenstufe:\n  - myDPD Pro (unter 500 Pakete/Monat): DPD-Depot direkt kontaktieren,\n    um CloudUser ID und CloudUser Token zu erhalten.\n  - myDPD Business (500+ Pakete/Monat): Zugangsdaten unter\n    www.mydpdbusiness.de in den Kontoeinstellungen finden.\n\nRetouren werden von DPD nativ unterstützt — den Schalter im\nRetouren-Abschnitt aktivieren. Keine separate Retouren-Karte erforderlich (im Gegensatz zu DHL).\n\nEtikettendrucker wird aus printer_setup vorausgefüllt, sobald diese Karte konfiguriert ist.\nDrucker-Setup ist derzeit ein Stub (MVP außerhalb des Umfangs) — vorerst manuell ausfüllen.\n",
+        "capabilities": [
+          "DPD Classic und Classic Predict Etikettengenerierung aus dem Versandzentrum",
+          "DPD Cloud Zugangsdaten-Authentifizierung über Connect",
+          "Live-Tracking (Predict) standardmäßig aktiviert",
+          "Retouren-Labels nativ unterstützt — keine separate Karte erforderlich",
+          "Etikettenformat-Auswahl (A4 / A6)",
+          "Gewichtsbasierte Standardwerte für die Etikettengenerierung",
+          "Optionaler Referenztext auf dem Etikett"
+        ],
+        "inputs": [
+          "CloudUser ID (vom DPD-Depot oder mydpdbusiness.de)",
+          "CloudUser Token (vom DPD-Depot oder mydpdbusiness.de)",
+          "Etikettendrucker (aus printer_setup vorausgefüllt, überschreibbar)"
+        ],
+        "outputs": [
+          "DPD Versandart aktiv in Xentral → Einstellungen → Versandarten",
+          "DPD Predict Live-Tracking für alle ausgehenden Sendungen aktiviert",
+          "Etikettendrucker für DPD-Labels zugewiesen",
+          "Connect-Authentifizierungseintrag für DPD Cloud"
+        ],
+        "notes": "Classic Predict ist der Standarddienst und sollte aktiviert bleiben, es sei denn, der\nKunde hat explizit einen anderen DPD-Dienst gebucht. Das Deaktivieren ohne konfigurierten\nAlternativen Versandservice kann dazu führen, dass DPD zusätzliche Gebühren pro Sendung berechnet.\n\nDPD erfordert beim Setup keine Absenderadresse — die Versandadresse auf\nEtiketten wird bei der Etikettengenerierung aus den Xentral-Unternehmensstammdaten\n(company_basics) gezogen, nicht hier konfiguriert.\n"
+      },
+      "sections": [
+        {
+          "id": "authentication",
+          "title": "DPD-Authentifizierung",
+          "hint": "DPD Cloud-Zugangsdaten. Werden über Connect übermittelt — nicht in dieser Karte gespeichert.",
+          "human": [
+            {
+              "text": "CloudUser ID",
+              "why": "Von DPD bereitgestellt, nachdem der Cloud-Zugang aktiviert wurde. myDPD Pro (<500 Pakete/Monat): beim DPD-Depot anfragen. myDPD Business (500+ Pakete/Monat): unter www.mydpdbusiness.de zu finden.\n"
+            },
+            {
+              "text": "CloudUser Token",
+              "why": "Gleiche Quelle wie CloudUser ID — wird über die Connect-Authenticate-Aktion übermittelt; wird nie in dieser Karte gespeichert."
+            },
+            {
+              "text": "Nach Eingabe der Zugangsdaten auf Authentifizieren klicken",
+              "why": "Überträgt Zugangsdaten an Connect → Versandanbieter. Karte nicht speichern, bis die Authentifizierung erfolgreich zurückgegeben wird."
+            }
+          ],
+          "fields": [
+            {
+              "id": "clouduserid",
+              "type": "text",
+              "label": "CloudUser ID",
+              "placeholder": "Ihre DPD Cloud-Benutzer-ID",
+              "default": "",
+              "human": true,
+              "human_why": "Von DPD nach Aktivierung des Cloud-Zugangs bereitgestellt. myDPD Pro: DPD-Depot kontaktieren. myDPD Business: unter www.mydpdbusiness.de zu finden.\n"
+            },
+            {
+              "id": "cloudusertoken",
+              "type": "secret",
+              "label": "CloudUser Token",
+              "placeholder": "••••••••",
+              "default": "",
+              "human": true,
+              "human_why": "DPD Cloud-Token — wird über die Connect-Authenticate-Aktion übermittelt und direkt an Connect → Versandanbieter weitergeleitet. Wird nie in dieser Karte gespeichert oder im Onboarding-Plan angezeigt.\n"
+            },
+            {
+              "id": "connect_authenticate",
+              "type": "action",
+              "label": "Mit DPD verbinden",
+              "action": "connect_authenticate",
+              "provider": "dpd",
+              "triggers": [
+                "clouduserid",
+                "cloudusertoken"
+              ],
+              "human": true,
+              "human_why": "Betreiber klickt auf Authentifizieren nach Eingabe der Zugangsdaten. Überträgt CloudUser ID und Token an Connect → Versandanbieter. Karte nicht speichern, bis die Authentifizierung einen Erfolgsstatus zurückgibt.\n"
+            }
+          ]
+        },
+        {
+          "id": "label_config",
+          "title": "Etikettenformat",
+          "hint": "Etikettenformat und Drucker für die Packstation.",
+          "human": [
+            {
+              "text": "Etikettenformat (A6 empfohlen für Thermodrucker)",
+              "why": "Hardwarespezifisch — abhängig vom Drucker an der Packstation"
+            },
+            {
+              "text": "Etikettendrucker",
+              "why": "Aus printer_setup vorausgefüllt, sobald konfiguriert — derzeit ein Stub; manuell ausfüllen"
+            }
+          ],
+          "fields": [
+            {
+              "id": "druck_format",
+              "type": "radio",
+              "label": "Etikettenformat",
+              "options": [
+                {
+                  "value": "A6",
+                  "label": "A6 — Thermodrucker (empfohlen)"
+                },
+                {
+                  "value": "A4",
+                  "label": "A4 — Laserdrucker"
+                }
+              ],
+              "default": "A6",
+              "human": true,
+              "human_why": "Hardwarespezifisch. A6 als Empfehlung für Thermodrucker vorausfüllen (am häufigsten an Packstationen) — Betreiber bestätigt basierend auf dem tatsächlichen Druckermodell.\n"
+            },
+            {
+              "id": "drucker_versandlabel",
+              "type": "text",
+              "label": "Etikettendrucker",
+              "placeholder": "z.B. Zebra ZD421 — Packstation 1",
+              "default": "",
+              "human": false,
+              "human_why": "Aus printer_setup.printer_name vorausgefüllt, sobald diese Karte konfiguriert ist. Derzeit ein Stub (MVP außerhalb des Umfangs) — Betreiber muss den Druckernamen manuell eingeben.\n",
+              "source": "printer_setup.printer_name",
+              "overwritable": true
+            },
+            {
+              "id": "versand_email",
+              "type": "radio",
+              "label": "Versandbenachrichtigungs-E-Mail",
+              "options": [
+                {
+                  "value": "Standard",
+                  "label": "Standard — Projekteinstellungen übernehmen"
+                },
+                {
+                  "value": "Keine",
+                  "label": "Keine"
+                },
+                {
+                  "value": "Eigene Textvorlage",
+                  "label": "Eigene Vorlage"
+                }
+              ],
+              "default": "Standard",
+              "human": false,
+              "human_why": "Standard übernimmt die Projektlogistikeinstellungen. Dieses Feld nur anzeigen, wenn der Betreiber explizit nach dem Versandbenachrichtigungsverhalten fragt.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "service_options",
+          "title": "DPD-Dienst",
+          "hint": "Classic Predict (Live-Tracking) ist standardmäßig aktiviert. Nur ändern, wenn ein anderer Dienst gebucht wurde.",
+          "human": [],
+          "fields": [
+            {
+              "id": "classic_predict",
+              "type": "toggle",
+              "label": "Classic Predict (Live-Tracking)",
+              "default": true,
+              "human": false,
+              "human_why": "Aktiviert DPD Predict Live-Tracking für alle Sendungen — Kunden erhalten Statusupdates und können ein Lieferfenster wählen. Standardmäßig aktiviert empfohlen. Das Deaktivieren ohne Buchung eines alternativen Dienstes kann zu zusätzlichen DPD-Gebühren führen.\n"
+            },
+            {
+              "id": "alternativer_versandservice",
+              "type": "text",
+              "label": "Alternativer Servicecode",
+              "placeholder": "z.B. Servicecode aus DPD-Vertrag",
+              "default": "",
+              "human": false,
+              "human_why": "Nur erforderlich, wenn der Kunde einen Nicht-Classic DPD-Dienst gebucht hat (z.B. Samstagszustellung, Express). Den von DPD bereitgestellten Servicecode eingeben. Für Classic und Classic Predict leer lassen.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "weight_defaults",
+          "title": "Standard-Sendungsgewicht",
+          "hint": "Von Xentral für die DPD-Etikettengenerierung verwendet. Auf einen typischen D2C-Standardwert voreingestellt — an das durchschnittliche Sendungsgewicht anpassen.",
+          "human": [],
+          "fields": [
+            {
+              "id": "standardgewicht_kg",
+              "type": "number",
+              "label": "Standardgewicht (kg)",
+              "default": 1.0,
+              "human": false,
+              "human_why": "Auf 1,0 kg voreingestellt (typisches D2C-Kleinpaket). Betreiber sollte überschreiben, wenn das durchschnittliche Sendungsgewicht erheblich abweicht. Wird verwendet, wenn einzelne Artikelgewichte nicht in Xentral erfasst sind.\n",
+              "overwritable": true
+            },
+            {
+              "id": "gewicht_anpassen_in",
+              "type": "radio",
+              "label": "Einheit für Verpackungsgewicht-Anpassung",
+              "options": [
+                {
+                  "value": "kg",
+                  "label": "kg (fester Gewichtszuschlag)"
+                },
+                {
+                  "value": "percent",
+                  "label": "% (Prozentsatz des Artikelgewichts)"
+                }
+              ],
+              "default": "kg",
+              "human": false,
+              "human_why": "Optional. Fügt jeder Sendungsgewichtsberechnung ein festes Verpackungsgewicht hinzu. Nur konfigurieren, wenn der Kunde möchte, dass Xentral das Karton-/Polstergewicht in DPD-Deklarationen automatisch berücksichtigt.\n",
+              "advanced": true
+            },
+            {
+              "id": "gewicht_anpassen_um",
+              "type": "number",
+              "label": "Verpackungsgewicht-Anpassungsbetrag",
+              "default": 0,
+              "human": false,
+              "human_why": "Betrag, der gemäß der oben ausgewählten Einheit hinzugefügt wird. Bei Nichtbedarf 0 lassen. Mit gewicht_anpassen_in kombinieren.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "returns",
+          "title": "Retouren-Labels",
+          "hint": "DPD unterstützt Retouren nativ — keine separate Karte wie bei DHL erforderlich.",
+          "human": [],
+          "fields": [
+            {
+              "id": "retouren_unterstuetzt",
+              "type": "toggle",
+              "label": "Retouren unterstützt",
+              "default": true,
+              "human": false,
+              "human_why": "Aktiviert die Erstellung von Retouren-Labels für Bestellungen, die mit dieser DPD Versandart versendet wurden. DPD unterstützt dies nativ — keine separate Retouren-Karte erforderlich. Standardmäßig für B2C-Setups aktivieren.\n"
+            },
+            {
+              "id": "bevorzugte_ruecksendemethode",
+              "type": "text",
+              "label": "Bevorzugte Rücksendungsmethode",
+              "placeholder": "z.B. DPD (API) — leer lassen, um diesen Spediteur zu verwenden",
+              "default": "",
+              "human": false,
+              "human_why": "Optional. Wählt eine bestimmte Retouren-Versandart vor, wenn eine Retoure manuell in Xentral erstellt wird. Leer lassen, um standardmäßig diese DPD Versandart für Retouren zu verwenden.\n",
+              "advanced": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": true
+}

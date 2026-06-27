@@ -1,0 +1,180 @@
+{
+  "id": "gutschrift_xentral_original",
+  "version": 1,
+  "engine": "weasyprint",
+  "locales": {
+    "de": {
+      "title": "Gutschrift",
+      "description": "Klassische Gutschrift im Xentral-Original-Stil: DIN-5008-Layout, Logo, Absenderzeile, Anschriftenfeld, Infoblock rechts (Gutschriftsdatum, Bezug zur Rechnung, Kundennummer), Positionstabelle, USt-Aufstellung je Satz, Pflichtangaben in der Fußzeile. Schwarz auf weiß, ohne Farbflächen. Rendert ausschließlich aus der Standard-V3-Payload (creditNotes). §14 UStG."
+    },
+    "en": {
+      "title": "Credit Note",
+      "description": "Classic credit note in the Xentral original style: DIN 5008 layout, logo, sender line, address window, right info block (credit note date, invoice reference, customer no.), line-item table, per-rate VAT breakdown, mandatory footer lines. Black on white, no colour fills. Renders purely from the standard V3 creditNotes payload."
+    }
+  },
+  "v3_endpoint": "/api/v3/creditNotes/{id}?include=all",
+  "filename_pattern": "Gutschrift-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute (or alt='' AND role='presentation')",
+    "tables MUST use <th scope='col'> or scope='row'",
+    "exactly one <h1> per document",
+    "heading hierarchy MUST be contiguous (no jump from h1 to h3)",
+    "<title> in <head> MUST be set and non-empty",
+    "amounts MUST use tabular-nums and right-align"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "company"
+    ],
+    "company": {
+      "required": [
+        "name",
+        "address"
+      ],
+      "optional": [
+        "logo",
+        "phone",
+        "email",
+        "website",
+        "vatId",
+        "taxId",
+        "ceo"
+      ]
+    },
+    "optional": [
+      "language",
+      "invoiceReference",
+      "customerNumber",
+      "bodyOutroduction"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data.lineItems | default([]) %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title='Gutschriftsempfänger' %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.credit_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.invoiceReference %}<tr><th scope=\"row\">{{ L.invoice_ref }}</th><td>{{ data.invoiceReference }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if buyer.vatId %}<tr><th scope=\"row\">{{ L.customer_vat }}</th><td>{{ buyer.vatId }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  <section class=\"box-intro\" data-box=\"intro\"><p>{{ L.intro }}</p></section>\n\n  {% with title=L.positions, caption=L.positions, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"terms-heading\">\n    <h2 id=\"terms-heading\">{{ L.terms_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 64mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n.positions-table thead th:nth-child(3) { width: 22mm; }\n.positions-table thead th:nth-child(4) { width: 30mm; }\n.positions-table thead th:nth-child(5) { width: 32mm; }\n.positions-table thead th:nth-child(6) { display: none; }\n.positions-table tbody td:nth-child(6) { display: none; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-left {\n    content: \"Beispiel Handels GmbH · Marktplatz 1, 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-right {\n    content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A Commerzbank Berlin · BIC COBADEFFXXX \\A IBAN DE89 3704 0044 0532 0130 00\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    text-align: right; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "66012",
+    "documentNumber": "GU-2026-00014",
+    "documentDate": "12.05.2026",
+    "invoiceReference": "RE-2026-00321",
+    "customerNumber": "10043",
+    "language": "de",
+    "documentAddress": {
+      "name": "Musterfirma GmbH",
+      "coName": "Buchhaltung",
+      "street": "Hauptstraße 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "country": "Deutschland",
+      "vatId": "DE298765432"
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "description": "Rücksendung – Transportschaden",
+        "quantity": 1,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "249.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "249.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "296.31000000",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 19,
+          "reduced": 7
+        }
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "249.00000000",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "296.31000000",
+        "currency": "EUR"
+      }
+    },
+    "bodyOutroduction": "Der Gutschriftsbetrag wird Ihrem Konto gutgeschrieben bzw. mit offenen Forderungen verrechnet.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "phone": "+49 30 1234567-0",
+      "email": "kontakt@beispiel-handel.de",
+      "website": "www.beispiel-handel.de",
+      "vatId": "DE123456789",
+      "taxId": "13/456/78901",
+      "ceo": "Max Beispiel"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Gutschrift",
+      "intro": "wir schreiben Ihnen die folgenden Positionen gut.",
+      "credit_date": "Gutschriftsdatum",
+      "invoice_ref": "Bezug Rechnung",
+      "customer_number": "Kundennummer",
+      "customer_vat": "Ihre USt-IdNr.",
+      "positions": "Positionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_total": "Gesamt",
+      "net_total": "Nettobetrag",
+      "vat_label": "zzgl.",
+      "vat_on": "USt auf",
+      "gross_total": "Gutschriftsbetrag",
+      "terms_heading": "Hinweis"
+    },
+    "en": {
+      "doc_title": "Credit Note",
+      "intro": "we hereby credit you for the following items.",
+      "credit_date": "Credit note date",
+      "invoice_ref": "Invoice ref.",
+      "customer_number": "Customer no.",
+      "customer_vat": "Your VAT-ID",
+      "positions": "Items",
+      "col_pos": "Pos",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_total": "Total",
+      "net_total": "Net total",
+      "vat_label": "plus",
+      "vat_on": "VAT on",
+      "gross_total": "Credit total",
+      "terms_heading": "Note"
+    }
+  }
+}

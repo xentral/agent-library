@@ -1,0 +1,256 @@
+{
+  "id": "return_slip",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Retourenschein (RMA)",
+      "description": "Retourenformular, das der Kunde dem zurückgesendeten Paket beilegt. Enthält die Checkliste der Retourengründe, die Positionen des ursprünglichen Auftrags mit Spalten für die zurückgesendete Menge, RMA-Nummer + Barcode zum Scannen beim Wareneingang sowie ein IBAN-Feld für die Rückerstattung. Einseitiges A4 mit abtrennbarem Rücksende-Adressetikett oben.\n"
+    },
+    "en": {
+      "title": "Return slip (RMA)",
+      "description": "Return form for the customer to enclose with the package being sent back. Includes the return-reason checklist, line items from the original order with quantity-returned columns, RMA number + barcode for the warehouse to scan on inbound, and an IBAN field for the refund payout. Single-page A4 with detachable return-address label at the top.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/salesOrders/{id}?include=all",
+  "filename_pattern": "Return-{rmaNumber}.pdf",
+  "compliance": [],
+  "schema": {
+    "required": [
+      "rmaNumber",
+      "rmaDate",
+      "originalOrder",
+      "lineItems"
+    ],
+    "originalOrder": {
+      "required": [
+        "documentNumber",
+        "documentDate",
+        "customerNumber"
+      ]
+    },
+    "lineItems": {
+      "item": {
+        "required": [
+          "number",
+          "name",
+          "quantity",
+          "unit"
+        ],
+        "optional": [
+          "ean",
+          "price"
+        ]
+      }
+    },
+    "optional": [
+      "language",
+      "returnAddress",
+      "customer",
+      "reasons",
+      "deadline",
+      "refundIban"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n\n{% block title %}{{ L.doc_title }} {{ data.rmaNumber }}{% endblock %}\n\n{% set items = data.lineItems | default([]) %}\n{% set ret_addr = data.returnAddress | default({}) %}\n{% set cust = data.customer | default({}) %}\n\n{% block content %}\n\n  {# Abtrenn-Streifen oben: Rücksende-Label, das auf das Paket geklebt\n     werden kann. Schnitt-Hinweis und gestrichelte Trennlinie. #}\n  {% if ret_addr.name %}\n  <section class=\"rt-cut\" aria-labelledby=\"rt-cut-heading\">\n    <h2 id=\"rt-cut-heading\" class=\"sr-only\">{{ L.return_addr }}</h2>\n    <div class=\"rt-cut__label\">\n      <div class=\"rt-cut__title\">{{ L.return_addr }} · RMA {{ data.rmaNumber }}</div>\n      <div class=\"rt-cut__addr\">\n        <strong>{{ ret_addr.name }}</strong><br>\n        {% if ret_addr.street %}{{ ret_addr.street }}<br>{% endif %}\n        {% if ret_addr.zipCode or ret_addr.city %}{{ ret_addr.zipCode }} {{ ret_addr.city }}{% endif %}\n        {% if ret_addr.country %} · {{ ret_addr.country }}{% endif %}\n      </div>\n    </div>\n    <div class=\"rt-cut__barcode\">\n      <div class=\"barcode-rma\" data-code=\"{{ data.rmaNumber }}\"></div>\n      <div class=\"rt-cut__barcode-caption\">{{ data.rmaNumber }}</div>\n    </div>\n  </section>\n  <div class=\"rt-cut-marker\" role=\"separator\" aria-label=\"{{ L.cut_here }}\">\n    ✂ — — — — — — — — — — — — — — — — — — — — &nbsp; {{ L.cut_here }} &nbsp; — — — — — — — — — — — — — — — — — — — — ✂\n  </div>\n  {% endif %}\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }}</h1>\n    <p class=\"rt-intro\">{{ L.intro }}</p>\n  </section>\n\n  <section class=\"rt-meta\">\n    <dl>\n      <div><dt>{{ L.rma_no }}</dt><dd>{{ data.rmaNumber }}</dd></div>\n      <div><dt>{{ L.rma_date }}</dt><dd>{{ data.rmaDate }}</dd></div>\n      {% if data.deadline %}<div><dt>{{ L.deadline }}</dt><dd>{{ data.deadline }}</dd></div>{% endif %}\n      <div class=\"rt-meta__group\"><dt>{{ L.orig_order }}</dt><dd>\n        {{ L.order_no }} <strong>{{ data.originalOrder.documentNumber }}</strong>\n        · {{ L.order_date }} {{ data.originalOrder.documentDate }}\n        · {{ L.customer_no }} {{ data.originalOrder.customerNumber }}\n      </dd></div>\n    </dl>\n  </section>\n\n  {% if cust.name %}\n  <section class=\"rt-card\">\n    <h2 class=\"rt-card__title\">{{ L.customer_block }}</h2>\n    <p class=\"rt-card__body\">\n      <strong>{{ cust.name }}</strong><br>\n      {% if cust.street %}{{ cust.street }}<br>{% endif %}\n      {% if cust.zipCode or cust.city %}{{ cust.zipCode }} {{ cust.city }}{% endif %}\n      {% if cust.email %}<br>{{ cust.email }}{% endif %}\n    </p>\n  </section>\n  {% endif %}\n\n  <section aria-labelledby=\"rt-items-heading\">\n    <h2 id=\"rt-items-heading\" class=\"rt-section-title\">{{ L.col_name }}</h2>\n    <table class=\"rt-items\">\n      <thead>\n        <tr>\n          <th class=\"rt-items__col-pos\">{{ L.col_pos }}</th>\n          <th class=\"rt-items__col-sku\">{{ L.col_sku }}</th>\n          <th class=\"rt-items__col-name\">{{ L.col_name }}</th>\n          <th class=\"rt-items__col-qty\">{{ L.col_qty_orig }}</th>\n          <th class=\"rt-items__col-ret\">{{ L.col_qty_ret }}</th>\n          <th class=\"rt-items__col-reason\">{{ L.col_reason }}</th>\n        </tr>\n      </thead>\n      <tbody>\n        {% for it in items %}\n        <tr>\n          <td class=\"rt-items__col-pos\">{{ loop.index }}</td>\n          <td class=\"rt-items__col-sku\">\n            <div>{{ it.number }}</div>\n            {% if it.ean %}<div class=\"rt-items__ean\">{{ it.ean }}</div>{% endif %}\n          </td>\n          <td class=\"rt-items__col-name\">{{ it.name }}</td>\n          <td class=\"rt-items__col-qty\">{{ it.quantity | number }} {{ it.unit | default('') }}</td>\n          <td class=\"rt-items__col-ret\"><span class=\"rt-input rt-input--qty\"></span></td>\n          <td class=\"rt-items__col-reason\"><span class=\"rt-input rt-input--reason\"></span></td>\n        </tr>\n        {% endfor %}\n      </tbody>\n    </table>\n  </section>\n\n  <section class=\"rt-reasons\" aria-labelledby=\"rt-reasons-heading\">\n    <h2 id=\"rt-reasons-heading\" class=\"rt-section-title\">{{ L.reasons_heading }}</h2>\n    <ul class=\"rt-reasons__list\">\n      {% for code, label in L.reasons %}\n      <li>\n        <span class=\"rt-checkbox\"></span>\n        <span class=\"rt-reasons__code\">{{ code }}</span>\n        <span class=\"rt-reasons__label\">{{ label }}</span>\n      </li>\n      {% endfor %}\n    </ul>\n    <div class=\"rt-reasons__other\">\n      <div class=\"rt-reasons__other-label\">{{ L.reason_other }}</div>\n      <div class=\"rt-reasons__other-box\"></div>\n    </div>\n  </section>\n\n  <section class=\"rt-refund\" aria-labelledby=\"rt-refund-heading\">\n    <h2 id=\"rt-refund-heading\" class=\"rt-section-title\">{{ L.refund_heading }}</h2>\n    <p class=\"rt-refund__default\">{{ L.refund_default }}</p>\n    <div class=\"rt-refund__iban\">\n      <label class=\"rt-refund__iban-label\">{{ L.refund_iban }}:</label>\n      <span class=\"rt-refund__iban-box\">{{ data.refundIban | default('') }}</span>\n    </div>\n  </section>\n\n  <section class=\"rt-signature\" aria-labelledby=\"rt-sig-heading\">\n    <h2 id=\"rt-sig-heading\" class=\"sr-only\">{{ L.sig_heading }}</h2>\n    <div class=\"rt-signature__row\">\n      <div>\n        <div class=\"rt-signature__line\"></div>\n        <div class=\"rt-signature__label\">{{ L.sig_date }}</div>\n      </div>\n      <div>\n        <div class=\"rt-signature__line\"></div>\n        <div class=\"rt-signature__label\">{{ L.sig_signature }}</div>\n      </div>\n    </div>\n  </section>\n\n  {# Service-Felder unten — wird vom Lager beim Wareneingang\n     ausgefüllt. Hilft beim Eingang-Workflow und beim Status-Update. #}\n  <section class=\"rt-office\" aria-labelledby=\"rt-office-heading\">\n    <h2 id=\"rt-office-heading\" class=\"rt-office__title\">{{ L.office_only }}</h2>\n    <div class=\"rt-office__grid\">\n      <div>\n        <div class=\"rt-office__label\">{{ L.received_on }}</div>\n        <div class=\"rt-office__line\"></div>\n      </div>\n      <div>\n        <div class=\"rt-office__label\">{{ L.checked_by }}</div>\n        <div class=\"rt-office__line\"></div>\n      </div>\n      <div>\n        <div class=\"rt-office__label\">{{ L.condition }}</div>\n        <div class=\"rt-office__pills\">\n          <span><span class=\"rt-checkbox\"></span> {{ L.condition_new }}</span>\n          <span><span class=\"rt-checkbox\"></span> {{ L.condition_used }}</span>\n          <span><span class=\"rt-checkbox\"></span> {{ L.condition_damaged }}</span>\n        </div>\n      </div>\n      <div>\n        <div class=\"rt-office__label\">{{ L.action }}</div>\n        <div class=\"rt-office__pills\">\n          <span><span class=\"rt-checkbox\"></span> {{ L.action_refund }}</span>\n          <span><span class=\"rt-checkbox\"></span> {{ L.action_replace }}</span>\n          <span><span class=\"rt-checkbox\"></span> {{ L.action_voucher }}</span>\n          <span><span class=\"rt-checkbox\"></span> {{ L.action_reject }}</span>\n        </div>\n      </div>\n    </div>\n  </section>\n\n{% endblock %}\n",
+  "css": "/* Retourenschein — A4, eine Seite. Oben Schnitt-Streifen mit Rücksende-\n   Adresse, dann Items-Tabelle, Gründe-Liste, IBAN-Feld, Unterschriften\n   und ein \"Vom Lager auszufüllen\"-Block. */\n\n.sr-only {\n  position: absolute;\n  width: 1px; height: 1px;\n  overflow: hidden;\n  clip: rect(0 0 0 0);\n}\n\n/* Abtrenn-Streifen oben — Rücksende-Label das auf das Paket geklebt\n   wird. Border auf 3 Seiten + dashed unten als Schnittlinie. */\n.rt-cut {\n  display: grid;\n  grid-template-columns: 1fr 60mm;\n  gap: 6mm;\n  align-items: center;\n  padding: 5mm 6mm;\n  border: 0.3mm solid #111827;\n  margin-bottom: 0;\n}\n.rt-cut__title {\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.4px;\n  font-weight: 700;\n  color: #6b7280;\n  margin-bottom: 2mm;\n}\n.rt-cut__addr {\n  font-size: 11pt;\n  line-height: 1.35;\n}\n.rt-cut__barcode { text-align: center; }\n.rt-cut__barcode-caption {\n  font-family: monospace;\n  font-size: 9pt;\n  margin-top: 1mm;\n  letter-spacing: 0.3pt;\n}\n\n.rt-cut-marker {\n  text-align: center;\n  font-size: 8pt;\n  color: #6b7280;\n  letter-spacing: 1pt;\n  padding: 3mm 0 8mm;\n  border-top: 0.3mm dashed #9ca3af;\n  border-bottom: 0.3mm dashed #9ca3af;\n  margin-bottom: 6mm;\n}\n\n/* RMA-Barcode oben rechts im Schnitt-Block — Code-128-Style. */\n.barcode-rma {\n  height: 12mm;\n  background:\n    repeating-linear-gradient(\n      to right,\n      #111827 0 0.5mm,\n      transparent 0.5mm 0.9mm,\n      #111827 0.9mm 1.2mm,\n      transparent 1.2mm 1.8mm,\n      #111827 1.8mm 2.3mm,\n      transparent 2.3mm 2.9mm,\n      #111827 2.9mm 3.2mm,\n      transparent 3.2mm 4mm\n    );\n  border-bottom: 0.2mm solid #111827;\n}\n\n.rt-intro {\n  font-size: 10pt;\n  color: #4b5563;\n  margin: 1mm 0 0;\n  line-height: 1.45;\n}\n\n.rt-meta { margin: 4mm 0 6mm; }\n.rt-meta dl {\n  display: grid;\n  grid-template-columns: max-content 1fr max-content 1fr;\n  gap: 1mm 4mm;\n  margin: 0;\n  font-size: 9.5pt;\n}\n.rt-meta dl > div { display: contents; }\n.rt-meta dt {\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  font-weight: 700;\n  color: #6b7280;\n}\n.rt-meta dd { margin: 0; }\n.rt-meta__group { grid-column: 1 / -1; }\n\n.rt-card {\n  margin: 4mm 0 6mm;\n  padding: 3mm 5mm;\n  background: rgba(15,23,42,0.03);\n  border-radius: 1.5mm;\n}\n.rt-card__title {\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  font-weight: 700;\n  color: #6b7280;\n  margin: 0 0 1mm;\n}\n.rt-card__body {\n  margin: 0;\n  font-size: 10pt;\n  line-height: 1.4;\n}\n\n.rt-section-title {\n  font-size: 10pt;\n  font-weight: 700;\n  margin: 4mm 0 2mm;\n  color: #111827;\n}\n\n.rt-items {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 9.5pt;\n}\n.rt-items thead th {\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  text-align: left;\n  background: #f3f4f6;\n  border-bottom: 0.4mm solid #6b7280;\n  padding: 2mm 3mm;\n  color: #374151;\n}\n.rt-items tbody td {\n  padding: 2.5mm 3mm;\n  border-bottom: 0.2mm solid #e5e7eb;\n  vertical-align: middle;\n}\n.rt-items__col-pos    { width: 10mm; color: #6b7280; }\n.rt-items__col-sku    { width: 26mm; font-family: monospace; }\n.rt-items__col-qty    { width: 22mm; text-align: right; font-variant-numeric: tabular-nums; }\n.rt-items__col-ret    { width: 22mm; text-align: center; }\n.rt-items__col-reason { width: 22mm; text-align: center; }\n.rt-items__ean {\n  font-size: 8pt;\n  color: #6b7280;\n}\n\n.rt-input {\n  display: inline-block;\n  height: 6mm;\n  border-bottom: 0.3mm solid #111827;\n}\n.rt-input--qty    { width: 14mm; }\n.rt-input--reason { width: 14mm; }\n\n.rt-reasons {\n  margin: 6mm 0;\n  padding: 4mm 5mm;\n  border: 0.3mm solid #d1d5db;\n  border-radius: 1.5mm;\n}\n.rt-reasons__list {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 1.5mm 6mm;\n}\n.rt-reasons__list li {\n  display: flex;\n  align-items: center;\n  gap: 2.5mm;\n  font-size: 9.5pt;\n}\n.rt-reasons__code {\n  font-family: monospace;\n  font-weight: 700;\n  font-size: 8.5pt;\n  color: #4b5563;\n}\n.rt-reasons__other {\n  margin-top: 4mm;\n}\n.rt-reasons__other-label {\n  font-size: 8.5pt;\n  font-weight: 600;\n  color: #4b5563;\n  margin-bottom: 1mm;\n}\n.rt-reasons__other-box {\n  height: 16mm;\n  border: 0.2mm solid #d1d5db;\n  border-radius: 1mm;\n}\n\n.rt-refund {\n  margin: 6mm 0;\n  padding: 4mm 5mm;\n  background: rgba(109, 124, 255, 0.06);\n  border-radius: 1.5mm;\n}\n.rt-refund__default {\n  margin: 0 0 2mm;\n  font-size: 9.5pt;\n  color: #1f2937;\n}\n.rt-refund__iban {\n  font-size: 9.5pt;\n}\n.rt-refund__iban-label {\n  font-weight: 600;\n  margin-right: 2mm;\n}\n.rt-refund__iban-box {\n  display: inline-block;\n  min-width: 110mm;\n  height: 6mm;\n  border-bottom: 0.3mm solid #111827;\n  font-family: monospace;\n}\n\n.rt-signature {\n  margin: 6mm 0;\n}\n.rt-signature__row {\n  display: grid;\n  grid-template-columns: 60mm 1fr;\n  gap: 10mm;\n}\n.rt-signature__line {\n  border-bottom: 0.3mm solid #111827;\n  height: 12mm;\n}\n.rt-signature__label {\n  font-size: 9pt;\n  color: #6b7280;\n  margin-top: 1mm;\n}\n\n.rt-checkbox {\n  display: inline-block;\n  width: 4.5mm;\n  height: 4.5mm;\n  border: 0.4mm solid #111827;\n  border-radius: 0.5mm;\n  vertical-align: middle;\n  flex-shrink: 0;\n}\n\n.rt-office {\n  margin-top: 8mm;\n  padding: 4mm 5mm;\n  border: 0.3mm dashed #9ca3af;\n  border-radius: 1.5mm;\n  background: rgba(15,23,42,0.02);\n  page-break-inside: avoid;\n}\n.rt-office__title {\n  margin: 0 0 3mm;\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  font-weight: 700;\n  color: #6b7280;\n}\n.rt-office__grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 4mm 8mm;\n}\n.rt-office__label {\n  font-size: 8.5pt;\n  font-weight: 600;\n  color: #4b5563;\n  margin-bottom: 1mm;\n}\n.rt-office__line {\n  border-bottom: 0.3mm solid #6b7280;\n  height: 7mm;\n}\n.rt-office__pills {\n  display: flex;\n  gap: 4mm;\n  flex-wrap: wrap;\n  font-size: 9pt;\n}\n.rt-office__pills span {\n  display: inline-flex;\n  align-items: center;\n  gap: 2mm;\n}\n",
+  "example_data": {
+    "rmaNumber": "RMA-2026-00187",
+    "rmaDate": "2026-05-12",
+    "deadline": "2026-06-11",
+    "language": "de",
+    "originalOrder": {
+      "documentNumber": "AUF-2026-04412",
+      "documentDate": "2026-04-28",
+      "customerNumber": "10043"
+    },
+    "returnAddress": {
+      "name": "Beispiel Handels GmbH · Retoure",
+      "street": "Lagerstraße 45",
+      "zipCode": "70378",
+      "city": "Stuttgart",
+      "country": "DE"
+    },
+    "customer": {
+      "name": "Müller Handels AG",
+      "street": "Hauptstrasse 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "email": "buchhaltung@mueller-handels.example"
+    },
+    "lineItems": [
+      {
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "ean": "4012345678901",
+        "quantity": 2,
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-007",
+        "name": "Schreibtisch 160×80",
+        "ean": "4012345678949",
+        "quantity": 1,
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-019",
+        "name": "Tischlampe LED warmweiß",
+        "ean": "4012345679113",
+        "quantity": 4,
+        "unit": "Stk"
+      }
+    ],
+    "refundIban": "",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Retourenschein",
+      "intro": "Bitte diesen Schein vollständig ausgefüllt der Rücksendung beilegen. Die Bearbeitung Ihrer Erstattung beginnt mit dem Wareneingang.",
+      "rma_no": "RMA-Nummer",
+      "rma_date": "Ausstellung",
+      "deadline": "Rücksende-Frist",
+      "orig_order": "Originalauftrag",
+      "order_no": "Auftragsnummer",
+      "order_date": "Bestelldatum",
+      "customer_no": "Kundennummer",
+      "return_addr": "Rücksende-Adresse",
+      "customer_block": "Absender",
+      "col_pos": "Pos",
+      "col_sku": "Artikel",
+      "col_name": "Bezeichnung",
+      "col_qty_orig": "Geliefert",
+      "col_qty_ret": "Retour",
+      "col_reason": "Grund",
+      "reasons_heading": "Retoure-Gründe",
+      "reasons": [
+        [
+          "1",
+          "Falsch geliefert (anderer Artikel)"
+        ],
+        [
+          "2",
+          "Beschädigt erhalten"
+        ],
+        [
+          "3",
+          "Qualität nicht wie erwartet"
+        ],
+        [
+          "4",
+          "Zu spät geliefert"
+        ],
+        [
+          "5",
+          "Falsche Menge"
+        ],
+        [
+          "6",
+          "Doppelt bestellt"
+        ],
+        [
+          "7",
+          "Sonstiger Grund (bitte unten erläutern)"
+        ]
+      ],
+      "reason_other": "Weitere Anmerkungen",
+      "refund_heading": "Rückerstattung",
+      "refund_default": "Die Rückerstattung erfolgt auf das ursprüngliche Zahlungsmittel.",
+      "refund_iban": "Abweichende IBAN für die Erstattung",
+      "sig_heading": "Datum und Unterschrift",
+      "sig_date": "Datum",
+      "sig_signature": "Unterschrift Kunde",
+      "cut_here": "Hier abtrennen und auf das Paket kleben",
+      "office_only": "Wird vom Lager / Service ausgefüllt",
+      "received_on": "Wareneingang am",
+      "checked_by": "Geprüft von",
+      "condition": "Zustand",
+      "condition_new": "wie neu",
+      "condition_used": "gebraucht",
+      "condition_damaged": "beschädigt",
+      "action": "Aktion",
+      "action_refund": "Erstattung",
+      "action_replace": "Ersatzlieferung",
+      "action_voucher": "Gutschein",
+      "action_reject": "Ablehnen"
+    },
+    "en": {
+      "doc_title": "Return slip",
+      "intro": "Please enclose this completed slip with the parcel. Your refund will be processed once the warehouse receives the goods.",
+      "rma_no": "RMA number",
+      "rma_date": "Issued on",
+      "deadline": "Return by",
+      "orig_order": "Original order",
+      "order_no": "Order no.",
+      "order_date": "Order date",
+      "customer_no": "Customer no.",
+      "return_addr": "Return address",
+      "customer_block": "Sender",
+      "col_pos": "Pos",
+      "col_sku": "Item",
+      "col_name": "Description",
+      "col_qty_orig": "Shipped",
+      "col_qty_ret": "Returned",
+      "col_reason": "Reason",
+      "reasons_heading": "Return reasons",
+      "reasons": [
+        [
+          "1",
+          "Wrong item delivered"
+        ],
+        [
+          "2",
+          "Arrived damaged"
+        ],
+        [
+          "3",
+          "Quality did not meet expectations"
+        ],
+        [
+          "4",
+          "Arrived too late"
+        ],
+        [
+          "5",
+          "Wrong quantity"
+        ],
+        [
+          "6",
+          "Ordered by mistake / duplicate"
+        ],
+        [
+          "7",
+          "Other reason (explain below)"
+        ]
+      ],
+      "reason_other": "Additional notes",
+      "refund_heading": "Refund",
+      "refund_default": "The refund will be credited to the original payment method.",
+      "refund_iban": "Alternative IBAN for the refund",
+      "sig_heading": "Date and signature",
+      "sig_date": "Date",
+      "sig_signature": "Customer signature",
+      "cut_here": "Cut along this line and stick to the parcel",
+      "office_only": "Filled in by warehouse / service",
+      "received_on": "Received on",
+      "checked_by": "Checked by",
+      "condition": "Condition",
+      "condition_new": "as new",
+      "condition_used": "used",
+      "condition_damaged": "damaged",
+      "action": "Action",
+      "action_refund": "Refund",
+      "action_replace": "Replacement",
+      "action_voucher": "Voucher",
+      "action_reject": "Reject"
+    }
+  }
+}

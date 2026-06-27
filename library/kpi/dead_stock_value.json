@@ -1,0 +1,27 @@
+{
+  "id": "dead_stock_value",
+  "version": 1,
+  "icon": "archive",
+  "category": "inventory",
+  "order": 230,
+  "kpi": {
+    "key": "dead_stock_value",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Summe Bestandswert (Bestand mal Einstandspreis) der Artikel ohne Lagerbewegung in den letzten 90 Tagen; ein einzelner Datensatz.",
+    "sql_string": "\nSELECT \n  COALESCE(SUM(suc.quantity * p.calculated_purchase_price), 0) AS \"Bestandswert_ohne_Bewegung_90Tage\"\nFROM storage_unit_contents suc\nJOIN products p ON suc.product_id = p.product_id\nWHERE suc.product_id NOT IN (\n  SELECT DISTINCT sm.product_id\n  FROM stock_movements sm\n  WHERE sm.time >= NOW() - INTERVAL '90 days'\n)\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Dead stock value",
+      "description": "Value of SKUs with no movement in the last 90 days — candidates for clearance or write-off."
+    },
+    "de": {
+      "title": "Tote Bestände",
+      "description": "Wert der Artikel ohne Bewegung in den letzten 90 Tagen — Kandidaten für Abverkauf oder Abschreibung."
+    }
+  }
+}

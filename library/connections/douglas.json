@@ -1,0 +1,15 @@
+{
+  "id": "douglas",
+  "version": 1,
+  "name": "Douglas",
+  "domain": "douglas.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Douglas-Marketplace — Beauty-Produkte und Auftragsverwaltung."
+    },
+    "de": {
+      "description": "Douglas-Marketplace — Beauty-Produkte und Auftragsverwaltung."
+    }
+  }
+}

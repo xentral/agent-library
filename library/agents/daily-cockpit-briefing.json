@@ -1,0 +1,77 @@
+{
+  "order": 10,
+  "id": "daily-cockpit-briefing",
+  "icon": "calendar",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "dashboard"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Cockpit-Briefing",
+      "category": "Allgemein",
+      "description": "Geschäftsleitungs-Tagesbriefing — Forderungen, Liquidität, Auftragsbestand, strategische Risiken — täglich um 07:00.",
+      "tags": [
+        "Allgemein",
+        "CEO",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Cockpit-Briefing",
+        "description": "3-4 wichtigsten Geschäftsleitungs-Themen für den Tag — Forderungen, Liquidität, Auftragsbestand.",
+        "area": "Allgemein",
+        "briefing": {
+          "bucket_title": "Dashboard / CEO-Überblick",
+          "angles": [
+            "Offene Forderungen / Top-Debitor (Mahnstufe + Höhe)",
+            "Cashflow & Liquiditätsvorschau (14-30 Tage)",
+            "Auftragsbestand & Durchsatz (released / in Klärung / blockiert)",
+            "Agent-Automation Health: pending Jobs aller Agenten — was hängt, was wartet auf Operator-Eingriff?",
+            "Strategische Risiken & Saison-Themen (z.B. fällige Quartalsabschlüsse)",
+            "Top-Kunden-Status (umsatzkritische Accounts mit Auffälligkeiten)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Cockpit Briefing",
+      "category": "General",
+      "description": "Management daily briefing — receivables, liquidity, order backlog, strategic risks — every day at 07:00.",
+      "tags": [
+        "General",
+        "CEO",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Cockpit Briefing",
+        "description": "Top 3-4 management topics for today — receivables, liquidity, order backlog.",
+        "area": "General",
+        "briefing": {
+          "bucket_title": "Dashboard / CEO Overview",
+          "angles": [
+            "Open receivables / top debtor (dunning level + amount)",
+            "Cash flow & liquidity forecast (14-30 days)",
+            "Order backlog & throughput (released / under clarification / blocked)",
+            "Agent automation health: pending jobs across all agents — what's stuck, what needs operator intervention?",
+            "Strategic risks & seasonal topics (e.g. quarterly closings due)",
+            "Top customer status (revenue-critical accounts with anomalies)"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "id": "lab_startup_saas",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Startup SaaS (Abo-Rechnung)",
+      "description": "Abo-Rechnung im Vercel/Linear-Stil: großer Betrag-Headline, Mono-Wortmarke, Usage-KPI-Kacheln, Gradient-Akzent, Auto-Charge-Hinweis."
+    },
+    "en": {
+      "title": "Xentral Labs · Startup SaaS (Subscription Invoice)",
+      "description": "Subscription invoice, Vercel/Linear style: large amount headline, mono wordmark, usage KPI tiles, gradient accent, auto-charge note."
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Invoice-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data['lineItems'] | default([]) %}\n{% set pay = data.payment | default({}) %}\n\n{% block letterhead %}\n  <div class=\"sa-top\">\n    <div class=\"sa-brand\">\n      <svg class=\"sa-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <span class=\"sa-brandname mono\">{{ data.company.name | default('') }}</span>\n    </div>\n    <div class=\"sa-doc\">\n      <span class=\"sa-eyebrow mono\">{{ L.eyebrow }}</span>\n      <span class=\"sa-docno mono\">{{ data.documentNumber }}</span>\n    </div>\n  </div>\n{% endblock %}\n\n{% block content %}\n  <section class=\"sa-headline\">\n    <h1>{{ data.totals.gross | money }}</h1>\n    <p>{{ L.due_on }} {{ data.dueDate | date }} · {{ L.period }} {{ data.period }}</p>\n  </section>\n\n  <section class=\"sa-kpis\">\n    {% for k in data.kpis | default([]) %}\n    <div class=\"sa-kpi\"><div class=\"sa-kpi__v\">{{ k.value }}</div><div class=\"sa-kpi__k\">{{ k.label }}</div></div>\n    {% endfor %}\n  </section>\n\n  <table class=\"sa-items\">\n    <thead><tr>\n      <th class=\"sa-c-desc\">{{ L.col_item }}</th>\n      <th class=\"sa-c-meta\">{{ L.col_details }}</th>\n      <th class=\"sa-c-qty\">{{ L.col_qty }}</th>\n      <th class=\"sa-c-total\">{{ L.col_amount }}</th>\n    </tr></thead>\n    <tbody>\n      {% for p in items %}\n      <tr>\n        <td class=\"sa-c-desc\"><strong>{{ p.name }}</strong></td>\n        <td class=\"sa-c-meta\">{{ p.description }}</td>\n        <td class=\"sa-c-qty mono\">{{ p.quantity | number }}{% if p.unit %} {{ p.unit }}{% endif %}</td>\n        <td class=\"sa-c-total mono\">{{ p.lineItemRevenue.net | money }}</td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <div class=\"sa-foot\">\n    <section class=\"sa-pay\">\n      <div class=\"sa-card\">\n        <div class=\"sa-k\">{{ L.auto_charge }}</div>\n        <div class=\"sa-pay__method\">{{ pay.method | default('Visa ···· 4242') }}</div>\n        <p class=\"sa-pay__note\">{{ L.auto_note }}</p>\n      </div>\n    </section>\n    <section class=\"sa-totals\">\n      <div class=\"sa-trow\"><span>{{ L.subtotal }}</span><span class=\"mono\">{{ data.totals.net | money }}</span></div>\n      {% for rate, group in (items | selectattr('effectiveTaxRate','defined')) | groupby('effectiveTaxRate') %}\n        {% set ns = namespace(s=0.0) %}\n        {% for it in group %}{% set ns.s = ns.s + (it.lineItemRevenue.net.amount | default(0) | float) %}{% endfor %}\n        {% if rate %}<div class=\"sa-trow\"><span>{{ L.vat }} {{ rate }} %</span><span class=\"mono\">{{ (ns.s * (rate|float)/100.0) | money(currency='EUR') }}</span></div>{% endif %}\n      {% endfor %}\n      <div class=\"sa-trow sa-trow--grand\"><span>{{ L.total }}</span><span class=\"mono\">{{ data.totals.gross | money }}</span></div>\n      <div class=\"sa-gradient\"></div>\n    </section>\n  </div>\n{% endblock %}",
+  "css": "@page {\n  size: A4; margin: 18mm 18mm 22mm 18mm;\n  @bottom-left { content: \"Beispiel Cloud GmbH · Marktplatz 1 · 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; vertical-align: top; padding-top: 4mm; }\n  @bottom-center { content: \"Seite \" counter(page) \" von \" counter(pages); font-size: 6.5pt; color: #8a8a8a; white-space: nowrap; vertical-align: top; padding-top: 4mm; }\n  @bottom-right { content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm; }\n}\n\nbody { color: #0a0a0a; font-family: 'Helvetica', 'Arial', sans-serif; }\n.mono { font-family: 'SFMono-Regular', 'Courier New', monospace; letter-spacing: -0.02em; }\n.doc-header { display: block; margin: 0; }\n\n.sa-top { display: flex; align-items: center; justify-content: space-between; }\n.sa-brand { display: flex; align-items: center; gap: 3mm; }\n.sa-mark { height: 9mm; width: 9mm; display: block; }\n.sa-brandname { font-size: 12pt; font-weight: 700; }\n.sa-doc { text-align: right; }\n.sa-eyebrow { display: block; font-size: 8pt; letter-spacing: 0.2em; color: #9ca3af; font-weight: 700; }\n.sa-docno { display: block; font-size: 12pt; font-weight: 700; margin-top: 1mm; }\n\n/* Headline amount */\n.sa-headline { margin: 10mm 0 8mm; }\n.sa-headline h1 { font-size: 34pt; font-weight: 800; letter-spacing: -0.03em; margin: 0; font-variant-numeric: tabular-nums; }\n.sa-headline p { color: #6b7280; font-size: 10pt; margin-top: 2mm; }\n\n/* KPI tiles */\n.sa-kpis { display: flex; gap: 3mm; margin-bottom: 9mm; }\n.sa-kpi { flex: 1 1 0; border: 1px solid #ececec; border-radius: 2.5mm; padding: 4mm; }\n.sa-kpi__v { font-size: 15pt; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }\n.sa-kpi__k { font-size: 7.5pt; letter-spacing: 0.08em; text-transform: uppercase; color: #9ca3af; font-weight: 600; margin-top: 1.5mm; }\n\n/* Items */\n.sa-items { width: 100%; border-collapse: collapse; margin-bottom: 9mm; }\n.sa-items thead th { font-size: 7pt; letter-spacing: 0.14em; text-transform: uppercase; color: #9ca3af; font-weight: 700; text-align: left; padding: 0 0 3mm; border-bottom: 1px solid #0a0a0a; }\n.sa-items tbody td { padding: 3.4mm 0; border-bottom: 1px solid #f0f0f0; vertical-align: top; }\n.sa-c-desc { width: 52mm; }\n.sa-c-desc strong { font-weight: 700; }\n.sa-c-meta { color: #6b7280; font-size: 9pt; padding-right: 6mm; }\n.sa-c-qty { width: 26mm; text-align: right; color: #6b7280; }\n.sa-c-total { width: 30mm; text-align: right; font-weight: 700; }\nthead th.sa-c-qty, thead th.sa-c-total { text-align: right; }\n\n/* Footer */\n.sa-foot { display: flex; gap: 10mm; align-items: flex-start; }\n.sa-pay { flex: 1 1 0; }\n.sa-card { border: 1px solid #ececec; border-radius: 2.5mm; padding: 5mm; }\n.sa-k { font-size: 7pt; letter-spacing: 0.12em; text-transform: uppercase; color: #9ca3af; font-weight: 700; }\n.sa-pay__method { font-size: 12pt; font-weight: 700; margin-top: 1.5mm; }\n.sa-pay__note { font-size: 8.5pt; color: #6b7280; line-height: 1.5; margin-top: 2.5mm; }\n.sa-totals { flex: 0 0 70mm; }\n.sa-trow { display: flex; justify-content: space-between; padding: 2mm 0; font-size: 10pt; }\n.sa-trow span:first-child { color: #6b7280; }\n.sa-trow--grand { margin-top: 1.5mm; padding-top: 3mm; border-top: 1px solid #0a0a0a; font-size: 14pt; font-weight: 800; }\n.sa-trow--grand span:first-child { color: #0a0a0a; }\n.sa-gradient { height: 1.4mm; border-radius: 1mm; margin-top: 3mm; background: linear-gradient(90deg, #7c3aed 0%, #2563eb 100%); }",
+  "example_data": {
+    "id": "70091",
+    "kpis": [
+      {
+        "label": "Aktueller Plan",
+        "value": "Scale"
+      },
+      {
+        "label": "Aktive Seats",
+        "value": "42"
+      },
+      {
+        "label": "API-Calls",
+        "value": "8,4 Mio"
+      },
+      {
+        "label": "Speicher",
+        "value": "340 GB"
+      }
+    ],
+    "period": "01.–30.06.2026",
+    "totals": {
+      "net": {
+        "amount": "910.00",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "1082.90",
+        "currency": "EUR"
+      }
+    },
+    "company": {
+      "name": "beispiel.cloud",
+      "email": "hello@beispiel.cloud",
+      "vatId": "DE123456789"
+    },
+    "dueDate": "2026-07-08",
+    "payment": {
+      "method": "Visa ···· 4242"
+    },
+    "language": "de",
+    "lineItems": [
+      {
+        "name": "Scale Plan",
+        "unit": "Monat",
+        "quantity": 1,
+        "description": "Monatliche Plattformgebühr, inkl. 30 Seats & 6 Mio API-Calls",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "499.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      },
+      {
+        "name": "Zusätzliche Seats",
+        "unit": "Seat",
+        "quantity": 12,
+        "description": "12 Seats über Inklusivkontingent × 19,00 €",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "228.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      },
+      {
+        "name": "API-Calls über Kontingent",
+        "unit": "",
+        "quantity": 1,
+        "description": "2,4 Mio Calls über Inklusivvolumen",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "84.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      },
+      {
+        "name": "Premium Support",
+        "unit": "Monat",
+        "quantity": 1,
+        "description": "Add-on · Reaktionszeit < 4 h",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "99.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      }
+    ],
+    "documentDate": "2026-07-01",
+    "documentNumber": "INV-2026-0091",
+    "documentAddress": {
+      "city": "Berlin",
+      "name": "Northwind Labs GmbH",
+      "vatId": "DE301122334",
+      "street": "Torstraße 140",
+      "country": "Deutschland",
+      "zipCode": "10119"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Rechnung",
+      "eyebrow": "RECHNUNG",
+      "due_on": "fällig am",
+      "period": "Abrechnungszeitraum",
+      "col_item": "Position",
+      "col_details": "Details",
+      "col_qty": "Menge",
+      "col_amount": "Betrag",
+      "auto_charge": "Automatischer Einzug",
+      "auto_note": "Der Rechnungsbetrag wird am Fälligkeitsdatum automatisch eingezogen. Rechnungen & Belege jederzeit im Dashboard.",
+      "subtotal": "Zwischensumme",
+      "vat": "USt",
+      "total": "Gesamt"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "eyebrow": "INVOICE",
+      "due_on": "due on",
+      "period": "Billing period",
+      "col_item": "Item",
+      "col_details": "Details",
+      "col_qty": "Qty",
+      "col_amount": "Amount",
+      "auto_charge": "Automatic charge",
+      "auto_note": "The amount is charged automatically on the due date. Invoices & receipts anytime in your dashboard.",
+      "subtotal": "Subtotal",
+      "vat": "VAT",
+      "total": "Total"
+    }
+  }
+}

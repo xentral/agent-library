@@ -1,0 +1,194 @@
+{
+  "id": "ecommerce_multi_warehouse",
+  "slugs": [
+    "overview",
+    "market",
+    "personas",
+    "roadmap",
+    "risks",
+    "company",
+    "products",
+    "masterdata",
+    "channels",
+    "marketing",
+    "team",
+    "processes",
+    "custom_agents",
+    "logistics",
+    "systems",
+    "org",
+    "roles",
+    "migration",
+    "payment",
+    "financials",
+    "accounting",
+    "unit",
+    "reporting"
+  ],
+  "locales": {
+    "de": {
+      "name": "Multi-Warehouse E-Commerce",
+      "description": "Skalierter Onlinehandel mit mehreren Fulfillment-Standorten — Bestände-\nRouting, Carrier-Mix pro Standort, Multi-Channel-Vertrieb (Shop +\nMarktplätze + ggf. B2B). Komplexität ist die Hauptdisziplin.\n",
+      "emphasis": {
+        "overview": "Standort-Strategie + Routing-Logik sind die strategische Frage Nummer 1.",
+        "market": "Wachstums-Hebel klar — Internationalisierung, neue Kanäle, Sortimentstiefe.",
+        "risks": "Single-Warehouse-Risiken, Carrier-Ausfall, Saison-Spitzen explizit modellieren.",
+        "products": "Tiefe + Breite. Standort-Allokation pro SKU (welcher Bestand wo, warum).",
+        "masterdata": "Pflichtfelder pro Marktplatz + Sprache. Stammdaten sind das Fundament der Skalierung.",
+        "channels": "Voller Channel-Mix — Shop, Marktplätze, ggf. Wholesale. Marge + Anteil pro Kanal.",
+        "marketing": "Performance-Marketing skaliert, CAC pro Channel klar. Lifecycle-Programme automatisiert.",
+        "team": "Funktionale Teams — Ops, Tech, Marketing, Finanzen. Klare Schnittstellen + SLAs.",
+        "processes": "Quote-to-Cash über Kanäle hinweg + Retouren-Routing über Standorte hinweg.",
+        "custom_agents": "Bestände-Sync minütlich, Routing automatisch, Reports täglich/wöchentlich nach Rolle.",
+        "logistics": "Multi-Warehouse-Routing + Carrier-Mix pro Standort + 3PL-Verknüpfung. Inventur rollend.",
+        "systems": "Voll integrierte Tool-Landschaft. Jede Schnittstelle zählt, jede Latenz kostet.",
+        "org": "Klare Zuständigkeiten pro Funktion + Standort. Wer entscheidet was, wer eskaliert wohin.",
+        "roles": "Granulare Berechtigungen pro Standort + Funktion.",
+        "migration": "Cutover über mehrere Standorte koordiniert — pro Lager Freeze-Datum + Hypercare.",
+        "financials": "5-Jahres-Plan mit Standort-Splits, Capex für neue Standorte einplanen.",
+        "unit": "Kanal- und Standort-spezifische Margen. CAC, LTV, Cost-to-Serve pro Segment.",
+        "reporting": "Tages-Cockpit für CEO/COO/CFO, wöchentliche Standort-Reviews, monatliche Strategie-Reviews."
+      },
+      "tasks": [
+        {
+          "title": "Logo + Multi-Site-Beleg-Footer",
+          "hint": "Logo + Adresse je Standort sauber im Belegwesen hinterlegen"
+        },
+        {
+          "title": "Standort-Stammdaten",
+          "hint": "Lager · Carrier-Mix · Cut-Off-Zeiten · Picking-Methode pro Standort"
+        },
+        {
+          "title": "Routing-Logik definieren",
+          "hint": "Pro PLZ-Bereich + Produktkategorie — welcher Standort liefert"
+        },
+        {
+          "title": "Bestände-Sync zwischen Standorten",
+          "hint": "Frequenz + Schwellen + Reservierungs-Logik"
+        },
+        {
+          "title": "Multi-Channel-Anbindung",
+          "hint": "Shop + Amazon + eBay + B2B-Portal — Bestände-Allokation pro Kanal"
+        },
+        {
+          "title": "WMS / Lagersoftware",
+          "hint": "WMS-Integration pro Standort + Etiketten-Drucker + Picking-Geräte"
+        },
+        {
+          "title": "Carrier-Mix pro Standort",
+          "hint": "Speditionen + KEP-Carrier + Gefahrgut-Setup wo nötig"
+        },
+        {
+          "title": "International — IOSS / OSS / Zoll",
+          "hint": "EU-OSS-Quartalsmeldung + ggf. Drittland-Zoll-Setup"
+        },
+        {
+          "title": "Bank-Anbindung (FinAPI/EBICS)",
+          "hint": "Mehrere Konten + Marktplatz-Auszahlungen automatisch matchen"
+        },
+        {
+          "title": "DATEV + Konzern-Konsolidierung",
+          "hint": "Standort-Mandanten + Intercompany-Buchungen + Konzern-Reporting"
+        },
+        {
+          "title": "Approval-Workflows",
+          "hint": "Sonderkonditionen · Kreditrahmen · Standort-übergreifende Freigaben"
+        },
+        {
+          "title": "Test-User pro Standort + Rolle",
+          "hint": "Ops · Tech · Sales · Finanzen — Schulungen pro Standort"
+        },
+        {
+          "title": "Cut-Over-Plan rollend pro Standort",
+          "hint": "Standort 1 → 2 → 3 mit jeweils 2 Wochen Hypercare"
+        },
+        {
+          "title": "Disaster-Recovery dokumentieren",
+          "hint": "Was tun bei Standort-Ausfall · Backup-Routing · SLA-Eskalation"
+        }
+      ]
+    },
+    "en": {
+      "name": "Multi-Warehouse E-Commerce",
+      "description": "Scaled online retailer with multiple fulfilment sites — inventory\nrouting, carrier mix per site, multi-channel sales (shop +\nmarketplaces + optionally B2B). Complexity is the main discipline.\n",
+      "emphasis": {
+        "overview": "Site strategy + routing logic are the strategic question number one.",
+        "market": "Growth lever clear — internationalisation, new channels, range depth.",
+        "risks": "Single-warehouse risks, carrier outage, seasonal peaks explicitly modelled.",
+        "products": "Depth + breadth. Site allocation per SKU (which stock where, why).",
+        "masterdata": "Mandatory fields per marketplace + language. Master data is the foundation of scaling.",
+        "channels": "Full channel mix — shop, marketplaces, optionally wholesale. Margin + share per channel.",
+        "marketing": "Performance marketing scales, CAC per channel clear. Lifecycle programmes automated.",
+        "team": "Functional teams — ops, tech, marketing, finance. Clear interfaces + SLAs.",
+        "processes": "Quote-to-cash across channels + returns routing across sites.",
+        "custom_agents": "Inventory sync minute-by-minute, routing automatic, reports daily/weekly per role.",
+        "logistics": "Multi-warehouse routing + carrier mix per site + 3PL link. Rolling stock counts.",
+        "systems": "Fully integrated tool landscape. Every interface counts, every latency costs.",
+        "org": "Clear responsibilities per function + site. Who decides what, who escalates where.",
+        "roles": "Granular permissions per site + function.",
+        "migration": "Cut-over across multiple sites coordinated — per warehouse freeze date + hypercare.",
+        "financials": "5-year plan with site splits, plan capex for new sites.",
+        "unit": "Channel- and site-specific margins. CAC, LTV, cost-to-serve per segment.",
+        "reporting": "Daily cockpit for CEO/COO/CFO, weekly site reviews, monthly strategy reviews."
+      },
+      "tasks": [
+        {
+          "title": "Logo + multi-site document footer",
+          "hint": "Logo + address per site cleanly in document templates"
+        },
+        {
+          "title": "Site master data",
+          "hint": "Warehouse · carrier mix · cut-off times · picking method per site"
+        },
+        {
+          "title": "Define routing logic",
+          "hint": "Per postcode area + product category — which site ships"
+        },
+        {
+          "title": "Inventory sync between sites",
+          "hint": "Frequency + thresholds + reservation logic"
+        },
+        {
+          "title": "Multi-channel integration",
+          "hint": "Shop + Amazon + eBay + B2B portal — inventory allocation per channel"
+        },
+        {
+          "title": "WMS / warehouse software",
+          "hint": "WMS integration per site + label printer + picking devices"
+        },
+        {
+          "title": "Carrier mix per site",
+          "hint": "Freight forwarders + parcel carriers + hazmat setup where needed"
+        },
+        {
+          "title": "International — IOSS / OSS / customs",
+          "hint": "EU OSS quarterly filing + third-country customs setup if applicable"
+        },
+        {
+          "title": "Bank integration (FinAPI/EBICS)",
+          "hint": "Multiple accounts + marketplace payouts auto-matched"
+        },
+        {
+          "title": "DATEV + group consolidation",
+          "hint": "Site clients + intercompany postings + group reporting"
+        },
+        {
+          "title": "Approval workflows",
+          "hint": "Special terms · credit limits · cross-site releases"
+        },
+        {
+          "title": "Test user per site + role",
+          "hint": "Ops · tech · sales · finance — training per site"
+        },
+        {
+          "title": "Cut-over plan rolling per site",
+          "hint": "Site 1 → 2 → 3 with 2 weeks hypercare each"
+        },
+        {
+          "title": "Document disaster recovery",
+          "hint": "What to do on site outage · backup routing · SLA escalation"
+        }
+      ]
+    }
+  }
+}

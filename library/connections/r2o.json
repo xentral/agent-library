@@ -1,0 +1,15 @@
+{
+  "id": "r2o",
+  "version": 1,
+  "name": "ready2order",
+  "domain": "ready2order.com",
+  "category": "pos",
+  "locales": {
+    "en": {
+      "description": "Kassen-Bestellungen importieren, Lager und Tagesabschluss buchen."
+    },
+    "de": {
+      "description": "Kassen-Bestellungen importieren, Lager und Tagesabschluss buchen."
+    }
+  }
+}

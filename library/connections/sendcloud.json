@@ -1,0 +1,16 @@
+{
+  "id": "sendcloud",
+  "version": 1,
+  "name": "Sendcloud",
+  "domain": "sendcloud.de",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Multi-Carrier-Versand: Labels, Returns, Tracking aus einer Hand."
+    },
+    "de": {
+      "description": "Multi-Carrier-Versand: Labels, Returns, Tracking aus einer Hand."
+    }
+  },
+  "source": "https://marketplace.xentral.com/versanddienstleister/sendcloud"
+}

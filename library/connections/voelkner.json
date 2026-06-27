@@ -1,0 +1,15 @@
+{
+  "id": "voelkner",
+  "version": 1,
+  "name": "Voelkner",
+  "domain": "voelkner.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Voelkner-Marketplace — Aufträge und Tracking."
+    },
+    "de": {
+      "description": "Voelkner-Marketplace — Aufträge und Tracking."
+    }
+  }
+}

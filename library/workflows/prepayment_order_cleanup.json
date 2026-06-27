@@ -1,0 +1,182 @@
+{
+  "id": "prepayment_order_cleanup",
+  "version": 1,
+  "category": "finance",
+  "icon": "alertTriangle",
+  "order": 100,
+  "popular": true,
+  "trigger_type": "schedule",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Vorkasse-Aufträge nach 7 Tagen stornieren",
+      "description": "Findet Vorkasse-Aufträge, für die auch nach 7 Tagen kein\nZahlungseingang vorliegt, und storniert sie automatisch — der\nreservierte Bestand wird damit sofort wieder verkäuflich und\nKarteileichen verzerren weder Lagerbild noch Absatzplanung.\n\n**So funktioniert der Algorithmus**\n\n```\nVorkasse-Aufträge (offen, unbezahlt, älter als 7 Tage)\n └─ für jeden Auftrag → schon storniert?\n      ├─ nein → stornieren mit hinterlegter Begründung\n      └─ ja   → überspringen (Wiederholungsläufe bleiben\n                unkritisch)\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Der Workflow startet jeden Tag um 09:00 Uhr.\n2. Alle offenen, unbezahlten Vorkasse-Aufträge, die älter als\n   7 Tage sind, werden geladen.\n3. Für jeden dieser Aufträge einzeln wird zuerst geprüft, ob er\n   nicht bereits storniert ist.\n4. Ist er es nicht, wird er mit der hinterlegten Begründung\n   „No prepayment received within 7 days\" storniert.\n\n**Was verändert wird**\n\n- Der Status der betroffenen Aufträge wird auf „storniert\"\n  gesetzt und eine Stornobegründung am Auftrag hinterlegt.\n- Es werden keine Kunden-Mails verschickt und keine Belege\n  gelöscht — die Aufträge bleiben mit Stornovermerk im System\n  nachvollziehbar.\n\n**Voraussetzungen und Grenzen**\n\n- Vorkasse muss als Zahlungsart aktiv sein und der Zahlungsstatus\n  der Aufträge muss gepflegt werden (z. B. durch den\n  Zahlungsabgleich), sonst storniert der Workflow auch bezahlte\n  Aufträge.\n- Die 7-Tage-Frist ist in der Abfrage fest hinterlegt und dort\n  anpassbar.\n- Die Stornoprüfung vor dem Stornieren hält Wiederholungsläufe\n  unkritisch (idempotent): Bereits stornierte Aufträge werden\n  übersprungen.\n",
+      "recommended_when": "Sobald Vorkasse als Zahlungsart aktiv ist",
+      "tags": [
+        "Finanzen",
+        "Vorkasse",
+        "Auftragsbereinigung"
+      ]
+    },
+    "en": {
+      "name": "Cancel stale prepayment orders (>7 days)",
+      "description": "Finds prepayment orders that still have no incoming payment after 7\ndays and cancels them automatically — the reserved stock becomes\nsellable again immediately and stale orders no longer distort the\nstock picture or the forecast.\n\n**How the algorithm works**\n\n```\nPrepayment orders (open, unpaid, older than 7 days)\n └─ for each order → already cancelled?\n      ├─ no  → cancel with the stored reason\n      └─ yes → skip (re-runs stay harmless)\n```\n\n**What happens step by step**\n\n1. The workflow starts every day at 09:00.\n2. All open, unpaid prepayment orders older than 7 days are\n   loaded.\n3. For each of these orders, one by one, it first checks that the\n   order is not already cancelled.\n4. If it is not, the order is cancelled with the stored reason\n   \"No prepayment received within 7 days\".\n\n**What gets changed**\n\n- The status of the affected orders is set to \"cancelled\" and a\n  cancellation reason is stored on the order.\n- No customer mails are sent and no documents are deleted — the\n  orders remain traceable in the system with their cancellation\n  note.\n\n**Prerequisites and limits**\n\n- Prepayment must be active as a payment method and the payment\n  status of the orders must be maintained (e.g. via payment\n  matching), otherwise the workflow would cancel paid orders too.\n- The 7-day grace period is fixed in the query and can be\n  adjusted there.\n- The cancellation check before cancelling keeps re-runs harmless\n  (idempotent): already cancelled orders are skipped.\n",
+      "recommended_when": "As soon as prepayment is offered as a payment method",
+      "tags": [
+        "Finance",
+        "Prepayment",
+        "Order cleanup"
+      ],
+      "node_titles": {
+        "n_trig": "Every day at 09:00",
+        "n_query": "Load open prepayment orders",
+        "n_loop": "For each prepayment order, one by one",
+        "n_guard": "Is the order not yet cancelled?",
+        "n_cancel": "Cancel the order with a reason"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-schedule",
+        "config": {
+          "title": "Jeden Tag um 09:00 Uhr",
+          "schedule": {
+            "frequency": "daily",
+            "time": "09:00"
+          }
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Offene Vorkasse-Aufträge laden",
+          "varName": "openPrepayments",
+          "entityKey": "SalesOrder",
+          "entityLabel": "Sales order",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "paymentMethod": "prepayment",
+                "status": "open",
+                "paymentStatus": "unpaid",
+                "maxAgeDays": 7
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_loop",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jeden Vorkasse-Auftrag einzeln",
+          "varName": "order",
+          "items": "{{ openPrepayments.data }}"
+        }
+      }
+    },
+    {
+      "id": "n_guard",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Ist der Auftrag noch nicht storniert?",
+          "expression": "order.get('status') != 'cancelled'"
+        }
+      }
+    },
+    {
+      "id": "n_cancel",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Auftrag mit Begründung stornieren",
+          "varName": "stornieren",
+          "entityKey": "SalesOrder",
+          "entityLabel": "Sales order",
+          "operations": [
+            "update"
+          ],
+          "params": {
+            "update": {
+              "path": {
+                "uuid": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                }
+              },
+              "body": {
+                "status": "cancelled",
+                "cancellationReason": "No prepayment received within 7 days"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_loop",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_loop",
+      "target": "n_guard",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e4",
+      "source": "n_guard",
+      "target": "n_cancel",
+      "sourceHandle": "a",
+      "targetHandle": "in:update"
+    }
+  ]
+}

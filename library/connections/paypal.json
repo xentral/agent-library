@@ -1,0 +1,16 @@
+{
+  "id": "paypal",
+  "version": 1,
+  "name": "PayPal",
+  "domain": "paypal.com",
+  "category": "payment",
+  "locales": {
+    "en": {
+      "description": "PayPal-Zahlungen importieren und auf Aufträge buchen."
+    },
+    "de": {
+      "description": "PayPal-Zahlungen importieren und auf Aufträge buchen."
+    }
+  },
+  "source": "https://marketplace.xentral.com/zahlungsanbieter/paypal"
+}

@@ -1,0 +1,76 @@
+{
+  "order": 50,
+  "id": "daily-finance-briefing",
+  "icon": "invoice",
+  "integrations": [
+    "Xentral",
+    "DATEV"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "finance"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Finanz-Briefing",
+      "category": "Buchhaltung",
+      "description": "Finanz-Tagesbriefing — Mahnstufen, OPOS, Skonto-Fristen, Liquidität, USt — täglich um 07:00.",
+      "tags": [
+        "Buchhaltung",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Finanz-Briefing",
+        "description": "3-4 wichtigsten Finanz-Themen für den Tag — Mahnungen, OPOS, Skonto, Liquidität.",
+        "area": "Finanzen",
+        "briefing": {
+          "bucket_title": "Finanz / Buchhaltung",
+          "angles": [
+            "Mahnstufen 1/2/3 (welche Debitoren in welcher Stufe)",
+            "OPOS-Liste (Top-überfällige Forderungen + Verbindlichkeiten)",
+            "Skonto-Fristen (Eingangsrechnungen mit ziehbarem Skonto in 1-3 Tagen)",
+            "Liquiditätsplanung / Bankabstimmung",
+            "USt-Voranmeldung & andere fiskalische Termine (saisonal)",
+            "Finanz-Agent-Jobs in requires_intervention (Mahnvorschlag-Generator, Eingangsrechnung-Capture, Bank-Recon, OPOS-Auswerter hängen)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Finance Briefing",
+      "category": "Accounting",
+      "description": "Finance daily briefing — dunning levels, open items, cash discount deadlines, liquidity, VAT — every day at 07:00.",
+      "tags": [
+        "Accounting",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Finance Briefing",
+        "description": "Top 3-4 finance topics for today — dunning, open items, cash discount, liquidity.",
+        "area": "Finance",
+        "briefing": {
+          "bucket_title": "Finance / Accounting",
+          "angles": [
+            "Dunning levels 1/2/3 (which debtors at which level)",
+            "Open items list (top overdue receivables + payables)",
+            "Cash-discount deadlines (incoming invoices with discount available within 1-3 days)",
+            "Liquidity planning / bank reconciliation",
+            "VAT advance return & other fiscal deadlines (seasonal)",
+            "Finance agent jobs in requires_intervention (Dunning Proposal Generator, Incoming Invoice Capture, Bank Recon, Open Items Analyzer stuck)"
+          ]
+        }
+      }
+    }
+  }
+}

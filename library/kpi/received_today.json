@@ -1,0 +1,25 @@
+{
+  "id": "received_today",
+  "version": 1,
+  "icon": "inbox",
+  "category": "customer_service",
+  "order": 203,
+  "kpi": {
+    "key": "received_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 47
+  },
+  "locales": {
+    "en": {
+      "title": "Received today",
+      "description": "Inquiries received in the inbox since midnight."
+    },
+    "de": {
+      "title": "Heute eingegangen",
+      "description": "Vorgänge, die seit Mitternacht in der Inbox angekommen sind."
+    }
+  }
+}

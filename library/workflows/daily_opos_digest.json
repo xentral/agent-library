@@ -1,0 +1,143 @@
+{
+  "id": "daily_opos_digest",
+  "version": 1,
+  "category": "finance",
+  "icon": "invoice",
+  "order": 130,
+  "trigger_type": "schedule",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Tägliche Liste offener Posten (Entwurf)",
+      "description": "Jeden Werktag um 7 Uhr eine zusammengefasste Liste offener Posten\n— gruppiert nach Überfälligkeit, mit Top-10 nach Betrag. Der\nAgent erstellt den Text als Entwurf; das Versenden bleibt\nmanuell. So startet die Buchhaltung mit einem aktuellen Überblick\nin den Tag, ohne die offenen Posten selbst zusammenzusuchen.\n\n**Was Schritt für Schritt passiert**\n\n1. Jeden Werktag um 07:00 startet der Lauf und lädt die offenen\n   Posten (Ausgangsrechnungen mit Zahlstatus „offen\") aus\n   Xentral.\n2. Daraus verfasst der Agent eine Zusammenfassung: gruppiert nach\n   Überfälligkeit (0–14, 15–30, 31–60 und über 60 Tage), mit\n   Anzahl und Summe je Gruppe sowie den zehn größten Posten nach\n   Betrag.\n3. Der fertige Entwurf wird als Workflow-Ausgabe zurückgegeben.\n\n**Was verändert wird**\n\n- Nichts — der Workflow liest nur. Es werden keine Rechnungen\n  geändert, keine Mahnungen ausgelöst und auch keine E-Mail\n  versendet.\n- Der Text ist ein reiner Entwurf als Workflow-Ausgabe; das\n  Versenden bleibt bewusst manuell.\n\n**Voraussetzungen und Grenzen**\n\n- Setzt gepflegte Zahlstatus an den Ausgangsrechnungen voraus —\n  nur Rechnungen mit Status „offen\" fließen ein.\n- Die Listenabfrage liefert ohne gesetzte Seitengröße nur die\n  erste Ergebnisseite; bei sehr vielen offenen Posten die\n  Seitengröße in der Abfrage erhöhen.\n- Der Text stammt von einem Sprachmodell — Summen und Beträge vor\n  der Weitergabe kurz gegenprüfen.\n",
+      "recommended_when": "Sobald Buchhaltungsprozesse routiniert ablaufen",
+      "tags": [
+        "Finanzen",
+        "Offene Posten",
+        "Reporting"
+      ]
+    },
+    "en": {
+      "name": "Daily open-items digest (draft)",
+      "description": "Every business day at 7am: a summarized open-items digest —\ngrouped by overdue bucket, with top-10 by amount. The agent\ndrafts the text; sending stays manual. Accounting starts the day\nwith a current overview without compiling the open items by\nhand.\n\n**What happens step by step**\n\n1. Every business day at 07:00 the run starts and loads the open\n   items (sales invoices with payment status \"open\") from\n   Xentral.\n2. From that list the agent composes a digest: grouped by overdue\n   bucket (0-14, 15-30, 31-60 and 60+ days), with count and sum\n   per bucket plus the ten largest items by amount.\n3. The finished draft is returned as the workflow output.\n\n**What gets changed**\n\n- Nothing — the workflow only reads. No invoices are modified, no\n  dunning is triggered, and no email is sent.\n- The text is purely a draft returned as the workflow output;\n  sending deliberately stays manual.\n\n**Prerequisites and limits**\n\n- Requires maintained payment statuses on the sales invoices —\n  only invoices with status \"open\" are included.\n- Without an explicit page size the list query returns only the\n  first result page; with very many open items raise the page\n  size in the query.\n- The text comes from a language model — double-check sums and\n  amounts before passing the digest on.\n",
+      "recommended_when": "Once accounting processes are settled",
+      "tags": [
+        "Finance",
+        "Open items",
+        "Reporting"
+      ],
+      "node_titles": {
+        "n_trig": "Every business day at 07:00",
+        "n_query": "Load open items from Xentral",
+        "n_compose": "Compose the open-items digest",
+        "n_out": "Return the digest draft"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-schedule",
+        "config": {
+          "title": "Jeden Werktag um 07:00",
+          "schedule": {
+            "frequency": "daily",
+            "time": "07:00",
+            "weekdays": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Offene Posten aus Xentral laden",
+          "varName": "openItems",
+          "entityKey": "SalesInvoice",
+          "entityLabel": "Sales invoice",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "paymentStatus": "open"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_compose",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "agent",
+        "config": {
+          "title": "Zusammenfassung der offenen Posten verfassen",
+          "varName": "composeDigest",
+          "model": "gpt-5.1",
+          "prompt": "Build an accounting digest from this open-items list: {{ openItems.data }}\nGroup by overdue bucket (0-14, 15-30, 31-60, 60+ days), give count and sum per bucket, list the top-10 items by amount. Factual and compact, no prose padding. Return the finished text only.\n"
+        }
+      }
+    },
+    {
+      "id": "n_out",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "output",
+        "config": {
+          "title": "Entwurf der Zusammenfassung zurückgeben",
+          "varName": "digestDraft",
+          "value": "{{ composeDigest }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_compose",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_compose",
+      "target": "n_out"
+    }
+  ]
+}

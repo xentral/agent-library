@@ -1,0 +1,27 @@
+{
+  "id": "cash_discount_available",
+  "version": 1,
+  "icon": "star",
+  "category": "finance",
+  "order": 422,
+  "kpi": {
+    "key": "cash_discount_available",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Summe der noch sicherbaren Skonto-Beträge: Eingangsrechnungen mit aktivem Skontofenster, deren Skonto-Frist noch nicht abgelaufen ist; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(\n    COALESCE(SUM(\n      CASE\n        WHEN i.payment_status <> 'completed'\n         AND i.payment_target_days_cash_discount IS NOT NULL\n         AND i.date IS NOT NULL\n         AND DATEADD(day, i.payment_target_days_cash_discount, i.date) >= CURRENT_DATE\n        THEN COALESCE(i.xen_cash_discount_granted, i.cash_discount_granted, 0)\n        ELSE 0\n      END\n    ), 0),\n    2\n  ) AS \"KPI\"\nFROM invoices i\nWHERE\n  i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.payment_status <> 'completed';\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Cash discount available",
+      "description": "Cash-discount value still claimable on supplier invoices currently inside their discount window."
+    },
+    "de": {
+      "title": "Skonto verfügbar",
+      "description": "Skonto-Betrag, der aktuell noch sicherbar ist — Eingangsrechnungen im Skonto-Fenster."
+    }
+  }
+}

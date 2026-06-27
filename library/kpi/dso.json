@@ -1,0 +1,27 @@
+{
+  "id": "dso",
+  "version": 1,
+  "icon": "calendar",
+  "category": "finance",
+  "order": 400,
+  "kpi": {
+    "key": "dso",
+    "unit": "days",
+    "value_type": "duration",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Days Sales Outstanding: durchschnittliche Anzahl Tage bis Kunden ihre Rechnungen zahlen, rollierendes 90-Tage-Fenster; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(\n    AVG(\n      DATEDIFF(\n        day,\n        i.date,\n        i.paid_at\n      )\n    ),\n    2\n  ) AS \"DSO_Tage\"\nFROM invoices i\nWHERE i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.payment_status = 'completed'\n  AND i.date >= DATEADD(day, -90, CURRENT_DATE)\n  AND i.paid_at IS NOT NULL\n  AND i.paid_at >= i.date;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Days sales outstanding (DSO)",
+      "description": "Average days customers take to pay their invoices over the rolling 90-day window."
+    },
+    "de": {
+      "title": "Forderungslaufzeit",
+      "description": "Durchschnittliche Tage, bis Kunden ihre Rechnungen bezahlen — rollierendes 90-Tage-Fenster."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "klarna",
+  "version": 1,
+  "name": "Klarna",
+  "domain": "klarna.com",
+  "category": "payment",
+  "locales": {
+    "en": {
+      "description": "Klarna-Transaktionen abgleichen — Sofort, Rechnung, Ratenkauf."
+    },
+    "de": {
+      "description": "Klarna-Transaktionen abgleichen — Sofort, Rechnung, Ratenkauf."
+    }
+  },
+  "source": "https://marketplace.xentral.com/zahlungsanbieter/klarna"
+}

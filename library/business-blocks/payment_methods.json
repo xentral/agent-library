@@ -1,0 +1,624 @@
+{
+  "id": "payment_methods",
+  "version": 1,
+  "type": "setup",
+  "category": "finance",
+  "process_group": "Finance",
+  "icon": "credit-card",
+  "order": 43,
+  "popular": true,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "handbook_url": "https://help.xentral.com/hc/de/articles/360016722120",
+  "locales": {
+    "en": {
+      "name": "Payment Methods",
+      "description": "Activate the payment methods available to customers and set the payment\nterms for invoice-based payment. External providers (PayPal, Klarna, Stripe)\nneed a separate connector card.\n",
+      "tags": [
+        "Finance",
+        "Setup"
+      ],
+      "documentation": {
+        "overview": "Configures Zahlungsweisen in Xentral — the payment types shown on orders,\ninvoices, and customer accounts.\n\nPath: Einstellungen > Buchhaltung > Zahlungen & Geschäftskonten > Zahlungsweisen\nStandard defaults: Einstellungen > Buchhaltung > Steuer und Währung > Steuer/Währung\n\nEach Zahlungsweise has a Name (display) and a Verhalten (behavior type).\nThe Verhalten drives order management — there are exactly four:\n\n  Rechnung   → Ampel green; Zahlungsziel + Skonto fields active;\n               auto-dunning triggered when payment deadline passes.\n  Vorkasse   → Ampel red until payment received; no auto-shipping release.\n  Lastschrift → Ampel green; all invoices auto-added to SEPA Lastschriftlauf.\n  (none)     → No special payment behavior (used for auto-confirmed methods\n               like PayPal, credit card, ShopifyPayments).\n\nExternal payment connectors (ShopifyPayments, PayPal, Klarna, Mollie, Stripe)\nintegrate via separate connector cards. Once connected, they appear as\nselectable Zahlungsweisen automatically.\n\nActual money movement and reconciliation → Geschäftskonten (separate card).\nBeleg text and payment variables → PDF template card (depends on this card).\n",
+        "capabilities": [
+          "Activate standard payment methods (Vorkasse, Rechnung, Lastschrift, Barzahlung)",
+          "Configure invoice payment terms (Zahlungsziel + optional Skonto)",
+          "Set the system-default Zahlungsweise for customers and suppliers"
+        ],
+        "inputs": [
+          "Which payment methods to activate",
+          "Payment deadline for invoice-based payment (Zahlungsziel, days)",
+          "Skonto rate and deadline (if applicable)",
+          "Default payment method for customers and suppliers"
+        ],
+        "outputs": [
+          "Payment methods active in Xentral",
+          "Zahlungsbedingungen configured for Rechnung",
+          "System default Zahlungsweise set for Kunde and Lieferant in Grundeinstellungen"
+        ],
+        "notes": "Every business needs at least one payment method active before orders can\nbe processed — this is a blocking setup step.\n\nVorkasse + Rechnung cover ~90% of D2C and B2B setups respectively.\nSEPA Lastschrift needs a separate per-customer mandate collection process\n— only activate if the business already handles SEPA mandates.\n"
+      },
+      "sections": [
+        {
+          "id": "methods",
+          "title": "Payment methods to activate",
+          "hint": "Choose which methods your customers can use. Online providers (PayPal, Klarna, Stripe) are connector cards — see info box below.",
+          "human": [
+            {
+              "text": "Which payment methods are relevant for this business?",
+              "why": "Commercial decision — depends on the sales channel (online shop vs. B2B invoice), customer base (consumers vs. businesses), and banking setup. Cannot be derived automatically.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "vorkasse_aktiv",
+              "type": "toggle",
+              "label": "Vorkasse (Prepayment)",
+              "default": true,
+              "human": true,
+              "human_why": "Standard for B2C online shops. Order Ampel stays red until payment is confirmed. Enable if this business sells online to consumers.\n"
+            },
+            {
+              "id": "vorkasse_auto_paid",
+              "type": "toggle",
+              "label": "Vorkasse — payment auto-confirmed (no reconciliation)",
+              "default": false,
+              "visible_when": "vorkasse_aktiv == true",
+              "human": true,
+              "human_why": "OFF (default): customer pays first; bank transaction must be manually matched to the invoice in Zahlungsabgleich. ON: only if an external system confirms payment automatically — very uncommon for Vorkasse.\n"
+            },
+            {
+              "id": "vorkasse_release_green",
+              "type": "toggle",
+              "label": "Vorkasse — release order immediately (Ampel grün)",
+              "default": false,
+              "visible_when": "vorkasse_aktiv == true",
+              "human": true,
+              "human_why": "OFF (default): order stays red and is held until payment is confirmed — this is the point of Vorkasse. ON: order ships before payment, which defeats the purpose. Only enable if an external flow confirms payment.\n"
+            },
+            {
+              "id": "rechnung_aktiv",
+              "type": "toggle",
+              "label": "Rechnung (Invoice with payment terms)",
+              "default": true,
+              "human": true,
+              "human_why": "Standard for B2B customers. Order Ampel turns green immediately; invoice is sent with a payment deadline. Triggers auto-dunning when overdue. Enable if this business sells on credit.\n"
+            },
+            {
+              "id": "rechnung_auto_paid",
+              "type": "toggle",
+              "label": "Rechnung — payment auto-confirmed (no reconciliation)",
+              "default": false,
+              "visible_when": "rechnung_aktiv == true",
+              "human": true,
+              "human_why": "OFF (default): open invoices must be matched to bank transactions in Zahlungsabgleich; overdue invoices enter Dunning. ON: only if an external system marks invoices as paid automatically.\n"
+            },
+            {
+              "id": "rechnung_release_green",
+              "type": "toggle",
+              "label": "Rechnung — release order immediately (Ampel grün)",
+              "default": true,
+              "visible_when": "rechnung_aktiv == true",
+              "human": true,
+              "human_why": "ON (default): order ships immediately; Dunning triggers if payment is not received by the Zahlungsziel. OFF: order held until paid — unusual for B2B invoice flow; confirm with the business owner.\n"
+            },
+            {
+              "id": "paypal_aktiv",
+              "type": "toggle",
+              "label": "PayPal",
+              "default": false,
+              "human": true,
+              "human_why": "Enable if the business accepts PayPal at checkout. Requires a separate PayPal connector card — activating this adds that card to the onboarding plan.\n"
+            },
+            {
+              "id": "paypal_auto_paid",
+              "type": "toggle",
+              "label": "PayPal — payment auto-confirmed (no reconciliation)",
+              "default": true,
+              "visible_when": "paypal_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "paypal_release_green",
+              "type": "toggle",
+              "label": "PayPal — release order immediately (Ampel grün)",
+              "default": true,
+              "visible_when": "paypal_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "shopify_payments_aktiv",
+              "type": "toggle",
+              "label": "Shopify Payments",
+              "default": false,
+              "human": true,
+              "human_why": "Enable if the business uses Shopify Payments as the checkout processor. Requires a separate Shopify connection card. Only relevant for businesses running a Shopify storefront.\n"
+            },
+            {
+              "id": "shopify_payments_auto_paid",
+              "type": "toggle",
+              "label": "Shopify Payments — payment auto-confirmed (no reconciliation)",
+              "default": true,
+              "visible_when": "shopify_payments_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "shopify_payments_release_green",
+              "type": "toggle",
+              "label": "Shopify Payments — release order immediately (Ampel grün)",
+              "default": true,
+              "visible_when": "shopify_payments_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "bar_aktiv",
+              "type": "toggle",
+              "label": "Barzahlung / Selbstabholung (Cash / Store pickup)",
+              "default": false,
+              "human": true,
+              "human_why": "Enable if the business has a physical pickup point, market stall, or POS. Also used as a proxy for self-pickup orders in online shops where no payment is charged at checkout.\n"
+            },
+            {
+              "id": "bar_auto_paid",
+              "type": "toggle",
+              "label": "Barzahlung — payment auto-confirmed (no reconciliation)",
+              "default": true,
+              "visible_when": "bar_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "bar_release_green",
+              "type": "toggle",
+              "label": "Barzahlung — release order immediately (Ampel grün)",
+              "default": true,
+              "visible_when": "bar_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "external_info",
+              "type": "info",
+              "label": "Other providers (Klarna, Stripe, Mollie, …)",
+              "text": "Additional payment providers can be connected via their own connector cards. Once connected, they appear automatically as selectable Zahlungsweisen in Xentral.\n"
+            }
+          ]
+        },
+        {
+          "id": "invoice_terms",
+          "title": "Invoice payment terms (Zahlungsbedingungen)",
+          "hint": "Applies to the Rechnung method. Defines when payment is due and whether early-payment discount (Skonto) applies. Leave Skonto blank if not offered.",
+          "human": [
+            {
+              "text": "Payment deadline (Zahlungsziel) and Skonto conditions",
+              "why": "Commercial policy decision — set by the business owner or accountant. Common DE standards: 14 days net (B2C), 30 days net (B2B). Skonto 2% within 10 days is common for B2B to incentivise early payment.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "zahlungsziel_tage",
+              "type": "number",
+              "label": "Payment deadline (Zahlungsziel, days)",
+              "default": 14,
+              "human": true,
+              "human_why": "How many days after invoice date until payment is due. 14 days is the DE B2C standard; 30 days is common for B2B trade.\n"
+            },
+            {
+              "id": "skonto_prozent",
+              "type": "number",
+              "label": "Early-payment discount rate (Skonto, %)",
+              "placeholder": "e.g. 2.0 — leave blank if no Skonto",
+              "default": "",
+              "human": true,
+              "advanced": true,
+              "human_why": "Optional. Percentage discount if the customer pays within the Skonto window. Leave blank if no Skonto is offered. Typical rate: 2%.\n"
+            },
+            {
+              "id": "skonto_tage",
+              "type": "number",
+              "label": "Skonto payment window (days)",
+              "placeholder": "e.g. 10 — leave blank if no Skonto",
+              "default": "",
+              "human": true,
+              "advanced": true,
+              "human_why": "How many days from invoice date the Skonto offer is valid. Must be shorter than Zahlungsziel. Leave blank if no Skonto. Typical: 10 days.\n"
+            }
+          ]
+        },
+        {
+          "id": "default_method",
+          "title": "System default payment methods",
+          "hint": "Fallback when no Zahlungsweise is set on the customer or supplier record. Can be overridden per address in Adressen > Zahlungskonditionen.",
+          "human": [
+            {
+              "text": "Default Zahlungsweise for customers and suppliers",
+              "why": "Set in Einstellungen > Buchhaltung > Steuer und Währung. Wrong defaults can cause order processing delays or incorrect dunning — confirm with the business owner.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "standard_zahlungsweise_kunde",
+              "type": "select",
+              "label": "Default payment method — customers (Standard-Zahlungsweise Kunde)",
+              "options": [
+                {
+                  "id": "rechnung",
+                  "label": "Invoice (Rechnung)"
+                },
+                {
+                  "id": "vorkasse",
+                  "label": "Prepayment (Vorkasse)"
+                },
+                {
+                  "id": "lastschrift",
+                  "label": "SEPA direct debit (Lastschrift)"
+                },
+                {
+                  "id": "bar",
+                  "label": "Cash / store pickup (Barzahlung)"
+                },
+                {
+                  "id": "nachnahme",
+                  "label": "Cash on delivery (Nachnahme)"
+                },
+                {
+                  "id": "kreditkarte",
+                  "label": "Credit card (Kreditkarte)"
+                },
+                {
+                  "id": "paypal",
+                  "label": "PayPal"
+                }
+              ],
+              "default": "rechnung",
+              "human": true,
+              "human_why": "Fallback for new orders when no Zahlungsweise is set on the customer record. B2C shops often use Vorkasse; B2B setups use Rechnung.\n"
+            },
+            {
+              "id": "standard_zahlungsweise_lieferant",
+              "type": "select",
+              "label": "Default payment method — suppliers (Standard-Zahlungsweise Lieferant)",
+              "options": [
+                {
+                  "id": "rechnung",
+                  "label": "Invoice (Rechnung)"
+                },
+                {
+                  "id": "vorkasse",
+                  "label": "Prepayment (Vorkasse)"
+                },
+                {
+                  "id": "lastschrift",
+                  "label": "SEPA direct debit (Lastschrift)"
+                },
+                {
+                  "id": "bar",
+                  "label": "Cash / store pickup (Barzahlung)"
+                },
+                {
+                  "id": "nachnahme",
+                  "label": "Cash on delivery (Nachnahme)"
+                },
+                {
+                  "id": "kreditkarte",
+                  "label": "Credit card (Kreditkarte)"
+                },
+                {
+                  "id": "paypal",
+                  "label": "PayPal"
+                }
+              ],
+              "default": "rechnung",
+              "human": true,
+              "human_why": "Fallback for purchase orders and supplier invoices. Rechnung is the standard for most B2B supplier relationships.\n"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "name": "Zahlungsweisen",
+      "description": "Zahlungsweisen für Kunden aktivieren und Zahlungsbedingungen für\nrechnungsbasierte Zahlung festlegen. Externe Anbieter (PayPal, Klarna, Stripe)\nbenötigen eine separate Anbindungskarte.\n",
+      "tags": [
+        "Finanzen",
+        "Einrichtung"
+      ],
+      "documentation": {
+        "overview": "Konfiguriert Zahlungsweisen in Xentral — die Zahlungsarten, die auf Aufträgen,\nRechnungen und Kundenkonten angezeigt werden.\n\nPfad: Einstellungen > Buchhaltung > Zahlungen & Geschäftskonten > Zahlungsweisen\nStandardvorgaben: Einstellungen > Buchhaltung > Steuer und Währung > Steuer/Währung\n\nJede Zahlungsweise hat einen Namen (Anzeige) und ein Verhalten (Verhaltenstyp).\nDas Verhalten steuert die Auftragsabwicklung — es gibt genau vier:\n\n  Rechnung   → Ampel grün; Zahlungsziel + Skonto-Felder aktiv;\n               automatisches Mahnwesen wird ausgelöst, wenn die Zahlungsfrist abläuft.\n  Vorkasse   → Ampel rot bis Zahlungseingang; keine automatische Versandfreigabe.\n  Lastschrift → Ampel grün; alle Rechnungen automatisch zum SEPA Lastschriftlauf hinzugefügt.\n  (keine)    → Kein spezielles Zahlungsverhalten (für automatisch bestätigte Methoden\n               wie PayPal, Kreditkarte, ShopifyPayments).\n\nExterne Zahlungsanbindungen (ShopifyPayments, PayPal, Klarna, Mollie, Stripe)\nwerden über separate Anbindungskarten integriert. Nach der Verbindung erscheinen sie\nautomatisch als auswählbare Zahlungsweisen.\n\nTatsächlicher Zahlungsverkehr und Abgleich → Geschäftskonten (separate Karte).\nBelegtext und Zahlungsvariablen → PDF-Vorlagenkarte (hängt von dieser Karte ab).\n",
+        "capabilities": [
+          "Standard-Zahlungsweisen aktivieren (Vorkasse, Rechnung, Lastschrift, Barzahlung)",
+          "Zahlungsbedingungen für Rechnungen konfigurieren (Zahlungsziel + optionaler Skonto)",
+          "Standard-Zahlungsweise für Kunden und Lieferanten festlegen"
+        ],
+        "inputs": [
+          "Welche Zahlungsweisen aktiviert werden sollen",
+          "Zahlungsfrist für rechnungsbasierte Zahlung (Zahlungsziel, Tage)",
+          "Skonto-Satz und -Frist (falls zutreffend)",
+          "Standard-Zahlungsweise für Kunden und Lieferanten"
+        ],
+        "outputs": [
+          "Zahlungsweisen in Xentral aktiv",
+          "Zahlungsbedingungen für Rechnung konfiguriert",
+          "System-Standard-Zahlungsweise für Kunde und Lieferant in Grundeinstellungen gesetzt"
+        ],
+        "notes": "Jedes Unternehmen benötigt mindestens eine aktive Zahlungsweise, bevor Aufträge\nverarbeitet werden können — dies ist ein blockierender Einrichtungsschritt.\n\nVorkasse + Rechnung decken jeweils ~90% der D2C- und B2B-Setups ab.\nSEPA-Lastschrift benötigt einen separaten Mandatserfassungsprozess pro Kunde\n— nur aktivieren, wenn das Unternehmen bereits SEPA-Mandate verwaltet.\n"
+      },
+      "sections": [
+        {
+          "id": "methods",
+          "title": "Zu aktivierende Zahlungsweisen",
+          "human": [
+            {
+              "text": "Welche Zahlungsweisen sind für dieses Unternehmen relevant?",
+              "why": "Unternehmerische Entscheidung — abhängig vom Vertriebskanal (Online-Shop vs. B2B-Rechnung), Kundenstamm (Verbraucher vs. Unternehmen) und Bankeinrichtung. Kann nicht automatisch abgeleitet werden.\n"
+            }
+          ],
+          "hint": "Wähle aus, welche Methoden deine Kunden nutzen können. Online-Anbieter (PayPal, Klarna, Stripe) sind Anbindungskarten — siehe Infofeld unten.",
+          "fields": [
+            {
+              "id": "vorkasse_aktiv",
+              "type": "toggle",
+              "label": "Vorkasse",
+              "default": true,
+              "human": true,
+              "human_why": "Standard für B2C-Online-Shops. Auftrags-Ampel bleibt rot, bis die Zahlung bestätigt ist. Aktivieren, wenn dieses Unternehmen online an Verbraucher verkauft.\n"
+            },
+            {
+              "id": "vorkasse_auto_paid",
+              "type": "toggle",
+              "label": "Vorkasse — Zahlung automatisch bestätigt (kein Abgleich)",
+              "default": false,
+              "visible_when": "vorkasse_aktiv == true",
+              "human": true,
+              "human_why": "AUS (Standard): Kunde zahlt zuerst; Bankbuchung muss manuell der Rechnung im Zahlungsabgleich zugeordnet werden. EIN: nur wenn ein externes System die Zahlung automatisch bestätigt — bei Vorkasse sehr unüblich.\n"
+            },
+            {
+              "id": "vorkasse_release_green",
+              "type": "toggle",
+              "label": "Vorkasse — Auftrag sofort freigeben (Ampel grün)",
+              "default": false,
+              "visible_when": "vorkasse_aktiv == true",
+              "human": true,
+              "human_why": "AUS (Standard): Auftrag bleibt rot und wird zurückgehalten, bis die Zahlung bestätigt ist — das ist der Zweck von Vorkasse. EIN: Auftrag wird vor Zahlungseingang versendet, was den Zweck verfehlt. Nur aktivieren, wenn ein externer Prozess die Zahlung bestätigt.\n"
+            },
+            {
+              "id": "rechnung_aktiv",
+              "type": "toggle",
+              "label": "Rechnung (mit Zahlungsziel)",
+              "default": true,
+              "human": true,
+              "human_why": "Standard für B2B-Kunden. Auftrags-Ampel schaltet sofort auf grün; Rechnung wird mit Zahlungsfrist verschickt. Löst automatisches Mahnwesen bei Überfälligkeit aus. Aktivieren, wenn dieses Unternehmen auf Ziel verkauft.\n"
+            },
+            {
+              "id": "rechnung_auto_paid",
+              "type": "toggle",
+              "label": "Rechnung — Zahlung automatisch bestätigt (kein Abgleich)",
+              "default": false,
+              "visible_when": "rechnung_aktiv == true",
+              "human": true,
+              "human_why": "AUS (Standard): Offene Rechnungen müssen Bankbuchungen im Zahlungsabgleich zugeordnet werden; überfällige Rechnungen gehen ins Mahnwesen. EIN: nur wenn ein externes System Rechnungen automatisch als bezahlt markiert.\n"
+            },
+            {
+              "id": "rechnung_release_green",
+              "type": "toggle",
+              "label": "Rechnung — Auftrag sofort freigeben (Ampel grün)",
+              "default": true,
+              "visible_when": "rechnung_aktiv == true",
+              "human": true,
+              "human_why": "EIN (Standard): Auftrag wird sofort versendet; Mahnwesen greift, wenn die Zahlung nicht bis zum Zahlungsziel eingeht. AUS: Auftrag wird zurückgehalten, bis bezahlt — unüblich für B2B-Rechnungsfluss; mit dem Unternehmensinhaber abklären.\n"
+            },
+            {
+              "id": "paypal_aktiv",
+              "type": "toggle",
+              "label": "PayPal",
+              "default": false,
+              "human": true,
+              "human_why": "Aktivieren, wenn das Unternehmen PayPal an der Kasse akzeptiert. Erfordert eine separate PayPal-Anbindungskarte — diese Karte aktivieren fügt jene dem Onboarding-Plan hinzu.\n"
+            },
+            {
+              "id": "paypal_auto_paid",
+              "type": "toggle",
+              "label": "PayPal — Zahlung automatisch bestätigt (kein Abgleich)",
+              "default": true,
+              "visible_when": "paypal_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "paypal_release_green",
+              "type": "toggle",
+              "label": "PayPal — Auftrag sofort freigeben (Ampel grün)",
+              "default": true,
+              "visible_when": "paypal_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "shopify_payments_aktiv",
+              "type": "toggle",
+              "label": "Shopify Payments",
+              "default": false,
+              "human": true,
+              "human_why": "Aktivieren, wenn das Unternehmen Shopify Payments als Checkout-Prozessor nutzt. Erfordert eine separate Shopify-Anbindungskarte. Nur relevant für Unternehmen mit einem Shopify-Storefront.\n"
+            },
+            {
+              "id": "shopify_payments_auto_paid",
+              "type": "toggle",
+              "label": "Shopify Payments — Zahlung automatisch bestätigt (kein Abgleich)",
+              "default": true,
+              "visible_when": "shopify_payments_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "shopify_payments_release_green",
+              "type": "toggle",
+              "label": "Shopify Payments — Auftrag sofort freigeben (Ampel grün)",
+              "default": true,
+              "visible_when": "shopify_payments_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "bar_aktiv",
+              "type": "toggle",
+              "label": "Barzahlung / Selbstabholung",
+              "default": false,
+              "human": true,
+              "human_why": "Aktivieren, wenn das Unternehmen einen physischen Abholpunkt, Marktstand oder POS hat. Wird auch als Platzhalter für Selbstabholbestellungen in Online-Shops verwendet, bei denen an der Kasse keine Zahlung erhoben wird.\n"
+            },
+            {
+              "id": "bar_auto_paid",
+              "type": "toggle",
+              "label": "Barzahlung — Zahlung automatisch bestätigt (kein Abgleich)",
+              "default": true,
+              "visible_when": "bar_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "bar_release_green",
+              "type": "toggle",
+              "label": "Barzahlung — Auftrag sofort freigeben (Ampel grün)",
+              "default": true,
+              "visible_when": "bar_aktiv == true",
+              "human": false
+            },
+            {
+              "id": "external_info",
+              "type": "info",
+              "label": "Weitere Anbieter (Klarna, Stripe, Mollie, …)",
+              "text": "Weitere Zahlungsanbieter können über ihre eigenen Anbindungskarten verbunden werden. Nach der Verbindung erscheinen sie automatisch als auswählbare Zahlungsweisen in Xentral.\n"
+            }
+          ]
+        },
+        {
+          "id": "invoice_terms",
+          "title": "Zahlungsbedingungen (Rechnung)",
+          "hint": "Gilt für die Zahlungsweise Rechnung. Legt fest, wann die Zahlung fällig ist und ob Skonto gilt. Skonto leer lassen, wenn nicht angeboten.",
+          "human": [
+            {
+              "text": "Zahlungsziel und Skonto-Konditionen",
+              "why": "Unternehmerische Grundsatzentscheidung — vom Unternehmensinhaber oder Buchhalter festgelegt. Gängige DE-Standards: 14 Tage netto (B2C), 30 Tage netto (B2B). Skonto 2% innerhalb von 10 Tagen ist im B2B üblich, um frühzeitige Zahlung zu incentivieren.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "zahlungsziel_tage",
+              "type": "number",
+              "label": "Zahlungsziel (Tage)",
+              "default": 14,
+              "human": true,
+              "human_why": "Anzahl Tage nach Rechnungsdatum bis zur Zahlungsfälligkeit. 14 Tage ist der DE B2C-Standard; 30 Tage ist im B2B-Handel üblich.\n"
+            },
+            {
+              "id": "skonto_prozent",
+              "type": "number",
+              "label": "Skonto-Satz (%)",
+              "placeholder": "z.B. 2,0 — leer lassen, wenn kein Skonto",
+              "default": "",
+              "human": true,
+              "advanced": true,
+              "human_why": "Optional. Prozentualer Rabatt, wenn der Kunde innerhalb des Skonto-Zeitraums zahlt. Leer lassen, wenn kein Skonto angeboten wird. Typischer Satz: 2%.\n"
+            },
+            {
+              "id": "skonto_tage",
+              "type": "number",
+              "label": "Skonto-Zahlungsfenster (Tage)",
+              "placeholder": "z.B. 10 — leer lassen, wenn kein Skonto",
+              "default": "",
+              "human": true,
+              "advanced": true,
+              "human_why": "Anzahl Tage ab Rechnungsdatum, für die das Skonto-Angebot gilt. Muss kürzer sein als das Zahlungsziel. Leer lassen, wenn kein Skonto. Typisch: 10 Tage.\n"
+            }
+          ]
+        },
+        {
+          "id": "default_method",
+          "title": "System-Standard-Zahlungsweisen",
+          "hint": "Fallback, wenn keine Zahlungsweise im Kunden- oder Lieferantendatensatz gesetzt ist. Kann pro Adresse in Adressen > Zahlungskonditionen überschrieben werden.",
+          "human": [
+            {
+              "text": "Standard-Zahlungsweise für Kunden und Lieferanten",
+              "why": "Eingestellt in Einstellungen > Buchhaltung > Steuer und Währung. Falsche Standardwerte können zu Verzögerungen bei der Auftragsabwicklung oder fehlerhaftem Mahnwesen führen — mit dem Unternehmensinhaber bestätigen.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "standard_zahlungsweise_kunde",
+              "type": "select",
+              "label": "Standard-Zahlungsweise — Kunden",
+              "options": [
+                {
+                  "id": "rechnung",
+                  "label": "Rechnung"
+                },
+                {
+                  "id": "vorkasse",
+                  "label": "Vorkasse"
+                },
+                {
+                  "id": "lastschrift",
+                  "label": "SEPA-Lastschrift"
+                },
+                {
+                  "id": "bar",
+                  "label": "Barzahlung / Selbstabholung"
+                },
+                {
+                  "id": "nachnahme",
+                  "label": "Nachnahme"
+                },
+                {
+                  "id": "kreditkarte",
+                  "label": "Kreditkarte"
+                },
+                {
+                  "id": "paypal",
+                  "label": "PayPal"
+                }
+              ],
+              "default": "rechnung",
+              "human": true,
+              "human_why": "Fallback für neue Aufträge, wenn keine Zahlungsweise im Kundendatensatz gesetzt ist. B2C-Shops nutzen oft Vorkasse; B2B-Setups verwenden Rechnung.\n"
+            },
+            {
+              "id": "standard_zahlungsweise_lieferant",
+              "type": "select",
+              "label": "Standard-Zahlungsweise — Lieferanten",
+              "options": [
+                {
+                  "id": "rechnung",
+                  "label": "Rechnung"
+                },
+                {
+                  "id": "vorkasse",
+                  "label": "Vorkasse"
+                },
+                {
+                  "id": "lastschrift",
+                  "label": "SEPA-Lastschrift"
+                },
+                {
+                  "id": "bar",
+                  "label": "Barzahlung / Selbstabholung"
+                },
+                {
+                  "id": "nachnahme",
+                  "label": "Nachnahme"
+                },
+                {
+                  "id": "kreditkarte",
+                  "label": "Kreditkarte"
+                },
+                {
+                  "id": "paypal",
+                  "label": "PayPal"
+                }
+              ],
+              "default": "rechnung",
+              "human": true,
+              "human_why": "Fallback für Bestellungen und Lieferantenrechnungen. Rechnung ist der Standard für die meisten B2B-Lieferantenbeziehungen.\n"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": true
+}

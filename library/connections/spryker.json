@@ -1,0 +1,15 @@
+{
+  "id": "spryker",
+  "version": 1,
+  "name": "Spryker",
+  "domain": "spryker.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Headless B2B/B2C-Commerce-Plattform mit Xentral als Backend."
+    },
+    "de": {
+      "description": "Headless B2B/B2C-Commerce-Plattform mit Xentral als Backend."
+    }
+  }
+}

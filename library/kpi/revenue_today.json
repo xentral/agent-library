@@ -1,0 +1,27 @@
+{
+  "id": "revenue_today",
+  "version": 1,
+  "icon": "trendUp",
+  "category": "sales",
+  "order": 100,
+  "kpi": {
+    "key": "revenue_today",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "sales",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Summe Umsatz aus Rechnungen mit Belegdatum heute; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(SUM(i.net_revenue), 2) AS umsatz_heute\nFROM invoices i\nWHERE i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.date = CURRENT_DATE\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Revenue today",
+      "description": "Gross sales across all channels for the current day."
+    },
+    "de": {
+      "title": "Umsatz heute",
+      "description": "Bruttoumsatz über alle Kanäle für den aktuellen Tag."
+    }
+  }
+}

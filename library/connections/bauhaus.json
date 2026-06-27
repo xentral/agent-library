@@ -1,0 +1,15 @@
+{
+  "id": "bauhaus",
+  "version": 1,
+  "name": "Bauhaus",
+  "domain": "bauhaus.info",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Bauhaus-Marketplace-Anbindung — Listings und Aufträge."
+    },
+    "de": {
+      "description": "Bauhaus-Marketplace-Anbindung — Listings und Aufträge."
+    }
+  }
+}

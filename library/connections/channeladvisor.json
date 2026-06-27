@@ -1,0 +1,15 @@
+{
+  "id": "channeladvisor",
+  "version": 1,
+  "name": "ChannelAdvisor",
+  "domain": "channeladvisor.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "E-Commerce-Plattform für Multi-Channel-Distribution — Bestellungen sammeln."
+    },
+    "de": {
+      "description": "E-Commerce-Plattform für Multi-Channel-Distribution — Bestellungen sammeln."
+    }
+  }
+}

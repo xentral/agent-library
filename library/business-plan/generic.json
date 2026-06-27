@@ -1,0 +1,101 @@
+{
+  "id": "generic",
+  "slugs": [
+    "profile",
+    "overview",
+    "market",
+    "personas",
+    "roadmap",
+    "risks",
+    "company",
+    "products",
+    "masterdata",
+    "channels",
+    "marketing",
+    "team",
+    "processes",
+    "custom_agents",
+    "logistics",
+    "systems",
+    "org",
+    "roles",
+    "migration",
+    "payment",
+    "financials",
+    "accounting",
+    "unit",
+    "reporting"
+  ],
+  "locales": {
+    "de": {
+      "name": "Eigenes Modell",
+      "description": "Keine Vorlage trifft? Wir legen ein Skelett mit allen Sektionen\nleer an — du füllst auf, was für euch relevant ist, und löschst\noder ignorierst den Rest. Volle Freiheit ohne vordefinierte\nAnnahmen.\n",
+      "emphasis": {
+        "overview": "Steckbrief offen halten — fülle nur die Felder, die ihr wirklich braucht.",
+        "market": "Markt-Kapitel kann minimal bleiben, falls Strategie schon woanders dokumentiert ist.",
+        "channels": "Liste eure Kanäle frei auf — POS, Online, Wholesale, Mix — und priorisiert nach Umsatzanteil."
+      },
+      "tasks": [
+        {
+          "title": "Logo + Briefpapier-Vorlage",
+          "hint": "Logo (SVG/PNG) + Footer-Texte für Belege (AB, RG, LS)"
+        },
+        {
+          "title": "Stammdaten erfassen",
+          "hint": "Artikel · Kunden · Lieferanten — Pflichtfelder definieren"
+        },
+        {
+          "title": "Bank-Login einrichten",
+          "hint": "FinAPI/EBICS-Zugang für automatischen Zahlungsabgleich"
+        },
+        {
+          "title": "E-Mail-Vorlagen freigeben",
+          "hint": "Order-Confirm · Versand · Reklamation als Standard-Templates"
+        },
+        {
+          "title": "Schulungstermine planen",
+          "hint": "Pro Rolle eine Session vor Go-Live"
+        },
+        {
+          "title": "Go-Live-Datum bestätigen",
+          "hint": "Cut-Over-Wochenende + Hypercare-Phase abstimmen"
+        }
+      ]
+    },
+    "en": {
+      "name": "Custom Model",
+      "description": "No template fits? We'll create a skeleton with all sections empty —\nyou fill in what's relevant for your business and delete or ignore\nthe rest. Full freedom without preset assumptions.\n",
+      "emphasis": {
+        "overview": "Keep the company profile open — fill only the fields you actually need.",
+        "market": "The market chapter can stay minimal if strategy is already documented elsewhere.",
+        "channels": "List your channels freely — POS, online, wholesale, mix — and prioritise by revenue share."
+      },
+      "tasks": [
+        {
+          "title": "Logo + letterhead template",
+          "hint": "Logo (SVG/PNG) + footer copy for documents (order confirmation, invoice, delivery note)"
+        },
+        {
+          "title": "Capture master data",
+          "hint": "Products · customers · suppliers — define mandatory fields"
+        },
+        {
+          "title": "Set up bank login",
+          "hint": "FinAPI/EBICS access for automatic payment reconciliation"
+        },
+        {
+          "title": "Approve email templates",
+          "hint": "Order confirmation · shipping · complaints as standard templates"
+        },
+        {
+          "title": "Plan training sessions",
+          "hint": "One session per role before go-live"
+        },
+        {
+          "title": "Confirm go-live date",
+          "hint": "Cut-over weekend + hypercare phase agreed"
+        }
+      ]
+    }
+  }
+}

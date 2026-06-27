@@ -1,0 +1,230 @@
+{
+  "id": "warehouse_locations",
+  "version": 1,
+  "parent": "warehouse_setup",
+  "type": "setup_sub",
+  "category": "logistics",
+  "process_group": "Lager",
+  "icon": "shelves",
+  "order": 31,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "handbook_url": "https://help.xentral.com/hc/de/articles/360016722900",
+  "locales": {
+    "en": {
+      "name": "Shelf Locations",
+      "description": "Add shelf or bin locations (Lagerplätze) to the warehouse. At least one\nlocation is required before any stock can be received or picked.\nPaste a list or upload a CSV — manual one-by-one entry is not supported\nin the wizard.\n",
+      "tags": [
+        "Warehouse",
+        "Logistics",
+        "Setup"
+      ],
+      "documentation": {
+        "overview": "Creates the Lagerplätze (shelf locations or bins) inside the warehouse\ncreated in the warehouse_setup parent card.\n\nXentral requires at least one Lagerplatz before any article can be stored,\nreserved or picked. This subcard covers the two methods supported by the\nsetup wizard:\n\n  1. Freifeld paste — paste a newline or comma-separated list of shelf\n     names directly in the wizard. Best for simple structures under ~30\n     locations.\n\n  2. CSV upload — upload a CSV file with full shelf data. Best for\n     structured warehouses with many locations, or when dimensions and\n     special types need to be set per shelf from the start.\n\nManual one-by-one entry (Neuen Lagerplatz anlegen) is not applicable\nthrough the wizard and is not offered here.\n\nDone state: at least one Lagerplatz exists for the parent warehouse.\nAdditional locations can be added manually in Lager > Lagerverwaltung\nat any time after setup.\n",
+        "capabilities": [
+          "Bulk shelf creation via Freifeld (paste) or CSV upload",
+          "Naming convention guidance (max 15 characters per location)",
+          "CSV column reference for advanced location attributes",
+          {
+            "Xentral path": "Lager > Lagerverwaltung > open warehouse > Lagerplätze > Lagerplätze importieren"
+          }
+        ],
+        "inputs": [
+          "List of shelf names (paste or CSV)",
+          {
+            "Optional": "dimensions, special types, replenishment links (via CSV only)"
+          }
+        ],
+        "outputs": [
+          "All shelf locations created in the parent warehouse",
+          "Stock receipts, reservations and picking are now possible"
+        ],
+        "notes": "Shelf names must not exceed 15 characters — longer names cause errors when\nprinting barcode labels (warehouse_barcodes subcard).\n\nNaming convention matters from day one — renaming shelves after stock is\nbooked is complex and error-prone. Agree on a pattern before creating\nlocations. Examples from the Xentral handbook:\n\n  Simple:  L1001, L1002, L1003 (Lager 1, shelf 001 / 002 / 003)\n  Medium:  L211A25 (Lager 2, aisle 11, bay A, position 25)\n  Complex: L30AA01 (Lager 3, right side, aisle A, bay A, slot 01)\n  Multi-site: BL2AB01 (Berlin, Lager 2, aisle A, bay B01)\n\nCSV accepted columns: lagerplatz, adressid, nachschublager, verbrauchslager,\nsperrlager, poslager, reihenfolge, laenge, breite, hoehe, kategorie.\nOnly lagerplatz is required — all other columns are optional.\n"
+      },
+      "sections": [
+        {
+          "id": "naming_guide",
+          "title": "Naming convention",
+          "hint": "Agree on a shelf naming pattern before creating locations — renaming after stock is booked is complex.",
+          "human": [],
+          "fields": [
+            {
+              "id": "naming_info",
+              "type": "info",
+              "label": "Naming guide",
+              "text": "Shelf names must be max 15 characters. Use a consistent pattern that encodes the physical location so warehouse staff can navigate without a map. Recommended starting point for a simple warehouse: L001, L002, L003 ... Once stock is booked against a location, renaming it requires a manual stock transfer — plan the pattern before creating locations.\n"
+            }
+          ]
+        },
+        {
+          "id": "shelf_input",
+          "title": "Shelf locations",
+          "hint": "Choose paste or CSV upload. At least one shelf name is required.",
+          "human": [
+            {
+              "text": "Choose input method and provide shelf names",
+              "why": "Shelf locations are operator-specific — names, count and structure depend on the physical warehouse layout. Cannot be derived or pre-filled.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "input_method",
+              "type": "radio",
+              "label": "How do you want to add shelf locations?",
+              "options": [
+                {
+                  "value": "paste",
+                  "label": "Paste a list — simple warehouses, up to ~30 locations"
+                },
+                {
+                  "value": "csv_upload",
+                  "label": "Upload CSV — larger structures or when dimensions / types are needed per shelf"
+                }
+              ],
+              "default": "paste",
+              "human": true,
+              "human_why": "Determines which input field is shown. Paste is faster for simple setups; CSV is better for structured warehouses or when the customer already has their shelf list in a spreadsheet.\n"
+            },
+            {
+              "id": "lagerplaetze_freifeld",
+              "type": "textarea",
+              "label": "Shelf names (one per line or comma-separated)",
+              "placeholder": "L001\nL002\nL003\nL004",
+              "default": "",
+              "human": true,
+              "human_why": "Paste the list of shelf names the warehouse team will use. One name per line, or comma-separated. Max 15 characters per name. Duplicates are automatically ignored by Xentral.\n",
+              "visible_when": "input_method == paste"
+            },
+            {
+              "id": "lagerplaetze_csv",
+              "type": "file_upload",
+              "label": "Upload shelf locations CSV",
+              "accepted_formats": [
+                "csv"
+              ],
+              "human": true,
+              "human_why": "Upload a CSV file with at least a lagerplatz column. Optional columns: adressid, nachschublager, verbrauchslager, sperrlager, poslager, reihenfolge, laenge, breite, hoehe, kategorie. Duplicates are automatically ignored by Xentral.\n",
+              "visible_when": "input_method == csv_upload"
+            },
+            {
+              "id": "csv_format_info",
+              "type": "info",
+              "label": "CSV format reference",
+              "text": "Required column: lagerplatz (shelf name, max 15 chars). Optional columns: laenge / breite / hoehe (dimensions in cm), nachschublager (1 = replenishment location), verbrauchslager (1 = consumption location), sperrlager (1 = blocked stock location), poslager (1 = POS location), reihenfolge (sort order), kategorie (free label).\n",
+              "visible_when": "input_method == csv_upload"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "name": "Lagerplätze",
+      "description": "Regal- oder Fachpositionen (Lagerplätze) zum Lager hinzufügen. Mindestens eine\nPosition ist erforderlich, bevor Bestände eingelagert oder kommissioniert werden können.\nEine Liste einfügen oder eine CSV hochladen — manuelle Einzeleingabe wird im\nAssistenten nicht unterstützt.\n",
+      "tags": [
+        "Lager",
+        "Logistik",
+        "Einrichtung"
+      ],
+      "documentation": {
+        "overview": "Erstellt die Lagerplätze (Regal- oder Fachpositionen) innerhalb des Lagers,\ndas in der übergeordneten Karte warehouse_setup angelegt wurde.\n\nXentral erfordert mindestens einen Lagerplatz, bevor ein Artikel eingelagert,\nreserviert oder kommissioniert werden kann. Diese Unterkarte behandelt die zwei\nvom Einrichtungsassistenten unterstützten Methoden:\n\n  1. Freifeld-Einfügen — eine zeilengetrennte oder kommagetrennte Liste von\n     Lagerplatznamen direkt im Assistenten einfügen. Am besten für einfache\n     Strukturen mit unter ~30 Positionen.\n\n  2. CSV-Upload — eine CSV-Datei mit vollständigen Lagerplatzdaten hochladen.\n     Am besten für strukturierte Lager mit vielen Positionen oder wenn Abmessungen\n     und Sondertypen von Anfang an pro Regal gesetzt werden müssen.\n\nManuelle Einzeleingabe (Neuen Lagerplatz anlegen) ist über den Assistenten nicht\nvorgesehen und wird hier nicht angeboten.\n\nFertig-Zustand: Mindestens ein Lagerplatz existiert für das übergeordnete Lager.\nWeitere Positionen können nach der Einrichtung jederzeit manuell in\nLager > Lagerverwaltung hinzugefügt werden.\n",
+        "capabilities": [
+          "Massenerstellung von Lagerplätzen über Freifeld (Einfügen) oder CSV-Upload",
+          "Hinweise zur Namenskonvention (max. 15 Zeichen pro Position)",
+          "CSV-Spaltenreferenz für erweiterte Positionsattribute",
+          {
+            "Xentral path": "Lager > Lagerverwaltung > Lager öffnen > Lagerplätze > Lagerplätze importieren"
+          }
+        ],
+        "inputs": [
+          "Liste der Lagerplatznamen (Einfügen oder CSV)",
+          {
+            "Optional": "Abmessungen, Sondertypen, Nachschublager-Verknüpfungen (nur über CSV)"
+          }
+        ],
+        "outputs": [
+          "Alle Lagerplätze im übergeordneten Lager angelegt",
+          "Wareneingänge, Reservierungen und Kommissionierungen sind jetzt möglich"
+        ],
+        "notes": "Lagerplatznamen dürfen 15 Zeichen nicht überschreiten — längere Namen verursachen\nFehler beim Drucken von Barcode-Etiketten (Unterkarte warehouse_barcodes).\n\nDie Namenskonvention ist von Anfang an entscheidend — das Umbenennen von Lagerplätzen\nnach der Einlagerung von Beständen ist komplex und fehleranfällig. Vor der Anlage\nder Positionen ein Schema vereinbaren. Beispiele aus dem Xentral-Handbuch:\n\n  Einfach:    L1001, L1002, L1003 (Lager 1, Regal 001 / 002 / 003)\n  Mittel:     L211A25 (Lager 2, Gang 11, Fach A, Position 25)\n  Komplex:    L30AA01 (Lager 3, rechte Seite, Gang A, Fach A, Slot 01)\n  Mehrstandorte: BL2AB01 (Berlin, Lager 2, Gang A, Fach B01)\n\nAkzeptierte CSV-Spalten: lagerplatz, adressid, nachschublager, verbrauchslager,\nsperrlager, poslager, reihenfolge, laenge, breite, hoehe, kategorie.\nNur lagerplatz ist erforderlich — alle anderen Spalten sind optional.\n"
+      },
+      "sections": [
+        {
+          "id": "naming_guide",
+          "title": "Namenskonvention",
+          "hint": "Vor der Anlage der Lagerplätze ein Benennungsschema vereinbaren — Umbenennen nach Einlagerung von Beständen ist komplex.",
+          "human": [],
+          "fields": [
+            {
+              "id": "naming_info",
+              "type": "info",
+              "label": "Namenskonventions-Leitfaden",
+              "text": "Lagerplatznamen dürfen max. 15 Zeichen haben. Ein einheitliches Schema verwenden, das den physischen Standort kodiert, damit Lagermitarbeiter ohne Karte navigieren können. Empfohlener Ausgangspunkt für ein einfaches Lager: L001, L002, L003 ... Sobald Bestände einer Position zugebucht wurden, erfordert das Umbenennen eine manuelle Bestandsumlagerung — das Schema vor der Anlage planen.\n"
+            }
+          ]
+        },
+        {
+          "id": "shelf_input",
+          "title": "Lagerplätze",
+          "hint": "Einfügen oder CSV-Upload wählen. Mindestens ein Lagerplatzname ist erforderlich.",
+          "human": [
+            {
+              "text": "Eingabemethode wählen und Lagerplatznamen angeben",
+              "why": "Lagerplätze sind betreiberspezifisch — Namen, Anzahl und Struktur hängen vom physischen Lagerlayout ab. Können nicht abgeleitet oder vorausgefüllt werden.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "input_method",
+              "type": "radio",
+              "label": "Wie möchtest du Lagerplätze hinzufügen?",
+              "options": [
+                {
+                  "value": "paste",
+                  "label": "Liste einfügen — einfache Lager, bis zu ~30 Positionen"
+                },
+                {
+                  "value": "csv_upload",
+                  "label": "CSV hochladen — größere Strukturen oder wenn Abmessungen / Typen pro Regal benötigt werden"
+                }
+              ],
+              "default": "paste",
+              "human": true,
+              "human_why": "Bestimmt, welches Eingabefeld angezeigt wird. Einfügen ist schneller für einfache Setups; CSV ist besser für strukturierte Lager oder wenn der Kunde seine Lagerplatsliste bereits in einer Tabellenkalkulation hat.\n"
+            },
+            {
+              "id": "lagerplaetze_freifeld",
+              "type": "textarea",
+              "label": "Lagerplatznamen (einer pro Zeile oder kommagetrennt)",
+              "placeholder": "L001\nL002\nL003\nL004",
+              "default": "",
+              "human": true,
+              "human_why": "Liste der Lagerplatznamen einfügen, die das Lagerteam verwenden wird. Ein Name pro Zeile oder kommagetrennt. Max. 15 Zeichen pro Name. Duplikate werden von Xentral automatisch ignoriert.\n",
+              "visible_when": "input_method == paste"
+            },
+            {
+              "id": "lagerplaetze_csv",
+              "type": "file_upload",
+              "label": "Lagerplätze-CSV hochladen",
+              "accepted_formats": [
+                "csv"
+              ],
+              "human": true,
+              "human_why": "Eine CSV-Datei mit mindestens einer lagerplatz-Spalte hochladen. Optionale Spalten: adressid, nachschublager, verbrauchslager, sperrlager, poslager, reihenfolge, laenge, breite, hoehe, kategorie. Duplikate werden von Xentral automatisch ignoriert.\n",
+              "visible_when": "input_method == csv_upload"
+            },
+            {
+              "id": "csv_format_info",
+              "type": "info",
+              "label": "CSV-Format-Referenz",
+              "text": "Pflichtspalte: lagerplatz (Lagerplatzname, max. 15 Zeichen). Optionale Spalten: laenge / breite / hoehe (Abmessungen in cm), nachschublager (1 = Nachschublager), verbrauchslager (1 = Verbrauchslager), sperrlager (1 = Sperrlager), poslager (1 = POS-Lager), reihenfolge (Sortierreihenfolge), kategorie (freies Label).\n",
+              "visible_when": "input_method == csv_upload"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": true
+}

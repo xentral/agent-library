@@ -1,0 +1,26 @@
+{
+  "id": "first_contact_resolution",
+  "version": 1,
+  "icon": "check",
+  "category": "customer_service",
+  "order": 260,
+  "kpi": {
+    "key": "first_contact_resolution",
+    "unit": "%",
+    "value_type": "percent",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 78,
+    "initial_tone": "warn"
+  },
+  "locales": {
+    "en": {
+      "title": "First contact resolution",
+      "description": "Share of inquiries fully resolved on the first reply."
+    },
+    "de": {
+      "title": "First Contact Resolution",
+      "description": "Anteil der Anfragen, die schon mit der ersten Antwort gelöst sind."
+    }
+  }
+}

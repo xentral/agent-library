@@ -1,0 +1,15 @@
+{
+  "id": "amazonbuyshipping",
+  "version": 1,
+  "name": "Amazon Buy Shipping",
+  "domain": "amazon.de",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Amazon Buy Shipping — Labels direkt über Amazons Carrier-Konditionen."
+    },
+    "de": {
+      "description": "Amazon Buy Shipping — Labels direkt über Amazons Carrier-Konditionen."
+    }
+  }
+}

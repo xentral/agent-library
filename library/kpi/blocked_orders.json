@@ -1,0 +1,27 @@
+{
+  "id": "blocked_orders",
+  "version": 1,
+  "icon": "alertTriangle",
+  "category": "logistics",
+  "order": 302,
+  "kpi": {
+    "key": "blocked_orders",
+    "unit": "count",
+    "value_type": "number",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl offener Verkaufsaufträge, deren Auftragsdatum länger als sieben Tage zurückliegt; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(*) AS \"Anzahl offener Verkaufsaufträge\"\nFROM sales_orders so\nWHERE so.status NOT IN ('created', 'canceled')\n  AND COALESCE(so.is_completed, FALSE) = FALSE\n  AND so.date < DATEADD(day, -7, CURRENT_DATE)\n;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Blocked orders",
+      "description": "Sales orders open longer than seven days — typically stock, payment or carrier issues."
+    },
+    "de": {
+      "title": "Blockierte Aufträge",
+      "description": "Verkaufsaufträge, die länger als sieben Tage offen sind — meist Bestand, Zahlung oder Versand blockiert."
+    }
+  }
+}

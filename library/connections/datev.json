@@ -1,0 +1,28 @@
+{
+  "id": "datev",
+  "version": 1,
+  "name": "DATEV",
+  "domain": "datev.de",
+  "category": "accounting",
+  "locales": {
+    "en": {
+      "description": "Belege, Ausgangsrechnungen und OPOS in DATEV exportieren (SKR03/04).",
+      "human_inputs": [
+        "DATEV consultant number (Beraternummer)",
+        "Client number (Mandantennummer)",
+        "Chart of accounts variant (SKR03 or SKR04)",
+        "Tax advisor contact email"
+      ]
+    },
+    "de": {
+      "description": "Belege, Ausgangsrechnungen und OPOS in DATEV exportieren (SKR03/04).",
+      "human_inputs": [
+        "DATEV-Beraternummer",
+        "DATEV-Mandantennummer",
+        "Kontenplan-Variante (SKR03 oder SKR04)",
+        "Kontakt-E-Mail des Steuerberaters"
+      ]
+    }
+  },
+  "source": "https://marketplace.xentral.com/finanz-software/datev"
+}

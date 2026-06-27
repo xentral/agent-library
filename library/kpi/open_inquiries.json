@@ -1,0 +1,25 @@
+{
+  "id": "open_inquiries",
+  "version": 1,
+  "icon": "inbox",
+  "category": "customer_service",
+  "order": 200,
+  "kpi": {
+    "key": "open_inquiries",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 23
+  },
+  "locales": {
+    "en": {
+      "title": "Open inquiries",
+      "description": "Customer inquiries waiting for a response right now."
+    },
+    "de": {
+      "title": "Offene Anfragen",
+      "description": "Aktuell offene Kundenanfragen, die auf eine Antwort warten."
+    }
+  }
+}

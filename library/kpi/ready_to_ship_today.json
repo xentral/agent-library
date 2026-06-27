@@ -1,0 +1,27 @@
+{
+  "id": "ready_to_ship_today",
+  "version": 1,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 301,
+  "kpi": {
+    "key": "ready_to_ship_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl freigegebener Verkaufsaufträge mit Lieferdatum heute, die noch nicht versendet sind; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(*) AS anzahl_freigegebener_verkaufsauftraege\nFROM sales_orders so\nWHERE so.status = 'released'\n  AND so.delivery_date = CURRENT_DATE\n  AND so.is_sent = FALSE\n  AND so.status NOT IN ('created', 'canceled')\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Ready to ship today",
+      "description": "Released sales orders that are ready to leave the warehouse today."
+    },
+    "de": {
+      "title": "Heute zu versenden",
+      "description": "Freigegebene Verkaufsaufträge, die heute aus dem Lager raus sollen."
+    }
+  }
+}

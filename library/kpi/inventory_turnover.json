@@ -1,0 +1,27 @@
+{
+  "id": "inventory_turnover",
+  "version": 1,
+  "icon": "refreshCw",
+  "category": "inventory",
+  "order": 210,
+  "kpi": {
+    "key": "inventory_turnover",
+    "unit": "x/year",
+    "value_type": "number",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Lagerumschlagshäufigkeit pro Jahr: annualisierter Wareneinsatz aus Rechnungen der letzten 12 Monate geteilt durch den durchschnittlichen Bestandswert; ein einzelner Datensatz.",
+    "sql_string": "WITH sales_last_12_months AS (\n    SELECT\n        COALESCE(SUM(sii.xen_net_price * sii.quantity), 0) AS goods_issue_value\n    FROM summary_invoice_items sii\n    JOIN invoices i\n      ON sii.invoice_id = i.invoice_id\n    WHERE i.date >= DATEADD(month, -12, CURRENT_DATE)\n      AND i.status != 'created'\n),\ninventory_valuation_snapshots AS (\n    SELECT\n        date,\n        SUM(quantity * COALESCE(calculated_purchase_price, latest_purchase_price, inventory_purchase_price, 0)) AS stock_value\n    FROM warehouse_values\n    WHERE date >= DATEADD(month, -12, CURRENT_DATE)\n    GROUP BY date\n),\navg_inventory_value AS (\n    SELECT\n        COALESCE(AVG(stock_value), 0) AS avg_stock_value\n    FROM inventory_valuation_snapshots\n)\nSELECT\n    ROUND(\n        CASE\n            WHEN a.avg_stock_value > 0 THEN (s.goods_issue_value * 12.0 / 12.0) / a.avg_stock_value\n            ELSE NULL\n        END,\n        2\n    ) AS lagerumschlagshaeufigkeit_pro_jahr\nFROM sales_last_12_months s\nCROSS JOIN avg_inventory_value a\nLIMIT 1;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Inventory turnover",
+      "description": "How often the average stock is sold per year — annualised COGS divided by average stock."
+    },
+    "de": {
+      "title": "Lagerumschlag",
+      "description": "Wie oft der mittlere Bestand pro Jahr verkauft wird — annualisierter Wareneinsatz geteilt durch mittleren Bestandswert."
+    }
+  }
+}

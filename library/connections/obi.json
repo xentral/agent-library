@@ -1,0 +1,15 @@
+{
+  "id": "obi",
+  "version": 1,
+  "name": "OBI",
+  "domain": "obi.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "OBI-Marketplace-Aufträge automatisiert verarbeiten."
+    },
+    "de": {
+      "description": "OBI-Marketplace-Aufträge automatisiert verarbeiten."
+    }
+  }
+}

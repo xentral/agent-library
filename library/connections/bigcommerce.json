@@ -1,0 +1,16 @@
+{
+  "id": "bigcommerce",
+  "version": 1,
+  "name": "BigCommerce",
+  "domain": "bigcommerce.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "BigCommerce-Shops anbinden — Order Sync und Bestand pflegen."
+    },
+    "de": {
+      "description": "BigCommerce-Shops anbinden — Order Sync und Bestand pflegen."
+    }
+  },
+  "source": "https://marketplace.xentral.com/onlineshops/bigcommerce"
+}

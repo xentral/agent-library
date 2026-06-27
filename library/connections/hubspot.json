@@ -1,0 +1,16 @@
+{
+  "id": "hubspot",
+  "version": 1,
+  "name": "HubSpot",
+  "domain": "hubspot.com",
+  "category": "crm",
+  "locales": {
+    "en": {
+      "description": "Kontakte und Deals zwischen CRM und Xentral-Kunden synchronisieren."
+    },
+    "de": {
+      "description": "Kontakte und Deals zwischen CRM und Xentral-Kunden synchronisieren."
+    }
+  },
+  "source": "https://marketplace.xentral.com/hubspot"
+}

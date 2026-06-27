@@ -1,0 +1,15 @@
+{
+  "id": "bbutler",
+  "version": 1,
+  "name": "BuchhaltungsButler",
+  "domain": "buchhaltungsbutler.de",
+  "category": "accounting",
+  "locales": {
+    "en": {
+      "description": "Belegerkennung und Banking-Abgleich für Mittelstandsbuchhaltung."
+    },
+    "de": {
+      "description": "Belegerkennung und Banking-Abgleich für Mittelstandsbuchhaltung."
+    }
+  }
+}

@@ -1,0 +1,1916 @@
+{
+  "id": "b2b_wholesale_configuration",
+  "business_model": "b2b_wholesale",
+  "locales": {
+    "en": {
+      "options": {
+        "legal_forms": [
+          {
+            "id": "gmbh",
+            "label": "GmbH"
+          },
+          {
+            "id": "ug",
+            "label": "UG (haftungsbeschränkt)"
+          },
+          {
+            "id": "gmbh-cokg",
+            "label": "GmbH & Co. KG"
+          },
+          {
+            "id": "ag",
+            "label": "AG"
+          },
+          {
+            "id": "gbr",
+            "label": "GbR"
+          },
+          {
+            "id": "einzel",
+            "label": "Einzelunternehmer / e. K."
+          },
+          {
+            "id": "freiberuflich",
+            "label": "Freiberufler"
+          }
+        ],
+        "carriers": [
+          {
+            "id": "dhl",
+            "label": "DHL Geschäftskunden",
+            "default_active": true,
+            "default_service": "Paket National"
+          },
+          {
+            "id": "dhl-express",
+            "label": "DHL Express",
+            "default_active": false,
+            "default_service": "Express International"
+          },
+          {
+            "id": "dpd",
+            "label": "DPD",
+            "default_active": true,
+            "default_service": "Classic"
+          },
+          {
+            "id": "ups",
+            "label": "UPS",
+            "default_active": false,
+            "default_service": "Standard / Express Saver"
+          },
+          {
+            "id": "gls",
+            "label": "GLS",
+            "default_active": false,
+            "default_service": "BusinessParcel"
+          },
+          {
+            "id": "dachser",
+            "label": "DACHSER (Spedition)",
+            "default_active": false,
+            "default_service": "Stückgut / Pallet"
+          },
+          {
+            "id": "schenker",
+            "label": "DB Schenker",
+            "default_active": false,
+            "default_service": "Stückgut / FTL"
+          },
+          {
+            "id": "pickup",
+            "label": "Selbstabholung",
+            "default_active": false,
+            "default_service": "— (kein Versand)"
+          }
+        ],
+        "versand_routing_modes": [
+          {
+            "id": "priority",
+            "label": "Prioritätsliste",
+            "hint": "Erster aktiver Carrier wird genommen, Fallback bei Ausfall."
+          },
+          {
+            "id": "cheapest",
+            "label": "Günstigster pro Paket",
+            "hint": "Carrier nach Kosten je Paket — braucht aktive Tarif-API."
+          },
+          {
+            "id": "fastest",
+            "label": "Schnellster",
+            "hint": "Carrier nach Lead-Time, höhere Kosten in Kauf nehmen."
+          },
+          {
+            "id": "rules",
+            "label": "Regelbasiert",
+            "hint": "Pro Land / Gewicht eigene Carrier-Wahl (im B2B-Wholesale Standard)."
+          }
+        ]
+      },
+      "name": "B2B wholesale",
+      "description": "Xentral-Konfiguration für B2B-Großhandel. Quote-to-Cash, Kunden-\nPreisgruppen, Rahmenverträge, Approval-Workflows, Mahnwesen, EDI\nund Sales-Team-Strukturen tragen das Setup. Marketing,\nNewsletter, Marktplätze, Returns-Portal und OSS sind hier nicht\nrelevant — Reverse-Charge + ZM-Meldung sind dafür Pflicht.\n",
+      "sidebar": [
+        {
+          "id": "overview",
+          "label": "Übersicht"
+        },
+        {
+          "id": "sync",
+          "label": "Abgleich"
+        },
+        {
+          "group": "Unternehmen",
+          "items": [
+            {
+              "id": "unternehmen:firma",
+              "label": "Firmendaten"
+            },
+            {
+              "id": "unternehmen:bank",
+              "label": "Bank & Zahlungsverkehr"
+            }
+          ]
+        },
+        {
+          "group": "Stammdaten",
+          "items": [
+            {
+              "id": "projekte",
+              "label": "Projekte / Kunden-Cluster"
+            },
+            {
+              "id": "stammdaten:artikel",
+              "label": "Artikel + Sortimente"
+            },
+            {
+              "id": "stammdaten:kunden",
+              "label": "B2B-Kunden"
+            },
+            {
+              "id": "stammdaten:lieferanten",
+              "label": "Lieferanten"
+            },
+            {
+              "id": "stammdaten:nummernkreise",
+              "label": "Nummernkreise"
+            }
+          ]
+        },
+        {
+          "group": "Vertrieb (Quote-to-Cash)",
+          "items": [
+            {
+              "id": "vertrieb:angebote",
+              "label": "Angebote (Quotes)"
+            },
+            {
+              "id": "vertrieb:auftraege",
+              "label": "Aufträge & Workflow"
+            },
+            {
+              "id": "vertrieb:preise",
+              "label": "Preisgruppen & Staffeln"
+            },
+            {
+              "id": "vertrieb:kundenpreise",
+              "label": "Kundenspezifische Preise"
+            },
+            {
+              "id": "vertrieb:rahmen",
+              "label": "Rahmenverträge"
+            },
+            {
+              "id": "vertrieb:approval",
+              "label": "Approval-Workflow"
+            }
+          ]
+        },
+        {
+          "group": "Sales-Team",
+          "items": [
+            {
+              "id": "sales:vertreter",
+              "label": "Vertreter / Außendienst"
+            },
+            {
+              "id": "sales:provision",
+              "label": "Provisionen & Abrechnung"
+            }
+          ]
+        },
+        {
+          "group": "Forderungsmanagement",
+          "items": [
+            {
+              "id": "forderung:mahnwesen",
+              "label": "Mahnwesen"
+            },
+            {
+              "id": "forderung:bonitaet",
+              "label": "Kreditlimit & Bonität"
+            },
+            {
+              "id": "forderung:opos",
+              "label": "OPOS-Auswertung"
+            }
+          ]
+        },
+        {
+          "group": "Zahlungen",
+          "items": [
+            {
+              "id": "zahlungen:arten",
+              "label": "Zahlungsarten (B2B)"
+            },
+            {
+              "id": "zahlungen:reconciliation",
+              "label": "Reconciliation"
+            }
+          ]
+        },
+        {
+          "group": "Versand",
+          "items": [
+            {
+              "id": "versand:carrier",
+              "label": "Carrier (Paket + Spedition)"
+            },
+            {
+              "id": "versand:arten",
+              "label": "Versandarten & Frachtkosten"
+            },
+            {
+              "id": "versand:etiketten",
+              "label": "Etiketten + Beleg-Anhänge"
+            }
+          ]
+        },
+        {
+          "group": "Lager & Logistik",
+          "items": [
+            {
+              "id": "lager:own",
+              "label": "Eigenlager"
+            },
+            {
+              "id": "lager:fulfiller",
+              "label": "Fulfiller / 3PL"
+            }
+          ]
+        },
+        {
+          "group": "Finanzen & Steuer",
+          "items": [
+            {
+              "id": "finanzen:reverse-charge",
+              "label": "EU-B2B Reverse-Charge + ZM"
+            },
+            {
+              "id": "finanzen:drittland",
+              "label": "Drittland-Export"
+            },
+            {
+              "id": "finanzen:buchhaltung",
+              "label": "Buchhaltung & DATEV"
+            }
+          ]
+        },
+        {
+          "group": "Kommunikation",
+          "items": [
+            {
+              "id": "kommunikation:email",
+              "label": "E-Mail-Templates (B2B-Belege)"
+            },
+            {
+              "id": "kommunikation:smtp",
+              "label": "SMTP / Provider"
+            }
+          ]
+        },
+        {
+          "group": "Benutzer & Rechte",
+          "items": [
+            {
+              "id": "benutzer:rollen",
+              "label": "Rollen (mit Approval-Logik)"
+            },
+            {
+              "id": "benutzer:mitarbeiter",
+              "label": "Mitarbeiter"
+            }
+          ]
+        },
+        {
+          "group": "Schnittstellen",
+          "items": [
+            {
+              "id": "schnittstellen:api",
+              "label": "API & Webhooks"
+            },
+            {
+              "id": "schnittstellen:edi",
+              "label": "EDI / EDIFACT"
+            },
+            {
+              "id": "schnittstellen:integrationen",
+              "label": "CRM · Faktoring · Bonität"
+            }
+          ]
+        }
+      ],
+      "modules": {
+        "unternehmen:firma": {
+          "title": "Firmendaten",
+          "group": "Unternehmen",
+          "description": "Firmenname · Rechtsform · USt-ID · Steuernummer · Anschrift ·\nLogo · Belegfußzeile (mit AGB-Hinweis und Lieferbedingungen).\nErscheint auf jedem Beleg.\n",
+          "sections": [
+            {
+              "id": "company-form",
+              "title": "Firma & Rechtsform",
+              "hint": "Wer steht auf dem Beleg? Pflichtangaben aus Handelsregister + Steueranmeldung.",
+              "human": [
+                {
+                  "text": "Firmenname offiziell bestätigen",
+                  "why": "Muss exakt mit HR-Eintrag matchen — auf jedem Beleg rechtsverbindlich"
+                },
+                {
+                  "text": "Rechtsform bestätigen",
+                  "why": "Bestimmt Pflichtangaben + Haftung"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "company_name",
+                  "type": "text",
+                  "label": "Firmenname (offiziell)",
+                  "default": "Beispiel B2B GmbH",
+                  "human": true,
+                  "human_why": "Muss exakt dem HR-Eintrag entsprechen — auf jedem Beleg rechtsverbindlich."
+                },
+                {
+                  "id": "legal_form",
+                  "type": "radio",
+                  "label": "Rechtsform",
+                  "default": "gmbh",
+                  "options_ref": "legal_forms",
+                  "human": true,
+                  "human_why": "Bestimmt Pflichtangaben & Haftung. Falsche Form führt zu falschen Belegen."
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "hr_number",
+                      "type": "text",
+                      "label": "Handelsregister-Nr.",
+                      "placeholder": "HRB 12345",
+                      "default": "HRB 12345"
+                    },
+                    {
+                      "id": "hr_court",
+                      "type": "text",
+                      "label": "Registergericht",
+                      "placeholder": "Amtsgericht …",
+                      "default": "Amtsgericht München"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "tax-identification",
+              "title": "Steuer-Identifikation",
+              "hint": "USt-ID erscheint auf jeder Rechnung. VIES-Validierung schützt vor Tippfehlern.",
+              "human": [
+                {
+                  "text": "USt-ID + Steuernummer liefern",
+                  "why": "Werden vom Finanzamt vergeben, nirgendwo öffentlich abrufbar"
+                }
+              ],
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "ust_id",
+                      "type": "text",
+                      "label": "USt-ID",
+                      "default": "DE123456789",
+                      "placeholder": "DE123456789"
+                    },
+                    {
+                      "id": "tax_number",
+                      "type": "text",
+                      "label": "Steuernummer",
+                      "default": "143/123/45678",
+                      "placeholder": "143/123/45678",
+                      "human": true,
+                      "human_why": "Wird vom Finanzamt vergeben, nirgendwo öffentlich abrufbar."
+                    }
+                  ]
+                },
+                {
+                  "layout": "toggle-group",
+                  "fields": [
+                    {
+                      "id": "ustid_validate",
+                      "type": "toggle",
+                      "label": "USt-ID per VIES validieren (empfohlen)",
+                      "default": true
+                    },
+                    {
+                      "id": "kleinunternehmer",
+                      "type": "toggle",
+                      "label": "Kleinunternehmer-Regelung (§ 19 UStG) — keine USt auf Belegen",
+                      "default": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "address",
+              "title": "Anschrift",
+              "hint": "Geschäftsadresse für Belege und Korrespondenz. Abweichende Versandadresse pro Lager separat.",
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "street",
+                      "type": "text",
+                      "label": "Straße",
+                      "default": "Musterstr."
+                    },
+                    {
+                      "id": "house_no",
+                      "type": "text",
+                      "label": "Hausnummer",
+                      "default": "1",
+                      "max_width": 120
+                    }
+                  ]
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "zip",
+                      "type": "text",
+                      "label": "PLZ",
+                      "default": "80331",
+                      "max_width": 140
+                    },
+                    {
+                      "id": "city",
+                      "type": "text",
+                      "label": "Ort",
+                      "default": "München"
+                    },
+                    {
+                      "id": "country",
+                      "type": "text",
+                      "label": "Land",
+                      "default": "DE",
+                      "placeholder": "DE",
+                      "max_width": 100
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "contact",
+              "title": "Kontakt",
+              "hint": "Adressen, die in Belegen, Bestellbestätigungen und im Impressum auftauchen.",
+              "human": [
+                {
+                  "text": "Mailboxen einrichten + Empfänger zuweisen",
+                  "why": "Interne Org-Entscheidung — wer liest was"
+                },
+                {
+                  "text": "Hotline-Nummer liefern (oder weglassen)",
+                  "why": "Service-Policy-Entscheidung"
+                }
+              ],
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "main_email",
+                      "type": "email",
+                      "label": "Hauptmail / Belege",
+                      "default": "hello@b2b.de",
+                      "human": true,
+                      "human_why": "Welche Inbox liest die Mails — interne Org-Entscheidung."
+                    },
+                    {
+                      "id": "service_email",
+                      "type": "email",
+                      "label": "Service / Customer Care",
+                      "default": "service@b2b.de",
+                      "human": true,
+                      "human_why": "Routing zur CS-Mailbox, kein Default ableitbar."
+                    }
+                  ]
+                },
+                {
+                  "id": "hotline",
+                  "type": "tel",
+                  "label": "Hotline / Telefon",
+                  "default": "+49 89 1234567",
+                  "max_width": 220,
+                  "human": true,
+                  "human_why": "Service-Policy — eigene Nummer oder leer lassen."
+                }
+              ]
+            },
+            {
+              "id": "branding",
+              "title": "Branding & Belegfooter",
+              "hint": "Logo + Brandfarbe + Belegfußzeile — wird in jedem PDF (Rechnung, Lieferschein, Mahnung) verwendet.",
+              "human": [
+                {
+                  "text": "Logo-Asset hochladen (transparentes PNG, ≥ 600 px breit)",
+                  "why": "Brand-Asset, nirgendwo öffentlich abrufbar"
+                },
+                {
+                  "text": "AGB-Footer-Text festlegen",
+                  "why": "B2B-Geschäftsbedingungen + Lieferbedingungen — juristisch geprüft pro Branche"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "logo_url",
+                  "type": "url",
+                  "label": "Logo-URL",
+                  "hint": "HTTPS-URL eines transparenten PNG, mind. 600 px breit.",
+                  "default": "",
+                  "placeholder": "https://cdn.b2b.de/logo.png",
+                  "human": true,
+                  "human_why": "Brand-Asset, liegt nirgendwo öffentlich abrufbar."
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "brand_color",
+                      "type": "text",
+                      "label": "Brandfarbe (Hex)",
+                      "default": "#6D7CFF",
+                      "placeholder": "#6D7CFF",
+                      "max_width": 160,
+                      "human": true,
+                      "human_why": "Marken-Identität, nicht maschinell entscheidbar."
+                    }
+                  ]
+                },
+                {
+                  "id": "beleg_footer",
+                  "type": "textarea",
+                  "label": "Belegfußzeile",
+                  "hint": "Pflichtangaben fürs Impressum auf Rechnungen — Firma, Anschrift, HR, USt-ID, Geschäftsführung.",
+                  "default": "Beispiel B2B GmbH · Musterstr. 1 · 80331 München · HRB 12345 · USt-ID DE123456789 · Geschäftsführer: …",
+                  "min_height": 80
+                }
+              ]
+            }
+          ]
+        },
+        "unternehmen:bank": {
+          "title": "Bank & Zahlungsverkehr",
+          "group": "Unternehmen",
+          "description": "Hauptkonto + SEPA-Gläubiger-ID + Default-Zahlungsziele +\nSkonto-Policy. SEPA-Lastschrift hängt davon ab. Bank-Login\n(FinAPI/EBICS) für automatischen OPOS-Abgleich.\n",
+          "human_inputs": 5,
+          "human": [
+            {
+              "text": "IBAN + Kontoinhaber liefern",
+              "why": "Sensible Bankdaten, nicht öffentlich abrufbar",
+              "inline": true
+            },
+            {
+              "text": "SEPA-Gläubiger-ID bei Bundesbank beantragen + eintragen",
+              "why": "Externer Behörden-Antrag, einmalig pro Unternehmen",
+              "inline": true
+            },
+            {
+              "text": "Default-Zahlungsziel entscheiden (14/30/60/90 Tage netto)",
+              "why": "Pricing-Policy mit Cash-Flow-Wirkung"
+            },
+            {
+              "text": "Skonto-Default + -Frist festlegen",
+              "why": "Margen-relevant, je Branche andere Norm"
+            },
+            {
+              "text": "Bank-Login (FinAPI / EBICS) freigeben",
+              "why": "PSD2-Berechtigung muss explizit erteilt werden"
+            }
+          ]
+        },
+        "projekte": {
+          "title": "Projekte / Kunden-Cluster",
+          "group": "Stammdaten",
+          "description": "Cross-cutting Tag in Xentral. Im B2B oft genutzt für\nKunden-Cluster (Schlüsselkunden vs. Standardkunden vs.\nReseller) oder Projekte (befristete Großaufträge). Steuert\nBelegfluss + Reporting + Provisionen pro Cluster.\n",
+          "human_inputs": 2,
+          "human": [
+            {
+              "text": "Cluster-Schnitt definieren",
+              "why": "Geschäftsmodell-spezifisch — wir kennen weder Sortiment noch Kundenstruktur"
+            }
+          ]
+        },
+        "stammdaten:artikel": {
+          "title": "Artikel + Sortimente",
+          "group": "Stammdaten",
+          "description": "Artikelpflichtfelder + Sortimentstyp (Kernsortiment / Spezial /\nDrop-Ship). Im B2B keine Variantenmatrix wie bei D2C-Mode —\ndafür Mengen-Einheit + Verpackungseinheit + Mindestbestellmenge\n+ EAN/GTIN für EDI.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Sortiments-Schnitt definieren (Kernsortiment / Spezial / Drop-Ship)",
+              "why": "Strategische Sortiments-Entscheidung — bestimmt Bestandshaltung + Lieferzeit-Versprechen"
+            },
+            {
+              "text": "Mengen-Einheit + Verpackungseinheit pro Artikel pflegen",
+              "why": "Branchen- und SKU-spezifisch — kein generischer Default"
+            },
+            {
+              "text": "Mindestbestellmenge pro Artikel",
+              "why": "Zollverbund / Versandkosten-Logik — Geschäftsentscheidung"
+            },
+            {
+              "text": "Sortimentszuordnung pro Kundengruppe",
+              "why": "Manche Sortimente nur für ausgewählte Kundenklassen freigegeben"
+            }
+          ]
+        },
+        "stammdaten:kunden": {
+          "title": "B2B-Kunden",
+          "group": "Stammdaten",
+          "description": "Kundenstamm mit B2B-spezifischen Pflichtfeldern: Firmenname ·\nAnschrift · USt-ID · Hauptansprechpartner · Vertreter ·\nPreisgruppe · Zahlungsziel · Kreditlimit. Adressen-Modul mit\nLiefer- und Rechnungsadresse separat.\n",
+          "human_inputs": 7,
+          "human": [
+            {
+              "text": "Top-30-Kundenliste mit allen Konditionen liefern",
+              "why": "Existierender Kundenbestand — nirgendwo automatisch abrufbar"
+            },
+            {
+              "text": "Default-Zahlungsziel + Kreditlimit für Neukunden",
+              "why": "Risk-Policy"
+            },
+            {
+              "text": "Standard-Vertreter-Zuordnung pro Region/Branche",
+              "why": "Sales-Organisation kennen wir nicht"
+            },
+            {
+              "text": "Preisgruppen-Definition + Default-Zuordnung",
+              "why": "Pricing-Strategie pro Kundenklasse"
+            },
+            {
+              "text": "Bonitätsprüfung-Schwelle (manuell vs. automatisch)",
+              "why": "Risk-Toleranz, je nach Kundenmix unterschiedlich"
+            },
+            {
+              "text": "Kunden-Klassifizierung (A/B/C oder Top-30/Mid-Tail/Long-Tail)",
+              "why": "Service-Levels und Provisions-Modell hängen daran"
+            },
+            {
+              "text": "Liefersperre-Regel (bei Mahnstufe / Limit-Überschreitung)",
+              "why": "Geschäftspolitik"
+            }
+          ],
+          "options": [
+            {
+              "label": "Adress-Typ",
+              "default": "Firmenkunde (Geschäftskontakt)",
+              "hint": "Trennt B2B (Firma + USt-ID) von B2C (Privatperson). Steuert Default-Felder."
+            },
+            {
+              "label": "Standard-Adresstypen",
+              "default": "Rechnung · Lieferung · Versand",
+              "hint": "Pro Kontakt mehrere Adressen mit Typ-Tag."
+            },
+            {
+              "label": "USt-ID-Auto-Validierung (VIES)",
+              "default": "bei Anlage + monatlich",
+              "hint": "Automatische VIES-Prüfung mit Audit-Log. Ungültige IDs werden flag-markiert."
+            },
+            {
+              "label": "Default-Zahlungsziel",
+              "default": "30 Tage netto",
+              "hint": "Wird im Kunden-Stamm hinterlegt, override durch Preisgruppe möglich."
+            },
+            {
+              "label": "Default-Skonto",
+              "default": "2 % bei 8 Tagen",
+              "hint": "Branchen-typisch im B2B-Wholesale."
+            },
+            {
+              "label": "Kreditlimit-Default",
+              "default": "0 € (Vorkasse) für Neukunden",
+              "hint": "Erst nach Bonitäts-Check + 3 Monaten zahlungstreuem Verhalten anheben."
+            },
+            {
+              "label": "Vertreter-Zuordnung",
+              "default": "im Tab Settings hinterlegt",
+              "hint": "Bestimmt Provisions-Berechtigung — verwendet vom Commission-Modul."
+            },
+            {
+              "label": "Preisgruppen-Zuordnung",
+              "default": "über Tab Groups · Checkbox",
+              "hint": "Mehrere Gruppen pro Kunde möglich, aber nur eine wirkt als Preisgruppe."
+            },
+            {
+              "label": "Kunden-Sperre",
+              "default": "manuell · Auto-Trigger ab Mahnstufe 2",
+              "hint": "Sperrt Auftrags-Anlage mit Warnhinweis."
+            }
+          ]
+        },
+        "stammdaten:lieferanten": {
+          "title": "Lieferanten",
+          "group": "Stammdaten",
+          "description": "Lieferanten mit Konditionen (Zahlungsziel · Skonto ·\nLieferzeit · MOQ). Bewertungsmodell + EDI/EDIFACT für\nTop-Lieferanten optional.\n",
+          "human_inputs": 3,
+          "human": [
+            {
+              "text": "Lieferantenstamm mit Lead-Times + MOQs liefern",
+              "why": "Branchenspezifisch"
+            },
+            {
+              "text": "Top-Lieferanten markieren (für EDI/Rahmenvertrag-Setup)",
+              "why": "Strategisch wichtig für Bestell-Automation"
+            },
+            {
+              "text": "Bewertungs-Kriterien aktivieren",
+              "why": "Lieferanten-Performance-Steuerung — geschäftspolitisch"
+            }
+          ]
+        },
+        "stammdaten:nummernkreise": {
+          "title": "Nummernkreise",
+          "group": "Stammdaten",
+          "description": "Belegnummern für Angebot · Auftrag · Lieferschein · Rechnung ·\nGutschrift · Mahnung · Bestellung. Im B2B häufig pro Mandant\noder pro Kunden-Cluster eigene Kreise.\n",
+          "human_inputs": 1,
+          "human": [
+            {
+              "text": "Pro-Cluster-Nummernkreise wenn Mandanten-Trennung gewünscht",
+              "why": "Mandanten-/Branding-Strategie"
+            }
+          ]
+        },
+        "vertrieb:angebote": {
+          "title": "Angebote (Quotes)",
+          "group": "Vertrieb (Quote-to-Cash)",
+          "description": "Quote-Modul: Erstellung von formellen Angeboten mit Liefer-\nbedingungen, Gültigkeitsdauer, Preisbindung. Im B2B oft\nPflicht für Aufträge ab Schwellenwert. Annahme-Workflow durch\nKunde, dann automatische Auftrags-Erstellung.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Angebots-Pflicht-Schwelle definieren",
+              "why": "Schwellenwert ab dem Angebote zwingend sind — Pricing-Policy"
+            },
+            {
+              "text": "Sonder-Bedingungen (Preisbindung · Mengenbindung · Skonto)",
+              "why": "B2B-Vertragsmodell pro Kunde verschieden"
+            },
+            {
+              "text": "Approval bei Sonderkonditionen-Angebot",
+              "why": "Margen-Schutz"
+            },
+            {
+              "text": "Lieferbedingungen-Standard-Wording (FOB · CIF · DAP)",
+              "why": "Incoterms-Wahl ist Geschäftspolitik"
+            }
+          ],
+          "options": [
+            {
+              "label": "Status-Workflow",
+              "default": "Angelegt → Versendet → Angenommen / Abgelehnt → Abgelaufen",
+              "hint": "Standard-Belegfluss in Xentral. Status-Wechsel über Aktion-Buttons im Beleg."
+            },
+            {
+              "label": "Standard-Gültigkeit (Tage)",
+              "default": "14",
+              "hint": "Frist bis das Angebot automatisch auf \"Abgelaufen\" wechselt. Im B2B oft 30 Tage."
+            },
+            {
+              "label": "Nummernkreis-Präfix",
+              "default": "AN-",
+              "hint": "Über Stammdaten · Nummernkreise pro Beleg-Typ definiert."
+            },
+            {
+              "label": "Beleg-Footer aus Firmendaten",
+              "default": "auto",
+              "hint": "AGB-Hinweis + Pflichtangaben § 14 UStG werden aus den Firmendaten gezogen."
+            },
+            {
+              "label": "Auto-Conversion Angebot → Auftrag",
+              "default": "manuell freigeben",
+              "hint": "B2B-Standard ist manuelle Freigabe nach Kunden-Annahme. Auto-Conversion nur bei vorhandener Bestellung des Kunden."
+            },
+            {
+              "label": "Versand-Optionen",
+              "default": "PDF per E-Mail",
+              "hint": "Zusätzlich Druck oder Download. PDF wird mit dem in den Firmendaten hinterlegten Briefpapier erstellt."
+            },
+            {
+              "label": "Anhänge erlaubt",
+              "default": "ja",
+              "hint": "Zusätzliche Dateien (Datenblätter, Zertifikate) am Beleg-PDF anhängen."
+            },
+            {
+              "label": "Freie Felder (Zusatzinfos)",
+              "default": "Projekt-Nr · Ausschreibungs-Nr",
+              "hint": "Frei konfigurierbare Zusatzfelder für branchenspezifische Daten."
+            }
+          ]
+        },
+        "vertrieb:auftraege": {
+          "title": "Aufträge & Workflow",
+          "group": "Vertrieb (Quote-to-Cash)",
+          "description": "Quote-to-Cash mit Status-Trigger Auftrag → Reservierung →\nLieferschein → Rechnung. Pre-Order-Hold bei\nKreditlimit-Überschreitung oder Preisabweichung. Teillieferung\n+ Streckengeschäft als Standard-Optionen.\n",
+          "human_inputs": 2,
+          "human": [
+            {
+              "text": "Mindestauftragswert pro Kundenklasse",
+              "why": "Margen-/Vertriebs-Policy"
+            },
+            {
+              "text": "Streckengeschäfts-Regeln (welche Lieferanten · welche Margen)",
+              "why": "Geschäftsmodell"
+            }
+          ],
+          "options": [
+            {
+              "label": "Status-Indikator-Ampel",
+              "default": "5 Symbole (Bezahlt · Lieferschein · Versand · Rechnung · Buchhaltung)",
+              "hint": "Auto-Versand erfolgt erst wenn alle Symbole grün sind (Xentral-Standard)."
+            },
+            {
+              "label": "Auto-Reservierung bei Lieferschein-Anlage",
+              "default": "an",
+              "hint": "Bei Anlage Lieferschein wird Bestand automatisch reserviert oder ausgebucht."
+            },
+            {
+              "label": "Lieferschein-Freigabe sperrt Änderungen",
+              "default": "an",
+              "hint": "Nach Freigabe ist der Lieferschein unveränderlich (Prozesssicherheit)."
+            },
+            {
+              "label": "Teillieferung erlaubt",
+              "default": "an",
+              "hint": "Auto-Backorder erstellt Restmengen-Lieferschein."
+            },
+            {
+              "label": "Auto-Hold bei Kreditlimit",
+              "default": "warnen + manuelle Freigabe",
+              "hint": "Alternativ \"blocken\" — Auftrag kann nicht weiter prozessiert werden."
+            },
+            {
+              "label": "Sammelrechnung pro Kunde",
+              "default": "monatlich",
+              "hint": "Mehrere Lieferscheine eines Kunden werden zu einer Rechnung gebündelt."
+            },
+            {
+              "label": "Auto-Versand (ready-for-shipping)",
+              "default": "manuell freigeben",
+              "hint": "B2B-Standard ist manuelle Versandfreigabe statt Auto-Trigger."
+            },
+            {
+              "label": "Streckengeschäft (Drop-Ship)",
+              "default": "Bypass-Lager",
+              "hint": "Auftrag direkt zum Lieferanten ohne Bestandsbewegung im eigenen Lager."
+            }
+          ]
+        },
+        "vertrieb:preise": {
+          "title": "Preisgruppen & Staffeln",
+          "group": "Vertrieb (Quote-to-Cash)",
+          "description": "Listenpreis pro Artikel + Mengenstaffel pro Preisgruppe (z. B.\n„Großhandel A\", „Großhandel B\", „Mitarbeiter\"). Staffeln\ngelten zusätzlich zu Kundenpreisen.\n",
+          "human_inputs": 6,
+          "human": [
+            {
+              "text": "Preisgruppen-Schnitt definieren (z. B. nach Volumen / Branche / Region)",
+              "why": "Pricing-Strategie"
+            },
+            {
+              "text": "Mengenstaffel-Schwellen pro Gruppe (z. B. 100/500/1000 Stk)",
+              "why": "Branche-spezifisch"
+            },
+            {
+              "text": "Margen pro Preisgruppe + Reporting",
+              "why": "Pricing-Policy"
+            },
+            {
+              "text": "Standard-Preisgruppe für Neukunden",
+              "why": "Risk-/Margen-Wahl"
+            }
+          ],
+          "options": [
+            {
+              "label": "Gruppentyp",
+              "default": "Preisgruppe",
+              "hint": "Xentral kennt zwei Typen — \"Gruppe\" (reiner Filter) vs \"Preisgruppe\" (mit Pricing-Logik). Für B2B Preisgruppe wählen."
+            },
+            {
+              "label": "% Rabatt aufs Sortiment",
+              "default": "0 — pro Artikel pflegen",
+              "hint": "Alternativ pauschaler %-Rabatt pro Preisgruppe (z. B. Großhandel A: -15 %)."
+            },
+            {
+              "label": "Mengenstaffel-Schwellen",
+              "default": "100 / 500 / 1000 Stk",
+              "hint": "Branchen-typische Tier-Sprünge. Pro Preisgruppe + pro Artikel separat pflegbar."
+            },
+            {
+              "label": "Adresszuordnung",
+              "default": "manuell pro Kontakt",
+              "hint": "Über Sell · Contacts · Tab \"Groups\" Checkbox setzen."
+            },
+            {
+              "label": "Hierarchie Preisgruppe vs Kundenstamm",
+              "default": "Preisgruppe vor Kundenstamm",
+              "hint": "Preisgruppen-Konditionen schlagen Default-Konditionen aus dem Kundenstamm."
+            },
+            {
+              "label": "Zahlungsziel + Skonto pro Preisgruppe",
+              "default": "30 Tage netto · 2 % Skonto bei 8 Tagen",
+              "hint": "Konditionen können pro Preisgruppe vorgegeben statt pro Kunde gesetzt werden."
+            }
+          ]
+        },
+        "vertrieb:kundenpreise": {
+          "title": "Kundenspezifische Preise",
+          "group": "Vertrieb (Quote-to-Cash)",
+          "description": "Sonderpreise pro Kunde × Artikel + Gültigkeitsdauer. Override\ngegenüber Preisgruppe + Staffel. Zentral für Top-30-Kunden-\nGeschäft.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Sonderkonditions-Liste pro Top-Kunde liefern",
+              "why": "Existierende Vereinbarungen, nicht ableitbar"
+            },
+            {
+              "text": "Default-Gültigkeitsdauer pro Sonderpreis",
+              "why": "Vertragsmodell-Entscheidung"
+            },
+            {
+              "text": "Approval-Schwelle für Sonderpreis-Anlage",
+              "why": "Margen-Schutz"
+            },
+            {
+              "text": "Eskalations-Workflow bei Auslaufen einer Vereinbarung",
+              "why": "CRM-Prozess"
+            }
+          ],
+          "options": [
+            {
+              "label": "Preis-Hierarchie (Auflösungs-Reihenfolge)",
+              "default": "Kundenspezifisch → Preisgruppe → Listenpreis",
+              "hint": "Xentral sucht den günstigsten gültigen Preis von oben nach unten — kundenspezifisch schlägt immer."
+            },
+            {
+              "label": "Pflege-Ort",
+              "default": "Verkaufspreis im Artikel · Bedingung „Kunde\"",
+              "hint": "Alternativ Bedingung „Gruppe\" für Preisgruppen-Pricing. Trennt Customer-Preise von Group-Preisen am gleichen Artikel."
+            },
+            {
+              "label": "Gültigkeit (Start / Ende)",
+              "default": "ab heute · unbegrenzt",
+              "hint": "Filter „aktuell gültig\" zeigt nur Preise mit gültigem Zeitfenster. Auslaufende Sonderpreise werden auto-deaktiviert."
+            },
+            {
+              "label": "Rabatt-Typ",
+              "default": "Festpreis",
+              "hint": "Alternativ % Rabatt vom Listenpreis (über App „Extended Discounts\" für komplexe Regeln)."
+            },
+            {
+              "label": "Mengenstaffel zusätzlich",
+              "default": "an",
+              "hint": "Sonderpreis kann mit Mengenstaffel kombiniert werden — z. B. „Kunde X bekommt 8,50 € ab 100 Stk\"."
+            },
+            {
+              "label": "CSV-Massenimport",
+              "default": "verfügbar",
+              "hint": "Format — Kunde · Artikel · Preis · Gültig-Von · Gültig-Bis. Pflicht-Format bei Top-30-Onboarding."
+            },
+            {
+              "label": "Konflikt-Warnung",
+              "default": "an",
+              "hint": "Bei überlappenden Gültigkeiten oder doppelten Einträgen pro Kunde × Artikel."
+            },
+            {
+              "label": "Approval-Schwelle",
+              "default": "ab 10 % Margen-Abweichung vom Listenpreis",
+              "hint": "Sonderpreis-Anlage geht ohne Freigabe durch — darüber Approval-Workflow."
+            }
+          ]
+        },
+        "vertrieb:rahmen": {
+          "title": "Rahmenverträge",
+          "group": "Vertrieb (Quote-to-Cash)",
+          "description": "Multi-Bestellungen aus einem Rahmenvertrag mit Volumen ·\nAbrufmenge · Laufzeit · Preisbindung. Xentral kennt das als\n„Framework Agreement (Customers)\".\n",
+          "human_inputs": 2,
+          "human": [
+            {
+              "text": "Bestehende Rahmenverträge importieren (Volumen · Preis · Laufzeit · Kunde)",
+              "why": "Vertragsbestand, nicht ableitbar"
+            },
+            {
+              "text": "Eskalation bei drohendem Auslaufen / Restmengen-Schwelle",
+              "why": "CRM-Prozess"
+            }
+          ],
+          "options": [
+            {
+              "label": "Vereinbarte Gesamtmenge",
+              "default": "pro Vertrag pflegen",
+              "hint": "Spalte \"Menge\" — Gesamtvolumen für die Vertragsdauer."
+            },
+            {
+              "label": "Abgerufen (Spalte „Called off\")",
+              "default": "auto-tracking",
+              "hint": "Wird bei jedem Auftrag im Vertrags-Zeitraum automatisch hochgezählt."
+            },
+            {
+              "label": "Restmenge",
+              "default": "Gesamtmenge − Abgerufen",
+              "hint": "Implizit berechnet, wird im Vertrag direkt angezeigt."
+            },
+            {
+              "label": "Vertrags-Laufzeit (von / bis)",
+              "default": "12 Monate",
+              "hint": "Aufträge außerhalb des Zeitraums werden NICHT vom Vertrag abgezogen."
+            },
+            {
+              "label": "Preisbindung pro Position",
+              "default": "fixiert",
+              "hint": "Alternativ \"Indexierung\" mit Anpassungsregel (selten genutzt)."
+            },
+            {
+              "label": "Warnung bei Restmenge-Schwelle",
+              "default": "20 % Rest",
+              "hint": "Auto-Hinweis an Vertreter sobald Restmenge unter Schwelle fällt."
+            },
+            {
+              "label": "Auto-Verlängerung",
+              "default": "aus",
+              "hint": "Bei Auslaufen Hinweis statt Auto-Renewal — Vertrags-Refresh ist Vertriebs-Anlass."
+            }
+          ]
+        },
+        "vertrieb:approval": {
+          "title": "Approval-Workflow",
+          "group": "Vertrieb (Quote-to-Cash)",
+          "description": "Mehrstufige Freigabe für Sonderpreise · Kreditlimit-\nErhöhungen · Großaufträge oberhalb Schwellenwert. 4-Augen-\nPrinzip ab definierten Schwellen.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Schwellen pro Approval-Stufe (€ / % Margen-Abweichung)",
+              "why": "Compliance-/Risk-Policy"
+            },
+            {
+              "text": "Wer darf was freigeben (Rollen-Mapping)",
+              "why": "Org-Struktur"
+            },
+            {
+              "text": "Eskalation bei abgelehnter Freigabe",
+              "why": "Prozess-Entscheidung"
+            },
+            {
+              "text": "4-Augen-Pflicht ab welchem Schwellenwert",
+              "why": "Compliance"
+            }
+          ],
+          "options": [
+            {
+              "label": "Implementation",
+              "default": "User Permissions Assignment (Workflow)",
+              "hint": "Xentral nutzt Berechtigungs-Workflows als Approval-Mechanismus — Aktion (z. B. „Auftrag freigeben\") an Rollen geknüpft."
+            },
+            {
+              "label": "Standard-Stufen",
+              "default": "Sales → Innendienst-Lead → Buchhaltung",
+              "hint": "3-stufiger B2B-Default — Sales schlägt vor, Lead prüft, Buchhaltung gibt frei."
+            },
+            {
+              "label": "Trigger Sonderpreis",
+              "default": "ab 10 % Margen-Abweichung",
+              "hint": "Unter Schwelle — Sales darf direkt anlegen. Darüber — Approval erforderlich."
+            },
+            {
+              "label": "Trigger Kreditlimit-Erhöhung",
+              "default": "jede Erhöhung",
+              "hint": "Buchhaltung muss IMMER freigeben — keine Sales-Self-Service-Erhöhung."
+            },
+            {
+              "label": "Trigger Großauftrag",
+              "default": "ab 50.000 € Auftragswert",
+              "hint": "Ab Schwelle 4-Augen-Pflicht (Sales + Lead)."
+            },
+            {
+              "label": "Standard-Reaktion bei Trigger",
+              "default": "Auftrag/Beleg auf „Hold\"",
+              "hint": "Beleg kann nicht weiterprozessiert werden bis Freigabe da ist — Status-Indikator zeigt Sperre."
+            },
+            {
+              "label": "Eskalation bei Ablehnung",
+              "default": "zurück an Sales mit Begründungs-Pflicht",
+              "hint": "Alternativ — Eskalation an höhere Stufe statt Reject."
+            },
+            {
+              "label": "Audit-Log",
+              "default": "an",
+              "hint": "Wer hat wann was freigegeben — Compliance-Pflicht für GoBD-/Audit-Reviews."
+            }
+          ]
+        },
+        "sales:vertreter": {
+          "title": "Vertreter / Außendienst",
+          "group": "Sales-Team",
+          "description": "Kundenstamm-Zuordnung pro Vertreter. Vertreter sieht nur\neigene Kunden + Pipeline. Sales-Manager hat Sicht auf alle\nVertreter im Bereich.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Vertreter-Liste mit Kundenzuordnung",
+              "why": "Sales-Org, nirgendwo abrufbar"
+            },
+            {
+              "text": "Sales-Manager-Hierarchie (wer berichtet an wen)",
+              "why": "Approval- + Provisions-Logik hängt daran"
+            },
+            {
+              "text": "Außendienst-Region pro Vertreter",
+              "why": "Lead-Routing"
+            },
+            {
+              "text": "Vertreter-Provisionssatz pro Kundenklasse",
+              "why": "Vertragsfrage"
+            }
+          ],
+          "options": [
+            {
+              "label": "Vertreter-Pflege",
+              "default": "in der Adresse · Tab Settings · rechte Seitenleiste",
+              "hint": "Pro Kunden-Adresse genau ein Vertreter zugeordnet — Basis für Provisions-Berechnung."
+            },
+            {
+              "label": "User-Rolle",
+              "default": "Sales (Außendienst)",
+              "hint": "Eigene Rolle für Vertreter mit eingeschränkter Sicht. Sales-Manager bekommt erweiterte Rolle."
+            },
+            {
+              "label": "Sicht-Beschränkung",
+              "default": "Adressfilter: nur eigene Vertreter-Zuordnung",
+              "hint": "Über Adressfilter („Adressmengen flexibel segmentieren\") wird die sichtbare Kundenmenge auf Vertreter-Zuordnung eingeschränkt."
+            },
+            {
+              "label": "Sales-Manager-Sicht",
+              "default": "alle Vertreter im Bereich",
+              "hint": "Manager-Rolle kann Adressfilter über mehrere Vertreter aggregieren."
+            },
+            {
+              "label": "Außendienst-Region",
+              "default": "Freitext-Feld pro Vertreter",
+              "hint": "Manuelle Pflege — keine Auto-Geo-Logik. Wird für Lead-Routing genutzt."
+            },
+            {
+              "label": "Außendienst-Lager (optional)",
+              "default": "Project-Warehouse pro Vertreter",
+              "hint": "Best Practice — wenn Vertreter selbst Auftrag erfasst und Ware mitnimmt, eigenes Project-Warehouse als Bevorzugt-Lager."
+            },
+            {
+              "label": "Pipeline-Sicht (CRM-Tab)",
+              "default": "an",
+              "hint": "Im Adressstamm „CRM\"-Tab — Aktivitäten, Notizen, Termine pro Vertreter."
+            },
+            {
+              "label": "Provisions-Satz pro Kundenklasse",
+              "default": "im Kunden-Stamm „Other Data\"",
+              "hint": "Standardsatz pro Kunde override-bar — wird vom Commission-Modul (sales:provision) gelesen."
+            }
+          ]
+        },
+        "sales:provision": {
+          "title": "Provisionen & Abrechnung",
+          "group": "Sales-Team",
+          "description": "Provisionsberechnung pro Vertreter — Basis (Umsatz · Marge ·\nStückzahl) und Satz pro Artikel/Kundengruppe. Monatliche\nAbrechnung. Sales-Manager bekommt Anteil aus\nVertreter-Abschlüssen.\n",
+          "human_inputs": 3,
+          "human": [
+            {
+              "text": "Provisions-Modell festlegen (% vom Umsatz · Marge · Stückzahl)",
+              "why": "Vertragsmodell pro Vertreter, geschäftspolitisch"
+            },
+            {
+              "text": "Sätze pro Artikel/Kundengruppe",
+              "why": "Pricing-/Anreiz-Logik"
+            },
+            {
+              "text": "Sales-Manager-Override-Anteil",
+              "why": "Hierarchische Provisions-Aufteilung"
+            }
+          ],
+          "options": [
+            {
+              "label": "Vertreter-Zuordnung pro Kunde",
+              "default": "in Adress-Stammdaten · Tab Settings",
+              "hint": "Standard-Pflege im Kontakt — bestimmt automatisch wer Provision auf den Auftrag bekommt."
+            },
+            {
+              "label": "Provisions-Basis",
+              "default": "% vom Umsatz",
+              "hint": "Alternativen — % auf Marge / Festbetrag pro Stück / Staffel pro Auftragsvolumen."
+            },
+            {
+              "label": "Default-Provisionssatz",
+              "default": "5 %",
+              "hint": "Wird im Kunden-Stamm unter \"Other Data\" hinterlegt, override pro Kunde möglich."
+            },
+            {
+              "label": "Berechnungs-Zeitraum",
+              "default": "monatlich",
+              "hint": "Date-Range bei \"Load Revenue\" wird per Monat / Quartal / Jahr abgerechnet."
+            },
+            {
+              "label": "Annual-Reports",
+              "default": "Tab Annual Reports per Vertreter",
+              "hint": "Bricht Umsatz pro Monat + Gesamtumsatz pro Kunde nach Vertreter auf."
+            },
+            {
+              "label": "Module-Variante",
+              "default": "Commission (neu)",
+              "hint": "Älteres Modul „Vertreterabrechnungen\" wird nicht mehr weiterentwickelt — für Neueinrichtungen Commission verwenden."
+            },
+            {
+              "label": "Auto-Buchung in DATEV",
+              "default": "manuell",
+              "hint": "Provisions-Buchung erfolgt nach Freigabe durch Buchhaltung — kein Auto-Export."
+            }
+          ]
+        },
+        "forderung:mahnwesen": {
+          "title": "Mahnwesen",
+          "group": "Forderungsmanagement",
+          "description": "Mehrstufiges Mahnwesen mit Mahntexten · Gebühren · Fristen ·\nLieferstopp ab Stufe 2. Auto-Eskalation bei Nicht-Zahlung.\nXentral-Standard ist 3 Stufen + Inkasso.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Mahnstufen-Anzahl + Fristen entscheiden",
+              "why": "Branchen-/Kunden-Mix-spezifisch"
+            },
+            {
+              "text": "Lieferstopp-Trigger festlegen",
+              "why": "Risk-/Service-Policy-Trade-off"
+            },
+            {
+              "text": "Mahntext-Tonalität pro Stufe",
+              "why": "Brand-/Beziehungs-Pflege"
+            },
+            {
+              "text": "Inkasso-Übergabe-Schwelle + Partner",
+              "why": "Vertrag mit Inkasso-Dienstleister"
+            }
+          ],
+          "options": [
+            {
+              "label": "Mahnstufen-Anzahl",
+              "default": "3 (Mahnung 1 · Mahnung 2 · Mahnung 3)",
+              "hint": "Xentral-Standard. Eine offene Rechnung durchläuft die Stufen sukzessiv."
+            },
+            {
+              "label": "Frist zwischen Stufen",
+              "default": "14 Tage",
+              "hint": "Vordefinierte Wartezeit bevor in die nächste Stufe eskaliert wird."
+            },
+            {
+              "label": "Mahngebühr Stufe 1",
+              "default": "0 €",
+              "hint": "Erste Erinnerung gebührenfrei (B2B-Convention)."
+            },
+            {
+              "label": "Mahngebühr Stufe 2",
+              "default": "5 €",
+              "hint": "Pro Stufe SEPARATER Gesamtbetrag — Gebühren werden NICHT kumuliert."
+            },
+            {
+              "label": "Mahngebühr Stufe 3",
+              "default": "15 €",
+              "hint": "Gesamtbetrag für Stufe 3 — wieder absoluter Betrag, nicht aufaddiert auf Stufe 2."
+            },
+            {
+              "label": "Lieferstopp-Trigger",
+              "default": "ab Mahnstufe 2",
+              "hint": "Setzt Warnung am Kunden, weitere Aufträge werden mit Hinweis erfasst."
+            },
+            {
+              "label": "OPOS-Liste-Filter",
+              "default": "alle offenen + überfällige",
+              "hint": "Zeigt teilbezahlte und offene Rechnungen mit aktueller Mahnstufe."
+            },
+            {
+              "label": "Auto-Versand",
+              "default": "an",
+              "hint": "Mahnung wird per E-Mail-Template aus Belegfußzeile automatisch versendet."
+            },
+            {
+              "label": "Inkasso-Übergabe",
+              "default": "nach Stufe 3 + 14 Tage",
+              "hint": "Daten-Export an Inkasso-Dienstleister, Format pro Partner unterschiedlich."
+            }
+          ]
+        },
+        "forderung:bonitaet": {
+          "title": "Kreditlimit & Bonität",
+          "group": "Forderungsmanagement",
+          "description": "Pro Kunde Kreditlimit + Verhalten bei Überschreitung\n(warnen / blocken / auto-Liefersperre). Externe\nBonitätsauskunft (Creditreform) optional, monatliche\nRe-Validierung.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Default-Kreditlimit € entscheiden",
+              "why": "Risk-Policy"
+            },
+            {
+              "text": "Verhalten bei Überschreitung (warnen / blocken / auto-Liefersperre)",
+              "why": "Risk-Toleranz"
+            },
+            {
+              "text": "Bonitätsdienst-Vertrag (Creditreform / Coface)",
+              "why": "Externer Vertrag, Pricing-Entscheidung"
+            },
+            {
+              "text": "Limits pro Kunde (Top-30) eintragen",
+              "why": "Vertrauensvorschuss + historische Daten"
+            }
+          ],
+          "options": [
+            {
+              "label": "Pflege-Ort Kreditlimit",
+              "default": "Adressdaten · buchhaltungsrelevante Daten",
+              "hint": "Pro Kunde im Adress-Modul — gleiche Stelle wie Reisekosten, Verrechnungskonten."
+            },
+            {
+              "label": "Live-Anzeige",
+              "default": "rechte Seitenleiste der Adresse",
+              "hint": "Zeigt aktuelles Limit, Jahresumsatz, aktuellen Saldo — Echtzeit-Sicht für Sales/Innendienst."
+            },
+            {
+              "label": "Default-Limit Neukunde",
+              "default": "0 € (Vorkasse)",
+              "hint": "Sicherer Default — Limit wird nach 3 Monaten zahlungstreuem Verhalten oder Bonitätsprüfung erhöht."
+            },
+            {
+              "label": "Verhalten bei Überschreitung",
+              "default": "warnen + manuell freigeben",
+              "hint": "Alternativen — „blocken\" (Auftrag kann nicht angelegt werden) / „auto-Liefersperre\" (Auftrag ja, aber kein Lieferschein)."
+            },
+            {
+              "label": "Pop-up bei Limit-Erreichung",
+              "default": "an",
+              "hint": "Hinweis im Adress-/Auftrags-Bereich — wurde von Community gefordert und ist via Workflow konfigurierbar."
+            },
+            {
+              "label": "Bonitätsdienst-Anbindung",
+              "default": "Creditreform (Standard) · Coface (Alternative)",
+              "hint": "API-Anbindung mit monatlicher Re-Validierung. Optional — viele B2B-Setups verzichten und nutzen historische Zahlungsmoral."
+            },
+            {
+              "label": "Auto-Re-Validierung",
+              "default": "monatlich",
+              "hint": "Periodische Bonitätsprüfung über externe API — Limit wird auto-angepasst bei Verschlechterung."
+            },
+            {
+              "label": "Liefersperre",
+              "default": "manuell setzen oder über Mahnstufe 2 auto",
+              "hint": "Sperren-Feld in Adresse — kontrolliert zentrale Prozesse (Lieferung, Belege, Kommunikation)."
+            },
+            {
+              "label": "Faktoring-/Versicherungs-Limit",
+              "default": "separates Feld pro Kunde",
+              "hint": "Wenn Faktoring aktiv — Faktoring-Limit kann unterhalb internem Kreditlimit liegen, nimmt dann Vorrang."
+            }
+          ]
+        },
+        "forderung:opos": {
+          "title": "OPOS-Auswertung",
+          "group": "Forderungsmanagement",
+          "description": "Offene-Posten-Liste mit Aging (0-30 / 30-60 / 60-90 / 90+).\nWöchentlicher Report an Buchhaltung + Sales (eigene Kunden).\nDSO-Tracking pro Kundenklasse.\n",
+          "human_inputs": 1,
+          "human": [
+            {
+              "text": "DSO-Ziel pro Kundenklasse definieren",
+              "why": "Cash-Flow-Steuerung"
+            }
+          ],
+          "options": [
+            {
+              "label": "Aufruf-Pfad",
+              "default": "Buchhaltung · Mahnwesen · OPOS-Liste",
+              "hint": "Standard-Navigation in Xentral. Working basis für Buchhaltungs-Team."
+            },
+            {
+              "label": "Auto-Abzug",
+              "default": "Gutschriften + Skonto",
+              "hint": "System rechnet bezahlte Gutschriften und gewährte Skonto-Beträge automatisch raus — Restbetrag = OPOS."
+            },
+            {
+              "label": "Aging-Buckets",
+              "default": "0-30 / 30-60 / 60-90 / 90+ Tage",
+              "hint": "B2B-Standard. Über 90 Tage = Inkasso-Kandidat."
+            },
+            {
+              "label": "DSO-Definition",
+              "default": "Tage zwischen Rechnungs-Erstellung und vollständiger Zahlung",
+              "hint": "Days Sales Outstanding — durchschnittliche Zahlungsdauer pro Kunde / Kundenklasse / Gesamtstand."
+            },
+            {
+              "label": "Report-Frequenz",
+              "default": "wöchentlich montags",
+              "hint": "An Buchhaltung. Sales bekommt nur Sicht auf eigene Kunden."
+            },
+            {
+              "label": "Filter-Optionen",
+              "default": "Stichtag · Kundenklasse · Vertreter · Mahnstufe",
+              "hint": "Wichtig für Stichtag-Reports z. B. Bilanz-OPOS zum 31.12."
+            },
+            {
+              "label": "Auto-Match aus Bank",
+              "default": "FinAPI / EBICS aktiv",
+              "hint": "Eingehende Zahlung wird auto auf offene Rechnung gematched (Toleranz für Skonto-Abzüge konfigurierbar)."
+            },
+            {
+              "label": "Export-Format",
+              "default": "Excel + DATEV-Format",
+              "hint": "Wöchentlicher Versand als XLSX, Bilanz-Export im DATEV-Format für Steuerberater."
+            }
+          ]
+        },
+        "zahlungen:arten": {
+          "title": "Zahlungsarten (B2B)",
+          "group": "Zahlungen",
+          "description": "B2B-typischer Mix: Rechnung-30/60/90, SEPA-Lastschrift,\nVorkasse für Neukunden + bei Limit-Überschreitung. Kreditkarte\nfür Auslandsgeschäft optional. Kein BNPL, keine PayPal.\n",
+          "human_inputs": 1,
+          "human": [
+            {
+              "text": "Auslandsgeschäft-Zahlungsarten (Kreditkarte / SWIFT) entscheiden",
+              "why": "Markt-/Risiko-Wahl"
+            }
+          ]
+        },
+        "zahlungen:reconciliation": {
+          "title": "Reconciliation",
+          "group": "Zahlungen",
+          "description": "OPOS-Match aus Bank-Statements (FinAPI) + Sammelbuchungen für\nMehrfach-Rechnungs-Zahlungen. Match-Toleranz für\nSkonto-Abzüge.\n",
+          "human_inputs": 0
+        },
+        "versand:carrier": {
+          "title": "Carrier (Paket + Spedition)",
+          "group": "Versand",
+          "description": "DHL Geschäftskunden für Paket. Spedition (DACHSER ·\nSchenker · DPD · GLS) für Großmengen / Pallet / FTL. Pro\nCarrier API-Anbindung + Account-Nr.\n",
+          "sections": [
+            {
+              "id": "active-carriers",
+              "title": "Aktive Versanddienstleister",
+              "hint": "Welche Carrier sind angebunden? Pro Carrier brauchst du Account-Nr + API-Zugang. API-Keys werden in „Schnittstellen → API & Webhooks\" gepflegt.",
+              "human": [
+                {
+                  "text": "Carrier-Verträge abschließen (DHL EKP + Spedition)",
+                  "why": "Geschäftskunden-Konditionen erfordern Vertrag"
+                },
+                {
+                  "text": "Account-Nr + API-Keys pro Carrier",
+                  "why": "Vertragsdaten, nicht öffentlich abrufbar"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "carriers",
+                  "type": "matrix",
+                  "rows_ref": "carriers",
+                  "pick_one_column": "default",
+                  "default_pick": "dhl",
+                  "columns": [
+                    {
+                      "id": "active",
+                      "type": "checkbox",
+                      "label": "Aktiv"
+                    },
+                    {
+                      "id": "account_nr",
+                      "type": "text",
+                      "label": "Account-Nr.",
+                      "placeholder": "EKP / Account-Nr.",
+                      "human": true,
+                      "human_why": "Vertragsdaten sind nur dem Vertragspartner bekannt.",
+                      "disabled_when_inactive": true
+                    },
+                    {
+                      "id": "service",
+                      "type": "text",
+                      "label": "Service-Level",
+                      "disabled_when_inactive": true
+                    },
+                    {
+                      "id": "default",
+                      "type": "radio-pick",
+                      "label": "Default"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "multi-carrier-routing",
+              "title": "Multi-Carrier-Routing",
+              "hint": "Wie wird pro Auftrag der Carrier gewählt, wenn mehrere aktiv sind?",
+              "fields": [
+                {
+                  "id": "routing_mode",
+                  "type": "radio",
+                  "label": "Strategie",
+                  "default": "rules",
+                  "options_ref": "versand_routing_modes"
+                }
+              ]
+            }
+          ]
+        },
+        "versand:arten": {
+          "title": "Versandarten & Frachtkosten",
+          "group": "Versand",
+          "description": "Pro Carrier × Versandart eigene Frachtkosten-Matrix. Bei\nGroßkunden Frachtkosten-Vereinbarungen pro Auftrag /\nRahmenvertrag.\n",
+          "human_inputs": 3,
+          "human": [
+            {
+              "text": "Frachtkosten-Matrix pro Region × Gewicht × Carrier",
+              "why": "Carrier-spezifische Tarife, Verhandlungssache"
+            },
+            {
+              "text": "Pallet-Frachtkosten + FTL-Sonderkonditionen",
+              "why": "Pro Spediteur unterschiedlich, Verhandlungssache"
+            },
+            {
+              "text": "Frachtfreigrenze pro Kunde / Auftragswert",
+              "why": "Pricing-Strategie"
+            }
+          ]
+        },
+        "versand:etiketten": {
+          "title": "Etiketten + Beleg-Anhänge",
+          "group": "Versand",
+          "description": "Etiketten-Format DIN A6 thermo + GS1-128 für Pallet. Beleg-\nAnhänge an Lieferschein (Zertifikate, Sicherheits-Datenblätter)\nje nach Branche.\n",
+          "human_inputs": 1,
+          "human": [
+            {
+              "text": "Beleg-Anhang-Pflicht pro Sortiment (z. B. SDB für Chemie)",
+              "why": "Compliance pro Branche"
+            }
+          ]
+        },
+        "lager:own": {
+          "title": "Eigenlager",
+          "group": "Lager & Logistik",
+          "description": "Eigenes Lager mit Multi-Pallet-Picking (Wave-/Batch-Picking\ndominant bei Großmengen, weniger Single-Order). Streckengeschäft\nals Bypass für nicht-lagergeführte Artikel.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Lager-Standorte definieren (Anzahl + Kürzel)",
+              "why": "Existierende Logistik-Struktur"
+            },
+            {
+              "text": "Pick-Methode wählen (Scanner · Mobile · Wave/Batch)",
+              "why": "Hardware-Verfügbarkeit + Volumen"
+            },
+            {
+              "text": "Streckengeschäft-Lieferanten-Liste",
+              "why": "Geschäftsmodell"
+            },
+            {
+              "text": "Lagerplatz-Konvention (z. B. ABC-Zone)",
+              "why": "Layout pro Lager"
+            }
+          ]
+        },
+        "lager:fulfiller": {
+          "title": "Fulfiller / 3PL",
+          "group": "Lager & Logistik",
+          "description": "Optional bei Auslagerung an externes 3PL-Lager. Im B2B\nseltener als bei D2C, aber für regionale Hubs sinnvoll.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "3PL-Vertrag + Datenformat",
+              "why": "Vertrag mit Drittanbieter"
+            },
+            {
+              "text": "API/EDI/SFTP-Credentials",
+              "why": "Vertragsdaten"
+            },
+            {
+              "text": "Sortiments-/Projektzuordnung pro 3PL",
+              "why": "Welche Artikel laufen über 3PL vs. Eigenlager"
+            }
+          ]
+        },
+        "finanzen:reverse-charge": {
+          "title": "EU-B2B Reverse-Charge + ZM-Meldung",
+          "group": "Finanzen & Steuer",
+          "description": "Bei valider USt-ID des EU-Empfängers wird die Rechnung netto\nausgestellt — Empfänger schuldet die Steuer.\nZusammenfassende-Meldung (ZM) ans Bundeszentralamt für\nSteuern, monatlich oder quartalsweise.\n",
+          "human_inputs": 0,
+          "options": [
+            {
+              "label": "Trigger",
+              "default": "valide EU-USt-ID des Empfängers + Lieferung in EU-Ausland",
+              "hint": "Beide Bedingungen müssen erfüllt sein — sonst Standard-USt."
+            },
+            {
+              "label": "Rechnungs-Steuer",
+              "default": "0 € (netto)",
+              "hint": "Empfänger schuldet die Steuer im Empfängerland — kein Vorsteuerabzug für uns."
+            },
+            {
+              "label": "Pflicht-Hinweis auf Beleg",
+              "default": "Steuerschuldnerschaft des Leistungsempfängers / Reverse-Charge",
+              "hint": "Pflichttext — fehlt er, ist die Rechnung formell falsch und kann steuerlich beanstandet werden."
+            },
+            {
+              "label": "USt-ID-Validierung",
+              "default": "VIES bei Anlage + monatliche Re-Validierung",
+              "hint": "EU-Webservice (vat.europa.eu/vies). Audit-Log mit Timestamp + Ergebnis pro Prüfung."
+            },
+            {
+              "label": "ZM-Meldungsfrequenz",
+              "default": "quartalsweise",
+              "hint": "Auto-Switch auf monatlich wenn Schwelle (50.000 € EU-B2B-Umsatz pro Quartal) überschritten wird."
+            },
+            {
+              "label": "ZM-Empfänger",
+              "default": "Bundeszentralamt für Steuern (BZSt)",
+              "hint": "Elektronische Übermittlung über BZSt-Online-Portal oder ELSTER-Schnittstelle."
+            },
+            {
+              "label": "ZM-Format",
+              "default": "ELMA5 / CSV",
+              "hint": "Datei-Format des BZSt — pro Periode ein Datensatz pro EU-Kunde mit USt-ID + Netto-Umsatz."
+            },
+            {
+              "label": "Korrektur-Workflow",
+              "default": "Korrektur-Meldung im Folgemonat",
+              "hint": "Falls USt-ID nachträglich ungültig wird, Storno + Re-Issue mit korrekter Steuer."
+            }
+          ]
+        },
+        "finanzen:drittland": {
+          "title": "Drittland-Export",
+          "group": "Finanzen & Steuer",
+          "description": "Steuerfrei mit Ausfuhrnachweis (Zollbeleg). Bei Großmengen\nATLAS-Anbindung optional.\n",
+          "human_inputs": 2,
+          "human": [
+            {
+              "text": "Drittland-Strategie (welche Länder bedient)",
+              "why": "Markt-Strategie"
+            },
+            {
+              "text": "ATLAS-Account (wenn Großmengen)",
+              "why": "Zoll-Anbindung — externer Account"
+            }
+          ],
+          "options": [
+            {
+              "label": "Trigger",
+              "default": "Lieferadresse außerhalb EU",
+              "hint": "Steuerbefreiung greift automatisch bei Drittland-Lieferadresse — keine manuelle Wahl."
+            },
+            {
+              "label": "Rechnungs-Steuer",
+              "default": "0 € (netto, steuerfrei)",
+              "hint": "§ 4 Nr. 1a UStG. Hinweis-Text auf Beleg „Steuerfreie Ausfuhrlieferung\"."
+            },
+            {
+              "label": "Pflicht-Nachweis",
+              "default": "Ausfuhrbestätigung des Zolls",
+              "hint": "Ohne Ausfuhrnachweis verliert die Steuerbefreiung Bestand — bei Prüfung wird USt nachberechnet."
+            },
+            {
+              "label": "ATLAS-Anbindung",
+              "default": "ab ~10 Drittland-Sendungen / Monat",
+              "hint": "Elektronische Zollanmeldung. Unter Schwelle — Zollagent oder Spediteur übernimmt Anmeldung."
+            },
+            {
+              "label": "Incoterms-Default",
+              "default": "DAP (Delivered at Place)",
+              "hint": "Risiko + Kosten bis zur Lieferadresse. Alternativen — EXW, DDP, CPT je nach Vereinbarung."
+            },
+            {
+              "label": "HS-Code (Zolltarif) pro Artikel",
+              "default": "Pflichtfeld bei Drittland-Aktivierung",
+              "hint": "Achtstelliger Code — wird auf Zollerklärung + Handelsrechnung benötigt."
+            },
+            {
+              "label": "Ursprungsland pro Artikel",
+              "default": "Pflichtfeld bei Drittland-Aktivierung",
+              "hint": "Stammt der Artikel aus DE oder anderem Land? Beeinflusst Präferenzregeln + Zollsätze."
+            },
+            {
+              "label": "Versanddokumente",
+              "default": "Handelsrechnung + Packliste (3-fach) + EUR.1 / Ursprungserklärung",
+              "hint": "EUR.1 nur bei Präferenzabkommen-Ländern (z. B. Schweiz, UK, Japan)."
+            },
+            {
+              "label": "Beleg-Anhang",
+              "default": "Sicherheitsdatenblatt bei Chemie-/Gefahrgut",
+              "hint": "Branchen-Pflichtanhang am Lieferschein für bestimmte Sortimente."
+            },
+            {
+              "label": "USt-Rückforderung bei Direktverkauf an Privat",
+              "default": "n/a — wir machen B2B",
+              "hint": "Tax-Free-Shopping ist B2C-Thema — bei B2B-Wholesale nicht relevant."
+            }
+          ]
+        },
+        "finanzen:buchhaltung": {
+          "title": "Buchhaltung & DATEV",
+          "group": "Finanzen & Steuer",
+          "description": "DATEV-Export monatlich mit Kostenstellen pro Kunden-Cluster /\nVertreter / Sortiment. Kontenrahmen SKR03/04. Faktoring oder\nWarenkreditversicherung-Anbindung optional.\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "Software wählen (DATEV / Lex / sevDesk / BuchhaltungsButler)",
+              "why": "Vertrag + Steuerberater-Wahl"
+            },
+            {
+              "text": "API-Token / Login bereitstellen",
+              "why": "Sensible Credentials"
+            },
+            {
+              "text": "Kostenstellen-Schema festlegen",
+              "why": "Reporting-Bedarf"
+            },
+            {
+              "text": "Faktoring / Warenkreditversicherung-Anbindung",
+              "why": "Externer Vertrag"
+            }
+          ]
+        },
+        "kommunikation:email": {
+          "title": "E-Mail-Templates (B2B-Belege)",
+          "group": "Kommunikation",
+          "description": "Templates für Angebot · Auftragsbestätigung · Lieferschein ·\nRechnung · Mahnung · OPOS-Reminder. KEIN Marketing-Newsletter,\nKEINE Triggermails (Cart-Abandon etc.). Sprachen aus Kunden-\nStammdaten.\n",
+          "human_inputs": 1,
+          "human": [
+            {
+              "text": "Tonalität für Mahn-Templates",
+              "why": "Beziehungspflege"
+            }
+          ]
+        },
+        "kommunikation:smtp": {
+          "title": "SMTP / Provider",
+          "group": "Kommunikation",
+          "description": "Belege gehen aus eigener Domain raus — DKIM/SPF/DMARC sauber\neingerichtet. SendGrid / Postmark / SES typisch.\n",
+          "human_inputs": 3,
+          "human": [
+            {
+              "text": "SMTP-Provider wählen (SendGrid / Postmark / Mailgun / SES / eigener)",
+              "why": "Account + Vertrag"
+            },
+            {
+              "text": "API-Key liefern",
+              "why": "Sensible Credentials"
+            },
+            {
+              "text": "DNS-Zugang für DKIM-Records",
+              "why": "DNS liegt außerhalb des Systems"
+            }
+          ]
+        },
+        "benutzer:rollen": {
+          "title": "Rollen (mit Approval-Logik)",
+          "group": "Benutzer & Rechte",
+          "description": "B2B-typische Rollen: Sales · Innendienst · Buchhaltung ·\nEinkauf · Lager · Admin. Approval-Pfade konfigurierbar pro\nSchwelle.\n",
+          "human_inputs": 1,
+          "human": [
+            {
+              "text": "4-Augen-Prinzip-Schwellen (€ + Margenabweichung)",
+              "why": "Compliance-Policy"
+            }
+          ]
+        },
+        "benutzer:mitarbeiter": {
+          "title": "Mitarbeiter",
+          "group": "Benutzer & Rechte",
+          "description": "User-Liste mit Rollen + Vertreter-Mapping. Mid-Size B2B hat\noft 10-50 User aktiv. SSO über Google Workspace / Microsoft\n365 für größere Teams.\n",
+          "human_inputs": 2,
+          "human": [
+            {
+              "text": "User-Liste mit Rollen-Zuordnung",
+              "why": "Org-Struktur"
+            },
+            {
+              "text": "SSO einrichten (optional)",
+              "why": "IdP-Wahl bei größeren Teams"
+            }
+          ]
+        },
+        "schnittstellen:api": {
+          "title": "API & Webhooks",
+          "group": "Schnittstellen",
+          "description": "API-Zugang für Kunden-Systeme (eigenes ERP), BI-Tools (Power\nBI / Metabase), Reporting. Pro Integration eigener Key +\nAudit-Log.\n",
+          "human_inputs": 0
+        },
+        "schnittstellen:edi": {
+          "title": "EDI / EDIFACT",
+          "group": "Schnittstellen",
+          "description": "EDI-Anbindung für Top-Kunden mit GLN (Global Location Number).\nEDIFACT (klassisch), OpenTrans (modern), REST-API (modernste\nVariante). Pro Kunde Mapping + Test-Bestellung.\n",
+          "human_inputs": 5,
+          "human": [
+            {
+              "text": "EDI-Provider wählen (oder direkt P2P)",
+              "why": "Vertrag + Setup-Aufwand"
+            },
+            {
+              "text": "GLN pro Kunde liefern",
+              "why": "Wird vom Kunden gestellt"
+            },
+            {
+              "text": "Mapping-Tabelle pro Kunde (Felder × Format)",
+              "why": "Pro Kunde individuell, oft mit deren IT-Team abzustimmen"
+            },
+            {
+              "text": "Eskalations-Workflow bei EDI-Fehler",
+              "why": "Operations-Prozess"
+            },
+            {
+              "text": "Test-Cycle mit Top-Kunden (3-5 Iterationen)",
+              "why": "Pro Mapping erstmaliger Validation-Cycle"
+            }
+          ],
+          "options": [
+            {
+              "label": "Daten-Format",
+              "default": "OpenTrans 2.x XML",
+              "hint": "Alternativen — EDIFACT D.96A (klassisch), Sport2000-Format (Branche), REST-JSON (modern)."
+            },
+            {
+              "label": "Transport-Kanal",
+              "default": "FTP zum EDI-Gateway",
+              "hint": "Xentral schickt XML-Dateien per FTP oder E-Mail an einen EDI-Gateway-Provider."
+            },
+            {
+              "label": "Sender-GLN",
+              "default": "im Bereich Sender hinterlegt",
+              "hint": "Eigene GLN — wird als Sender in alle EDI-Belege geschrieben."
+            },
+            {
+              "label": "Empfänger-GLN pro Kunde",
+              "default": "Adress-Stammdaten",
+              "hint": "Variable {DELIVERGLN} zieht GLN aus der Lieferadresse des Kunden."
+            },
+            {
+              "label": "EDI-Modul-Status",
+              "default": "Legacy + aktive Variante parallel",
+              "hint": "Älteres \"EDI (GLN) Legacy\" + neuere Variante existieren — bei Neuanlage neue Variante wählen."
+            },
+            {
+              "label": "Beleg-Typen",
+              "default": "Bestellung (ORDERS) · Auftragsbestätigung (ORDRSP) · Lieferschein (DESADV) · Rechnung (INVOIC)",
+              "hint": "EDIFACT-Standard-Set für B2B-Wholesale."
+            },
+            {
+              "label": "Test-Cycle vor Live-Schaltung",
+              "default": "3-5 Iterationen pro Mapping",
+              "hint": "Wird mit dem IT-Team des Kunden abgestimmt, bis ORDERS und INVOIC sauber durchgehen."
+            },
+            {
+              "label": "Eskalation bei EDI-Fehler",
+              "default": "E-Mail an EDI-Owner + Innendienst",
+              "hint": "Manuelle Verarbeitung als Fallback bis Mapping korrigiert ist."
+            }
+          ]
+        },
+        "schnittstellen:integrationen": {
+          "title": "CRM · Faktoring · Bonität",
+          "group": "Schnittstellen",
+          "description": "CRM (HubSpot / Pipedrive / Salesforce) für Sales-Pipeline +\nBonitätsdienst (Creditreform / Coface) + Faktoring /\nWarenkreditversicherung. KEINE Newsletter-Tools, KEINE\nHelpdesks (B2B-Innendienst nutzt Mailbox + CRM).\n",
+          "human_inputs": 4,
+          "human": [
+            {
+              "text": "CRM-System wählen",
+              "why": "Stack-Entscheidung"
+            },
+            {
+              "text": "Bonitätsdienst aktivieren",
+              "why": "Vertrag mit Drittanbieter"
+            },
+            {
+              "text": "Faktoring-Anbindung (Limit-Datei-Format)",
+              "why": "Vertrag + Datei-Standard"
+            },
+            {
+              "text": "Warenkreditversicherung-Anbindung",
+              "why": "Externer Vertrag"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

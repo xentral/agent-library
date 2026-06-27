@@ -1,0 +1,27 @@
+{
+  "id": "return_rate",
+  "version": 1,
+  "icon": "return",
+  "category": "sales",
+  "order": 140,
+  "kpi": {
+    "key": "return_rate",
+    "unit": "%",
+    "value_type": "percent",
+    "group": "sales",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Retourenquote der letzten 30 Tage in Prozent: Wert retournierter Artikel geteilt durch Wert versendeter Artikel; ein einzelner Datensatz.",
+    "sql_string": "WITH order_items AS (\n    SELECT\n        so.sales_order_id,\n        soi.sales_order_item_id,\n        soi.net_price,\n        soi.discount,\n        soi.quantity,\n        so.date AS order_date\n    FROM sales_orders so\n    JOIN sales_order_items soi\n        ON so.sales_order_id = soi.sales_order_id\n    LEFT JOIN projects proj\n        ON so.project_id = proj.project_id\n    WHERE\n        so.status IN ('released', 'sent', 'completed')\n        AND so.date >= DATEADD(day, -30, CURRENT_DATE)\n        AND so.status NOT IN ('created', 'canceled', 'unknown')\n        AND (proj.project_id IS NULL OR proj.project_id IS NOT NULL)\n),\nreturned_quantities AS (\n    SELECT\n        rsi.sales_order_item_id,\n        SUM(COALESCE(rsi.quantity, 0)) AS returned_quantity\n    FROM return_shipment_items rsi\n    JOIN return_shipments rs\n        ON rs.return_shipment_id = rsi.return_shipment_id\n    WHERE\n        rsi.status IN ('released', 'sent', 'completed')\n        AND rs.status IN ('released', 'sent', 'completed')\n        AND rs.date >= DATEADD(day, -30, CURRENT_DATE)\n    GROUP BY 1\n)\nSELECT\n    COALESCE(\n        ROUND(\n            100 * SUM(oi.net_price * (1 - COALESCE(oi.discount, 0)) * COALESCE(rq.returned_quantity, 0))\n            / NULLIF(SUM(oi.net_price * (1 - COALESCE(oi.discount, 0)) * oi.quantity), 0),\n            2\n        ),\n        0\n    ) AS retourenquote_prozent\nFROM order_items oi\nLEFT JOIN returned_quantities rq\n    ON oi.sales_order_item_id = rq.sales_order_item_id;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Return rate",
+      "description": "Share of shipped items returned over the last 30 days, by value."
+    },
+    "de": {
+      "title": "Retourenquote",
+      "description": "Anteil der retournierten Artikel der letzten 30 Tage, nach Wert."
+    }
+  }
+}

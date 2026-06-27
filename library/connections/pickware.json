@@ -1,0 +1,15 @@
+{
+  "id": "pickware",
+  "version": 1,
+  "name": "pickware",
+  "domain": "pickware.de",
+  "category": "wms",
+  "locales": {
+    "en": {
+      "description": "WMS-Anbindung für Pick & Pack mit mobilem Scanner."
+    },
+    "de": {
+      "description": "WMS-Anbindung für Pick & Pack mit mobilem Scanner."
+    }
+  }
+}

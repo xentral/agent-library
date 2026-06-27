@@ -1,0 +1,240 @@
+{
+  "id": "auto_release_paid_orders",
+  "version": 1,
+  "category": "warehouse",
+  "icon": "check",
+  "order": 140,
+  "popular": true,
+  "trigger_type": "erp-event",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Bezahlte Aufträge automatisch freigeben",
+      "description": "Wird eine Vorkasse-Zahlung verbucht, sucht der Workflow bezahlte\nAufträge, die noch auf Freigabe warten, und gibt sie bei\nausreichendem Bestand zur Pickliste frei. Bei Fehlbestand bleibt\nder Auftrag geparkt und es wird eine Notiz für die\nBestandsdisposition als Entwurf erstellt — so geht keine bezahlte\nBestellung im Tagesgeschäft unter.\n\n**So funktioniert der Algorithmus**\n\n```\nZahlung verbucht\n └─ bezahlte Aufträge laden, die auf Freigabe warten\n      └─ je Auftrag: deckt der Bestand den Auftrag?\n           ├─ ja   → zur Pickliste freigeben\n           └─ nein → parken („wartet auf Bestand\")\n                     → Notiz-Entwurf für die Disposition\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Sobald eine Zahlung verbucht wird, lädt der Workflow alle\n   bezahlten Aufträge, die auf Freigabe warten.\n2. Für jeden Auftrag einzeln prüft er, ob der Bestand den Auftrag\n   deckt.\n3. Reicht der Bestand, wird der Auftrag zur Pickliste freigegeben.\n4. Reicht er nicht, wird der Auftrag bis zum Wareneingang geparkt.\n5. Der Agent entwirft dann eine Notiz für die Bestandsdisposition:\n   welche Artikel für den Auftrag fehlen und wie viele Einheiten.\n\n**Was verändert wird**\n\n- Ändert den Status der gefundenen Aufträge — entweder auf „zur\n  Pickliste freigegeben\" oder auf „bezahlt, wartet auf Bestand\".\n- Die Fehlbestands-Notiz bleibt ein Entwurf; es wird nichts\n  automatisch versendet.\n\n**Voraussetzungen und Grenzen**\n\n- Reagiert auf das ERP-Ereignis „Zahlung verbucht\" und setzt\n  voraus, dass Aufträge den Status „bezahlt, wartet auf Freigabe\"\n  tragen und eine Bestandsinformation (stockAvailable) am Auftrag\n  vorliegt.\n- Die Listenabfrage liefert ohne gesetzte Seitengröße nur die\n  erste Ergebnisseite — bei sehr vielen wartenden Aufträgen räumt\n  erst die nächste verbuchte Zahlung den Rest ab.\n",
+      "recommended_when": "Sobald Vorkasse-Aufträge planbar bezahlt werden",
+      "tags": [
+        "Logistik",
+        "Auftragsfreigabe",
+        "Vorkasse"
+      ]
+    },
+    "en": {
+      "name": "Auto-release paid orders",
+      "description": "When a prepayment is booked, the workflow finds paid orders still\nawaiting release and releases them for picking when stock covers\nthe order. On shortage the order stays parked and a note for\ninventory planning is drafted — so no paid order gets lost in the\ndaily routine.\n\n**How the algorithm works**\n\n```\npayment booked\n └─ load paid orders awaiting release\n      └─ per order: does stock cover the order?\n           ├─ yes → release for picking\n           └─ no  → park (\"awaiting stock\")\n                    → draft a note for inventory planning\n```\n\n**What happens step by step**\n\n1. As soon as a payment is booked, the workflow loads all paid\n   orders awaiting release.\n2. For each order, one by one, it checks whether stock covers the\n   order.\n3. If stock is sufficient, the order is released for picking.\n4. If not, the order is parked until stock arrives.\n5. The agent then drafts a note for inventory planning: which\n   items are short for the order and how many units.\n\n**What gets changed**\n\n- Updates the status of the matched orders — either to \"released\n  for picking\" or to \"paid, awaiting stock\".\n- The shortage note stays a draft; nothing is sent automatically.\n\n**Prerequisites and limits**\n\n- Reacts to the ERP event \"payment booked\" and expects orders to\n  carry the status \"paid, awaiting release\" plus a stock indicator\n  (stockAvailable) on the order.\n- Without an explicit page size the list query returns only the\n  first result page — with very many waiting orders, the next\n  booked payment picks up the rest.\n",
+      "recommended_when": "Once prepayment orders pay reliably",
+      "tags": [
+        "Logistics",
+        "Order release",
+        "Prepayment"
+      ],
+      "node_titles": {
+        "n_trig": "When a payment is booked",
+        "n_query": "Load paid orders awaiting release",
+        "n_loop": "For each order, one by one",
+        "n_cond": "Does stock cover the order?",
+        "n_release": "Release the order for picking",
+        "n_park": "Park the order until stock arrives",
+        "n_notify": "Draft a shortage note for inventory planning"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-erp-event",
+        "config": {
+          "title": "Wenn eine Zahlung verbucht wird",
+          "event": "payment.booked"
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Bezahlte Aufträge laden, die auf Freigabe warten",
+          "varName": "ordersAwaitingRelease",
+          "entityKey": "SalesOrder",
+          "entityLabel": "Sales order",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "status": "paid_awaiting_release"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_loop",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jeden Auftrag einzeln",
+          "varName": "order",
+          "items": "{{ ordersAwaitingRelease.data }}"
+        }
+      }
+    },
+    {
+      "id": "n_cond",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Reicht der Bestand für den Auftrag?",
+          "expression": "bool(order.get('stockAvailable'))"
+        }
+      }
+    },
+    {
+      "id": "n_release",
+      "type": "wfNode",
+      "position": {
+        "x": -200,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Auftrag zur Pickliste freigeben",
+          "varName": "releaseOrder",
+          "entityKey": "SalesOrder",
+          "entityLabel": "Sales order",
+          "operations": [
+            "update"
+          ],
+          "params": {
+            "update": {
+              "path": {
+                "uuid": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                }
+              },
+              "body": {
+                "status": "released_for_picking"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_park",
+      "type": "wfNode",
+      "position": {
+        "x": 360,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Auftrag bis zum Wareneingang parken",
+          "varName": "parkOrder",
+          "entityKey": "SalesOrder",
+          "entityLabel": "Sales order",
+          "operations": [
+            "update"
+          ],
+          "params": {
+            "update": {
+              "path": {
+                "uuid": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                }
+              },
+              "body": {
+                "status": "paid_awaiting_stock"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_notify",
+      "type": "wfNode",
+      "position": {
+        "x": 360,
+        "y": 1280
+      },
+      "data": {
+        "typeId": "agent",
+        "config": {
+          "title": "Notiz zum Fehlbestand entwerfen",
+          "varName": "shortageNote",
+          "model": "gpt-5.1",
+          "prompt": "Draft a concise note for inventory planning: which items are short for order {{ order.number }} and how many units. Plain, factual, no fluff.\n"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_loop",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_loop",
+      "target": "n_cond",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e4",
+      "source": "n_cond",
+      "target": "n_release",
+      "sourceHandle": "a",
+      "targetHandle": "in:update"
+    },
+    {
+      "id": "e5",
+      "source": "n_cond",
+      "target": "n_park",
+      "sourceHandle": "b",
+      "targetHandle": "in:update"
+    },
+    {
+      "id": "e6",
+      "source": "n_park",
+      "target": "n_notify"
+    }
+  ]
+}

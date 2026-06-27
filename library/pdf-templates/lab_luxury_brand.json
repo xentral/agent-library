@@ -1,0 +1,114 @@
+{
+  "id": "lab_luxury_brand",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Luxury Brand (Gutschrift)",
+      "description": "Editoriale Gutschrift im Maison-Stil: zentrierte Komposition, Serif-Wortmarke, Ivory-Vollfläche, Champagner-Akzent, großer Serif-Betrag."
+    },
+    "en": {
+      "title": "Xentral Labs · Luxury Brand (Credit Note)",
+      "description": "Editorial maison-style credit note: centred composition, serif wordmark, ivory full-bleed, champagne accent, large serif amount."
+    }
+  },
+  "v3_endpoint": "/api/v3/creditNotes/{id}?include=all",
+  "filename_pattern": "Gutschrift-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data['lineItems'] | default([]) %}\n\n{% block letterhead %}\n  <div class=\"lx-head\">\n    <svg class=\"lx-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n    <div class=\"lx-wordmark\">{{ data.company.name | default('') }}</div>\n    <div class=\"lx-tagline\">{{ data.tagline | default('Maison · Berlin') }}</div>\n  </div>\n{% endblock %}\n\n{% block content %}\n  <div class=\"lx-divider\"></div>\n\n  <section class=\"lx-titleblock\">\n    <div class=\"lx-eyebrow\">{{ L.doc_title }}</div>\n    <h1 class=\"lx-docno\">{{ data.documentNumber }}</h1>\n    <p class=\"lx-statement\">{{ data.statement | default(L.statement_default) }}</p>\n  </section>\n\n  <section class=\"lx-meta\">\n    <div class=\"lx-meta__col\">\n      <div class=\"lx-label\">{{ L.for_label }}</div>\n      <div class=\"lx-strong\">{{ buyer.name }}</div>\n      <div>{{ buyer.street }}</div>\n      <div>{{ buyer.zipCode }} {{ buyer.city }}</div>\n    </div>\n    <div class=\"lx-meta__col lx-meta__col--c\">\n      <div class=\"lx-label\">{{ L.date_label }}</div>\n      <div>{{ data.documentDate | date('long') }}</div>\n    </div>\n    <div class=\"lx-meta__col lx-meta__col--r\">\n      <div class=\"lx-label\">{{ L.ref_label }}</div>\n      <div>{{ L.invoice_word }} {{ data.invoiceRef }}</div>\n      <div class=\"lx-dim\">{{ data.reason }}</div>\n    </div>\n  </section>\n\n  <table class=\"lx-items\">\n    <tbody>\n      {% for p in items %}\n      <tr>\n        <td class=\"lx-iname\"><span class=\"lx-n\">{{ p.name }}</span>{% if p.description %}<span class=\"lx-d\">{{ p.description }}</span>{% endif %}</td>\n        <td class=\"lx-iqty\">{{ p.quantity | number }} ×</td>\n        <td class=\"lx-iamt num\">{{ p.lineItemRevenue.net | money }}</td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <section class=\"lx-total\">\n    <div class=\"lx-total__label\">{{ L.credit_amount }}</div>\n    <div class=\"lx-total__amt num\">{{ data.totals.gross | money }}</div>\n    <div class=\"lx-total__break\">{{ L.net }} {{ data.totals.net | money }}{% for rate, group in (data['lineItems'] | default([]) | selectattr('effectiveTaxRate','defined')) | groupby('effectiveTaxRate') %}{% set ns = namespace(s=0.0) %}{% for it in group %}{% set ns.s = ns.s + (it.lineItemRevenue.net.amount | default(0) | float) %}{% endfor %}{% if rate %} · {{ L.vat }} {{ rate }} % {{ (ns.s * (rate|float)/100.0) | money(currency='EUR') }}{% endif %}{% endfor %}</div>\n    <div class=\"lx-total__note\">{{ L.refund_note }}</div>\n  </section>\n\n  <footer class=\"lx-foot\">\n    <div class=\"lx-divider lx-divider--thin\"></div>\n    <div class=\"lx-foot__legal\">\n      <div>{{ data.company.name }} · {{ data.company.address }}</div>\n      <div>Amtsgericht Charlottenburg · HRB 123456 · Geschäftsführerin: Charlotte Beispiel</div>\n      <div>USt-IdNr. {{ data.company.vatId | default('DE123456789') }}{% if data.company.email %} · {{ data.company.email }}{% endif %}</div>\n    </div>\n  </footer>\n{% endblock %}",
+  "css": "@page { size: A4; margin: 0; }\n\nbody {\n  margin: 0; padding: 22mm 28mm;\n  background: #faf7f2; color: #14110e;\n  font-family: 'Helvetica', 'Arial', sans-serif;\n  -webkit-print-color-adjust: exact; print-color-adjust: exact;\n}\n.num { font-variant-numeric: tabular-nums; }\n.doc-header { display: block; margin: 0; }\n\n/* Centered masthead */\n.lx-head { text-align: center; }\n.lx-mark { height: 9mm; width: 9mm; display: inline-block; margin-bottom: 4mm; }\n.lx-wordmark { font-family: 'Georgia', 'Times New Roman', serif; font-size: 25pt; font-weight: 400; letter-spacing: 0.32em; text-transform: uppercase; text-indent: 0.32em; }\n.lx-tagline { font-size: 8pt; letter-spacing: 0.3em; text-transform: uppercase; color: #9c7c46; margin-top: 2.5mm; text-indent: 0.3em; }\n\n.lx-divider { height: 1px; background: #14110e; margin: 9mm 0; }\n.lx-divider--thin { background: #d8d0c2; margin: 6mm 0 4mm; }\n\n/* Title block */\n.lx-titleblock { text-align: center; margin-bottom: 11mm; }\n.lx-eyebrow { font-size: 8.5pt; letter-spacing: 0.34em; text-transform: uppercase; color: #9c7c46; font-weight: 700; text-indent: 0.34em; }\n.lx-docno { font-family: 'Georgia', 'Times New Roman', serif; font-size: 21pt; font-weight: 400; letter-spacing: 0.06em; margin: 3mm 0 0; }\n.lx-statement { font-size: 10.5pt; line-height: 1.7; color: #4a443a; max-width: 120mm; margin: 5mm auto 0; }\n\n/* Meta */\n.lx-meta { display: flex; gap: 8mm; padding: 5mm 0; border-top: 1px solid #e0d8ca; border-bottom: 1px solid #e0d8ca; margin-bottom: 9mm; }\n.lx-meta__col { flex: 1 1 0; }\n.lx-meta__col > div { line-height: 1.55; font-size: 9.5pt; }\n.lx-meta__col--c { text-align: center; }\n.lx-meta__col--r { text-align: right; }\n.lx-label { font-size: 7pt; letter-spacing: 0.2em; text-transform: uppercase; color: #9c7c46; font-weight: 700; margin-bottom: 2mm; }\n.lx-strong { font-weight: 700; }\n.lx-dim { color: #8a8170; }\n\n/* Items */\n.lx-items { width: 100%; border-collapse: collapse; margin-bottom: 10mm; }\n.lx-items td { padding: 4mm 0; border-bottom: 1px solid #e8e1d4; vertical-align: baseline; }\n.lx-iname .lx-n { font-family: 'Georgia', 'Times New Roman', serif; font-size: 13pt; display: block; }\n.lx-iname .lx-d { font-size: 9pt; color: #8a8170; margin-top: 1.2mm; display: block; letter-spacing: 0.02em; }\n.lx-iqty { width: 22mm; text-align: right; color: #8a8170; font-size: 10pt; }\n.lx-iamt { width: 34mm; text-align: right; font-size: 12pt; }\n\n/* Total — centered statement */\n.lx-total { text-align: center; margin: 12mm 0; }\n.lx-total__label { font-size: 8.5pt; letter-spacing: 0.3em; text-transform: uppercase; color: #9c7c46; font-weight: 700; text-indent: 0.3em; }\n.lx-total__amt { font-family: 'Georgia', 'Times New Roman', serif; font-size: 38pt; font-weight: 400; letter-spacing: 0.01em; margin: 3mm 0 0; }\n.lx-total__note { font-size: 8.5pt; color: #8a8170; margin-top: 4mm; }\n\n/* Footer */\n.lx-foot { margin-top: 14mm; }\n.lx-foot__row { display: flex; justify-content: space-between; font-size: 7.5pt; letter-spacing: 0.1em; text-transform: uppercase; color: #8a8170; }\n.lx-foot__legal { text-align: center; font-size: 7pt; color: #8a8170; line-height: 1.7; letter-spacing: 0.02em; }\n\n.lx-total__break { font-size: 9pt; color: #6c685e; margin-top: 2.5mm; }\n",
+  "example_data": {
+    "id": "90310",
+    "reason": "Retoure — Größe getauscht",
+    "totals": {
+      "net": {
+        "amount": "1100.00",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "1309.00",
+        "currency": "EUR"
+      }
+    },
+    "company": {
+      "name": "Maison Beispiel",
+      "email": "service@maison-beispiel.de",
+      "address": "Kurfürstendamm 1, 10719 Berlin"
+    },
+    "tagline": "Maison · Berlin",
+    "language": "de",
+    "lineItems": [
+      {
+        "name": "Cashmere-Mantel",
+        "unit": "Stk",
+        "quantity": 1,
+        "description": "Camel · Gr. 38 · Art. CM-038-CAM",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "890.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      },
+      {
+        "name": "Seidenschal",
+        "unit": "Stk",
+        "quantity": 1,
+        "description": "Bordeaux · 90×90 cm · Art. SC-090-BDX",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "210.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      }
+    ],
+    "statement": "Vielen Dank für Ihr Vertrauen. Wir haben Ihre Rücksendung erhalten und geprüft und schreiben Ihnen den nachstehenden Betrag mit Freude gut. Wir freuen uns, Sie bald wieder begrüßen zu dürfen.",
+    "invoiceRef": "RE-2026-02890",
+    "documentDate": "2026-06-19",
+    "documentNumber": "GS-2026-00310",
+    "documentAddress": {
+      "city": "München",
+      "name": "Frau Charlotte Berger",
+      "street": "Maximilianstraße 12",
+      "country": "Deutschland",
+      "zipCode": "80539"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Gutschrift",
+      "net": "Netto",
+      "vat": "USt",
+      "for_label": "Für",
+      "date_label": "Datum",
+      "ref_label": "Bezug",
+      "invoice_word": "Rechnung",
+      "credit_amount": "Gutschriftbetrag",
+      "refund_note": "inkl. MwSt · Erstattung auf das ursprüngliche Zahlungsmittel innerhalb von 5 Werktagen",
+      "statement_default": "Vielen Dank. Wir haben Ihre Rücksendung erhalten und schreiben Ihnen den nachstehenden Betrag gut."
+    },
+    "en": {
+      "doc_title": "Credit Note",
+      "net": "Net",
+      "vat": "VAT",
+      "for_label": "For",
+      "date_label": "Date",
+      "ref_label": "Reference",
+      "invoice_word": "Invoice",
+      "credit_amount": "Credit amount",
+      "refund_note": "incl. VAT · refunded to the original payment method within 5 business days",
+      "statement_default": "Thank you. We have received your return and are crediting you the amount below."
+    }
+  }
+}

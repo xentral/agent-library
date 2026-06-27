@@ -1,0 +1,15 @@
+{
+  "id": "hhg",
+  "version": 1,
+  "name": "HHG",
+  "domain": "",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "HHG-Shopsystem — Order-Sync mit Xentral."
+    },
+    "de": {
+      "description": "HHG-Shopsystem — Order-Sync mit Xentral."
+    }
+  }
+}

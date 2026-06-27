@@ -1,0 +1,166 @@
+{
+  "id": "lab_financial_corporate",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Financial Corporate (Mahnung)",
+      "description": "Mahnung im seriösen Navy: Konten-Summen-Kacheln, Offene-Posten-Tabelle mit Überfälligkeit, Aging-Balkendiagramm, SEPA-GiroCode."
+    },
+    "en": {
+      "title": "Xentral Labs · Financial Corporate (Dunning)",
+      "description": "Dunning letter in serious navy: account summary tiles, open-items table with overdue days, aging bar chart, SEPA GiroCode."
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Mahnung-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set opn = data.openItems | default([]) %}\n{% set pay = data.payment | default({}) %}\n\n{% block letterhead %}\n  <div class=\"fi-top\">\n    <div class=\"fi-brand\">\n      <svg class=\"fi-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <span class=\"fi-brandname\">{{ data.company.name | default('') }}</span>\n    </div>\n    <div class=\"fi-doc\">\n      <span class=\"fi-eyebrow\">{{ data.stage | default(L.doc_title) }}</span>\n      <span class=\"fi-docno\">{{ data.documentNumber }}</span>\n      <span class=\"fi-date\">{{ data.documentDate | date }}</span>\n    </div>\n  </div>\n{% endblock %}\n\n{% block content %}\n  <section class=\"fi-addr\">\n    <div class=\"fi-addr__sender\">{{ data.company.name }} · {{ data.company.address }}</div>\n    <strong>{{ buyer.name }}</strong>{% if buyer.coName %} · {{ buyer.coName }}{% endif %}<br>\n    {{ buyer.street }} · {{ buyer.zipCode }} {{ buyer.city }} · {{ L.cust_no }} {{ data.customerNumber }}\n  </section>\n\n  <p class=\"fi-intro\">{{ data.intro | default(L.intro_default) }}</p>\n\n  <section class=\"fi-tiles\">\n    <div class=\"fi-tile fi-tile--accent\"><div class=\"fi-tile__v\">{{ data.summary.totalOpen | money }}</div><div class=\"fi-tile__k\">{{ L.total_open }}</div></div>\n    <div class=\"fi-tile\"><div class=\"fi-tile__v\">{{ data.summary.oldestDays }} {{ L.days }}</div><div class=\"fi-tile__k\">{{ L.oldest }}</div></div>\n    <div class=\"fi-tile\"><div class=\"fi-tile__v\">{{ opn | length }}</div><div class=\"fi-tile__k\">{{ L.open_items }}</div></div>\n    <div class=\"fi-tile\"><div class=\"fi-tile__v\">{{ data.deadline | date }}</div><div class=\"fi-tile__k\">{{ L.pay_by }}</div></div>\n  </section>\n\n  <div class=\"fi-main\">\n    <section class=\"fi-open\">\n      <h2 class=\"fi-h2\">{{ L.open_items }}</h2>\n      <table class=\"fi-table\">\n        <thead><tr><th>{{ L.col_doc }}</th><th>{{ L.col_date }}</th><th>{{ L.col_due }}</th><th class=\"r\">{{ L.col_amount }}</th><th class=\"r\">{{ L.col_overdue }}</th></tr></thead>\n        <tbody>\n          {% for o in opn %}\n          <tr>\n            <td class=\"mono\">{{ o.number }}</td>\n            <td>{{ o.date | date('short') }}</td>\n            <td>{{ o.due | date('short') }}</td>\n            <td class=\"r num\">{{ o.amount | money }}</td>\n            <td class=\"r\"><span class=\"fi-days {% if o.daysOverdue > 30 %}fi-days--hot{% endif %}\">{{ o.daysOverdue }} {{ L.days_abbr }}</span></td>\n          </tr>\n          {% endfor %}\n          {% if data.fee %}<tr><td class=\"mono\">{{ L.fee_label }}</td><td colspan=\"2\"></td><td class=\"r num\">{{ data.fee | money }}</td><td></td></tr>{% endif %}\n        </tbody>\n        <tfoot><tr><td colspan=\"3\">{{ L.sum_due }}</td><td class=\"r num\">{{ data.summary.totalOpen | money }}</td><td></td></tr></tfoot>\n      </table>\n    </section>\n    <aside class=\"fi-aging\">\n      <h2 class=\"fi-h2\">{{ L.aging }}</h2>\n      <div class=\"fi-chart\">\n        {% for b in data.aging | default([]) %}\n        <div class=\"fi-bar\"><div class=\"fi-bar__fill\" style=\"height: {{ b.pct }}%;\"></div><div class=\"fi-bar__lbl\">{{ b.label }}</div></div>\n        {% endfor %}\n      </div>\n    </aside>\n  </div>\n\n  <section class=\"fi-pay\">\n    <div class=\"fi-pay__info\">\n      <h2 class=\"fi-h2 fi-h2--light\">{{ L.payment }}</h2>\n      <div class=\"fi-pay__grid\">\n        <span>{{ L.recipient }}</span><strong>{{ data.company.name }}</strong>\n        <span>IBAN</span><strong class=\"mono\">{{ pay.iban }}</strong>\n        <span>BIC</span><strong class=\"mono\">{{ pay.bic }}</strong>\n        <span>{{ L.reference }}</span><strong>{{ data.documentNumber }}</strong>\n        <span>{{ L.amount_word }}</span><strong>{{ data.summary.totalOpen | money }}</strong>\n      </div>\n    </div>\n    <div class=\"fi-pay__qr\">\n      {% if data.summary.totalOpen and data.summary.totalOpen.amount and (data.summary.totalOpen.amount | float) >= 0.01 %}{{ epc_qr(name=data.company.name | default('Empfänger'), iban=(pay.iban | default('DE00')) | replace(' ', ''), amount=(data.summary.totalOpen.amount | default('0')), reference=data.documentNumber | default(''), bic=pay.bic | default('')) }}{% else %}<div class=\"fi-noqr\"></div>{% endif %}\n      <span>{{ L.girocode }}</span>\n    </div>\n  </section>\n{% endblock %}",
+  "css": "@page {\n  size: A4; margin: 16mm 18mm 20mm 18mm;\n  @bottom-left { content: \"Beispiel Handels GmbH · Marktplatz 1 · 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; vertical-align: top; padding-top: 4mm; }\n  @bottom-center { content: \"Seite \" counter(page) \" von \" counter(pages); font-size: 6.5pt; color: #8a8a8a; white-space: nowrap; vertical-align: top; padding-top: 4mm; }\n  @bottom-right { content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm; }\n}\n\nbody { color: #0b2545; font-family: 'Helvetica', 'Arial', sans-serif; }\n.num { font-variant-numeric: tabular-nums; }\n.mono { font-family: 'Courier New', monospace; letter-spacing: -0.02em; }\n.r { text-align: right; }\n.doc-header { display: block; margin: 0; }\n\n.fi-top { display: flex; align-items: flex-start; justify-content: space-between; padding-bottom: 4mm; border-bottom: 2px solid #0b2545; }\n.fi-brand { display: flex; align-items: center; gap: 3mm; }\n.fi-mark { height: 9mm; width: 9mm; display: block; }\n.fi-brandname { font-size: 12pt; font-weight: 800; }\n.fi-doc { text-align: right; }\n.fi-eyebrow { display: block; font-size: 9pt; letter-spacing: 0.16em; text-transform: uppercase; color: #b91c1c; font-weight: 800; }\n.fi-docno { display: block; font-size: 13pt; font-weight: 800; margin-top: 0.6mm; }\n.fi-date { font-size: 8.5pt; color: #6b7890; }\n\n.fi-addr { margin: 6mm 0 4mm; font-size: 10pt; line-height: 1.5; }\n.fi-addr__sender { font-size: 7.5pt; color: #6b7890; border-bottom: 1px solid #d6deea; padding-bottom: 1mm; margin-bottom: 2mm; }\n.fi-intro { font-size: 9.5pt; color: #3a4863; line-height: 1.5; max-width: 165mm; margin-bottom: 6mm; }\n\n/* Tiles */\n.fi-tiles { display: flex; gap: 3mm; margin-bottom: 7mm; }\n.fi-tile { flex: 1 1 0; background: #eef2f7; border-radius: 2.5mm; padding: 4mm; }\n.fi-tile--accent { background: #0b2545; color: #fff; }\n.fi-tile__v { font-size: 14pt; font-weight: 800; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }\n.fi-tile__k { font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7890; font-weight: 700; margin-top: 1.5mm; }\n.fi-tile--accent .fi-tile__k { color: #9db4d4; }\n\n/* Main */\n.fi-main { display: flex; gap: 7mm; align-items: flex-start; margin-bottom: 7mm; }\n.fi-open { flex: 1 1 0; }\n.fi-h2 { font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #0b2545; font-weight: 800; margin: 0 0 3mm; }\n.fi-h2--light { color: #9db4d4; }\n.fi-table { width: 100%; border-collapse: collapse; }\n.fi-table thead th { font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7890; font-weight: 700; text-align: left; padding: 0 2mm 2mm; border-bottom: 1px solid #0b2545; }\n.fi-table thead th.r { text-align: right; }\n.fi-table tbody td { padding: 2.4mm 2mm; border-bottom: 1px solid #e6ebf2; font-size: 9.5pt; }\n.fi-table tfoot td { padding: 2.6mm 2mm; font-weight: 800; font-size: 10.5pt; border-top: 2px solid #0b2545; }\n.fi-days { font-size: 8.5pt; font-weight: 700; color: #6b7890; }\n.fi-days--hot { color: #b91c1c; }\n\n/* Aging chart */\n.fi-aging { flex: 0 0 54mm; background: #eef2f7; border-radius: 2.5mm; padding: 4mm; }\n.fi-chart { display: flex; align-items: flex-end; justify-content: space-between; gap: 2.5mm; height: 34mm; }\n.fi-bar { flex: 1 1 0; display: flex; flex-direction: column; align-items: stretch; height: 100%; justify-content: flex-end; }\n.fi-bar__fill { background: #0b2545; border-radius: 1mm 1mm 0 0; min-height: 0.6mm; }\n.fi-bar:nth-child(1) .fi-bar__fill { background: #3a4863; }\n.fi-bar:nth-child(2) .fi-bar__fill { background: #1d4ed8; }\n.fi-bar:nth-child(n+3) .fi-bar__fill { background: #b91c1c; }\n.fi-bar__lbl { font-size: 6.5pt; color: #6b7890; text-align: center; margin-top: 1.6mm; }\n\n/* Payment */\n.fi-pay { display: flex; gap: 7mm; background: #0b2545; color: #fff; border-radius: 3mm; padding: 5mm 6mm; align-items: center; }\n.fi-pay__info { flex: 1 1 0; }\n.fi-pay__grid { display: grid; grid-template-columns: 26mm 1fr; gap: 1.4mm 4mm; font-size: 9.5pt; }\n.fi-pay__grid span { color: #9db4d4; }\n.fi-pay__grid strong { color: #fff; font-weight: 700; }\n.fi-pay__qr { flex: 0 0 32mm; text-align: center; }\n.fi-pay__qr svg { width: 30mm; height: 30mm; background: #fff; padding: 1.5mm; border-radius: 2mm; }\n.fi-pay__qr span { display: block; font-size: 7.5pt; color: #9db4d4; margin-top: 2mm; }",
+  "example_data": {
+    "id": "80455",
+    "fee": {
+      "amount": "5.00",
+      "currency": "EUR"
+    },
+    "aging": [
+      {
+        "pct": 47,
+        "label": "0–30 T"
+      },
+      {
+        "pct": 100,
+        "label": "31–60 T"
+      },
+      {
+        "pct": 0,
+        "label": "61–90 T"
+      },
+      {
+        "pct": 0,
+        "label": ">90 T"
+      }
+    ],
+    "intro": "Sehr geehrte Damen und Herren, zu den unten aufgeführten Belegen konnten wir bislang keinen Zahlungseingang feststellen. Sicher ein Versehen — wir bitten um Ausgleich des offenen Betrags bis zum genannten Datum. Sollte sich Ihre Zahlung überschnitten haben, betrachten Sie dieses Schreiben als gegenstandslos.",
+    "stage": "1. Mahnung",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin"
+    },
+    "payment": {
+      "bic": "COBADEFFXXX",
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "bankName": "Commerzbank Berlin"
+    },
+    "summary": {
+      "totalOpen": {
+        "amount": "4515.00",
+        "currency": "EUR"
+      },
+      "oldestDays": 35
+    },
+    "deadline": "2026-06-30",
+    "language": "de",
+    "openItems": [
+      {
+        "due": "2026-05-16",
+        "date": "2026-05-02",
+        "amount": {
+          "amount": "2380.00",
+          "currency": "EUR"
+        },
+        "number": "RE-2026-02991",
+        "daysOverdue": 35
+      },
+      {
+        "due": "2026-06-01",
+        "date": "2026-05-18",
+        "amount": {
+          "amount": "1190.00",
+          "currency": "EUR"
+        },
+        "number": "RE-2026-03044",
+        "daysOverdue": 19
+      },
+      {
+        "due": "2026-06-11",
+        "date": "2026-05-28",
+        "amount": {
+          "amount": "940.00",
+          "currency": "EUR"
+        },
+        "number": "RE-2026-03101",
+        "daysOverdue": 9
+      }
+    ],
+    "documentDate": "2026-06-20",
+    "customerNumber": "K-44120",
+    "documentNumber": "MA-2026-00455",
+    "documentAddress": {
+      "city": "Hamburg",
+      "name": "Lindner Handelskontor GmbH",
+      "coName": "Buchhaltung",
+      "street": "Speicherstadt 4",
+      "country": "Deutschland",
+      "zipCode": "20457"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Zahlungserinnerung",
+      "total_open": "Offener Gesamtbetrag",
+      "days": "Tage",
+      "oldest": "Ältester Posten überfällig",
+      "open_items": "Offene Posten",
+      "pay_by": "Zahlung bis",
+      "col_doc": "Beleg",
+      "col_date": "Datum",
+      "col_due": "Fällig",
+      "col_amount": "Betrag",
+      "col_overdue": "Überfällig",
+      "days_abbr": "T",
+      "fee_label": "Mahngebühr",
+      "sum_due": "Summe fällig",
+      "aging": "Altersstruktur",
+      "payment": "Zahlung",
+      "recipient": "Empfänger",
+      "reference": "Verwendung",
+      "amount_word": "Betrag",
+      "girocode": "GiroCode scannen &amp; zahlen",
+      "cust_no": "Kunden-Nr.",
+      "intro_default": "Sehr geehrte Damen und Herren, zu den folgenden Belegen konnten wir bislang keinen Zahlungseingang feststellen. Wir bitten um Ausgleich des offenen Betrags bis zum genannten Datum."
+    },
+    "en": {
+      "doc_title": "Payment reminder",
+      "total_open": "Total outstanding",
+      "days": "days",
+      "oldest": "Oldest item overdue",
+      "open_items": "Open items",
+      "pay_by": "Pay by",
+      "col_doc": "Document",
+      "col_date": "Date",
+      "col_due": "Due",
+      "col_amount": "Amount",
+      "col_overdue": "Overdue",
+      "days_abbr": "d",
+      "fee_label": "Dunning fee",
+      "sum_due": "Total due",
+      "aging": "Aging",
+      "payment": "Payment",
+      "recipient": "Recipient",
+      "reference": "Reference",
+      "amount_word": "Amount",
+      "girocode": "Scan GiroCode &amp; pay",
+      "cust_no": "Customer no.",
+      "intro_default": "Dear Sir or Madam, we have not yet been able to record payment for the documents below. We kindly ask you to settle the outstanding amount by the date stated."
+    }
+  }
+}

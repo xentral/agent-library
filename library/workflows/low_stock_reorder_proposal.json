@@ -1,0 +1,180 @@
+{
+  "id": "low_stock_reorder_proposal",
+  "version": 1,
+  "category": "warehouse",
+  "icon": "warehouse",
+  "order": 150,
+  "trigger_type": "schedule",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Bestellvorschlag bei Unterbestand",
+      "description": "Findet täglich um 6 Uhr alle Artikel, die unter ihren Mindestbestand\ngefallen sind, gruppiert sie nach Hauptlieferant und erzeugt je\nLieferant einen Bestellvorschlag als Entwurf — damit nichts unbemerkt\nausverkauft und der Einkauf nur noch prüfen und freigeben muss.\n\n**Was Schritt für Schritt passiert**\n\n1. Der Workflow startet jeden Tag um 06:00 Uhr.\n2. Alle Artikel unter Mindestbestand werden geladen.\n3. Die Artikel werden nach ihrem Hauptlieferanten gruppiert —\n   Artikel ohne Hauptlieferant landen in einer eigenen Gruppe.\n4. Für jeden Lieferanten einzeln wird ein Bestellvorschlag als\n   Entwurf angelegt, der alle betroffenen Artikel als Positionen\n   enthält.\n\n**Was verändert wird**\n\n- Es werden ausschließlich neue Bestellungen im Status „Entwurf\"\n  angelegt — nichts wird automatisch bestellt oder an Lieferanten\n  verschickt.\n- Artikel- und Lieferantendaten werden nur gelesen, nie verändert.\n\n**Voraussetzungen und Grenzen**\n\n- Mindestbestände und Hauptlieferanten müssen an den Artikeln\n  gepflegt sein, sonst findet der Workflow keine Artikel bzw. kann\n  nicht sinnvoll gruppieren.\n- Jeder Lauf erzeugt neue Entwürfe; bestehende Entwürfe werden\n  nicht erkannt oder zusammengeführt — die Vorschläge also\n  zeitnah prüfen und freigeben oder verwerfen.\n",
+      "recommended_when": "Sobald Mindestbestände gepflegt sind",
+      "tags": [
+        "Logistik",
+        "Einkauf",
+        "Bestand"
+      ]
+    },
+    "en": {
+      "name": "Reorder proposal on low stock",
+      "description": "Each day at 6am, finds every product that has fallen below its\nminimum stock level, groups them by main supplier and creates one\ndraft purchase order per supplier — so nothing sells out unnoticed\nand purchasing only has to review and release.\n\n**What happens step by step**\n\n1. The workflow starts every day at 06:00.\n2. All products below minimum stock are loaded.\n3. The products are grouped by their main supplier — products\n   without a main supplier end up in a group of their own.\n4. For each supplier, one by one, a draft purchase order is\n   created containing all affected products as positions.\n\n**What gets changed**\n\n- Only new purchase orders in \"draft\" status are created —\n  nothing is ordered automatically or sent to suppliers.\n- Product and supplier data are only read, never modified.\n\n**Prerequisites and limits**\n\n- Minimum stock levels and main suppliers must be maintained on\n  the products, otherwise the workflow finds no products or\n  cannot group them meaningfully.\n- Every run creates fresh drafts; existing drafts are not\n  detected or merged — review and release or discard the\n  proposals promptly.\n",
+      "recommended_when": "Once minimum stock levels are maintained",
+      "tags": [
+        "Logistics",
+        "Purchasing",
+        "Stock"
+      ],
+      "node_titles": {
+        "n_trig": "Every day at 06:00",
+        "n_query": "Load products below minimum stock",
+        "n_group": "Group products by main supplier",
+        "n_loop": "For each supplier, one by one",
+        "n_po": "Create a draft purchase order"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-schedule",
+        "config": {
+          "title": "Jeden Tag um 06:00 Uhr",
+          "schedule": {
+            "frequency": "daily",
+            "time": "06:00"
+          }
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Artikel unter Mindestbestand laden",
+          "varName": "lowStockProducts",
+          "entityKey": "Product",
+          "entityLabel": "Product",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "belowMinStock": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_group",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Artikel nach Hauptlieferant gruppieren",
+          "varName": "supplierGroups",
+          "code": "rows = lowStockProducts.get('data', []) if isinstance(lowStockProducts, dict) else (lowStockProducts or [])\ngroups = {}\nfor p in rows:\n    groups.setdefault(p.get('mainSupplierId'), []).append(p)\nresult = [{'supplierId': k, 'items': v} for k, v in groups.items()]\nlog(f\"{len(result)} supplier group(s)\")\n"
+        }
+      }
+    },
+    {
+      "id": "n_loop",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jeden Lieferanten einzeln",
+          "varName": "supplierGroup",
+          "items": "{{ supplierGroups }}"
+        }
+      }
+    },
+    {
+      "id": "n_po",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Bestellvorschlag als Entwurf anlegen",
+          "varName": "bestellung",
+          "entityKey": "PurchaseOrder",
+          "entityLabel": "Purchase order",
+          "operations": [
+            "create"
+          ],
+          "params": {
+            "create": {
+              "body": {
+                "supplierId": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "supplierId"
+                },
+                "status": "draft",
+                "positions": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "items"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_group",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_group",
+      "target": "n_loop"
+    },
+    {
+      "id": "e4",
+      "source": "n_loop",
+      "target": "n_po",
+      "sourceHandle": "a",
+      "targetHandle": "in:create"
+    }
+  ]
+}

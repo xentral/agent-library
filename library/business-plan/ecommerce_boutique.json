@@ -1,0 +1,135 @@
+{
+  "id": "ecommerce_boutique",
+  "slugs": [
+    "overview",
+    "company",
+    "products",
+    "channels",
+    "logistics",
+    "systems",
+    "migration",
+    "payment"
+  ],
+  "locales": {
+    "de": {
+      "name": "Small e-commerce",
+      "description": "Kleinerer Onlinehändler mit eigenem Lager. Eigener Webshop ist\nHauptkanal, schlankes Team, Routine-Operations dominieren. Sauberer\nERP-Betrieb wichtiger als Wachstums-Skalierung.\n",
+      "emphasis": {
+        "overview": "Klares Sortiment + Zielgruppe — Boutique-Charakter durchziehen, kein Bauchladen.",
+        "company": "Logo + AGB-Footer für AB · LS · RG · Mahnung sauber aufsetzen — der Beleg ist die Visitenkarte.",
+        "products": "Kuratiertes Sortiment, klare Marge pro SKU. Lieber tief als breit.",
+        "channels": "Eigener Shop trägt 70-90% — Marktplätze nur als Add-on.",
+        "logistics": "Eigenes Lager, eigenes Picking, 1-2 Carrier. Versanderlebnis ist persönlich.",
+        "systems": "Wenige Schnittstellen — Shop, Buchhaltung, Versand-Etiketten reichen am Anfang.",
+        "migration": "Cut-Over-Wochenende, klares Freeze-Datum, 2 Wochen Hypercare.",
+        "payment": "3-5 Provider reichen. Vorkasse + Klarna + PayPal als Standard."
+      },
+      "tasks": [
+        {
+          "title": "Logo + Beleg-Footer",
+          "hint": "Logo (SVG/PNG) + AGB-Footer für AB · LS · RG · Mahnung"
+        },
+        {
+          "title": "Shop-Anbindung",
+          "hint": "API-Keys/Webhook-URL vom eigenen Shop (Shopify · Woo · JTL · Magento)"
+        },
+        {
+          "title": "Stammdaten-CSV",
+          "hint": "Artikel + Bilder + Pflichtfelder shop-fähig vorbereiten"
+        },
+        {
+          "title": "Versand + Etiketten-Drucker",
+          "hint": "1-2 Carrier (DHL/DPD/UPS) + Etiketten-Drucker für Pick & Pack"
+        },
+        {
+          "title": "E-Mail-Vorlagen freigeben",
+          "hint": "Order-Confirm · Versand · Retoure · Kundenanfrage"
+        },
+        {
+          "title": "SMTP + SPF/DKIM",
+          "hint": "Postfach + DNS-Records, damit Belege nicht im Spam landen"
+        },
+        {
+          "title": "Bank-Login (FinAPI/EBICS)",
+          "hint": "Tagesabgleich + OPOS-Matching automatisch"
+        },
+        {
+          "title": "DATEV-Berater-Zugang",
+          "hint": "Beraternr. + Mandantennr. an Steuerberater"
+        },
+        {
+          "title": "Test-User Lager/Buchhaltung",
+          "hint": "für rollenspezifische Schulung"
+        },
+        {
+          "title": "Schulungstermine planen",
+          "hint": "Pro Rolle 1 Session vor Go-Live reicht meist"
+        },
+        {
+          "title": "Go-Live-Datum bestätigen",
+          "hint": "Cut-Over-Wochenende · Freeze-Datum · 2 Wochen Hypercare"
+        }
+      ]
+    },
+    "en": {
+      "name": "Small e-commerce",
+      "description": "Smaller online retailer with own warehouse. Own webshop is the\nmain channel, lean team, routine operations dominate. Clean ERP\noperation matters more than growth scaling.\n",
+      "emphasis": {
+        "overview": "Clear range + target audience — keep boutique character through and through, no bargain bin.",
+        "company": "Set up logo + T&C footer for order confirmation · delivery note · invoice · dunning cleanly — the document is the business card.",
+        "products": "Curated range, clear margin per SKU. Better deep than broad.",
+        "channels": "Own shop carries 70-90% — marketplaces only as add-on.",
+        "logistics": "Own warehouse, own picking, 1-2 carriers. Shipping experience is personal.",
+        "systems": "Few interfaces — shop, accounting, shipping labels are enough at the start.",
+        "migration": "Cut-over weekend, clear freeze date, 2 weeks hypercare.",
+        "payment": "3-5 providers are enough. Prepayment + Klarna + PayPal as standard."
+      },
+      "tasks": [
+        {
+          "title": "Logo + document footer",
+          "hint": "Logo (SVG/PNG) + T&C footer for order confirmation · delivery note · invoice · dunning"
+        },
+        {
+          "title": "Shop integration",
+          "hint": "API keys/webhook URL from your own shop (Shopify · Woo · JTL · Magento)"
+        },
+        {
+          "title": "Master-data CSV",
+          "hint": "Products + images + mandatory fields shop-ready"
+        },
+        {
+          "title": "Shipping + label printer",
+          "hint": "1-2 carriers (DHL/DPD/UPS) + label printer for pick & pack"
+        },
+        {
+          "title": "Approve email templates",
+          "hint": "Order confirmation · shipping · returns · customer inquiry"
+        },
+        {
+          "title": "SMTP + SPF/DKIM",
+          "hint": "Mailbox + DNS records so documents don't land in spam"
+        },
+        {
+          "title": "Bank login (FinAPI/EBICS)",
+          "hint": "Daily reconciliation + open-item matching automatic"
+        },
+        {
+          "title": "DATEV tax-advisor access",
+          "hint": "Advisor no. + client no. forwarded to tax advisor"
+        },
+        {
+          "title": "Test user warehouse/accounting",
+          "hint": "For role-specific training"
+        },
+        {
+          "title": "Plan training sessions",
+          "hint": "One session per role before go-live is usually enough"
+        },
+        {
+          "title": "Confirm go-live date",
+          "hint": "Cut-over weekend · freeze date · 2 weeks hypercare"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "decathlon",
+  "version": 1,
+  "name": "Decathlon",
+  "domain": "decathlon.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Decathlon-Marketplace — Auftragsabwicklung und Listings."
+    },
+    "de": {
+      "description": "Decathlon-Marketplace — Auftragsabwicklung und Listings."
+    }
+  }
+}

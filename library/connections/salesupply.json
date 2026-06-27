@@ -1,0 +1,15 @@
+{
+  "id": "salesupply",
+  "version": 1,
+  "name": "Salesupply",
+  "domain": "salesupply.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "Cross-Border-Fulfillment EU/UK/US mit Customer-Service-Modul."
+    },
+    "de": {
+      "description": "Cross-Border-Fulfillment EU/UK/US mit Customer-Service-Modul."
+    }
+  }
+}

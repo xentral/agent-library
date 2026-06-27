@@ -1,0 +1,15 @@
+{
+  "id": "getcore",
+  "version": 1,
+  "name": "GetCore",
+  "domain": "getcore.io",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "GetCore-Shop-Integration — Aufträge und Stammdaten."
+    },
+    "de": {
+      "description": "GetCore-Shop-Integration — Aufträge und Stammdaten."
+    }
+  }
+}

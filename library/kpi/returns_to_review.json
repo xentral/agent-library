@@ -1,0 +1,27 @@
+{
+  "id": "returns_to_review",
+  "version": 1,
+  "icon": "return",
+  "category": "logistics",
+  "order": 320,
+  "kpi": {
+    "key": "returns_to_review",
+    "unit": "count",
+    "value_type": "number",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl freigegebener Retouren, die auf eine Wareneingangs-Prüfung warten; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  COUNT(DISTINCT rsi.return_shipment_id) AS awaiting_goods_receipt_check_count\nFROM return_shipment_items rsi\nJOIN return_shipments rs\n  ON rs.return_shipment_id = rsi.return_shipment_id\nWHERE\n  rsi.status = 'released'\n  AND rs.status = 'released'\n  AND rs.progress_status = 'geprueft'\n  AND rs.is_sent = FALSE\n  AND rsi.sales_order_item_id IS NOT NULL\n  AND rsi.return_shipment_id IS NOT NULL;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Returns to review",
+      "description": "Released return orders waiting for a quality check decision."
+    },
+    "de": {
+      "title": "Retouren zu prüfen",
+      "description": "Freigegebene Retouren, die auf eine Wareneingangs-Prüfung warten."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "cisc",
+  "version": 1,
+  "name": "CISC",
+  "domain": "",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Carrier Integration Service — generische Anbindung an Versanddienstleister."
+    },
+    "de": {
+      "description": "Carrier Integration Service — generische Anbindung an Versanddienstleister."
+    }
+  }
+}

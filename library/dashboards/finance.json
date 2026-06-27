@@ -1,0 +1,168 @@
+{
+  "id": "finance",
+  "version": 2,
+  "icon": "coin",
+  "category": "finance",
+  "order": 130,
+  "recommended_kpis": [
+    "revenue_mtd",
+    "revenue_today",
+    "open_receivables",
+    "dso",
+    "overdue_dunning",
+    "open_payables",
+    "dpo",
+    "cash_runway_30d",
+    "unmatched_bank_transactions",
+    "due_today_amount",
+    "cash_discount_available",
+    "vat_filing_deadline",
+    "automation_rate",
+    "escalations_today"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "7 Eingangsrechnungen heute. **14** OPs sind überfällig.",
+          "en": "7 supplier invoices today. **14** open items are overdue."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "revenue_today",
+          "open_receivables",
+          "overdue_dunning"
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "type": "AttentionBlock",
+      "config": {
+        "kind": "finance"
+      }
+    },
+    {
+      "id": "kpi_grid_ops",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Operativ",
+          "en": "Operational"
+        },
+        "kpis": [
+          "open_payables",
+          "open_receivables",
+          "unmatched_bank_transactions",
+          "overdue_dunning",
+          "due_today_amount",
+          "cash_discount_available",
+          "dso",
+          "cash_runway_30d",
+          "vat_filing_deadline"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Strategisch",
+          "en": "Strategic"
+        },
+        "kpis": [
+          "revenue_mtd",
+          "dpo",
+          "automation_rate",
+          "escalations_today",
+          "revenue_today"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "inbox",
+            "label_key": "workspace.inquiries",
+            "view": "inbox",
+            "scope": "finance"
+          },
+          {
+            "id": "collect",
+            "label_key": "workspace.financeCollect",
+            "view": "sales_invoices"
+          },
+          {
+            "id": "pay",
+            "label_key": "workspace.financePay",
+            "view": "supplier_invoices"
+          },
+          {
+            "id": "refund",
+            "label_key": "workspace.financeRefund",
+            "view": "sales_credit_notes"
+          },
+          {
+            "id": "payments",
+            "label_key": "workspace.financePayments",
+            "view": "payments"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "attention",
+      "kpi_grid_ops",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "revenue_today",
+    "open_receivables",
+    "overdue_dunning",
+    "revenue_mtd",
+    "dso",
+    "dpo",
+    "open_payables",
+    "cash_runway_30d",
+    "unmatched_bank_transactions",
+    "due_today_amount",
+    "cash_discount_available",
+    "vat_filing_deadline",
+    "automation_rate",
+    "escalations_today"
+  ],
+  "default_briefings": [
+    "daily-finance-briefing"
+  ],
+  "locales": {
+    "en": {
+      "title": "Finance",
+      "description": "Invoices, dunning, OP matching and payment reconciliation."
+    },
+    "de": {
+      "title": "Finanzen",
+      "description": "Rechnungen, Mahnwesen, OP-Matching und Zahlungsabgleich."
+    }
+  }
+}

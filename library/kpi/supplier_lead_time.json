@@ -1,0 +1,27 @@
+{
+  "id": "supplier_lead_time",
+  "version": 1,
+  "icon": "truck",
+  "category": "purchasing",
+  "order": 320,
+  "kpi": {
+    "key": "supplier_lead_time",
+    "unit": "days",
+    "value_type": "duration",
+    "group": "purchasing",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Durchschnittliche Anzahl Tage zwischen Lieferantenbestellung und Wareneingang aus den Wareneingängen der letzten 90 Tage; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    AVG(DATEDIFF(day, po.date, ddi.delivery_date)) AS average_days_between_purchase_order_and_goods_receipt\nFROM delivery_date_items ddi\nLEFT JOIN purchase_orders po\n    ON ddi.purchase_order_id = po.purchase_order_id\nWHERE ddi.delivery_date >= DATEADD(day, -90, CURRENT_DATE)\n  AND po.date IS NOT NULL\n  AND ddi.delivery_date IS NOT NULL\n  AND po.date <= ddi.delivery_date;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Avg supplier lead time",
+      "description": "Mean days between purchase order placement and goods receipt across the last 30 days."
+    },
+    "de": {
+      "title": "Ø Lieferzeit Lieferanten",
+      "description": "Mittlere Tage zwischen Bestellung und Wareneingang über die letzten 30 Tage."
+    }
+  }
+}

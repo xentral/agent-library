@@ -1,0 +1,15 @@
+{
+  "id": "prestashop",
+  "version": 1,
+  "name": "PrestaShop",
+  "domain": "prestashop.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Open-Source-Shop koppeln — Aufträge in Xentral abrechnen."
+    },
+    "de": {
+      "description": "Open-Source-Shop koppeln — Aufträge in Xentral abrechnen."
+    }
+  }
+}

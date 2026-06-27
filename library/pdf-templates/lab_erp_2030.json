@@ -1,0 +1,214 @@
+{
+  "id": "lab_erp_2030",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · ERP 2030 (Rechnung)",
+      "description": "Rechnung als Smart-Dashboard: vibrant Gradients, KPI-Kacheln, KI-Insights-Panel mit Donut-Gauge und Sparkline."
+    },
+    "en": {
+      "title": "Xentral Labs · ERP 2030 (Invoice)",
+      "description": "Invoice as a smart dashboard: vibrant gradients, KPI tiles, AI-insights panel with donut gauge and sparkline."
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Rechnung-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data['lineItems'] | default([]) %}\n{% set sk = data.skonto | default({}) %}\n\n{% block letterhead %}\n  <div class=\"fu-top\">\n    <div class=\"fu-brand\">\n      <svg class=\"fu-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <span class=\"fu-brandname\">{{ data.company.name | default('') }}</span>\n    </div>\n    <div class=\"fu-doc\">\n      <span class=\"fu-pill\">{{ L.pill }}</span>\n      <span class=\"fu-docno\">{{ L.doc_title }} {{ data.documentNumber }}</span>\n    </div>\n  </div>\n{% endblock %}\n\n{% block content %}\n  <h1 class=\"visually-hidden\">{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  <section class=\"fu-kpis\">\n    <div class=\"fu-kpi fu-kpi--hero\">\n      <div class=\"fu-kpi__k\">{{ L.amount_label }}</div>\n      <div class=\"fu-kpi__v\">{{ data.totals.gross | money }}</div>\n      <div class=\"fu-kpi__s\">{{ L.due_on }} {{ data.dueDate | date }}</div>\n    </div>\n    {% if sk.payAmount %}\n    <div class=\"fu-kpi\"><div class=\"fu-kpi__k\">{{ L.skonto_tile }}</div><div class=\"fu-kpi__v2\">{{ sk.payAmount | money }}</div><div class=\"fu-kpi__s\">−{{ sk.percent }} % {{ L.until }} {{ sk.deadline | date }}</div></div>\n    {% else %}\n    <div class=\"fu-kpi\"><div class=\"fu-kpi__k\">{{ L.recipient }}</div><div class=\"fu-kpi__v2\">{{ buyer.name }}</div><div class=\"fu-kpi__s\">{{ buyer.city }}</div></div>\n    {% endif %}\n    <div class=\"fu-kpi\"><div class=\"fu-kpi__k\">{{ L.net_due }}</div><div class=\"fu-kpi__v2\">{{ data.dueDate | date }}</div><div class=\"fu-kpi__s\">{{ L.net_due_sub }}</div></div>\n  </section>\n\n  <section class=\"fu-ai\">\n    <div class=\"fu-ai__gauge\">\n      <svg viewBox=\"0 0 42 42\" class=\"fu-gauge\">\n        <circle cx=\"21\" cy=\"21\" r=\"15.915\" fill=\"none\" stroke=\"rgba(255,255,255,0.25)\" stroke-width=\"3.5\"/>\n        <circle cx=\"21\" cy=\"21\" r=\"15.915\" fill=\"none\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linecap=\"round\" stroke-dasharray=\"{{ sk.ringPct | default(60) }} 100\" transform=\"rotate(-90 21 21)\"/>\n        <text x=\"21\" y=\"20\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"700\" fill=\"#ffffff\">{{ sk.days | default('–') }}</text>\n        <text x=\"21\" y=\"25.5\" text-anchor=\"middle\" font-size=\"3.4\" fill=\"rgba(255,255,255,0.85)\">{{ L.days_left | upper }}</text>\n      </svg>\n    </div>\n    <div class=\"fu-ai__body\">\n      <div class=\"fu-ai__hd\"><svg class=\"fu-spark\" viewBox=\"0 0 24 24\" fill=\"#fff\"><path d=\"M12 2l2.2 6.4L20.6 11l-6.4 2.2L12 20l-2.2-6.8L3.4 11l6.4-2.6z\"/></svg>{{ L.smart_head }}</div>\n      <ul class=\"fu-ai__list\">\n        {% if sk.percent %}<li>{{ sk.percent }} % {{ L.skonto_text }} {{ sk.deadline | date }} — {{ L.you_save }} {{ sk.save | money }}.</li>{% endif %}\n        <li>{{ L.benefit_einvoice }}</li>\n        {% if data.climateNeutral %}<li>{{ L.benefit_climate }}</li>{% endif %}\n      </ul>\n    </div>\n    <div class=\"fu-ai__assist\">\n      <div class=\"fu-assist__qr\">{{ qr_code(data.assistUrl | default('https://agent.xentral.com'), dark='#5b3df0') }}</div>\n      <div class=\"fu-assist__q\">{{ L.assist_q }}</div>\n      <div class=\"fu-assist__sub\">{{ L.assist_sub }}</div>\n    </div>\n  </section>\n\n  <table class=\"fu-items\">\n    <thead><tr><th>{{ L.col_item }}</th><th class=\"r\">{{ L.col_qty }}</th><th class=\"r\">{{ L.col_unit }}</th><th class=\"r\">{{ L.col_amount }}</th></tr></thead>\n    <tbody>\n      {% for p in items %}\n      <tr>\n        <td><strong>{{ p.name }}</strong>{% if p.description %}<span class=\"fu-d\">{{ p.description }}</span>{% endif %}</td>\n        <td class=\"r num\">{{ p.quantity | number }} {{ p.unit }}</td>\n        <td class=\"r num\">{{ p.price.net | money }}</td>\n        <td class=\"r num fu-amt\">{{ p.lineItemRevenue.net | money }}</td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <div class=\"fu-foot\">\n    <section class=\"fu-pay\">\n      <div class=\"fu-k\">{{ L.payment }}</div>\n      <div class=\"fu-pay__line\">{{ data.payment.iban }} · {{ data.payment.bic }}</div>\n      <div class=\"fu-qr\">{{ qr_code(data.payUrl | default('https://agent.xentral.com'), dark='#7c3aed') }}<span>{{ L.pay_now }}</span></div>\n    </section>\n    <section class=\"fu-totals\">\n      <div class=\"fu-trow\"><span>{{ L.net }}</span><span class=\"num\">{{ data.totals.net | money }}</span></div>\n      {% for rate, group in (items | selectattr('effectiveTaxRate','defined')) | groupby('effectiveTaxRate') %}\n        {% set ns = namespace(s=0.0) %}\n        {% for it in group %}{% set ns.s = ns.s + (it.lineItemRevenue.net.amount | default(0) | float) %}{% endfor %}\n        {% if rate %}<div class=\"fu-trow\"><span>{{ L.vat }} {{ rate }} %</span><span class=\"num\">{{ (ns.s * (rate|float)/100.0) | money(currency='EUR') }}</span></div>{% endif %}\n      {% endfor %}\n      <div class=\"fu-grand\"><span>{{ L.total }}</span><span class=\"num\">{{ data.totals.gross | money }}</span></div>\n    </section>\n  </div>\n\n  <footer class=\"fu-pagefoot\">\n    <span>{{ data.company.name }} · {{ data.company.address }}</span>\n    <span>Amtsgericht Charlottenburg · HRB 123456 · Geschäftsführer: Max Beispiel</span>\n    <span>USt-IdNr. {{ data.company.vatId | default('DE123456789') }} · St.-Nr. 13/456/78901</span>\n  </footer>\n{% endblock %}",
+  "css": "@page { size: A4; margin: 0; }\nbody {\n  margin: 0; padding: 15mm 16mm;\n  background: #f5f6fb; color: #0f1222;\n  font-family: 'Helvetica', 'Arial', sans-serif;\n  -webkit-print-color-adjust: exact; print-color-adjust: exact;\n}\n.num { font-variant-numeric: tabular-nums; }\n.r { text-align: right; }\n.doc-header { display: block; margin: 0 0 6mm; }\n\n.fu-top { display: flex; align-items: center; justify-content: space-between; }\n.fu-brand { display: flex; align-items: center; gap: 3mm; }\n.fu-mark { height: 10mm; width: 10mm; display: block; }\n.fu-brandname { font-size: 12pt; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; }\n.fu-doc { text-align: right; }\n.fu-pill { display: inline-block; font-size: 7pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: linear-gradient(90deg,#7c3aed,#06b6d4); border-radius: 999px; padding: 1mm 3mm; }\n.fu-docno { display: block; font-size: 11pt; font-weight: 700; margin-top: 1.4mm; }\n\n.fu-kpis { display: flex; gap: 3mm; margin-bottom: 4mm; }\n.fu-kpi { flex: 1 1 0; background: #ffffff; border: 1px solid #e7e9f2; border-radius: 3mm; padding: 4.5mm; }\n.fu-kpi--hero { background: linear-gradient(135deg, #0f1222 0%, #312352 100%); border: none; color: #fff; flex: 1.3 1 0; }\n.fu-kpi__k { font-size: 7pt; letter-spacing: 0.1em; text-transform: uppercase; color: #8b90a8; font-weight: 700; }\n.fu-kpi--hero .fu-kpi__k { color: #b6a9e6; }\n.fu-kpi__v { font-size: 22pt; font-weight: 800; letter-spacing: -0.02em; margin-top: 1.5mm; font-variant-numeric: tabular-nums; }\n.fu-kpi__v2 { font-size: 12pt; font-weight: 800; margin-top: 1.5mm; }\n.fu-kpi__s { font-size: 8pt; color: #8b90a8; margin-top: 1.5mm; }\n.fu-kpi--hero .fu-kpi__s { color: #cfc6ee; }\n\n.fu-ai { display: flex; align-items: center; gap: 6mm; background: linear-gradient(120deg, #7c3aed 0%, #5b3df0 45%, #06b6d4 100%); color: #fff; border-radius: 3mm; padding: 5mm 6mm; margin-bottom: 6mm; }\n.fu-ai__gauge { flex: 0 0 24mm; }\n.fu-gauge { width: 24mm; height: 24mm; display: block; }\n.fu-ai__body { flex: 1 1 0; }\n.fu-ai__hd { display: flex; align-items: center; gap: 2mm; font-size: 9pt; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2mm; }\n.fu-spark { width: 4mm; height: 4mm; }\n.fu-ai__list { margin: 0; padding-left: 4.5mm; font-size: 9.5pt; line-height: 1.55; }\n.fu-ai__trend { flex: 0 0 38mm; text-align: center; }\n.fu-ai__trendk { font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.8); font-weight: 700; margin-bottom: 1.5mm; }\n.fu-sparkline { width: 38mm; height: 13mm; display: block; }\n\n.fu-items { width: 100%; border-collapse: collapse; margin-bottom: 6mm; }\n.fu-items thead th { font-size: 7pt; letter-spacing: 0.1em; text-transform: uppercase; color: #8b90a8; font-weight: 700; text-align: left; padding: 0 2mm 2.5mm; border-bottom: 1px solid #0f1222; }\n.fu-items thead th.r { text-align: right; }\n.fu-items tbody td { padding: 3mm 2mm; border-bottom: 1px solid #e7e9f2; vertical-align: top; font-size: 10pt; }\n.fu-items tbody td strong { font-weight: 700; }\n.fu-d { display: block; color: #8b90a8; font-size: 8.5pt; margin-top: 0.6mm; }\n.fu-amt { font-weight: 700; }\n\n.fu-foot { display: flex; gap: 8mm; align-items: flex-start; }\n.fu-pay { flex: 1 1 0; }\n.fu-k { font-size: 7pt; letter-spacing: 0.12em; text-transform: uppercase; color: #8b90a8; font-weight: 700; }\n.fu-pay__line { font-family: 'Courier New', monospace; font-size: 9.5pt; margin-top: 1.5mm; }\n.fu-qr { display: flex; align-items: center; gap: 3mm; margin-top: 3.5mm; font-size: 9pt; color: #5b5f76; }\n.fu-qr svg { width: 18mm; height: 18mm; }\n.fu-totals { flex: 0 0 68mm; background: #fff; border: 1px solid #e7e9f2; border-radius: 3mm; padding: 5mm; }\n.fu-trow { display: flex; justify-content: space-between; padding: 1.5mm 0; font-size: 10pt; color: #5b5f76; }\n.fu-grand { display: flex; justify-content: space-between; margin-top: 2mm; padding-top: 3mm; border-top: 1px solid #e7e9f2; font-size: 15pt; font-weight: 800; color: #0f1222; }\n.fu-grand .num { color: #7c3aed; }\n.fu-ai__assist { flex: 0 0 38mm; text-align: center; background: rgba(255,255,255,0.12); border-radius: 3mm; padding: 3.5mm 3mm; }\n.fu-assist__qr { display: flex; justify-content: center; }\n.fu-assist__qr svg { width: 17mm; height: 17mm; background: #fff; padding: 1.4mm; border-radius: 2mm; }\n.fu-assist__q { font-size: 8.5pt; font-weight: 700; margin-top: 2.2mm; }\n.fu-assist__sub { font-size: 7pt; color: rgba(255,255,255,0.82); margin-top: 0.6mm; }\n\n.fu-pagefoot { margin-top: 9mm; padding-top: 4mm; border-top: 1px solid #e7e9f2; display: flex; justify-content: space-between; gap: 6mm; font-size: 6.8pt; color: #8b90a8; }\n",
+  "example_data": {
+    "id": "100512",
+    "documentNumber": "RE-2026-05012",
+    "documentDate": "2026-06-20",
+    "dueDate": "2026-07-04",
+    "language": "de",
+    "documentAddress": {
+      "name": "Aurelia Retail AG",
+      "street": "Königsallee 92",
+      "zipCode": "40212",
+      "city": "Düsseldorf",
+      "country": "Deutschland",
+      "vatId": "DE311002244"
+    },
+    "skonto": {
+      "percent": 2,
+      "deadline": "2026-06-27",
+      "days": 7,
+      "ringPct": 50,
+      "save": {
+        "amount": "122.81",
+        "currency": "EUR"
+      },
+      "payAmount": {
+        "amount": "6017.59",
+        "currency": "EUR"
+      }
+    },
+    "climateNeutral": true,
+    "assistUrl": "https://agent.xentral.com/inv/RE-2026-05012",
+    "payUrl": "https://agent.xentral.com/pay/RE-2026-05012",
+    "lineItems": [
+      {
+        "name": "SmartHub Gateway",
+        "description": "IoT-Edge-Controller, 4G/WiFi",
+        "quantity": 5,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "380.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "1900.00",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "name": "Sensor-Kit IoT",
+        "description": "Temperatur / Feuchte / Bewegung",
+        "quantity": 40,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "24.50",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "980.00",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "name": "Cloud-Anbindung & Setup",
+        "description": "Provisionierung, Dashboards, Schulung",
+        "quantity": 1,
+        "unit": "Pauschal",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "1200.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "1200.00",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "name": "Wartung & Monitoring",
+        "description": "12 Monate, 24/7 Alerting",
+        "quantity": 12,
+        "unit": "Monat",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "90.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "1080.00",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "payment": {
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "bic": "COBADEFFXXX"
+    },
+    "totals": {
+      "net": {
+        "amount": "5160.00",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "6140.40",
+        "currency": "EUR"
+      }
+    },
+    "company": {
+      "name": "Xentral Agent OS",
+      "address": "Marktplatz 1, 10115 Berlin"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Rechnung",
+      "pill": "Smart-Rechnung",
+      "amount_label": "Rechnungsbetrag",
+      "due_on": "fällig am",
+      "skonto_tile": "Skonto-Zahlbetrag",
+      "until": "bis",
+      "recipient": "Empfänger",
+      "net_due": "Zahlungsziel",
+      "net_due_sub": "ohne Abzug",
+      "days_left": "Tage",
+      "smart_head": "Smart-Service · Ihre Vorteile",
+      "skonto_text": "Skonto bei Zahlung bis",
+      "you_save": "Sie sparen",
+      "benefit_einvoice": "ZUGFeRD-E-Rechnung — maschinenlesbar und direkt in Ihre Buchhaltung importierbar.",
+      "benefit_climate": "Klimaneutral versendet — CO₂ vollständig kompensiert.",
+      "assist_q": "Fragen zur Rechnung?",
+      "assist_sub": "KI-Assistent · rund um die Uhr",
+      "col_item": "Position",
+      "col_qty": "Menge",
+      "col_unit": "Einzeln",
+      "col_amount": "Betrag",
+      "payment": "Zahlung",
+      "pay_now": "Sofort bezahlen",
+      "net": "Netto",
+      "vat": "USt",
+      "total": "Gesamt"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "pill": "Smart invoice",
+      "amount_label": "Amount due",
+      "due_on": "due on",
+      "skonto_tile": "Early-pay amount",
+      "until": "by",
+      "recipient": "Recipient",
+      "net_due": "Payment due",
+      "net_due_sub": "net amount",
+      "days_left": "days",
+      "smart_head": "Smart service · Your benefits",
+      "skonto_text": "discount if you pay by",
+      "you_save": "you save",
+      "benefit_einvoice": "ZUGFeRD e-invoice — machine-readable, ready to import into your accounting.",
+      "benefit_climate": "Shipped climate-neutral — CO₂ fully offset.",
+      "assist_q": "Questions about this invoice?",
+      "assist_sub": "AI assistant · around the clock",
+      "col_item": "Item",
+      "col_qty": "Qty",
+      "col_unit": "Unit",
+      "col_amount": "Amount",
+      "payment": "Payment",
+      "pay_now": "Pay now",
+      "net": "Net",
+      "vat": "VAT",
+      "total": "Total"
+    }
+  }
+}

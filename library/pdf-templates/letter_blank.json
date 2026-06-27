@@ -1,0 +1,74 @@
+{
+  "id": "letter_blank",
+  "v3_endpoint": "",
+  "filename_pattern": "Letter-{documentNumber}.pdf",
+  "engine": "gotenberg_chromium",
+  "languages": [
+    "de",
+    "en"
+  ],
+  "compliance": [],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute (or alt='' AND role='presentation')",
+    "exactly one <h1> per document"
+  ],
+  "locales": {
+    "de": {
+      "title": "Brief (Blanko-Struktur)",
+      "description": "Struktur-Startpunkt für einen freien Brief OHNE Positionen (Anschreiben, Mahnung, Mitteilung). Vollständige Struktur — Empfänger, Infoblock, Betreff, Anrede, Freitext, Grußformel — bei neutraler Optik. Klonen und nur das CSS (den Skin) gestalten."
+    },
+    "en": {
+      "title": "Letter (blank structure)",
+      "description": "Structure starter for a free-form letter with NO line items (cover letter, reminder, notice). Full structure — recipient, info block, subject, salutation, free text, closing — with a neutral skin. Clone it and design only the CSS (the skin)."
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Schreiben",
+      "doc_date": "Datum",
+      "customer_number": "Kundennummer",
+      "your_ref": "Ihr Zeichen",
+      "subject_fallback": "Betreff",
+      "closing": "Mit freundlichen Grüßen"
+    },
+    "en": {
+      "doc_title": "Letter",
+      "doc_date": "Date",
+      "customer_number": "Customer no.",
+      "your_ref": "Your reference",
+      "subject_fallback": "Subject",
+      "closing": "Kind regards"
+    }
+  },
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{#====================================================================\n  LETTER STRUCTURE (not a line-item document). This file is the STRUCTURE.\n  To design a new look: clone it and edit ONLY the css (the skin).\n  Text uses {{ L.<key> }} (maintain via set_translation). Available\n  regions (data-box): recipient · info · subject · intro · body ·\n  signature. Optional building block: contact_person (partial).\n====================================================================#}\n\n{% block title %}{{ data.subject | default(L.subject_fallback) }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n\n{#- HEADER (Briefkopf): Logo + Firmenblock. Das ist DIE Kopfzeile — hier\n   bearbeiten; KEINE zweite Kopfzeile im Inhalt zeichnen. Die Seitenzahl\n   steht im Footer (css @bottom-center), nie oben rechts. Dieser Block\n   ueberschreibt den Base-Default, damit der Header im Template sichtbar ist. -#}\n{% block letterhead %}\n  <div class=\"doc-header__brand\">\n    {% if assets.logo %}\n      <img src=\"{{ assets.logo }}\" alt=\"{{ data.company.name | default('') }}\" class=\"doc-header__logo\">\n    {% else %}\n      <div class=\"doc-header__wordmark\"><strong>{{ data.company.name | default('') }}</strong></div>\n    {% endif %}\n    {% if data.company.address %}<p class=\"doc-header__sender\">{{ data.company.address }}</p>{% endif %}\n  </div>\n  <div class=\"doc-header__contact\">\n    {% if data.company.phone %}<div>{{ data.company.phone }}</div>{% endif %}\n    {% if data.company.email %}<div>{{ data.company.email }}</div>{% endif %}\n    {% if data.company.website %}<div>{{ data.company.website }}</div>{% endif %}\n  </div>\n{% endblock %}\n\n{% block content %}\n\n  {#- Header row: recipient address left, metadata right. -#}\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title=L.doc_title %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.doc_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.your_ref }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  {#- Subject (exactly one <h1>). -#}\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ data.subject | default(L.subject_fallback) }}</h1>\n  </section>\n\n  {#- Salutation. -#}\n  {% if data.salutation %}\n  <section class=\"box-intro\" data-box=\"intro\"><p>{{ data.salutation }}</p></section>\n  {% endif %}\n\n  {#- Free-text body. Paragraphs split on blank lines. -#}\n  <section class=\"box-body\" data-box=\"body\">\n    {% for para in (data.bodyText | default('')).split('\\n\\n') %}\n      {% if para | trim %}<p>{{ para | trim }}</p>{% endif %}\n    {% endfor %}\n  </section>\n\n  {#- Closing + signature. -#}\n  <section class=\"box-signature\" data-box=\"signature\">\n    <p class=\"sig-closing\">{{ L.closing }}</p>\n    <div class=\"sig-line\"></div>\n    {% if data.signerName or data.company.ceo %}<p class=\"sig-name\">{{ data.signerName | default(data.company.ceo) }}</p>{% endif %}\n  </section>\n\n{% endblock %}\n",
+  "css": "/* ===================================================================\n   SKIN — this is where the LOOK is designed. Cascades after base.css\n   and overrides its neutral defaults. The structure (html) stays untouched.\n   =================================================================== */\n\n/* :root { --fs-body: 10.5pt; --lh-body: 1.5; } */\n\n/* --- Header: address left, metadata right --- */\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 10mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 60mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n/* --- Letter body --- */\n.box-subject h1 { font-size: 13pt; }\n.box-body { margin: 5mm 0; }\n.box-body p { margin: 0 0 3mm; }\n\n/* --- Closing --- */\n.box-signature { margin: 10mm 0 0; page-break-inside: avoid; }\n.sig-closing { margin: 0 0 12mm; }\n.sig-name { margin: 1.5mm 0 0; }\n\n/* --- Page footer: page number BOTTOM (not top) + mandatory legal/contact\n   lines via @page margin boxes. Literal placeholder strings — CSS is NOT\n   Jinja-rendered, so fill from the tenant's company data at author time,\n   one line per \\A. --- */\n@page {\n  @top-right { content: none; }\n  @bottom-left {\n    content: \"Beispiel Handels GmbH \\00b7 Marktplatz 1, 10115 Berlin \\A Amtsgericht Charlottenburg \\00b7 HRB 123456 \\A Gesch\\00e4ftsf\\00fchrer: Max Beispiel\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line; vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-right {\n    content: \"USt-IdNr. DE123456789 \\A Commerzbank Berlin \\00b7 IBAN DE89 3704 0044 0532 0130 00\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "20001",
+    "documentNumber": "LET-2026-0007",
+    "documentDate": "20.06.2026",
+    "customerNumber": "10043",
+    "customerOrderNumber": "AZ-2026-118",
+    "language": "de",
+    "subject": "Information zu Ihrer Lieferung",
+    "salutation": "Sehr geehrte Damen und Herren,",
+    "bodyText": "vielen Dank für Ihr Vertrauen in unsere Produkte.\n\nWir möchten Sie darüber informieren, dass sich die Lieferung Ihrer letzten Bestellung um wenige Tage verzögert. Die Ware verlässt unser Lager voraussichtlich am 25.06.2026.\n\nBei Rückfragen stehen wir Ihnen jederzeit gerne zur Verfügung.",
+    "documentAddress": {
+      "name": "Musterfirma GmbH",
+      "coName": "Einkauf",
+      "street": "Hauptstraße 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "country": "Deutschland"
+    },
+    "signerName": "Max Beispiel",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "phone": "+49 30 1234567-0",
+      "email": "kontakt@beispiel-handel.de",
+      "website": "www.beispiel-handel.de",
+      "ceo": "Max Beispiel"
+    }
+  }
+}

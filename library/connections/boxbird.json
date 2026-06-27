@@ -1,0 +1,15 @@
+{
+  "id": "boxbird",
+  "version": 1,
+  "name": "Boxbird",
+  "domain": "boxbird.de",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "D2C-Fulfillment-Startup für DACH — flexible Verträge, API-Anbindung an Xentral."
+    },
+    "de": {
+      "description": "D2C-Fulfillment-Startup für DACH — flexible Verträge, API-Anbindung an Xentral."
+    }
+  }
+}

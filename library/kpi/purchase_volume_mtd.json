@@ -1,0 +1,27 @@
+{
+  "id": "purchase_volume_mtd",
+  "version": 1,
+  "icon": "trendUp",
+  "category": "purchasing",
+  "order": 402,
+  "kpi": {
+    "key": "purchase_volume_mtd",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "purchasing",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Gesamtwert der in diesem Monat angelegten Lieferantenbestellungen (Spalte 1) plus Gesamtwert der Lieferantenbestellungen des Vormonats (Spalte 2); ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  COALESCE(SUM(CASE\n    WHEN DATE_TRUNC('month', so.date) = DATE_TRUNC('month', CURRENT_DATE)\n    THEN so.total_amount\n    ELSE 0\n  END), 0) AS \"Aktueller Wert\",\n  COALESCE(SUM(CASE\n    WHEN DATE_TRUNC('month', so.date) = DATE_TRUNC('month', DATEADD('month', -1, CURRENT_DATE))\n    THEN so.total_amount\n    ELSE 0\n  END), 0) AS \"Vorperiodenwert\"\nFROM sales_orders so\nWHERE so.status NOT IN ('created', 'canceled')\n  AND so.is_supplier_order = TRUE\n  AND so.date >= DATEADD('month', -1, DATE_TRUNC('month', CURRENT_DATE))\n  AND so.date < DATEADD('month', 1, DATE_TRUNC('month', CURRENT_DATE));\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Purchase volume (MTD)",
+      "description": "Total purchase order value created this month."
+    },
+    "de": {
+      "title": "Volumen (Monat)",
+      "description": "Gesamtwert der in diesem Monat angelegten Lieferantenbestellungen."
+    }
+  }
+}

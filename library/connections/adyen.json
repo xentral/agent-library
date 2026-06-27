@@ -1,0 +1,15 @@
+{
+  "id": "adyen",
+  "version": 1,
+  "name": "Adyen",
+  "domain": "adyen.com",
+  "category": "payment",
+  "locales": {
+    "en": {
+      "description": "Adyen-Transaktionen importieren und automatisch zuordnen."
+    },
+    "de": {
+      "description": "Adyen-Transaktionen importieren und automatisch zuordnen."
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "order": 60,
+  "id": "daily-products-briefing",
+  "icon": "catalog",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "master_data_products"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Produkt-Briefing",
+      "category": "Stammdaten",
+      "description": "Produkt-Tagesbriefing — Mindestbestand, ohne Bild/Beschreibung, Slow-Mover, Preisanpassung — täglich um 07:00.",
+      "tags": [
+        "Stammdaten",
+        "Produkte",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Produkt-Briefing",
+        "description": "3-4 wichtigsten Produkt-Themen für den Tag — Bestand, Artikelqualität, Preise.",
+        "area": "Stammdaten",
+        "briefing": {
+          "bucket_title": "Produkte",
+          "angles": [
+            "Artikel unter Mindestbestand (Nachbestellung prüfen)",
+            "Artikel ohne Bild (Conversion-Risiko, Bilder ergänzen)",
+            "Artikel ohne Bestand (im Shop ausblenden oder nachbestellen)",
+            "Slow-Mover > 90 Tage (Rabatt-Aktion oder Auslistung erwägen)",
+            "Artikel ohne Beschreibung (SEO & Kundeninfo unvollständig)",
+            "Preisanpassung empfohlen (Wettbewerb günstiger)",
+            "Produkt-Dubletten (gleiche EAN/SKU mehrfach)",
+            "Produkt-Agent-Jobs in requires_intervention (Produkt-Listing, SKU-Validator hängen)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Product Briefing",
+      "category": "Master Data",
+      "description": "Product daily briefing — minimum stock, missing image/description, slow-movers, price adjustments — every day at 07:00.",
+      "tags": [
+        "Master Data",
+        "Products",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Product Briefing",
+        "description": "Top 3-4 product topics for today — stock, product quality, prices.",
+        "area": "Master Data",
+        "briefing": {
+          "bucket_title": "Products",
+          "angles": [
+            "Products below minimum stock (review reorder)",
+            "Products without image (conversion risk — add images)",
+            "Products out of stock (hide in shop or reorder)",
+            "Slow-movers > 90 days (consider discount or delisting)",
+            "Products without description (SEO & customer info incomplete)",
+            "Price adjustment recommended (competitor cheaper)",
+            "Product duplicates (same EAN/SKU more than once)",
+            "Product agent jobs in requires_intervention (Product Listing, SKU Validator stuck)"
+          ]
+        }
+      }
+    }
+  }
+}

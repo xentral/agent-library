@@ -1,0 +1,272 @@
+{
+  "id": "opos_dunning_escalation",
+  "version": 1,
+  "category": "finance",
+  "icon": "email",
+  "order": 110,
+  "popular": true,
+  "trigger_type": "schedule",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Mahnstufen automatisch eskalieren",
+      "description": "Geht jeden Morgen die Liste der offenen Posten durch und setzt für\njede überfällige Rechnung die passende Mahnstufe abhängig von der\nÜberfälligkeit (30/60 Tage) — so eskaliert das Mahnwesen von selbst\nund kein offener Posten bleibt unbemerkt liegen.\n\n**So funktioniert der Algorithmus**\n\n```\nOffene Rechnungen (mind. 14 Tage überfällig)\n └─ für jede Rechnung → wie lange überfällig?\n      ├─ ab 60 Tagen      → Mahnstufe 3 setzen\n      ├─ ab 30 Tagen      → Mahnstufe 2 setzen\n      └─ sonst (14–29 T.) → Mahnstufe 1 setzen\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Der Workflow startet jeden Tag um 07:30 Uhr.\n2. Alle offenen Rechnungen, die mindestens 14 Tage überfällig\n   sind, werden geladen.\n3. Für jede überfällige Rechnung einzeln wird geprüft, wie lange\n   sie überfällig ist.\n4. Ab 60 Tagen wird Mahnstufe 3 gesetzt, ab 30 Tagen Mahnstufe 2,\n   darunter (14 bis 29 Tage) Mahnstufe 1.\n\n**Was verändert wird**\n\n- Ausschließlich das Feld „Mahnstufe\" an den betroffenen\n  Rechnungen wird gesetzt.\n- Es werden keine Mahnungen verschickt und keine Belege erzeugt —\n  der Versand bleibt beim regulären Mahnlauf bzw. den\n  Mitarbeitenden.\n\n**Voraussetzungen und Grenzen**\n\n- Zahlungsstatus und Fälligkeitsdaten der Rechnungen müssen\n  gepflegt sein.\n- Rechnungen, die weniger als 14 Tage überfällig sind, werden\n  bewusst nicht angefasst.\n- Die Mahnstufe wird absolut gesetzt (nicht „+1\") —\n  Wiederholungsläufe sind dadurch unkritisch, eine manuell höher\n  gesetzte Stufe kann aber wieder heruntergestuft werden.\n",
+      "recommended_when": "Sobald regelmäßig offene Posten anfallen",
+      "tags": [
+        "Finanzen",
+        "Mahnwesen",
+        "Offene Posten"
+      ]
+    },
+    "en": {
+      "name": "Auto-escalate dunning levels",
+      "description": "Walks the open-items list every morning and sets the appropriate\ndunning level on each overdue invoice depending on how long it has\nbeen overdue (30/60 days) — dunning escalates on its own and no open\nitem goes unnoticed.\n\n**How the algorithm works**\n\n```\nOpen invoices (at least 14 days overdue)\n └─ for each invoice → how long overdue?\n      ├─ 60+ days          → set dunning level 3\n      ├─ 30+ days          → set dunning level 2\n      └─ else (14–29 days) → set dunning level 1\n```\n\n**What happens step by step**\n\n1. The workflow starts every day at 07:30.\n2. All open invoices that are at least 14 days overdue are\n   loaded.\n3. Each overdue invoice is checked individually for how long it\n   has been overdue.\n4. From 60 days on dunning level 3 is set, from 30 days on\n   dunning level 2, below that (14 to 29 days) dunning level 1.\n\n**What gets changed**\n\n- Only the \"dunning level\" field on the affected invoices is set.\n- No dunning letters are sent and no documents are created —\n  sending remains with the regular dunning run or with the staff.\n\n**Prerequisites and limits**\n\n- Payment status and due dates of the invoices must be\n  maintained.\n- Invoices less than 14 days overdue are deliberately left\n  untouched.\n- The dunning level is set absolutely (not \"+1\") — re-runs are\n  therefore harmless, but a manually raised level may be lowered\n  again.\n",
+      "recommended_when": "As soon as open items accumulate regularly",
+      "tags": [
+        "Finance",
+        "Dunning",
+        "Open items"
+      ],
+      "node_titles": {
+        "n_trig": "Every day at 07:30",
+        "n_query": "Load overdue open invoices",
+        "n_loop": "For each overdue invoice, one by one",
+        "n_rules": "How long has the invoice been overdue?",
+        "n_dun_3": "Set dunning level 3 (60+ days)",
+        "n_dun_2": "Set dunning level 2 (30+ days)",
+        "n_dun_1": "Set dunning level 1 (14+ days)"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-schedule",
+        "config": {
+          "title": "Jeden Tag um 07:30 Uhr",
+          "schedule": {
+            "frequency": "daily",
+            "time": "07:30"
+          }
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Überfällige offene Rechnungen laden",
+          "varName": "overdueInvoices",
+          "entityKey": "SalesInvoice",
+          "entityLabel": "Sales invoice",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "paymentStatus": "open",
+                "minOverdueDays": 14
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_loop",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jede überfällige Rechnung einzeln",
+          "varName": "invoice",
+          "items": "{{ overdueInvoices.data }}"
+        }
+      }
+    },
+    {
+      "id": "n_rules",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "rule-group",
+        "config": {
+          "title": "Wie lange ist die Rechnung überfällig?",
+          "rules": [
+            {
+              "label": "60+ days",
+              "expression": "invoice.get('overdueDays', 0) >= 60"
+            },
+            {
+              "label": "30+ days",
+              "expression": "invoice.get('overdueDays', 0) >= 30"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "n_dun_3",
+      "type": "wfNode",
+      "position": {
+        "x": 360,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Mahnstufe 3 setzen (ab 60 Tagen)",
+          "varName": "mahnstufe3",
+          "entityKey": "SalesInvoice",
+          "entityLabel": "Sales invoice",
+          "operations": [
+            "update"
+          ],
+          "params": {
+            "update": {
+              "path": {
+                "uuid": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                }
+              },
+              "body": {
+                "dunningLevel": 3
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_dun_2",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Mahnstufe 2 setzen (ab 30 Tagen)",
+          "varName": "mahnstufe2",
+          "entityKey": "SalesInvoice",
+          "entityLabel": "Sales invoice",
+          "operations": [
+            "update"
+          ],
+          "params": {
+            "update": {
+              "path": {
+                "uuid": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                }
+              },
+              "body": {
+                "dunningLevel": 2
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_dun_1",
+      "type": "wfNode",
+      "position": {
+        "x": -200,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Mahnstufe 1 setzen (ab 14 Tagen)",
+          "varName": "mahnstufe1",
+          "entityKey": "SalesInvoice",
+          "entityLabel": "Sales invoice",
+          "operations": [
+            "update"
+          ],
+          "params": {
+            "update": {
+              "path": {
+                "uuid": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                }
+              },
+              "body": {
+                "dunningLevel": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_loop",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_loop",
+      "target": "n_rules",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e4",
+      "source": "n_rules",
+      "target": "n_dun_3",
+      "sourceHandle": "r0",
+      "targetHandle": "in:update"
+    },
+    {
+      "id": "e5",
+      "source": "n_rules",
+      "target": "n_dun_2",
+      "sourceHandle": "r1",
+      "targetHandle": "in:update"
+    },
+    {
+      "id": "e6",
+      "source": "n_rules",
+      "target": "n_dun_1",
+      "sourceHandle": "else",
+      "targetHandle": "in:update"
+    }
+  ]
+}

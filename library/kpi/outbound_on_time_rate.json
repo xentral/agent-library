@@ -1,0 +1,27 @@
+{
+  "id": "outbound_on_time_rate",
+  "version": 1,
+  "icon": "trendUp",
+  "category": "logistics",
+  "order": 306,
+  "kpi": {
+    "key": "outbound_on_time_rate",
+    "unit": "%",
+    "value_type": "percent",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Anteil der Versandbelege der letzten 30 Tage, deren Versanddatum nicht später als das zugesagte Lieferdatum war, in Prozent; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  COALESCE(\n    ROUND(\n      100.0 * SUM(\n        CASE\n          WHEN s.sent_at::date <= so.delivery_date THEN 1\n          ELSE 0\n        END\n      ) / NULLIF(COUNT(*), 0),\n      2\n    ),\n    0\n  ) AS kpi_percent\nFROM shipments s\nLEFT JOIN sales_orders so\n  ON so.sales_order_id = s.invoice_id\nWHERE\n  s.sent_at::date >= DATEADD(day, -30, CURRENT_DATE)\n  AND s.sent_at IS NOT NULL\n  AND so.delivery_date IS NOT NULL\n  AND so.status IN ('released', 'sent', 'completed');\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Outbound on-time rate",
+      "description": "Share of own shipments that hit the promised delivery date."
+    },
+    "de": {
+      "title": "On-Time Rate Versand",
+      "description": "Anteil eigener Sendungen, die das zugesagte Lieferdatum erreichen."
+    }
+  }
+}

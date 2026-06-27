@@ -1,0 +1,15 @@
+{
+  "id": "generic3pl",
+  "version": 1,
+  "name": "3PL / Fulfiller (generisch)",
+  "domain": "",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "Beliebiges Fulfillment-Lager via CSV/SFTP, REST-API oder EDI anbinden — Aufträge raus, Bestand und Tracking rein."
+    },
+    "de": {
+      "description": "Beliebiges Fulfillment-Lager via CSV/SFTP, REST-API oder EDI anbinden — Aufträge raus, Bestand und Tracking rein."
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "dhl",
+  "version": 1,
+  "name": "DHL",
+  "domain": "dhl.de",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Versandlabels erzeugen, Tracking-Nummern an Shop zurückmelden.",
+      "human_inputs": [
+        "DHL business customer number (EKP/Kundennummer)",
+        "Account procedure (Verfahren) for V01PAK / V01PRIO",
+        "API user + password (Geschäftskunden-Portal)",
+        "Default sender address (return-to / shipper)"
+      ]
+    },
+    "de": {
+      "description": "Versandlabels erzeugen, Tracking-Nummern an Shop zurückmelden.",
+      "human_inputs": [
+        "DHL Geschäftskundennummer (EKP)",
+        "Verfahren (V01PAK / V01PRIO) je nach Tarif",
+        "API-User + Passwort des Geschäftskunden-Portals",
+        "Standard-Absenderadresse"
+      ]
+    }
+  },
+  "source": "https://marketplace.xentral.com/versanddienstleister/dhl"
+}

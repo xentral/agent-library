@@ -1,0 +1,26 @@
+{
+  "id": "shopify",
+  "version": 1,
+  "name": "Shopify",
+  "domain": "shopify.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Bestellungen, Kunden, Bestand und Produkte bidirektional synchronisieren.",
+      "human_inputs": [
+        "Shopify shop URL (myshop.myshopify.com)",
+        "Admin API access token",
+        "Webhook secret for order/customer events"
+      ]
+    },
+    "de": {
+      "description": "Bestellungen, Kunden, Bestand und Produkte bidirektional synchronisieren.",
+      "human_inputs": [
+        "Shop-URL (myshop.myshopify.com)",
+        "Admin-API-Access-Token",
+        "Webhook-Secret für Order- und Kunden-Events"
+      ]
+    }
+  },
+  "source": "https://marketplace.xentral.com/onlineshops/shopify"
+}

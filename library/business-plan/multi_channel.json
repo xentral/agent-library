@@ -1,0 +1,157 @@
+{
+  "id": "multi_channel",
+  "slugs": [
+    "overview",
+    "market",
+    "roadmap",
+    "company",
+    "products",
+    "masterdata",
+    "channels",
+    "marketing",
+    "team",
+    "processes",
+    "custom_agents",
+    "logistics",
+    "systems",
+    "roles",
+    "migration",
+    "payment",
+    "financials",
+    "accounting",
+    "unit",
+    "reporting"
+  ],
+  "locales": {
+    "de": {
+      "name": "Multi-Channel-Händler",
+      "description": "Volumen-Spiel über mehrere Kanäle — eigener Shop + Amazon + eBay\n+ ggf. Otto/Kaufland. Bestände-Sync, Pricing und schmale Margen\nbei hohem Auftragsdurchsatz.\n",
+      "emphasis": {
+        "overview": "Welche Kanäle macht ihr profitabel — und welche tragen das System nur mit?",
+        "channels": "Anteil + Marge pro Kanal scharf machen. Kanal-spezifische Preise + Versandkosten.",
+        "products": "Sortiments-Breite vs. Tiefe — was läuft auf welchem Kanal? EOL-Strategie.",
+        "masterdata": "Sauberes SKU-Schema + Pflichtfelder pro Kanal (Amazon ASIN, eBay-Kategorien, GTIN).",
+        "logistics": "Carrier-Mix + Lagerstrategie (Eigenlager vs. FBA vs. 3PL) — entscheidet euer Cost-to-Serve.",
+        "systems": "Channel-Integrationen sind die Lebensader. Bestände-Sync darf nie hängen.",
+        "unit": "Kanal-spezifische Margen rechnen — Marktplatz-Gebühren + Werbekosten + Retouren mit drin.",
+        "reporting": "Pro Kanal — Umsatz, Marge, Bestand, Retourenquote. Tageswert + Trend.",
+        "custom_agents": "Bestände-Sync, Pricing-Repricer, Marktplatz-Listings — Slots klar terminieren."
+      },
+      "tasks": [
+        {
+          "title": "Logo + Beleg-Footer",
+          "hint": "Belege je Kanal (Privat/Geschäft) sauber trennen"
+        },
+        {
+          "title": "SKU-Schema final",
+          "hint": "Einheitliches GTIN/ASIN/EAN-Schema vor Listing-Sync"
+        },
+        {
+          "title": "Amazon Seller-Account verbinden",
+          "hint": "MWS/SP-API-Token + FBA/FBM-Strategie pro SKU"
+        },
+        {
+          "title": "eBay / Kaufland / Otto verbinden",
+          "hint": "Token + kanalspezifische Preise · Versandkosten · Lieferzeit"
+        },
+        {
+          "title": "Stammdaten-CSV pro Kanal",
+          "hint": "Pflichtfelder pro Marktplatz — Maße · Bilder · Kategorien · GTIN"
+        },
+        {
+          "title": "Versand-Carrier + Label-Drucker",
+          "hint": "Carrier-Mix konfigurieren · Etiketten + Versandbeleg"
+        },
+        {
+          "title": "Repricer-Tool anbinden",
+          "hint": "SellerLogic · RepricerExpress · BlackCurve an Xentral koppeln"
+        },
+        {
+          "title": "Bank-Login (FinAPI/EBICS)",
+          "hint": "Marktplatz-Auszahlungen automatisch zuordnen"
+        },
+        {
+          "title": "DATEV + OSS-Quartalsmeldung",
+          "hint": "EU-B2C-Meldepflicht klären · OSS-Reports vorbereiten"
+        },
+        {
+          "title": "Schulung Marktplatz-Cases",
+          "hint": "Retoure Amazon vs. eigener Shop · Bewertungen · Disputes"
+        },
+        {
+          "title": "Test-User CS/Lager/Buchhaltung",
+          "hint": "für Multi-Channel-Schulung"
+        },
+        {
+          "title": "Go-Live + Cut-Over-Plan",
+          "hint": "Bestände einfrieren · Channels umstellen · Freeze-Wochenende"
+        }
+      ]
+    },
+    "en": {
+      "name": "Multi-Channel Retailer",
+      "description": "Volume play across multiple channels — own shop + Amazon + eBay\n+ optionally Otto/Kaufland. Inventory sync, pricing and thin\nmargins at high order throughput.\n",
+      "emphasis": {
+        "overview": "Which channels are you running profitably — and which only carry the system?",
+        "channels": "Sharpen share + margin per channel. Channel-specific prices + shipping costs.",
+        "products": "Range breadth vs. depth — what runs on which channel? EOL strategy.",
+        "masterdata": "Clean SKU scheme + mandatory fields per channel (Amazon ASIN, eBay categories, GTIN).",
+        "logistics": "Carrier mix + warehouse strategy (own warehouse vs. FBA vs. 3PL) — decides your cost-to-serve.",
+        "systems": "Channel integrations are the lifeline. Inventory sync must never hang.",
+        "unit": "Calculate channel-specific margins — marketplace fees + ad cost + returns included.",
+        "reporting": "Per channel — revenue, margin, stock, return rate. Daily value + trend.",
+        "custom_agents": "Inventory sync, pricing repricer, marketplace listings — schedule slots clearly."
+      },
+      "tasks": [
+        {
+          "title": "Logo + document footer",
+          "hint": "Cleanly separate documents per channel (B2C/B2B)"
+        },
+        {
+          "title": "SKU scheme final",
+          "hint": "Unified GTIN/ASIN/EAN scheme before listing sync"
+        },
+        {
+          "title": "Connect Amazon seller account",
+          "hint": "MWS/SP-API token + FBA/FBM strategy per SKU"
+        },
+        {
+          "title": "Connect eBay / Kaufland / Otto",
+          "hint": "Tokens + channel-specific prices · shipping · lead time"
+        },
+        {
+          "title": "Master-data CSV per channel",
+          "hint": "Mandatory fields per marketplace — dimensions · images · categories · GTIN"
+        },
+        {
+          "title": "Shipping carrier + label printer",
+          "hint": "Configure carrier mix · labels + shipping document"
+        },
+        {
+          "title": "Connect repricer tool",
+          "hint": "SellerLogic · RepricerExpress · BlackCurve linked to Xentral"
+        },
+        {
+          "title": "Bank login (FinAPI/EBICS)",
+          "hint": "Marketplace payouts auto-matched"
+        },
+        {
+          "title": "DATEV + OSS quarterly filing",
+          "hint": "Clarify EU B2C reporting · prepare OSS reports"
+        },
+        {
+          "title": "Marketplace-case training",
+          "hint": "Returns on Amazon vs. own shop · reviews · disputes"
+        },
+        {
+          "title": "Test user CS/warehouse/accounting",
+          "hint": "For multi-channel training"
+        },
+        {
+          "title": "Go-live + cut-over plan",
+          "hint": "Freeze stock · switch channels · freeze weekend"
+        }
+      ]
+    }
+  }
+}

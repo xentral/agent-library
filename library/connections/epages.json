@@ -1,0 +1,15 @@
+{
+  "id": "epages",
+  "version": 1,
+  "name": "ePages",
+  "domain": "epages.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "ePages-basierte Shops anbinden — Order-Sync und Bestandspflege."
+    },
+    "de": {
+      "description": "ePages-basierte Shops anbinden — Order-Sync und Bestandspflege."
+    }
+  }
+}

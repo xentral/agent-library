@@ -1,0 +1,75 @@
+{
+  "order": 40,
+  "id": "daily-procurement-briefing",
+  "icon": "archive",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "procurement"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Einkaufs-Briefing",
+      "category": "Einkauf",
+      "description": "Einkauf-Tagesbriefing — Lieferanten-Verzug, fällige Bestellungen, Mindestbestand, Konditionen — täglich um 07:00.",
+      "tags": [
+        "Einkauf",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Einkaufs-Briefing",
+        "description": "3-4 wichtigsten Einkaufs-Themen für den Tag — Lieferanten, Bestellungen, Konditionen.",
+        "area": "Einkauf",
+        "briefing": {
+          "bucket_title": "Einkauf",
+          "angles": [
+            "Lieferanten-Verzug (versprochene vs tatsächliche Liefertermine)",
+            "Fällige Bestellungen / offene Bestellvorschläge",
+            "Mindestbestand-Unterschreitung (beschaffungsrelevante Artikel)",
+            "Preise & Konditionen mit fälliger Verhandlung",
+            "Wareneingangs-Quote pro Lieferant (auffällig schlechte?)",
+            "Einkaufs-Agent-Jobs in requires_intervention (Lieferanten-RFQ, Bestellvorschlag-Generator hängen)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Procurement Briefing",
+      "category": "Procurement",
+      "description": "Procurement daily briefing — supplier delays, due orders, minimum stock, terms — every day at 07:00.",
+      "tags": [
+        "Procurement",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Procurement Briefing",
+        "description": "Top 3-4 procurement topics for today — suppliers, orders, terms.",
+        "area": "Procurement",
+        "briefing": {
+          "bucket_title": "Procurement",
+          "angles": [
+            "Supplier delay (promised vs actual delivery dates)",
+            "Due orders / open reorder proposals",
+            "Minimum-stock breaches (procurement-relevant items)",
+            "Prices & terms with negotiation due",
+            "Goods-receipt rate per supplier (any noticeably bad ones?)",
+            "Procurement agent jobs in requires_intervention (Supplier RFQ, Reorder Proposal Generator stuck)"
+          ]
+        }
+      }
+    }
+  }
+}

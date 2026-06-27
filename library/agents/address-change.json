@@ -1,0 +1,156 @@
+{
+  "order": 200,
+  "id": "address-change",
+  "icon": "user",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "form",
+    "tools": [
+      "xentral_copilot",
+      "xentral_crm",
+      "xentral_email"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.3
+  },
+  "locales": {
+    "de": {
+      "name": "Adressänderung Kunde",
+      "category": "Kundenservice",
+      "description": "Externes Formular für Kunden — neue Lieferadresse erfassen, der Agent aktualisiert Xentral und benachrichtigt den Versand.",
+      "tags": [
+        "Kundenservice",
+        "Stammdaten"
+      ],
+      "prefill": {
+        "name": "Adressänderung Kunde",
+        "description": "Kunde meldet eine neue Lieferadresse — Agent prüft Bestell-Status und aktualisiert die Daten.",
+        "area": "Kundenservice",
+        "form_meta": {
+          "audience": "external",
+          "fields": [
+            {
+              "id": "order_number",
+              "label": "Bestellnummer",
+              "type": "text",
+              "placeholder": "z.B. AB-2026-12345",
+              "required": true
+            },
+            {
+              "id": "customer_email",
+              "label": "E-Mail (zur Bestätigung)",
+              "type": "email",
+              "required": true
+            },
+            {
+              "id": "new_street",
+              "label": "Neue Straße + Hausnummer",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "new_zip",
+              "label": "PLZ",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "new_city",
+              "label": "Stadt",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "new_country",
+              "label": "Land",
+              "type": "select",
+              "options": [
+                "DE",
+                "AT",
+                "CH",
+                "sonstiges"
+              ],
+              "required": true
+            },
+            {
+              "id": "reason",
+              "label": "Grund der Änderung (optional)",
+              "type": "textarea"
+            }
+          ]
+        },
+        "instructions": "Du bist der Adressänderungs-Agent für den Kundenservice. Wenn ein\nKunde das Formular abschickt:\n\n1. Hol via Co-Pilot die Bestellung anhand der Bestellnummer.\n   Prüfe Kundenmatch über die angegebene E-Mail — wenn die nicht\n   zur Bestellung passt, antworte höflich „Bestellnummer und\n   E-Mail passen nicht zusammen, bitte CS kontaktieren\" und\n   lege KEINE Adressänderung an.\n2. Prüfe den Versand-Status der Bestellung:\n   - Noch nicht versandt → Lieferadresse in Xentral direkt am\n     Auftrag aktualisieren. Bestätigungsmail an den Kunden.\n   - Bereits versandt → KEINE Änderung in Xentral. Eine\n     CRM-Notiz mit dem Adresswunsch + Eskalations-Task für CS\n     („Bitte mit Spedition klären\"). Antworte dem Kunden:\n     „Versand ist schon raus, wir melden uns mit der Spedition.\"\n3. Schreib eine CRM-Notiz mit Datum, alter Adresse, neuer\n   Adresse und Grund (sofern angegeben).\n4. Bestätigungsmail an die angegebene Kundenadresse mit\n   kurzem Status (durchgeführt / in Klärung) — DE-formell,\n   keine Marketing-Floskeln.\n\nAntworte zum Schluss intern mit einer Zusammenfassung:\nBestellung, alter→neuer Wert, Status der Änderung, was als\nnächstes passiert.\n"
+      }
+    },
+    "en": {
+      "name": "Customer address change",
+      "category": "Customer Service",
+      "description": "External form for customers — submit a new delivery address; the agent updates Xentral and notifies fulfilment.",
+      "tags": [
+        "Customer Service",
+        "Master Data"
+      ],
+      "prefill": {
+        "name": "Customer address change",
+        "description": "Customer reports a new delivery address — agent checks order status and updates Xentral.",
+        "area": "Customer Service",
+        "form_meta": {
+          "audience": "external",
+          "fields": [
+            {
+              "id": "order_number",
+              "label": "Order number",
+              "type": "text",
+              "placeholder": "e.g. AB-2026-12345",
+              "required": true
+            },
+            {
+              "id": "customer_email",
+              "label": "Email (for confirmation)",
+              "type": "email",
+              "required": true
+            },
+            {
+              "id": "new_street",
+              "label": "New street + house number",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "new_zip",
+              "label": "Postal code",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "new_city",
+              "label": "City",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "new_country",
+              "label": "Country",
+              "type": "select",
+              "options": [
+                "DE",
+                "AT",
+                "CH",
+                "other"
+              ],
+              "required": true
+            },
+            {
+              "id": "reason",
+              "label": "Reason for change (optional)",
+              "type": "textarea"
+            }
+          ]
+        },
+        "instructions": "You are the address-change agent for customer service. When a\ncustomer submits the form:\n\n1. Fetch the order via copilot using the order number. Verify\n   the customer email against the order — if it doesn't match,\n   politely reply \"order number and email don't match, please\n   contact CS\" and do NOT make any change.\n2. Check the order's shipping status:\n   - Not yet shipped → update the delivery address directly on\n     the order in Xentral. Confirmation email to the customer.\n   - Already shipped → DO NOT change Xentral. Create a CRM\n     note with the requested address + an escalation task for\n     CS (\"please coordinate with carrier\"). Reply to the\n     customer: \"your order has already shipped, we'll follow\n     up with the carrier.\"\n3. Write a CRM note with date, old address, new address, and\n   reason (if provided).\n4. Confirmation email to the customer with a brief status\n   (done / pending) — professional English, no marketing fluff.\n\nFinish with an internal summary: order, old→new value, status\nof the change, what happens next.\n"
+      }
+    }
+  }
+}

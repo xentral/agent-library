@@ -1,0 +1,16 @@
+{
+  "id": "zalando",
+  "version": 1,
+  "name": "Zalando ZFS",
+  "domain": "zalando.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "ZFS-Belieferung, Bestände und Retouren synchronisieren."
+    },
+    "de": {
+      "description": "ZFS-Belieferung, Bestände und Retouren synchronisieren."
+    }
+  },
+  "source": "https://marketplace.xentral.com/marktplaetze/zalando"
+}

@@ -1,0 +1,192 @@
+{
+  "id": "catalog_data_quality_sweep",
+  "version": 1,
+  "category": "warehouse",
+  "icon": "warehouse",
+  "order": 180,
+  "trigger_type": "schedule",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Stammdaten-Check über den ganzen Katalog",
+      "description": "Blättert seitenweise durch den kompletten Artikelkatalog und\nsammelt alle Artikel mit fehlenden Stammdaten (EAN, Gewicht,\nEinkaufspreis) in einem Bericht. So fallen Pflegelücken\nregelmäßig und automatisch auf, bevor sie im Versand oder im\nEinkauf Probleme machen.\n\n**So funktioniert der Algorithmus**\n\n```\nStart → Paging vorbereiten (Seite 1, Größe 100, leere Liste)\nsolange weitere Katalogseiten existieren:\n ├─ Seite laden → je Artikel: EAN / Gewicht / EK vorhanden?\n │    └─ fehlt etwas → Artikel auf die Mängelliste\n └─ letzte Seite erreicht → Bericht erstellen → ausgeben\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Jeden Montag um 03:00 startet der Lauf und bereitet das\n   seitenweise Blättern vor (Seite 1, Seitengröße 100, leere\n   Mängelliste).\n2. Solange weitere Katalogseiten existieren, prüft ein Testknoten,\n   ob es noch eine weitere Seite gibt.\n3. Ist das der Fall, wird die Katalogseite geladen und jeder\n   Artikel auf Lücken geprüft — Artikel mit fehlender EAN,\n   fehlendem Gewicht oder fehlendem Einkaufspreis landen mit ihrer\n   ID und den fehlenden Feldern auf der Mängelliste.\n4. Ist die letzte Seite erreicht, wird der Bericht über die\n   fehlenden Stammdaten erstellt und als Workflow-Ausgabe\n   zurückgegeben.\n\n**Was verändert wird**\n\n- Nichts — der Workflow liest den Katalog nur. Es werden keine\n  Artikel geändert und keine E-Mails versendet.\n- Das Ergebnis ist ausschließlich ein Bericht (Liste der\n  auffälligen Artikel plus Anzahl) als Workflow-Ausgabe.\n\n**Voraussetzungen und Grenzen**\n\n- Da die Seitenzahl vorab unbekannt ist, steuert eine\n  While-Schleife das Paging.\n- Eine Obergrenze von 1000 Durchläufen verhindert ein\n  Endlos-Paging; bei sehr großen Katalogen besser die Seitengröße\n  (Standard 100) erhöhen, statt sich auf diese Grenze zu\n  verlassen.\n- Geprüft werden genau die Felder EAN, Gewicht und Einkaufspreis —\n  weitere Pflichtfelder lassen sich im Code-Knoten ergänzen.\n",
+      "recommended_when": "Sobald der Katalog groß genug für regelmäßige Checks ist",
+      "tags": [
+        "Logistik",
+        "Stammdaten",
+        "Datenqualität"
+      ]
+    },
+    "en": {
+      "name": "Catalog data-quality sweep",
+      "description": "Pages through the entire product catalog and collects every\nproduct with missing master data (EAN, weight, purchase price)\ninto a report. Maintenance gaps surface regularly and\nautomatically — before they cause trouble in shipping or\npurchasing.\n\n**How the algorithm works**\n\n```\nstart → prepare paging (page 1, size 100, empty findings list)\nwhile more catalog pages exist:\n ├─ load page → per product: EAN / weight / purchase price set?\n │    └─ anything missing → add product to the findings list\n └─ last page reached → build the report → return it\n```\n\n**What happens step by step**\n\n1. Every Monday at 03:00 the run starts and prepares the\n   page-by-page sweep (page 1, page size 100, empty findings\n   list).\n2. While more catalog pages exist, a test node checks whether\n   there is another page left.\n3. If so, the catalog page is loaded and every product is checked\n   for gaps — products with a missing EAN, missing weight or\n   missing purchase price are added to the findings list with\n   their ID and the missing fields.\n4. Once the last page is reached, the missing-master-data report\n   is built and returned as the workflow output.\n\n**What gets changed**\n\n- Nothing — the workflow only reads the catalog. No products are\n  modified and no emails are sent.\n- The result is purely a report (list of flagged products plus\n  their count) as the workflow output.\n\n**Prerequisites and limits**\n\n- The page count is unknown up-front, so a while loop drives the\n  paging.\n- A cap of 1000 iterations bounds runaway paging; for very large\n  catalogs raise the page size (default 100) rather than relying\n  on that cap.\n- Exactly the fields EAN, weight and purchase price are checked —\n  additional required fields can be added in the code node.\n",
+      "recommended_when": "Once the catalog is large enough for regular checks",
+      "tags": [
+        "Logistics",
+        "Master data",
+        "Data quality"
+      ],
+      "node_titles": {
+        "n_trig": "Every Monday at 03:00",
+        "n_init": "Prepare the page-by-page sweep",
+        "n_while": "While more catalog pages exist",
+        "n_more": "Is there another page left?",
+        "n_scan": "Load the catalog page and check for gaps",
+        "n_report": "Build the missing-master-data report",
+        "n_out": "Return the data-quality report"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-schedule",
+        "config": {
+          "title": "Jeden Montag um 03:00",
+          "schedule": {
+            "frequency": "weekly",
+            "time": "03:00",
+            "weekdays": [
+              "mon"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "n_init",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Seitenweises Blättern vorbereiten",
+          "varName": "initPaging",
+          "code": "context['page'] = 1\ncontext['page_size'] = 100\ncontext['flagged'] = []\ncontext['more'] = True\nresult = True\n"
+        }
+      }
+    },
+    {
+      "id": "n_while",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "while",
+        "config": {
+          "title": "Solange weitere Katalogseiten existieren"
+        }
+      }
+    },
+    {
+      "id": "n_more",
+      "type": "wfNode",
+      "position": {
+        "x": 380,
+        "y": 560
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Gibt es noch eine weitere Seite?",
+          "varName": "morePages",
+          "code": "result = bool(context.get('more', False))\n"
+        }
+      }
+    },
+    {
+      "id": "n_scan",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Katalogseite laden und auf Lücken prüfen",
+          "varName": "scanPage",
+          "code": "resp = business_entity_op('Product', 'list', {'query': {'page': context['page'], 'pageSize': context['page_size']}})\nrows = resp.get('data', []) if isinstance(resp, dict) else (resp or [])\nfor p in rows:\n    missing = [f for f in ('ean', 'weight', 'purchasePrice') if not p.get(f)]\n    if missing:\n        context['flagged'].append({'id': p.get('id'), 'missing': missing})\nif len(rows) < context['page_size']:\n    context['more'] = False\nelse:\n    context['page'] += 1\nresult = len(rows)\nlog(f\"page {context['page']}: {len(rows)} product(s)\")\n"
+        }
+      }
+    },
+    {
+      "id": "n_report",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Bericht über fehlende Stammdaten erstellen",
+          "varName": "catalogReport",
+          "code": "result = {'flagged': context.get('flagged', []), 'count': len(context.get('flagged', []))}\nlog(f\"{result['count']} product(s) with missing master data\")\n"
+        }
+      }
+    },
+    {
+      "id": "n_out",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1280
+      },
+      "data": {
+        "typeId": "output",
+        "config": {
+          "title": "Datenqualitäts-Bericht zurückgeben",
+          "varName": "qualityReport",
+          "value": "{{ catalogReport }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_init"
+    },
+    {
+      "id": "e2",
+      "source": "n_init",
+      "target": "n_while"
+    },
+    {
+      "id": "e3",
+      "source": "n_while",
+      "target": "n_more",
+      "sourceHandle": "cond"
+    },
+    {
+      "id": "e4",
+      "source": "n_while",
+      "target": "n_scan",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e5",
+      "source": "n_while",
+      "target": "n_report",
+      "sourceHandle": "b"
+    },
+    {
+      "id": "e6",
+      "source": "n_report",
+      "target": "n_out"
+    }
+  ]
+}

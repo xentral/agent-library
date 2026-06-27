@@ -1,0 +1,15 @@
+{
+  "id": "slack",
+  "version": 1,
+  "name": "Slack",
+  "domain": "slack.com",
+  "category": "comms",
+  "locales": {
+    "en": {
+      "description": "Auftrags-, Bestand- und Fehler-Notifications in Channels."
+    },
+    "de": {
+      "description": "Auftrags-, Bestand- und Fehler-Notifications in Channels."
+    }
+  }
+}

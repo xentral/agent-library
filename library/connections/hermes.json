@@ -1,0 +1,15 @@
+{
+  "id": "hermes",
+  "version": 1,
+  "name": "Hermes",
+  "domain": "hermesworld.com",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Hermes-Versandintegration für B2C-Sendungen."
+    },
+    "de": {
+      "description": "Hermes-Versandintegration für B2C-Sendungen."
+    }
+  }
+}

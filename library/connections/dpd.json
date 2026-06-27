@@ -1,0 +1,16 @@
+{
+  "id": "dpd",
+  "version": 1,
+  "name": "DPD",
+  "domain": "dpd.com",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "DPD-Labels, Versandavise, Sendungsstatus."
+    },
+    "de": {
+      "description": "DPD-Labels, Versandavise, Sendungsstatus."
+    }
+  },
+  "source": "https://marketplace.xentral.com/versanddienstleister/dpd"
+}

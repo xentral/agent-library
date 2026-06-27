@@ -1,0 +1,15 @@
+{
+  "id": "manomano",
+  "version": 1,
+  "name": "ManoMano",
+  "domain": "manomano.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "DIY-Marktplatz — Aufträge importieren, Tracking zurückmelden."
+    },
+    "de": {
+      "description": "DIY-Marktplatz — Aufträge importieren, Tracking zurückmelden."
+    }
+  }
+}

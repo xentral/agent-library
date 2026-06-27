@@ -1,0 +1,100 @@
+{
+  "id": "agent_performance",
+  "version": 2,
+  "icon": "chart-bar",
+  "category": "ops",
+  "order": 200,
+  "recommended_kpis": [
+    "automation_rate",
+    "avg_response_time",
+    "csat",
+    "first_contact_resolution",
+    "escalations_today",
+    "done_today"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "147 Vorgänge automatisch erledigt heute. **6** wurden eskaliert.",
+          "en": "147 cases handled automatically today. **6** were escalated."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "open_inquiries",
+          "automation_rate",
+          "done_today"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_key": "dashboards.mockup.kpi.title",
+        "kpis": [
+          "avg_response_time",
+          "csat",
+          "first_contact_resolution",
+          "escalations_today",
+          "sla_breaches",
+          "returns_today"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "inbox",
+            "label_key": "workspace.inquiries",
+            "view": "inbox",
+            "scope": "customer_service"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "open_inquiries",
+    "automation_rate",
+    "done_today",
+    "avg_response_time",
+    "csat",
+    "first_contact_resolution",
+    "escalations_today",
+    "sla_breaches",
+    "returns_today"
+  ],
+  "locales": {
+    "en": {
+      "title": "Agent Performance",
+      "description": "Per-agent throughput and success rate — how many jobs each agent handled, completion vs. requires_intervention, time-to-resolve."
+    },
+    "de": {
+      "title": "Agent-Leistung",
+      "description": "Durchsatz und Erfolgsquote je Agent — wie viele Jobs jeder Agent erledigt hat, abgeschlossen vs. Eingriff nötig, Bearbeitungsdauer."
+    }
+  }
+}

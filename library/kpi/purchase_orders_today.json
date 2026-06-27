@@ -1,0 +1,27 @@
+{
+  "id": "purchase_orders_today",
+  "version": 1,
+  "icon": "purchase",
+  "category": "purchasing",
+  "order": 403,
+  "kpi": {
+    "key": "purchase_orders_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "purchasing",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Lieferantenbestellungen mit Anlagedatum heute; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(*) AS \"Anzahl Lieferantenbestellungen heute\"\nFROM purchase_orders po\nWHERE po.date = CURRENT_DATE\n  AND po.status NOT IN ('canceled', 'completed', 'created')\n"
+  },
+  "locales": {
+    "en": {
+      "title": "New today",
+      "description": "Purchase orders created since midnight."
+    },
+    "de": {
+      "title": "Heute neu",
+      "description": "Heute neu angelegte Lieferantenbestellungen."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "sevensenders",
+  "version": 1,
+  "name": "7Senders",
+  "domain": "7senders.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "Cross-Border-Versandnetzwerk + Tracking-Plattform für EU-weite Auslieferung."
+    },
+    "de": {
+      "description": "Cross-Border-Versandnetzwerk + Tracking-Plattform für EU-weite Auslieferung."
+    }
+  }
+}

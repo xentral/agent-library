@@ -1,0 +1,15 @@
+{
+  "id": "rhenus",
+  "version": 1,
+  "name": "Rhenus Logistics",
+  "domain": "rhenus.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "Multi-User-Warehouse + Kontraktlogistik — Aufträge und Bestand mit Xentral abgleichen."
+    },
+    "de": {
+      "description": "Multi-User-Warehouse + Kontraktlogistik — Aufträge und Bestand mit Xentral abgleichen."
+    }
+  }
+}

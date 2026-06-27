@@ -1,0 +1,15 @@
+{
+  "id": "klaviyo",
+  "version": 1,
+  "name": "Klaviyo",
+  "domain": "klaviyo.com",
+  "category": "crm",
+  "locales": {
+    "en": {
+      "description": "E-Commerce-Daten aus Xentral nach Klaviyo für Email-Flows."
+    },
+    "de": {
+      "description": "E-Commerce-Daten aus Xentral nach Klaviyo für Email-Flows."
+    }
+  }
+}

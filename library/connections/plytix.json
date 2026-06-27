@@ -1,0 +1,15 @@
+{
+  "id": "plytix",
+  "version": 1,
+  "name": "Plytix",
+  "domain": "plytix.com",
+  "category": "pim",
+  "locales": {
+    "en": {
+      "description": "PIM-Sync: Produktinhalte, Bilder, Varianten zentral verwalten."
+    },
+    "de": {
+      "description": "PIM-Sync: Produktinhalte, Bilder, Varianten zentral verwalten."
+    }
+  }
+}

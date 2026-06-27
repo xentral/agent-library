@@ -1,0 +1,15 @@
+{
+  "id": "hermesfullfilment",
+  "version": 1,
+  "name": "Hermes Fulfilment",
+  "domain": "hermes-fulfilment.de",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "Otto-Group-Fulfillment — Lager, Versand und Retouren-Abwicklung."
+    },
+    "de": {
+      "description": "Otto-Group-Fulfillment — Lager, Versand und Retouren-Abwicklung."
+    }
+  }
+}

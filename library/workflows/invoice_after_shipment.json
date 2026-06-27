@@ -1,0 +1,184 @@
+{
+  "id": "invoice_after_shipment",
+  "version": 1,
+  "category": "finance",
+  "icon": "send",
+  "order": 160,
+  "popular": true,
+  "trigger_type": "erp-event",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Rechnung erzeugen nach Versand",
+      "description": "Wird ein Lieferschein als versendet gebucht, sucht der Workflow\nversendete, noch nicht fakturierte Lieferscheine, erstellt je\nLieferschein die zugehörige Rechnung und entwirft die Kunden-Mail.\nDer klassische Ablauf beim Rechnungskauf: Die Rechnung folgt\nautomatisch auf den Versand, ohne dass jemand daran denken muss.\n\n**Was Schritt für Schritt passiert**\n\n1. Ein Lieferschein wird als versendet gebucht — das ERP-Ereignis\n   startet den Workflow.\n2. Alle versendeten, noch nicht fakturierten Lieferscheine werden\n   geladen.\n3. Für jeden Lieferschein einzeln wird die zugehörige Rechnung\n   erstellt — Kunde, Positionen und die Referenz auf den\n   Lieferschein werden dabei übernommen.\n4. Der Agent entwirft eine kurze, freundliche Kunden-Mail, die\n   sich für die Bestellung bedankt und auf die neue\n   Rechnungsnummer verweist.\n\n**Was verändert wird**\n\n- Je Lieferschein wird eine neue Ausgangsrechnung in Xentral\n  angelegt.\n- Die Kunden-Mail bleibt ein Entwurf und wird nicht automatisch\n  versendet.\n\n**Voraussetzungen und Grenzen**\n\n- Der Workflow reagiert auf das ERP-Ereignis „Lieferschein\n  versendet\" und verarbeitet dann alle passenden Lieferscheine,\n  nicht nur den auslösenden — Doppelungen verhindert das\n  Filterkriterium „noch nicht fakturiert\".\n- Status- und Fakturierungs-Kennzeichen am Lieferschein müssen\n  gepflegt sein.\n- Die Listenabfrage liefert ohne gesetzte Seitengröße nur die\n  erste Ergebnisseite; bei hohem Versandvolumen räumt das nächste\n  Versand-Ereignis den Rest ab.\n",
+      "recommended_when": "Bei Rechnungskauf oder Lastschrift als Zahlungsart",
+      "tags": [
+        "Finanzen",
+        "Rechnung",
+        "Versand"
+      ]
+    },
+    "en": {
+      "name": "Create invoice after shipment",
+      "description": "When a delivery note is booked as shipped, the workflow finds\nshipped-but-uninvoiced delivery notes, creates the matching\ninvoice for each and drafts the customer mail. The classic\ninvoice-purchase flow: the invoice follows the shipment\nautomatically, with nobody having to remember it.\n\n**What happens step by step**\n\n1. A delivery note is booked as shipped — the ERP event starts\n   the workflow.\n2. All shipped, not yet invoiced delivery notes are loaded.\n3. For each delivery note, one by one, the matching invoice is\n   created — customer, positions and the reference to the\n   delivery note are carried over.\n4. The agent drafts a short, friendly customer mail that thanks\n   them for the order and mentions the new invoice number.\n\n**What gets changed**\n\n- One new sales invoice is created in Xentral per delivery note.\n- The customer mail stays a draft and is not sent automatically.\n\n**Prerequisites and limits**\n\n- The workflow reacts to the ERP event \"delivery note shipped\"\n  and then processes all matching delivery notes, not just the\n  triggering one — the \"not yet invoiced\" filter prevents\n  duplicates.\n- It requires maintained status and invoicing flags on the\n  delivery notes.\n- Without an explicit page size the list query returns only the\n  first result page; with high shipping volume the next shipment\n  event picks up the rest.\n",
+      "recommended_when": "When invoice or direct debit is offered",
+      "tags": [
+        "Finance",
+        "Invoice",
+        "Shipment"
+      ],
+      "node_titles": {
+        "n_trig": "When a delivery note is shipped",
+        "n_query": "Load shipped, uninvoiced delivery notes",
+        "n_loop": "For each delivery note, one by one",
+        "n_invoice": "Create the invoice for the delivery note",
+        "n_mail": "Draft the customer mail for the invoice"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-erp-event",
+        "config": {
+          "title": "Wenn ein Lieferschein versendet wird",
+          "event": "delivery_note.shipped"
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Versendete, nicht fakturierte Lieferscheine laden",
+          "varName": "shippedDeliveryNotes",
+          "entityKey": "DeliveryNote",
+          "entityLabel": "Delivery note",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "status": "shipped",
+                "invoiced": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_loop",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jeden Lieferschein einzeln",
+          "varName": "deliveryNote",
+          "items": "{{ shippedDeliveryNotes.data }}"
+        }
+      }
+    },
+    {
+      "id": "n_invoice",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Rechnung zum Lieferschein erstellen",
+          "varName": "createInvoice",
+          "entityKey": "SalesInvoice",
+          "entityLabel": "Sales invoice",
+          "operations": [
+            "create"
+          ],
+          "params": {
+            "create": {
+              "body": {
+                "customerId": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "customerId"
+                },
+                "positions": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "positions"
+                },
+                "deliveryNoteRef": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_mail",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "agent",
+        "config": {
+          "title": "Kunden-Mail zur Rechnung entwerfen",
+          "varName": "invoiceMail",
+          "model": "gpt-5.1",
+          "prompt": "Draft a short, friendly mail to the customer for delivery note {{ deliveryNote.number }}: thank them for the order, mention that invoice {{ createInvoice.documentNumber }} is attached. Return the mail text only.\n"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_loop",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_loop",
+      "target": "n_invoice",
+      "sourceHandle": "a",
+      "targetHandle": "in:create"
+    },
+    {
+      "id": "e4",
+      "source": "n_invoice",
+      "target": "n_mail"
+    }
+  ]
+}

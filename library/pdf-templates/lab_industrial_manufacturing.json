@@ -1,0 +1,161 @@
+{
+  "id": "lab_industrial_manufacturing",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Industrial Manufacturing (Lieferschein)",
+      "description": "Technischer Lieferschein: Stahl/Slate + Sicherheits-Amber, Monospace-Artikelnummern, Code-128-Barcode, Teillieferungs-Markierung, QC-Stempel."
+    },
+    "en": {
+      "title": "Xentral Labs · Industrial Manufacturing (Delivery Note)",
+      "description": "Technical delivery note: steel/slate + safety amber, monospace SKUs, Code-128 barcode, partial-delivery flag, QC stamp."
+    }
+  },
+  "v3_endpoint": "/api/v3/deliveryNotes/{id}?include=all",
+  "filename_pattern": "Lieferschein-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data['lineItems'] | default([]) %}\n{% set shp = data.shipping | default({}) %}\n\n{% block letterhead %}{% endblock %}\n\n{% block content %}\n  <section class=\"in-band\">\n    <div class=\"in-band__left\">\n      <svg class=\"in-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <div>\n        <div class=\"in-doctype\">{{ L.doc_title }}</div>\n        <div class=\"in-docno\">{{ data.documentNumber }}</div>\n      </div>\n    </div>\n    <div class=\"in-band__bc\">{{ barcode(data.documentNumber | default('LS'), kind='code128', module_color='#ffffff', background='#16243b') }}</div>\n  </section>\n\n  <section class=\"in-grid\">\n    <div class=\"in-cell\"><span class=\"in-k\">{{ L.date_label }}</span><span class=\"in-v\">{{ data.documentDate | date }}</span></div>\n    <div class=\"in-cell\"><span class=\"in-k\">{{ L.order_label }}</span><span class=\"in-v\">{{ data.customerOrderNumber | default(data.orderNumber) }}</span></div>\n    <div class=\"in-cell\"><span class=\"in-k\">{{ L.cust_no }}</span><span class=\"in-v\">{{ data.customerNumber }}</span></div>\n    <div class=\"in-cell\"><span class=\"in-k\">{{ L.carrier }}</span><span class=\"in-v\">{{ shp.carrier }}</span></div>\n    <div class=\"in-cell\"><span class=\"in-k\">{{ L.packages }}</span><span class=\"in-v\">{{ shp.packages }}</span></div>\n    <div class=\"in-cell\"><span class=\"in-k\">{{ L.weight }}</span><span class=\"in-v\">{{ shp.weight }}</span></div>\n  </section>\n\n  <section class=\"in-ship\">\n    <div class=\"in-k\">{{ L.ship_addr }}</div>\n    <div class=\"in-addr\"><strong>{{ buyer.name }}</strong>{% if buyer.coName %} · {{ buyer.coName }}{% endif %} · {{ buyer.street }} · {{ buyer.zipCode }} {{ buyer.city }}</div>\n  </section>\n\n  <table class=\"in-items\">\n    <thead><tr>\n      <th class=\"in-c-pos\">{{ L.col_pos }}</th>\n      <th class=\"in-c-art\">{{ L.col_artno }}</th>\n      <th class=\"in-c-name\">{{ L.col_desc }}</th>\n      <th class=\"in-c-num\">{{ L.col_ordered }}</th>\n      <th class=\"in-c-num\">{{ L.col_delivered }}</th>\n      <th class=\"in-c-num\">{{ L.col_weight }}</th>\n    </tr></thead>\n    <tbody>\n      {% for p in items %}\n      {% set partial = (p.delivered | default(p.quantity)) < (p.ordered | default(p.quantity)) %}\n      <tr class=\"{% if partial %}in-partial{% endif %}\">\n        <td class=\"in-c-pos\">{{ '%02d' | format(loop.index) }}</td>\n        <td class=\"in-c-art mono\">{{ p.number }}</td>\n        <td class=\"in-c-name\"><strong>{{ p.name }}</strong><span class=\"in-charge mono\">{{ L.batch }} {{ p.batch }}</span></td>\n        <td class=\"in-c-num num\">{{ p.ordered | default(p.quantity) | number }} {{ p.unit }}</td>\n        <td class=\"in-c-num num\">{{ p.delivered | default(p.quantity) | number }} {{ p.unit }}{% if partial %} <span class=\"in-flag\">{{ L.partial }}</span>{% endif %}</td>\n        <td class=\"in-c-num num\">{{ p.weight }}</td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <div class=\"in-foot\">\n    <section class=\"in-pack\">\n      <div class=\"in-k\">{{ L.ship_units }}</div>\n      <ul class=\"in-packlist\">\n        {% for u in data.packages | default([]) %}\n        <li><span class=\"mono\">{{ u.id }}</span> {{ u.type }} · {{ u.content }}</li>\n        {% endfor %}\n      </ul>\n      <p class=\"in-hint\">{{ data.note | default(L.note_default) }}</p>\n    </section>\n    <section class=\"in-qc\">\n      <div class=\"in-qc__title\">{{ L.qc_title }}</div>\n      <div class=\"in-qc__check\"><span class=\"in-box\"></span> {{ L.qc1 }}</div>\n      <div class=\"in-qc__check\"><span class=\"in-box\"></span> {{ L.qc2 }}</div>\n      <div class=\"in-qc__check\"><span class=\"in-box\"></span> {{ L.qc3 }}</div>\n      <div class=\"in-qc__sig\"><span class=\"in-qc__rule\"></span><span class=\"in-siglabel\">{{ L.date_sig }}</span></div>\n    </section>\n  </div>\n{% endblock %}",
+  "css": "@page {\n  size: A4; margin: 14mm 16mm 20mm 16mm;\n  @bottom-left { content: \"Beispiel Industrieteile GmbH · Industriestraße 8 · 70565 Stuttgart \\A Amtsgericht Stuttgart · HRB 654321 \\A Geschäftsführer: Max Beispiel\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; vertical-align: top; padding-top: 4mm; }\n  @bottom-center { content: \"Seite \" counter(page) \" von \" counter(pages); font-size: 6.5pt; color: #8a8a8a; white-space: nowrap; vertical-align: top; padding-top: 4mm; }\n  @bottom-right { content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm; }\n}\n\nbody { color: #16243b; font-family: 'Helvetica', 'Arial', sans-serif; }\n.num { font-variant-numeric: tabular-nums; }\n.mono { font-family: 'Courier New', 'Consolas', monospace; letter-spacing: -0.02em; }\n.doc-header { display: none; }\n\n/* Dark header band */\n.in-band { display: flex; align-items: center; justify-content: space-between; background: #16243b; color: #fff; border-radius: 2mm; padding: 5mm 7mm; border-left: 3mm solid #f59e0b; }\n.in-band__left { display: flex; align-items: center; gap: 5mm; }\n.in-mark { height: 12mm; width: 12mm; display: block; }\n.in-doctype { font-size: 8pt; letter-spacing: 0.34em; text-transform: uppercase; color: #f59e0b; font-weight: 700; }\n.in-docno { font-size: 19pt; font-weight: 800; letter-spacing: 0.01em; }\n.in-band__bc svg { height: 13mm; width: 52mm; }\n\n/* Info grid */\n.in-grid { display: flex; flex-wrap: wrap; border: 1px solid #d7dee8; border-radius: 2mm; margin: 6mm 0 4mm; }\n.in-cell { flex: 1 1 33%; padding: 3mm 4mm; border-right: 1px solid #e6ebf1; border-bottom: 1px solid #e6ebf1; }\n.in-cell:nth-child(3n) { border-right: none; }\n.in-cell:nth-child(n+4) { border-bottom: none; }\n.in-k { display: block; font-size: 6.8pt; letter-spacing: 0.16em; text-transform: uppercase; color: #7c8aa0; font-weight: 700; margin-bottom: 1mm; }\n.in-v { font-size: 10.5pt; font-weight: 700; }\n\n.in-ship { margin-bottom: 6mm; }\n.in-ship .in-k { margin-bottom: 1.4mm; }\n.in-addr { font-size: 10pt; }\n\n/* Items */\n.in-items { width: 100%; border-collapse: collapse; margin-bottom: 7mm; }\n.in-items thead th { font-size: 7pt; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: #16243b; font-weight: 700; text-align: left; padding: 2.4mm 3mm; }\n.in-items tbody td { padding: 2.8mm 3mm; border-bottom: 1px solid #e6ebf1; vertical-align: top; }\n.in-items tbody tr:nth-child(even) { background: #f6f8fb; }\n.in-partial { background: #fff7ea !important; }\n.in-c-pos { width: 11mm; color: #7c8aa0; }\n.in-c-art { width: 30mm; font-size: 9.5pt; }\n.in-c-num { width: 24mm; text-align: right; }\n.in-charge { display: block; color: #7c8aa0; font-size: 8pt; margin-top: 0.8mm; }\n.in-flag { font-size: 6.5pt; font-weight: 800; color: #fff; background: #f59e0b; border-radius: 1mm; padding: 0.3mm 1.4mm; letter-spacing: 0.05em; }\nthead th.in-c-num { text-align: right; }\n\n/* Footer */\n.in-foot { display: flex; gap: 8mm; align-items: stretch; }\n.in-pack { flex: 1 1 0; }\n.in-packlist { margin: 1.6mm 0 0; padding-left: 4mm; font-size: 9pt; line-height: 1.6; }\n.in-hint { font-size: 8pt; color: #6b7890; line-height: 1.45; margin-top: 3mm; max-width: 100mm; }\n.in-qc { flex: 0 0 60mm; border: 1.5px solid #16243b; border-radius: 2mm; padding: 4mm; }\n.in-qc__title { font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; margin-bottom: 3mm; }\n.in-qc__check { font-size: 9.5pt; margin-bottom: 2mm; display: flex; align-items: center; gap: 2.5mm; }\n.in-box { width: 4mm; height: 4mm; border: 1.4px solid #16243b; border-radius: 0.8mm; display: inline-block; }\n.in-qc__sig { margin-top: 5mm; }\n.in-qc__rule { display: block; border-top: 1px solid #16243b; height: 8mm; margin-bottom: 1.2mm; }\n.in-siglabel { font-size: 7.5pt; color: #7c8aa0; }",
+  "example_data": {
+    "id": "40471",
+    "note": "Ware bei Erhalt auf Vollständigkeit und Transportschäden prüfen. Pos 3 als Teillieferung — Restmenge folgt mit LS-2026-04498.",
+    "company": {
+      "name": "Beispiel Industrieteile GmbH",
+      "address": "Industriestraße 8, 70565 Stuttgart"
+    },
+    "language": "de",
+    "packages": [
+      {
+        "id": "PAL-0001",
+        "type": "Europalette",
+        "content": "Pos 1 — Stahlträger"
+      },
+      {
+        "id": "KAR-0002",
+        "type": "Karton",
+        "content": "Pos 2, 3 — Schrauben & Platten"
+      },
+      {
+        "id": "KAR-0003",
+        "type": "Karton",
+        "content": "Pos 4 — Schweißdraht"
+      }
+    ],
+    "shipping": {
+      "weight": "248,5 kg",
+      "carrier": "Spedition Müller",
+      "packages": "3 (1 Palette, 2 Kartons)"
+    },
+    "lineItems": [
+      {
+        "name": "Stahlträger IPE 200, S235JR, 6 m",
+        "unit": "Stk",
+        "batch": "CH-22418",
+        "number": "STL-IPE200",
+        "weight": "314,4 kg",
+        "ordered": 12,
+        "delivered": 12
+      },
+      {
+        "name": "Sechskantschraube M12×60, verzinkt, DIN 933",
+        "unit": "Stk",
+        "batch": "CH-90021",
+        "number": "BOLT-M12-60",
+        "weight": "40,0 kg",
+        "ordered": 500,
+        "delivered": 500
+      },
+      {
+        "name": "Ankerplatte 200×200×12 mm",
+        "unit": "Stk",
+        "batch": "CH-71190",
+        "number": "PLT-ANK-200",
+        "weight": "76,0 kg",
+        "ordered": 24,
+        "delivered": 20
+      },
+      {
+        "name": "Schweißdraht G3Si1 1,2 mm",
+        "unit": "Rolle",
+        "batch": "CH-55012",
+        "number": "WLD-G3SI1",
+        "weight": "60,0 kg",
+        "ordered": 4,
+        "delivered": 4
+      }
+    ],
+    "documentDate": "2026-06-20",
+    "customerNumber": "K-22014",
+    "documentNumber": "LS-2026-04471",
+    "documentAddress": {
+      "city": "Neu-Ulm",
+      "name": "Stahlbau Vogt GmbH",
+      "coName": "Wareneingang Tor 3",
+      "street": "Gewerbering 14",
+      "country": "Deutschland",
+      "zipCode": "89231"
+    },
+    "customerOrderNumber": "AB-2026-00987"
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Lieferschein",
+      "date_label": "Lieferdatum",
+      "order_label": "Auftrag",
+      "cust_no": "Kunden-Nr.",
+      "carrier": "Spedition",
+      "packages": "Packstücke",
+      "weight": "Gewicht",
+      "ship_addr": "Lieferanschrift",
+      "col_pos": "Pos",
+      "col_artno": "Artikel-Nr.",
+      "col_desc": "Bezeichnung / Charge",
+      "col_ordered": "Bestellt",
+      "col_delivered": "Geliefert",
+      "col_weight": "Gewicht",
+      "batch": "Charge",
+      "partial": "TEIL",
+      "ship_units": "Versandeinheiten",
+      "qc_title": "Wareneingang / QS",
+      "qc1": "Menge geprüft",
+      "qc2": "Charge erfasst",
+      "qc3": "Ohne Beanstandung",
+      "date_sig": "Datum / Unterschrift",
+      "note_default": "Ware bei Erhalt auf Vollständigkeit und Transportschäden prüfen. Beanstandungen innerhalb von 7 Tagen unter Angabe der Lieferschein-Nr."
+    },
+    "en": {
+      "doc_title": "Delivery Note",
+      "date_label": "Delivery date",
+      "order_label": "Order",
+      "cust_no": "Customer no.",
+      "carrier": "Carrier",
+      "packages": "Packages",
+      "weight": "Weight",
+      "ship_addr": "Delivery address",
+      "col_pos": "No.",
+      "col_artno": "Item no.",
+      "col_desc": "Description / batch",
+      "col_ordered": "Ordered",
+      "col_delivered": "Delivered",
+      "col_weight": "Weight",
+      "batch": "Batch",
+      "partial": "PART",
+      "ship_units": "Shipping units",
+      "qc_title": "Goods receipt / QA",
+      "qc1": "Quantity checked",
+      "qc2": "Batch recorded",
+      "qc3": "No complaints",
+      "date_sig": "Date / signature",
+      "note_default": "On receipt, please check the goods for completeness and transport damage. Report any issues within 7 days quoting the delivery-note number."
+    }
+  }
+}

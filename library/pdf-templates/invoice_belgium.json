@@ -1,0 +1,316 @@
+{
+  "id": "invoice_belgium",
+  "version": 1,
+  "engine": "weasyprint",
+  "locales": {
+    "de": {
+      "title": "Rechnung (Belgien, BTW / TVA)",
+      "description": "Belgische Rechnung im Xentral-Original-Stil (schwarz auf weiß) mit BTW/TVA-Nummer, RPR/RPM-Verweis und optionaler Peppol-ID. Reverse-Charge- und innergemeinschaftliche Pflichthinweise, Aussteller-Fiscal-Footer."
+    },
+    "en": {
+      "title": "Invoice (Belgium, BTW / TVA)",
+      "description": "Belgian invoice in the Xentral-Original clean style (black on white, no colour fills) with the fiscal fields the BTW / TVA regime expects — BE0XXX.XXX.XXX VAT number for seller and buyer, optional RPR/RPM register reference, optional Peppol participant ID. DIN-5008 layout, fiscal IDs in the info block, reverse-charge / intra-community legal notes, seller fiscal footer. Renders from the standard V3 invoices payload. Languages: Dutch, French, German, English."
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Factuur-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "VAT number MUST be displayed for seller AND buyer (B2B)",
+    "VAT format MUST follow `BE0XXX.XXX.XXX` (10 digits, leading 0)",
+    "Reverse-charge / intra-community delivery MUST surface as a visible legal note when the flag is set",
+    "amounts MUST use tabular-nums and right-align",
+    "currency defaults to EUR"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "company"
+    ],
+    "documentAddress": {
+      "required": [
+        "name",
+        "street",
+        "zipCode",
+        "city",
+        "country"
+      ],
+      "optional": [
+        "vatNumber",
+        "rprNumber",
+        "peppolId"
+      ]
+    },
+    "company": {
+      "required": [
+        "name",
+        "address",
+        "vatNumber"
+      ],
+      "optional": [
+        "rprNumber",
+        "peppolId",
+        "capital"
+      ]
+    },
+    "optional": [
+      "language",
+      "reverseCharge",
+      "intracomDelivery",
+      "payment",
+      "bodyOutroduction"
+    ]
+  },
+  "languages": [
+    "nl",
+    "fr",
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{# Belgischer Beleg im Xentral-Original-Stil: gleiches Clean-Layout wie die\n   Standard-Rechnung (head-cols, schwarz/weiss, keine Farbflaechen) plus die\n   belgischen Fiscal-Felder (BTW/TVA, RPR/RPM, Peppol-ID) im Infoblock und\n   einem schlichten Aussteller-Footer. Default-Locale `nl`. #}\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data.lineItems | default([]) %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title=L.buyer_block %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.invoice_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.reference }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n            {% if buyer.vatNumber %}<tr><th scope=\"row\">{{ L.vat_number }}</th><td>{{ buyer.vatNumber }}</td></tr>{% endif %}\n            {% if buyer.rprNumber %}<tr><th scope=\"row\">{{ L.rpr_number }}</th><td>{{ buyer.rprNumber }}</td></tr>{% endif %}\n            {% if buyer.peppolId %}<tr><th scope=\"row\">{{ L.peppol_id }}</th><td>{{ buyer.peppolId }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  {% with title=L.positions, caption=L.positions_caption, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','vat','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {% if data.payment %}\n  <section class=\"box-payment\" data-box=\"payment\" aria-labelledby=\"payment-heading\">\n    <h2 id=\"payment-heading\">{{ L.payment_heading }}</h2>\n    <dl>\n      {% if data.payment.iban %}<dt>{{ L.iban }}</dt><dd>{{ data.payment.iban }}</dd>{% endif %}\n      {% if data.payment.bic %}<dt>{{ L.bic }}</dt><dd>{{ data.payment.bic }}</dd>{% endif %}\n      {% if data.payment.bankName %}<dt>{{ L.bank }}</dt><dd>{{ data.payment.bankName }}</dd>{% endif %}\n    </dl>\n  </section>\n  {% endif %}\n\n  {% if data.reverseCharge %}\n  <section class=\"legal-note\" data-box=\"reverse-charge\"><p>{{ L.reverse_charge_note }}</p></section>\n  {% endif %}\n  {% if data.intracomDelivery %}\n  <section class=\"legal-note\" data-box=\"intracom\"><p>{{ L.intracom_note }}</p></section>\n  {% endif %}\n\n  {# Aussteller-Fiscal-Footer — BTW-Nummer + RPR + Peppol-ID + Kapital. #}\n  <section class=\"seller-footer\" data-box=\"seller-fiscal\" aria-labelledby=\"seller-fiscal-heading\">\n    <h2 id=\"seller-fiscal-heading\" class=\"seller-footer__title\">{{ L.seller_block }}</h2>\n    <p class=\"seller-footer__line\">{{ data.company.name }} · {{ data.company.address }}</p>\n    <p class=\"seller-footer__line\">\n      {% if data.company.vatNumber %}{{ L.vat_number }}: {{ data.company.vatNumber }}{% endif %}\n      {% if data.company.rprNumber %} · {{ L.rpr_number }}: {{ data.company.rprNumber }}{% endif %}\n      {% if data.company.peppolId %} · {{ L.peppol_id }}: {{ data.company.peppolId }}{% endif %}\n      {% if data.company.capital %} · {{ L.capital_label }}: {{ data.company.capital }}{% endif %}\n    </p>\n  </section>\n\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"notes-heading\">\n    <h2 id=\"notes-heading\">{{ L.notes_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 72mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n.box-payment dl { display: grid; grid-template-columns: 24mm 1fr; gap: 0.5mm 4mm; margin: 0; font-size: 9.5pt; }\n.box-payment dt { color: #6b7280; }\n.box-payment dd { margin: 0; }\n\n/* Pflicht-Hinweise (Reverse-Charge / intracom): schlicht, schwarz/weiß. */\n.legal-note { margin: 6mm 0; padding: 3mm 4mm; border: 0.3pt solid #d1d5db; font-size: 9pt; color: #374151; }\n.legal-note p { margin: 0; }\n\n.seller-footer { margin-top: 10mm; padding-top: 3mm; border-top: 0.4pt solid #d1d5db; font-size: 8pt; color: #6b7280; }\n.seller-footer__title { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9ca3af; margin: 0 0 1mm; }\n.seller-footer__line { margin: 0.4mm 0; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "be-30224",
+    "documentNumber": "2026/00514",
+    "documentDate": "2026-05-13",
+    "serviceDate": "2026-05-10",
+    "language": "nl",
+    "customerNumber": "KL-2087",
+    "customerOrderNumber": "Best. 8421",
+    "documentAddress": {
+      "name": "De Smet Logistiek BVBA",
+      "street": "Antwerpsesteenweg 142",
+      "zipCode": "2640",
+      "city": "Mortsel",
+      "country": "BE",
+      "vatNumber": "BE0456.789.012",
+      "rprNumber": "RPR Antwerpen 0456.789.012",
+      "peppolId": "0208:0456789012"
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-310",
+        "name": "Bureaustoel ergonomisch type A",
+        "description": "Mesh rugleuning, verstelbare armleuningen",
+        "quantity": 6,
+        "unit": "st",
+        "effectiveTaxRate": 21,
+        "price": {
+          "net": {
+            "amount": "239.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "1434.00",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "1735.14",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-318",
+        "name": "Vergadertafel 200×100",
+        "quantity": 1,
+        "unit": "st",
+        "effectiveTaxRate": 21,
+        "price": {
+          "net": {
+            "amount": "789.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "789.00",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "954.69",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 21,
+          "reduced": 6
+        }
+      },
+      "paymentTerms": {
+        "paymentTargetDays": 30
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "2223.00",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "2689.83",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "iban": "BE68 5390 0754 7034",
+      "bic": "BBRUBEBB",
+      "bankName": "ING België"
+    },
+    "reverseCharge": false,
+    "intracomDelivery": false,
+    "company": {
+      "name": "Voorbeeld Handel BV",
+      "address": "Koningsstraat 47, 1000 Brussel",
+      "vatNumber": "BE0123.456.789",
+      "rprNumber": "RPR Brussel 0123.456.789",
+      "peppolId": "0208:0123456789",
+      "capital": "75.000,00 € volstort"
+    },
+    "bodyOutroduction": "Bedankt voor uw vertrouwen."
+  },
+  "assets": {
+    "logo": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgNjAiIHJvbGU9ImltZyIKICAgICBhcmlhLWxhYmVsPSJCZWlzcGllbCBIYW5kZWxzIEdtYkggTG9nbyI+CiAgPHJlY3QgeD0iMCIgeT0iMTQiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjgiIGZpbGw9IiM2RDdDRkYiLz4KICA8cGF0aCBkPSJNOSAzOCBMMTYgMjQgTDIzIDM4IFoiIGZpbGw9IiNmZmYiLz4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjIyIiByPSIyLjUiIGZpbGw9IiNmZmYiLz4KICA8dGV4dCB4PSI0NCIgeT0iMzMiIGZpbGw9IiMwRjE3MkEiCiAgICAgICAgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTciCiAgICAgICAgZm9udC13ZWlnaHQ9IjcwMCI+QmVpc3BpZWw8L3RleHQ+CiAgPHRleHQgeD0iNDQiIHk9IjQ4IiBmaWxsPSIjNmI3MjgwIgogICAgICAgIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiCiAgICAgICAgbGV0dGVyLXNwYWNpbmc9IjAuMDZlbSI+SEFOREVMUyDCtyBHTUJIPC90ZXh0Pgo8L3N2Zz4K"
+  },
+  "translations": {
+    "nl": {
+      "doc_title": "Factuur",
+      "invoice_date": "Factuurdatum",
+      "customer_number": "Klantnummer",
+      "reference": "Uw bestelnummer",
+      "positions": "Posten",
+      "positions_caption": "Factuurposten",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Aantal",
+      "col_unit_price": "Eenheidsprijs",
+      "col_vat": "BTW",
+      "col_total": "Totaal",
+      "net_total": "Netto",
+      "vat_label": "BTW",
+      "vat_on": "op",
+      "gross_total": "Totaalbedrag",
+      "buyer_block": "Klant",
+      "seller_block": "Leverancier",
+      "vat_number": "BTW-nummer",
+      "rpr_number": "RPR / RPM",
+      "peppol_id": "Peppol-ID",
+      "capital_label": "Kapitaal",
+      "payment_heading": "Betaling",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "reverse_charge_note": "BTW verlegd — afnemer is BTW-plichtig (artikel 51, §2 W.BTW).",
+      "intracom_note": "Intracommunautaire levering, vrijgesteld van BTW (artikel 39bis W.BTW).",
+      "notes_heading": "Opmerkingen"
+    },
+    "fr": {
+      "doc_title": "Facture",
+      "invoice_date": "Date de facture",
+      "customer_number": "N° client",
+      "reference": "Votre commande",
+      "positions": "Postes",
+      "positions_caption": "Postes de la facture",
+      "col_pos": "Pos",
+      "col_article": "Article",
+      "col_qty": "Quantité",
+      "col_unit_price": "Prix unitaire",
+      "col_vat": "TVA",
+      "col_total": "Total",
+      "net_total": "Net",
+      "vat_label": "TVA",
+      "vat_on": "sur",
+      "gross_total": "Total à payer",
+      "buyer_block": "Client",
+      "seller_block": "Prestataire",
+      "vat_number": "N° TVA",
+      "rpr_number": "RPR / RPM",
+      "peppol_id": "Identifiant Peppol",
+      "capital_label": "Capital",
+      "payment_heading": "Paiement",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Banque",
+      "reverse_charge_note": "Autoliquidation — TVA due par le preneur (article 51, §2 du Code TVA).",
+      "intracom_note": "Livraison intracommunautaire exonérée de TVA (article 39bis Code TVA).",
+      "notes_heading": "Remarques"
+    },
+    "de": {
+      "doc_title": "Rechnung",
+      "invoice_date": "Rechnungsdatum",
+      "customer_number": "Kundennummer",
+      "reference": "Ihre Bestellnummer",
+      "positions": "Positionen",
+      "positions_caption": "Rechnungspositionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_vat": "MwSt",
+      "col_total": "Summe",
+      "net_total": "Netto",
+      "vat_label": "MwSt",
+      "vat_on": "auf",
+      "gross_total": "Gesamtbetrag",
+      "buyer_block": "Empfänger",
+      "seller_block": "Aussteller",
+      "vat_number": "BTW-Nummer",
+      "rpr_number": "RPR / RPM",
+      "peppol_id": "Peppol-ID",
+      "capital_label": "Stammkapital",
+      "payment_heading": "Zahlung",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "reverse_charge_note": "Steuerschuldumkehr — Empfänger schuldet die MwSt (Art. 51 §2 BTW-Gesetzbuch).",
+      "intracom_note": "Innergemeinschaftliche Lieferung, MwSt-frei (Art. 39bis BTW-Gesetzbuch).",
+      "notes_heading": "Hinweise"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "invoice_date": "Invoice date",
+      "customer_number": "Customer no.",
+      "reference": "Your order no.",
+      "positions": "Items",
+      "positions_caption": "Invoice items",
+      "col_pos": "Pos",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_vat": "VAT",
+      "col_total": "Total",
+      "net_total": "Net",
+      "vat_label": "VAT",
+      "vat_on": "on",
+      "gross_total": "Grand total",
+      "buyer_block": "Buyer",
+      "seller_block": "Seller",
+      "vat_number": "VAT no.",
+      "rpr_number": "Companies register",
+      "peppol_id": "Peppol participant ID",
+      "capital_label": "Share capital",
+      "payment_heading": "Payment",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "reverse_charge_note": "Reverse charge — VAT payable by the recipient (article 51 §2 of the Belgian VAT Code).",
+      "intracom_note": "Intra-community supply, exempt from VAT (article 39bis of the Belgian VAT Code).",
+      "notes_heading": "Notes"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "wolt",
+  "version": 1,
+  "name": "Wolt Delivery",
+  "domain": "wolt.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Wolt-Delivery-Plattform — Aufträge aus Wolt in Xentral verbuchen."
+    },
+    "de": {
+      "description": "Wolt-Delivery-Plattform — Aufträge aus Wolt in Xentral verbuchen."
+    }
+  }
+}

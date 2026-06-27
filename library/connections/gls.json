@@ -1,0 +1,16 @@
+{
+  "id": "gls",
+  "version": 1,
+  "name": "GLS",
+  "domain": "gls-pakete.de",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "GLS-Paketversand und Sendungsstatus."
+    },
+    "de": {
+      "description": "GLS-Paketversand und Sendungsstatus."
+    }
+  },
+  "source": "https://marketplace.xentral.com/versanddienstleister/gls"
+}

@@ -1,0 +1,49 @@
+{
+  "order": 62,
+  "id": "quick-reorder-check",
+  "icon": "inbox",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "workflow",
+    "tools": [
+      "xentral_copilot",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.2
+  },
+  "locales": {
+    "de": {
+      "name": "Nachbestell-Check",
+      "category": "Einkauf",
+      "description": "Findet Artikel unter Mindestbestand und schlägt Bestellmengen pro Lieferant vor.",
+      "tags": [
+        "Einkauf",
+        "Schnell-Aufgabe"
+      ],
+      "prefill": {
+        "name": "Nachbestell-Check",
+        "description": "Sofort-Übersicht: was ist unter Mindestbestand und sollte heute bestellt werden?",
+        "area": "Einkauf",
+        "instructions": "Du bist ein Einkaufs-Agent. Wenn der User dich startet:\n\n1. Frag den ERP-Co-Pilot nach allen Artikeln, deren freier Bestand unter\n   dem Mindestbestand liegt.\n2. Gruppiere nach Hauptlieferant. Pro Lieferant:\n   - Liste der Artikel + aktueller Bestand + Mindestbestand.\n   - Vorgeschlagene Bestellmenge = Mindestbestand × 2 - aktueller Bestand\n     (auf nächste Verpackungseinheit aufgerundet, falls verfügbar).\n3. Markiere \"kritisch\", wenn der Bestand bei 0 oder negativ ist.\n4. Lege für jeden Lieferanten eine User-Task an, die der Einkauf abnickt\n   (Titel: \"RFQ vorbereiten — {Lieferant}, {n} Artikel\"). Keine Bestellung\n   automatisch auslösen.\n\nAntworte mit einer kompakten Liste: Lieferant · Anzahl Artikel · kritische Artikel · Empfehlung.\n"
+      }
+    },
+    "en": {
+      "name": "Reorder check",
+      "category": "Procurement",
+      "description": "Finds items below safety stock and suggests order quantities per supplier.",
+      "tags": [
+        "Procurement",
+        "Quick task"
+      ],
+      "prefill": {
+        "name": "Reorder Check",
+        "description": "Instant overview — what's below safety stock and should be ordered today?",
+        "area": "Procurement",
+        "instructions": "You are a procurement agent. When the user starts you:\n\n1. Ask the ERP copilot for all items whose free stock is below the\n   minimum stock level.\n2. Group by main supplier. Per supplier:\n   - List of items + current stock + minimum stock.\n   - Suggested order quantity = min stock × 2 - current stock (rounded\n     up to the next packaging unit if available).\n3. Flag \"critical\" when stock is at 0 or negative.\n4. Create a user task per supplier for procurement to approve\n   (title: \"Prepare RFQ — {supplier}, {n} items\"). Never trigger an\n   order automatically.\n\nReply with a compact list: Supplier · Item count · Critical items · Recommendation.\n"
+      }
+    }
+  }
+}

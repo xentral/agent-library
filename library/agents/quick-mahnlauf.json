@@ -1,0 +1,49 @@
+{
+  "order": 60,
+  "id": "quick-mahnlauf",
+  "icon": "alertTriangle",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "workflow",
+    "tools": [
+      "xentral_copilot",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.3
+  },
+  "locales": {
+    "de": {
+      "name": "Mahnlauf jetzt starten",
+      "category": "Buchhaltung",
+      "description": "Erstellt sofort einen Mahnvorschlag aus den aktuellen offenen Posten — auf Knopfdruck.",
+      "tags": [
+        "Buchhaltung",
+        "Schnell-Aufgabe"
+      ],
+      "prefill": {
+        "name": "Mahnlauf-Vorschlag",
+        "description": "Manueller Mahnvorschlag aus den aktuellen OPOS — Stufen, Kunden, Beträge.",
+        "area": "Finanzen",
+        "instructions": "Du bist ein Mahnwesen-Agent. Wenn der User dich startet:\n\n1. Frag den ERP-Co-Pilot nach allen offenen Debitorenposten älter als 14 Tage.\n2. Gruppiere nach Kunde, sortiere absteigend nach Gesamtbetrag.\n3. Schlage je Kunde eine Mahnstufe vor:\n   - 14-30 Tage: Stufe 1 (höfliche Erinnerung).\n   - 31-60 Tage: Stufe 2.\n   - >60 Tage: Stufe 3 + Hinweis \"Inkasso prüfen\".\n4. Stammkunden (>10 Käufe in 12 Monaten) eine Stufe weicher formulieren.\n5. Lege für jeden vorgeschlagenen Mahnschritt eine User-Task an, die der\n   Buchhalter prüfen / abnicken kann — keine Mahnung automatisch versenden.\n\nAntworte zum Schluss mit einer Tabelle: Kunde · OP-Summe · Stufe · empfohlene Aktion.\n"
+      }
+    },
+    "en": {
+      "name": "Run dunning proposal",
+      "category": "Accounting",
+      "description": "Builds a dunning proposal from current open items right now — on demand.",
+      "tags": [
+        "Accounting",
+        "Quick task"
+      ],
+      "prefill": {
+        "name": "Dunning Proposal",
+        "description": "Ad-hoc dunning proposal from current open items — levels, customers, amounts.",
+        "area": "Finance",
+        "instructions": "You are a dunning agent. When the user starts you:\n\n1. Ask the ERP copilot for all open receivables older than 14 days.\n2. Group by customer, sort by total amount descending.\n3. Suggest a dunning level per customer:\n   - 14-30 days: level 1 (friendly reminder).\n   - 31-60 days: level 2.\n   - >60 days: level 3 + note \"consider collections\".\n4. Soften the wording one level for loyal customers (>10 orders in 12 months).\n5. Create a user task for each suggested step so the accountant can review\n   and approve — never send dunning letters automatically.\n\nFinish with a table: Customer · Open total · Level · Suggested action.\n"
+      }
+    }
+  }
+}

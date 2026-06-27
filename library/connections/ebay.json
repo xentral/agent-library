@@ -1,0 +1,16 @@
+{
+  "id": "ebay",
+  "version": 1,
+  "name": "eBay",
+  "domain": "ebay.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "eBay-Auftragsabruf, Bestand-Sync, Tracking-Rückmeldung."
+    },
+    "de": {
+      "description": "eBay-Auftragsabruf, Bestand-Sync, Tracking-Rückmeldung."
+    }
+  },
+  "source": "https://marketplace.xentral.com/marktplaetze/ebay"
+}

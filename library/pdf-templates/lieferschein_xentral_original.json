@@ -1,0 +1,151 @@
+{
+  "id": "lieferschein_xentral_original",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Lieferschein",
+      "description": "Klassischer Lieferschein im Xentral-Original-Stil: DIN-5008-Layout, Logo, Absenderzeile, Lieferanschrift im Anschriftenfeld, Infoblock rechts (Lieferdatum, Auftrags-Nr., Kundennummer), Positionstabelle ohne Preise (Pos, Art.-Nr., Artikel, Menge), Pflichtangaben in der Fußzeile. Schwarz auf weiß, ohne Farbflächen. Rendert ausschließlich aus der Standard-V3-Payload (deliveryNotes)."
+    },
+    "en": {
+      "title": "Delivery Note",
+      "description": "Classic delivery note in the Xentral original style: DIN 5008 layout, logo, sender line, delivery address in the address window, right info block (delivery date, order no., customer no.), price-free line-item table (Pos, SKU, item, qty), mandatory footer lines. Black on white, no colour fills. Renders purely from the standard V3 deliveryNotes payload."
+    }
+  },
+  "v3_endpoint": "/api/v3/deliveryNotes/{id}?include=all",
+  "filename_pattern": "Lieferschein-{documentNumber}.pdf",
+  "compliance": [],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute (or alt='' AND role='presentation')",
+    "tables MUST use <th scope='col'> or scope='row'",
+    "exactly one <h1> per document",
+    "heading hierarchy MUST be contiguous (no jump from h1 to h3)",
+    "<title> in <head> MUST be set and non-empty"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "company"
+    ],
+    "company": {
+      "required": [
+        "name",
+        "address"
+      ],
+      "optional": [
+        "logo",
+        "phone",
+        "email",
+        "website",
+        "vatId",
+        "taxId",
+        "ceo"
+      ]
+    },
+    "optional": [
+      "language",
+      "salesOrderNumber",
+      "customerNumber",
+      "effectiveAddresses",
+      "bodyOutroduction"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer   = data.documentAddress | default({}) %}\n{% set ship    = ((data.effectiveAddresses or {}).shipTo) | default({}) %}\n{% set recip   = ship if (ship and ship.name) else buyer %}\n{% set items   = data.lineItems | default([]) %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=recip, title=L.delivery_addr %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.delivery_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.salesOrderNumber %}<tr><th scope=\"row\">{{ L.order_no }}</th><td>{{ data.salesOrderNumber }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.order_ref }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  <section class=\"box-intro\" data-box=\"intro\"><p>{{ L.intro }}</p></section>\n\n  {% with title=L.positions, caption=L.positions, items=items, labels=L,\n          columns=['pos','sku','article','qty'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"notes-heading\">\n    <h2 id=\"notes-heading\">{{ L.notes_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 64mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n/* 4-Spalten-Lieferschein ohne Preise: Pos | Art.-Nr. | Artikel | Menge.\n   Basis-CSS richtet ab Spalte 3 rechtsbündig aus — hier überschreiben:\n   Artikel (Spalte 3) links, nur Menge (Spalte 4) rechts. */\n.positions-table thead th:nth-child(1) { width: 9mm; }\n.positions-table thead th:nth-child(2) { width: 30mm; }\n.positions-table thead th:nth-child(3),\n.positions-table tbody td:nth-child(3) { text-align: left; }\n.positions-table thead th:nth-child(4),\n.positions-table tbody td:nth-child(4) { text-align: right; width: 24mm; white-space: nowrap; }\n.positions-table thead th:nth-child(5),\n.positions-table thead th:nth-child(6) { display: none; }\n.positions-table tbody td:nth-child(5),\n.positions-table tbody td:nth-child(6) { display: none; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-left {\n    content: \"Beispiel Handels GmbH · Marktplatz 1, 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n  @bottom-right {\n    content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A Commerzbank Berlin · BIC COBADEFFXXX \\A IBAN DE89 3704 0044 0532 0130 00\";\n    font-size: 6.5pt; line-height: 1.4; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    text-align: right; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "44120",
+    "documentNumber": "LS-2026-00203",
+    "documentDate": "15.05.2026",
+    "salesOrderNumber": "AB-2026-00128",
+    "customerNumber": "10043",
+    "customerOrderNumber": "PO-MUS-4711",
+    "language": "de",
+    "documentAddress": {
+      "name": "Musterfirma GmbH",
+      "coName": "Einkauf",
+      "street": "Hauptstraße 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "country": "Deutschland"
+    },
+    "effectiveAddresses": {
+      "shipTo": {
+        "name": "Musterfirma GmbH - Zentrallager",
+        "coName": "Wareneingang Tor 3",
+        "street": "Industriestraße 5",
+        "zipCode": "70565",
+        "city": "Stuttgart",
+        "country": "Deutschland"
+      }
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "description": "Ergonomisch, schwarz, mit Armlehnen",
+        "quantity": 2,
+        "unit": "Stk"
+      },
+      {
+        "type": "product",
+        "number": "ART-007",
+        "name": "Schreibtisch 160x80",
+        "description": "Massivholz Eiche, höhenverstellbar 65-130 cm",
+        "quantity": 1,
+        "unit": "Stk"
+      }
+    ],
+    "bodyOutroduction": "Bitte prüfen Sie die Ware bei Erhalt auf Vollständigkeit und Unversehrtheit. Beanstandungen innerhalb von 7 Tagen.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "phone": "+49 30 1234567-0",
+      "email": "kontakt@beispiel-handel.de",
+      "website": "www.beispiel-handel.de",
+      "vatId": "DE123456789",
+      "taxId": "13/456/78901",
+      "ceo": "Max Beispiel"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Lieferschein",
+      "intro": "mit diesem Lieferschein erhalten Sie die folgenden Positionen.",
+      "delivery_date": "Lieferdatum",
+      "order_no": "Auftrags-Nr.",
+      "customer_number": "Kundennummer",
+      "order_ref": "Ihre Bestellnummer",
+      "delivery_addr": "Lieferanschrift",
+      "positions": "Positionen",
+      "col_pos": "Pos",
+      "col_sku": "Art.-Nr.",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "notes_heading": "Hinweise"
+    },
+    "en": {
+      "doc_title": "Delivery Note",
+      "intro": "this delivery note covers the following items.",
+      "delivery_date": "Delivery date",
+      "order_no": "Order no.",
+      "customer_number": "Customer no.",
+      "order_ref": "Your order no.",
+      "delivery_addr": "Delivery address",
+      "positions": "Items",
+      "col_pos": "Pos",
+      "col_sku": "SKU",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "notes_heading": "Notes"
+    }
+  }
+}

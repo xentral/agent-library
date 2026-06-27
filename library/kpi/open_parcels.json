@@ -1,0 +1,27 @@
+{
+  "id": "open_parcels",
+  "version": 1,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 304,
+  "kpi": {
+    "key": "open_parcels",
+    "unit": "count",
+    "value_type": "number",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Pakete bzw. Versandbelege im Status gepickt oder gepackt, die noch nicht an den Versanddienstleister übergeben wurden; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(DISTINCT s.shipment_id) AS \"Anzahl Pakete_oder_Versandbelege\"\nFROM shipments s\nWHERE s.is_released = TRUE\n  AND s.is_completed = FALSE\n  AND s.has_package_label_printed = TRUE\n  AND s.sent_at IS NULL\n  AND s.tracking_number IS NULL\n  AND s.has_no_tracking_mail = FALSE\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Open parcels",
+      "description": "Parcels picked or packed but not yet handed over to the carrier."
+    },
+    "de": {
+      "title": "Offene Pakete",
+      "description": "Pakete, die gepickt oder gepackt sind, aber noch nicht an den Versanddienstleister übergeben wurden."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "high_risk_count",
+  "version": 1,
+  "icon": "alertTriangle",
+  "category": "customer_service",
+  "order": 204,
+  "kpi": {
+    "key": "high_risk_count",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 3,
+    "initial_tone": "warn"
+  },
+  "locales": {
+    "en": {
+      "title": "High risk",
+      "description": "Open inquiries flagged as high risk — e.g. escalation, churn signal, legal."
+    },
+    "de": {
+      "title": "Hohes Risiko",
+      "description": "Offene Vorgänge mit Risiko-Flag — z. B. Eskalation, Churn-Signal oder Rechtliches."
+    }
+  }
+}

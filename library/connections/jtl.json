@@ -1,0 +1,15 @@
+{
+  "id": "jtl",
+  "version": 1,
+  "name": "JTL-Shop",
+  "domain": "jtl-software.de",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "JTL-Shop-Anbindung mit Auftrags- und Artikelabgleich."
+    },
+    "de": {
+      "description": "JTL-Shop-Anbindung mit Auftrags- und Artikelabgleich."
+    }
+  }
+}

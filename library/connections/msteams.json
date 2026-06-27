@@ -1,0 +1,15 @@
+{
+  "id": "msteams",
+  "version": 1,
+  "name": "Microsoft Teams",
+  "domain": "microsoft.com",
+  "category": "comms",
+  "locales": {
+    "en": {
+      "description": "Notifications und Approval-Workflows in Teams-Channels."
+    },
+    "de": {
+      "description": "Notifications und Approval-Workflows in Teams-Channels."
+    }
+  }
+}

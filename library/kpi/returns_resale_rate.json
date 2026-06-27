@@ -1,0 +1,27 @@
+{
+  "id": "returns_resale_rate",
+  "version": 1,
+  "icon": "refreshCw",
+  "category": "logistics",
+  "order": 323,
+  "kpi": {
+    "key": "returns_resale_rate",
+    "unit": "%",
+    "value_type": "percent",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Anteil der retournierten Artikel im laufenden Jahr, die ohne Aufarbeitung in den A-Bestand zurückgegangen sind, in Prozent; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(\n    100.0 * SUM(\n      CASE\n        WHEN sbdm.is_incoming = true\n         AND COALESCE(sbdm.is_interim, false) = false\n         AND COALESCE(sbdm.document_of_origin, '') ILIKE '%return%'\n         AND COALESCE(sbdm.internal_comment, '') NOT ILIKE '%aufarbeitung%'\n         AND COALESCE(sbdm.internal_comment, '') NOT ILIKE '%nacharbeit%'\n        THEN COALESCE(sbdm.quantity, 0)\n        ELSE 0\n      END\n    ) / NULLIF(SUM(COALESCE(sbdm.quantity, 0)), 0),\n    2\n  ) AS kpi_percent\nFROM stock_best_before_date_movements sbdm\nWHERE sbdm.time >= DATE_TRUNC('year', GETDATE())\n  AND sbdm.time < DATEADD(year, 1, DATE_TRUNC('year', GETDATE()));\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Resale rate",
+      "description": "Share of returned items that can be put back into A-stock without rework."
+    },
+    "de": {
+      "title": "Wiederverkaufs-Quote",
+      "description": "Anteil zurückgesendeter Artikel, die ohne Aufarbeitung zurück in den A-Bestand gehen."
+    }
+  }
+}

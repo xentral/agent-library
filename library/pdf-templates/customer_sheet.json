@@ -1,0 +1,196 @@
+{
+  "id": "customer_sheet",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Kundenstammdatenblatt",
+      "description": "Kundenstammdaten-Übersicht — Rechnungs- & Lieferadressen, Ansprechpartner, Zahlungsbedingungen, Vertriebsverantwortlicher, Tags / Segmentierung sowie eine Zusammenfassung der jüngsten Aktivität (letzter Auftrag, Umsatz seit Jahresbeginn, offener Saldo). Einseitiges A4-Referenzdokument, nützlich als Übergabeblatt oder für Account-Review-Meetings.\n"
+    },
+    "en": {
+      "title": "Customer master data sheet",
+      "description": "Customer master data overview — billing & shipping addresses, contact persons, payment terms, sales manager, tags / segmentation, and a recent-activity summary (last order, year-to-date revenue, open balance). Single-page A4 reference document, useful as a handover sheet or for account-review meetings.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/customers/{id}?include=contactPersons,deliveryAddresses,groups",
+  "filename_pattern": "Customer-{customerNumber}.pdf",
+  "compliance": [],
+  "schema": {
+    "required": [
+      "customerNumber",
+      "name",
+      "addresses"
+    ],
+    "addresses": {
+      "required": [
+        "billing"
+      ],
+      "billing": {
+        "required": [
+          "street",
+          "zipCode",
+          "city",
+          "country"
+        ]
+      },
+      "optional": [
+        "shipping"
+      ]
+    },
+    "optional": [
+      "language",
+      "email",
+      "phone",
+      "mobile",
+      "website",
+      "vatId",
+      "taxId",
+      "contactPersons",
+      "paymentTerms",
+      "salesManager",
+      "accountManager",
+      "tags",
+      "segment",
+      "activitySummary",
+      "notes"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n\n{% block title %}{{ L.doc_title }} — {{ data.name }}{% endblock %}\n\n{% set bill = data.addresses.billing | default({}) %}\n{% set ship = data.addresses.shipping | default({}) %}\n{% set act = data.activitySummary | default({}) %}\n\n{% block content %}\n\n  <section class=\"cs-header\" data-box=\"subject\">\n    <div class=\"cs-header__main\">\n      <h1 class=\"cs-header__name\">{{ data.name }}</h1>\n      <div class=\"cs-header__sub\">\n        {{ L.customer_no }} <strong>{{ data.customerNumber }}</strong>\n        {% if data.segment %} · {{ L.segment }}: <strong>{{ data.segment }}</strong>{% endif %}\n      </div>\n    </div>\n    {% if data.tags %}\n    <div class=\"cs-tags\">\n      {% for tag in data.tags %}<span class=\"cs-tag\">{{ tag }}</span>{% endfor %}\n    </div>\n    {% endif %}\n  </section>\n\n  <section class=\"cs-grid\">\n\n    {# Adressen #}\n    <div class=\"cs-card cs-card--addr\">\n      <h2>{{ L.addr_billing }}</h2>\n      <p>\n        {{ bill.name | default(data.name) }}<br>\n        {% if bill.street %}{{ bill.street }}<br>{% endif %}\n        {{ bill.zipCode }} {{ bill.city }}<br>\n        {{ bill.country }}\n      </p>\n    </div>\n\n    {% if ship and (ship.street or ship.city) %}\n    <div class=\"cs-card cs-card--addr\">\n      <h2>{{ L.addr_shipping }}</h2>\n      <p>\n        {{ ship.name | default(data.name) }}<br>\n        {% if ship.street %}{{ ship.street }}<br>{% endif %}\n        {{ ship.zipCode }} {{ ship.city }}<br>\n        {{ ship.country }}\n      </p>\n    </div>\n    {% endif %}\n\n    {# Steuer + Kontakt #}\n    <div class=\"cs-card\">\n      <h2>{{ L.tax_info }}</h2>\n      <dl class=\"cs-dl\">\n        {% if data.vatId %}<dt>{{ L.vat_id }}</dt><dd>{{ data.vatId }}</dd>{% endif %}\n        {% if data.taxId %}<dt>{{ L.tax_id }}</dt><dd>{{ data.taxId }}</dd>{% endif %}\n      </dl>\n    </div>\n\n    <div class=\"cs-card\">\n      <h2>{{ L.contacts }}</h2>\n      <dl class=\"cs-dl\">\n        {% if data.email %}<dt>{{ L.email }}</dt><dd>{{ data.email }}</dd>{% endif %}\n        {% if data.phone %}<dt>{{ L.phone }}</dt><dd>{{ data.phone }}</dd>{% endif %}\n        {% if data.mobile %}<dt>{{ L.mobile }}</dt><dd>{{ data.mobile }}</dd>{% endif %}\n        {% if data.website %}<dt>{{ L.website }}</dt><dd>{{ data.website }}</dd>{% endif %}\n      </dl>\n    </div>\n\n    {# Finanzen #}\n    {% if data.paymentTerms or data.creditLimit %}\n    <div class=\"cs-card\">\n      <h2>{{ L.finance }}</h2>\n      <dl class=\"cs-dl\">\n        {% if data.paymentTerms.target %}<dt>{{ L.payment_terms }}</dt><dd>{{ data.paymentTerms.target }}</dd>{% endif %}\n        {% if data.paymentTerms.method %}<dt>{{ L.payment_method }}</dt><dd>{{ data.paymentTerms.method }}</dd>{% endif %}\n        {% if data.creditLimit %}<dt>{{ L.credit_limit }}</dt><dd>{{ data.creditLimit }}</dd>{% endif %}\n        {% if act.openBalance %}<dt>{{ L.open_balance }}</dt><dd>{{ act.openBalance }}</dd>{% endif %}\n      </dl>\n    </div>\n    {% endif %}\n\n    {# Owner #}\n    {% if data.salesManager or data.accountManager %}\n    <div class=\"cs-card\">\n      <h2>{{ L.sales_manager }} &amp; {{ L.account_manager }}</h2>\n      <dl class=\"cs-dl\">\n        {% if data.salesManager %}<dt>{{ L.sales_manager }}</dt><dd>{{ data.salesManager }}</dd>{% endif %}\n        {% if data.accountManager %}<dt>{{ L.account_manager }}</dt><dd>{{ data.accountManager }}</dd>{% endif %}\n      </dl>\n    </div>\n    {% endif %}\n\n  </section>\n\n  {# Ansprechpartner-Tabelle #}\n  {% if data.contactPersons %}\n  <section class=\"cs-section\" aria-labelledby=\"cs-contacts\">\n    <h2 id=\"cs-contacts\">{{ L.contact_persons }}</h2>\n    <table class=\"cs-contacts\">\n      <thead>\n        <tr>\n          <th>{{ L.contacts }}</th>\n          <th>{{ L.email }}</th>\n          <th>{{ L.phone }}</th>\n        </tr>\n      </thead>\n      <tbody>\n        {% for cp in data.contactPersons %}\n        <tr>\n          <td><strong>{{ cp.name }}</strong>{% if cp.role %}<br><span class=\"cs-contacts__role\">{{ cp.role }}</span>{% endif %}</td>\n          <td>{{ cp.email }}</td>\n          <td>{{ cp.phone }}</td>\n        </tr>\n        {% endfor %}\n      </tbody>\n    </table>\n  </section>\n  {% endif %}\n\n  {# Activity-KPIs #}\n  {% if act %}\n  <section class=\"cs-section\" aria-labelledby=\"cs-activity\">\n    <h2 id=\"cs-activity\">{{ L.activity }}</h2>\n    <div class=\"cs-kpis\">\n      {% if act.lastOrderDate %}\n      <div class=\"cs-kpi\"><div class=\"cs-kpi__label\">{{ L.last_order }}</div><div class=\"cs-kpi__value\">{{ act.lastOrderDate }}</div></div>\n      {% endif %}\n      {% if act.ytdRevenue %}\n      <div class=\"cs-kpi\"><div class=\"cs-kpi__label\">{{ L.ytd_revenue }}</div><div class=\"cs-kpi__value\">{{ act.ytdRevenue }}</div></div>\n      {% endif %}\n      {% if act.avgOrderValue %}\n      <div class=\"cs-kpi\"><div class=\"cs-kpi__label\">{{ L.avg_order }}</div><div class=\"cs-kpi__value\">{{ act.avgOrderValue }}</div></div>\n      {% endif %}\n      {% if act.orderCount %}\n      <div class=\"cs-kpi\"><div class=\"cs-kpi__label\">{{ L.order_count }}</div><div class=\"cs-kpi__value\">{{ act.orderCount }}</div></div>\n      {% endif %}\n    </div>\n  </section>\n  {% endif %}\n\n  {% if data.notes %}\n  <section class=\"cs-section\" aria-labelledby=\"cs-notes\">\n    <h2 id=\"cs-notes\">{{ L.notes_heading }}</h2>\n    <p>{{ data.notes }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* Customer Master Sheet — Übersicht-Layout mit Karten-Grid. Eine Seite,\n   leicht scanbar. Kein Belegcharakter (keine Tabellen-Totals etc.). */\n\n.cs-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-start;\n  gap: 6mm;\n  margin-bottom: 6mm;\n  padding-bottom: 4mm;\n  border-bottom: 0.3mm solid #d1d5db;\n}\n.cs-header__name {\n  margin: 0;\n  font-size: 18pt;\n  font-weight: 700;\n  letter-spacing: -0.2pt;\n}\n.cs-header__sub {\n  margin-top: 1mm;\n  font-size: 10pt;\n  color: #6b7280;\n}\n.cs-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 2mm;\n  justify-content: flex-end;\n}\n.cs-tag {\n  font-size: 8pt;\n  font-weight: 600;\n  padding: 0.5mm 2mm;\n  border-radius: 1mm;\n  background: rgba(109, 124, 255, 0.10);\n  color: #4338ca;\n  letter-spacing: 0.2px;\n}\n\n.cs-grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr;\n  gap: 4mm;\n  margin-bottom: 6mm;\n}\n.cs-card {\n  border: 0.3mm solid #d1d5db;\n  border-radius: 1.5mm;\n  padding: 4mm 5mm;\n  font-size: 9.5pt;\n  line-height: 1.4;\n}\n.cs-card h2 {\n  margin: 0 0 2mm;\n  font-size: 8.5pt;\n  font-weight: 700;\n  text-transform: uppercase;\n  letter-spacing: 0.4px;\n  color: #6b7280;\n}\n.cs-card p {\n  margin: 0;\n}\n.cs-card--addr p {\n  font-size: 10pt;\n  line-height: 1.45;\n}\n\n.cs-dl {\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  gap: 1mm 3mm;\n  margin: 0;\n}\n.cs-dl dt {\n  font-size: 8pt;\n  color: #6b7280;\n  font-weight: 600;\n}\n.cs-dl dd {\n  margin: 0;\n  font-size: 9.5pt;\n}\n\n.cs-section {\n  margin-top: 6mm;\n  padding-top: 4mm;\n  border-top: 0.2mm solid #e5e7eb;\n}\n.cs-section h2 {\n  margin: 0 0 2mm;\n  font-size: 10pt;\n  font-weight: 700;\n}\n\n.cs-contacts {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 9.5pt;\n}\n.cs-contacts thead th {\n  background: #f3f4f6;\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  text-align: left;\n  padding: 2mm 3mm;\n  color: #374151;\n  border-bottom: 0.4mm solid #6b7280;\n}\n.cs-contacts tbody td {\n  padding: 2mm 3mm;\n  border-bottom: 0.2mm solid #e5e7eb;\n  vertical-align: top;\n}\n.cs-contacts__role {\n  font-size: 8.5pt;\n  color: #6b7280;\n}\n\n.cs-kpis {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: 3mm;\n}\n.cs-kpi {\n  border: 0.3mm solid #d1d5db;\n  border-radius: 1.5mm;\n  padding: 3mm 4mm;\n}\n.cs-kpi__label {\n  font-size: 8pt;\n  font-weight: 700;\n  letter-spacing: 0.3px;\n  text-transform: uppercase;\n  color: #6b7280;\n}\n.cs-kpi__value {\n  margin-top: 1mm;\n  font-size: 13pt;\n  font-weight: 600;\n  color: #111827;\n  font-variant-numeric: tabular-nums;\n}\n",
+  "example_data": {
+    "customerNumber": "10043",
+    "name": "Müller Handels AG",
+    "language": "de",
+    "segment": "A-Kunde",
+    "tags": [
+      "Stammkunde",
+      "B2B",
+      "Lastschrift"
+    ],
+    "addresses": {
+      "billing": {
+        "name": "Müller Handels AG",
+        "street": "Hauptstrasse 12",
+        "zipCode": "70174",
+        "city": "Stuttgart",
+        "country": "DE"
+      },
+      "shipping": {
+        "name": "Müller Handels AG · Lager",
+        "street": "Industriestrasse 8",
+        "zipCode": "70378",
+        "city": "Stuttgart",
+        "country": "DE"
+      }
+    },
+    "email": "info@mueller-handels.example",
+    "phone": "+49 711 555 0123",
+    "website": "https://mueller-handels.example",
+    "vatId": "DE123456789",
+    "taxId": "97/123/45678",
+    "contactPersons": [
+      {
+        "name": "Andreas Müller",
+        "role": "Geschäftsführung",
+        "email": "a.mueller@mueller-handels.example",
+        "phone": "+49 711 555 0124"
+      },
+      {
+        "name": "Sabine Hofer",
+        "role": "Einkauf",
+        "email": "s.hofer@mueller-handels.example",
+        "phone": "+49 711 555 0140"
+      },
+      {
+        "name": "Markus Lehmann",
+        "role": "Buchhaltung",
+        "email": "buchhaltung@mueller-handels.example"
+      }
+    ],
+    "paymentTerms": {
+      "target": "14 Tage netto, 2 % Skonto bei 7 Tagen",
+      "method": "SEPA-Lastschrift"
+    },
+    "creditLimit": "25.000,00 €",
+    "salesManager": "P. Schmidt",
+    "accountManager": "P. Schmidt",
+    "activitySummary": {
+      "lastOrderDate": "2026-05-08",
+      "ytdRevenue": "47.230,00 €",
+      "avgOrderValue": "1.180,75 €",
+      "orderCount": 40,
+      "openBalance": "2.498,00 €"
+    },
+    "notes": "Bevorzugt Lieferungen montags/dienstags. Reklamationen an die Buchhaltung CC setzen.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Kundenstammblatt",
+      "customer_no": "Kundennummer",
+      "segment": "Segment",
+      "tags": "Tags",
+      "addr_billing": "Rechnungsadresse",
+      "addr_shipping": "Lieferadresse",
+      "contact_persons": "Ansprechpartner",
+      "finance": "Finanzen",
+      "payment_terms": "Zahlungsbedingung",
+      "payment_method": "Zahlungsart",
+      "credit_limit": "Kreditlimit",
+      "open_balance": "Offene Posten",
+      "sales_manager": "Vertrieb",
+      "account_manager": "Account",
+      "activity": "Aktivität",
+      "last_order": "Letzte Bestellung",
+      "ytd_revenue": "Umsatz YTD",
+      "avg_order": "Ø Auftragswert",
+      "order_count": "Anzahl Aufträge",
+      "tax_info": "Steuer",
+      "vat_id": "USt-ID",
+      "tax_id": "Steuernummer",
+      "contacts": "Kontakt",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "mobile": "Mobil",
+      "website": "Website",
+      "notes_heading": "Notizen"
+    },
+    "en": {
+      "doc_title": "Customer master data",
+      "customer_no": "Customer no.",
+      "segment": "Segment",
+      "tags": "Tags",
+      "addr_billing": "Billing address",
+      "addr_shipping": "Shipping address",
+      "contact_persons": "Contact persons",
+      "finance": "Finance",
+      "payment_terms": "Payment terms",
+      "payment_method": "Payment method",
+      "credit_limit": "Credit limit",
+      "open_balance": "Open balance",
+      "sales_manager": "Sales manager",
+      "account_manager": "Account manager",
+      "activity": "Activity",
+      "last_order": "Last order",
+      "ytd_revenue": "YTD revenue",
+      "avg_order": "Avg. order value",
+      "order_count": "Orders",
+      "tax_info": "Tax",
+      "vat_id": "VAT ID",
+      "tax_id": "Tax no.",
+      "contacts": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "mobile": "Mobile",
+      "website": "Website",
+      "notes_heading": "Notes"
+    }
+  }
+}

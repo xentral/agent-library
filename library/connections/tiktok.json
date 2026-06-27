@@ -1,0 +1,15 @@
+{
+  "id": "tiktok",
+  "version": 1,
+  "name": "TikTok Shop",
+  "domain": "tiktok.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "TikTok-Shop-Bestellungen abrufen, Versand und Bestand zurückspielen."
+    },
+    "de": {
+      "description": "TikTok-Shop-Bestellungen abrufen, Versand und Bestand zurückspielen."
+    }
+  }
+}

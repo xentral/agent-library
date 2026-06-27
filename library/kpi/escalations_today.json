@@ -1,0 +1,26 @@
+{
+  "id": "escalations_today",
+  "version": 1,
+  "icon": "alert",
+  "category": "customer_service",
+  "order": 270,
+  "kpi": {
+    "key": "escalations_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 6,
+    "initial_tone": "warn"
+  },
+  "locales": {
+    "en": {
+      "title": "Escalations today",
+      "description": "Inquiries handed off to a human agent today."
+    },
+    "de": {
+      "title": "Eskalationen heute",
+      "description": "Heute an einen menschlichen Agenten übergebene Anfragen."
+    }
+  }
+}

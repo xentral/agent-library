@@ -1,0 +1,15 @@
+{
+  "id": "zenfulfillment",
+  "version": 1,
+  "name": "Zenfulfillment",
+  "domain": "zenfulfillment.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "D2C-Fulfillment in DE/NL — Order-Push aus Xentral, Tracking-Rückmeldung."
+    },
+    "de": {
+      "description": "D2C-Fulfillment in DE/NL — Order-Push aus Xentral, Tracking-Rückmeldung."
+    }
+  }
+}

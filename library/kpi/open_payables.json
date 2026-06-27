@@ -1,0 +1,27 @@
+{
+  "id": "open_payables",
+  "version": 1,
+  "icon": "payment",
+  "category": "finance",
+  "order": 430,
+  "kpi": {
+    "key": "open_payables",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Summe aller offenen Verbindlichkeiten aus unbezahlten Eingangsrechnungen; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(SUM(\n    CASE\n      WHEN l.status NOT IN ('canceled', 'created', 'unknown')\n        AND l.is_paid = FALSE\n        AND l.payment_due_date IS NOT NULL\n      THEN COALESCE(l.amount_to_be_paid_total, 0) - COALESCE(l.amount_paid_currently, 0)\n      ELSE 0\n    END\n  ), 2) AS \"Offene Verbindlichkeiten\"\nFROM liabilities l\nWHERE l.is_paid = FALSE\n  AND l.status NOT IN ('canceled', 'created', 'unknown');\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Open payables",
+      "description": "Sum of all unpaid supplier invoices — short-term liabilities the business owes."
+    },
+    "de": {
+      "title": "Offene Verbindlichkeiten",
+      "description": "Summe aller unbezahlten Eingangsrechnungen — kurzfristige Verbindlichkeiten gegenüber Lieferanten."
+    }
+  }
+}

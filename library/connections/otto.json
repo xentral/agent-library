@@ -1,0 +1,16 @@
+{
+  "id": "otto",
+  "version": 1,
+  "name": "OTTO Market",
+  "domain": "otto.market",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "OTTO-Market-Listings und Aufträge in Xentral verwalten."
+    },
+    "de": {
+      "description": "OTTO-Market-Listings und Aufträge in Xentral verwalten."
+    }
+  },
+  "source": "https://marketplace.xentral.com/marktplaetze/otto"
+}

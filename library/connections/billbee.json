@@ -1,0 +1,15 @@
+{
+  "id": "billbee",
+  "version": 1,
+  "name": "Billbee",
+  "domain": "billbee.io",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "Multi-Channel-Tool — Aufträge mehrerer Shops & Marktplätze bündeln."
+    },
+    "de": {
+      "description": "Multi-Channel-Tool — Aufträge mehrerer Shops & Marktplätze bündeln."
+    }
+  }
+}

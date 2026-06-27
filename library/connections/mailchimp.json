@@ -1,0 +1,15 @@
+{
+  "id": "mailchimp",
+  "version": 1,
+  "name": "Mailchimp",
+  "domain": "mailchimp.com",
+  "category": "crm",
+  "locales": {
+    "en": {
+      "description": "Kunden-Segmente an Mailchimp übergeben — Newsletter steuern."
+    },
+    "de": {
+      "description": "Kunden-Segmente an Mailchimp übergeben — Newsletter steuern."
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "id": "d2c",
+  "slugs": [
+    "overview",
+    "market",
+    "personas",
+    "roadmap",
+    "risks",
+    "company",
+    "products",
+    "masterdata",
+    "channels",
+    "marketing",
+    "team",
+    "processes",
+    "custom_agents",
+    "logistics",
+    "systems",
+    "roles",
+    "migration",
+    "payment",
+    "financials",
+    "accounting",
+    "unit",
+    "reporting"
+  ],
+  "locales": {
+    "de": {
+      "name": "D2C-Marke",
+      "description": "Eigene Marke, eigener Shop, Endkunden direkt. Marketing-Funnel,\nPersonas und Retention sind das Spiel — Xentral als zentrales\nBackend hinter Shop, Logistik und Retouren.\n",
+      "emphasis": {
+        "overview": "Eure Marke + Vision sind der Kompass — alles andere richtet sich daran aus.",
+        "personas": "Klare Personas → passgenaue Botschaft im Marketing + passendes Sortiment.",
+        "channels": "Eigener Shop ist Hauptkanal. Marktplätze nur als Sekundär-Spiel mit eigenen Margen-Regeln.",
+        "marketing": "Funnel + CAC + Retention — die D2C-Königsdisziplin. Hier hängt der LTV dran.",
+        "products": "Brand-Stories pro Produkt. Marge muss CAC + Logistik + Retouren tragen.",
+        "logistics": "Eigenes Lager oder 3PL — Versanderlebnis ist Teil der Marke (Unboxing, Beilagen).",
+        "unit": "AOV, CAC, LTV/CAC, Repeat-Rate, Retourenquote — kennt euch hier blind aus.",
+        "reporting": "Daily Cohort-View + ROAS pro Kanal. CRM/Lifecycle in Echtzeit.",
+        "custom_agents": "Marketing-Drops + Lifecycle-Mails + Retention-Trigger zentral steuern."
+      },
+      "tasks": [
+        {
+          "title": "Logo + Briefpapier-Vorlage",
+          "hint": "Hochauflösendes Logo (SVG/PNG) + AGB-Footer für Belege"
+        },
+        {
+          "title": "Shop-Integration freischalten",
+          "hint": "API-Keys + Webhook-URL vom eigenen Shop (Shopify · Woo · Magento)"
+        },
+        {
+          "title": "Stammdaten-CSV liefern",
+          "hint": "Artikel mit Bildern · Marke · Tags · Pflichtfelder shop-fähig"
+        },
+        {
+          "title": "Versand-Carrier konfigurieren",
+          "hint": "DHL · DPD · UPS-Account + Etiketten-Drucker (Pick/Versand)"
+        },
+        {
+          "title": "E-Mail-Vorlagen freigeben",
+          "hint": "Order-Confirm · Versand · Retoure · Reklamation"
+        },
+        {
+          "title": "SMTP-Setup + SPF/DKIM",
+          "hint": "Postfach + DNS-Records für Beleg-Versand aus eurer Domain"
+        },
+        {
+          "title": "Marketing-Tools verbinden",
+          "hint": "Klaviyo · Mailchimp · Brevo für Lifecycle-Mails und Retention"
+        },
+        {
+          "title": "Bank-Login (FinAPI/EBICS)",
+          "hint": "Zahlungsabgleich freischalten — Daily-Cashflow + OPOS"
+        },
+        {
+          "title": "DATEV-Berater-Zugang",
+          "hint": "Beraternr. + Mandantennr. an Steuerberater"
+        },
+        {
+          "title": "Test-User pro Rolle",
+          "hint": "CS · Lager · Buchhaltung — für Schulung"
+        },
+        {
+          "title": "Schulungstermine planen",
+          "hint": "Pro Rolle 1-2 Sessions vor Go-Live"
+        },
+        {
+          "title": "Go-Live-Datum bestätigen",
+          "hint": "Cut-Over-Wochenende · Freeze-Datum · Hypercare-Plan"
+        }
+      ]
+    },
+    "en": {
+      "name": "D2C Brand",
+      "description": "Own brand, own shop, end-customers direct. Marketing funnel,\npersonas and retention are the game — Xentral as the central\nbackend behind shop, fulfilment and returns.\n",
+      "emphasis": {
+        "overview": "Your brand + vision are the compass — everything else lines up against them.",
+        "personas": "Clear personas → spot-on messaging in marketing + the right range.",
+        "channels": "Own shop is the main channel. Marketplaces only as a secondary play with their own margin rules.",
+        "marketing": "Funnel + CAC + retention — the D2C masterclass. LTV hangs off this.",
+        "products": "Brand stories per product. Margin must cover CAC + fulfilment + returns.",
+        "logistics": "Own warehouse or 3PL — the unboxing experience is part of the brand (packaging, inserts).",
+        "unit": "AOV, CAC, LTV/CAC, repeat rate, return rate — know these inside out.",
+        "reporting": "Daily cohort view + ROAS per channel. CRM/lifecycle in real time.",
+        "custom_agents": "Marketing drops + lifecycle emails + retention triggers centrally orchestrated."
+      },
+      "tasks": [
+        {
+          "title": "Logo + letterhead template",
+          "hint": "High-resolution logo (SVG/PNG) + T&C footer for documents"
+        },
+        {
+          "title": "Activate shop integration",
+          "hint": "API keys + webhook URL from your own shop (Shopify · Woo · Magento)"
+        },
+        {
+          "title": "Deliver master-data CSV",
+          "hint": "Products with images · brand · tags · mandatory fields shop-ready"
+        },
+        {
+          "title": "Configure shipping carrier",
+          "hint": "DHL · DPD · UPS account + label printer (pick/pack)"
+        },
+        {
+          "title": "Approve email templates",
+          "hint": "Order confirmation · shipping · returns · complaints"
+        },
+        {
+          "title": "SMTP setup + SPF/DKIM",
+          "hint": "Mailbox + DNS records for document send-out from your domain"
+        },
+        {
+          "title": "Connect marketing tools",
+          "hint": "Klaviyo · Mailchimp · Brevo for lifecycle emails and retention"
+        },
+        {
+          "title": "Bank login (FinAPI/EBICS)",
+          "hint": "Payment reconciliation enabled — daily cashflow + open items"
+        },
+        {
+          "title": "DATEV tax-advisor access",
+          "hint": "Advisor no. + client no. forwarded to tax advisor"
+        },
+        {
+          "title": "Test user per role",
+          "hint": "CS · warehouse · accounting — for training"
+        },
+        {
+          "title": "Plan training sessions",
+          "hint": "1-2 sessions per role before go-live"
+        },
+        {
+          "title": "Confirm go-live date",
+          "hint": "Cut-over weekend · freeze date · hypercare plan"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "id": "warehouse_shipping",
+  "version": 2,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 115,
+  "recommended_kpis": [
+    "return_rate",
+    "inventory_turnover",
+    "dead_stock_value"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "**Lager- & Versand-Cockpit** — Tagesversand, OTIF, Carrier-Mix und Bestände.",
+          "en": "**Warehouse & shipping cockpit** — daily outbound, OTIF, carrier mix and inventory."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "return_rate",
+          "inventory_turnover",
+          "dead_stock_value"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_key": "dashboards.mockup.kpi.title",
+        "kpis": [
+          "inventory_turnover",
+          "dead_stock_value"
+        ]
+      }
+    },
+    {
+      "id": "shipments_daily",
+      "type": "BarChart",
+      "config": {
+        "title_text": {
+          "de": "Versandbelege pro Tag (14 Tage)",
+          "en": "Shipments per day (14 days)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Anzahl Versandbelege pro Tag in den letzten 14 Tagen",
+        "sqlString": "SELECT\n    CAST(sent_at AS DATE) AS \"Tag\",\n    COUNT(DISTINCT shipment_id) AS \"Anzahl Versandbelege\"\nFROM shipments\nWHERE sent_at >= DATEADD(day, -14, CURRENT_DATE)\n  AND sent_at < DATEADD(day, 1, CURRENT_DATE)\nGROUP BY 1\nORDER BY 1;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": 900
+      }
+    },
+    {
+      "id": "carrier_mix",
+      "type": "DonutChart",
+      "config": {
+        "title_text": {
+          "de": "Carrier-Mix (laufender Monat)",
+          "en": "Carrier mix (current month)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Anteil der Versandbelege pro Carrier (shipping_method) im laufenden Monat",
+        "sqlString": "SELECT\n    shipping_method AS \"Carrier\",\n    COUNT(*) AS \"Anzahl Versandbelege\",\n    ROUND(\n        100.0 * COUNT(*) / NULLIF(SUM(COUNT(*)) OVER (), 0),\n        2\n    ) AS \"Anteil in %\"\nFROM shipments\nWHERE sent_at >= DATE_TRUNC('month', CURRENT_DATE)\n  AND sent_at < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\nGROUP BY 1\nORDER BY \"Anzahl Versandbelege\" DESC, \"Carrier\";\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": 3600
+      }
+    },
+    {
+      "id": "shipments_by_carrier",
+      "type": "StackedBarChart",
+      "config": {
+        "title_text": {
+          "de": "Versand pro Woche je Carrier (4 Wochen)",
+          "en": "Shipments per week per carrier (4 weeks)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Anzahl Versandbelege pro Woche gruppiert nach Carrier, letzte 4 Wochen, gestapelt",
+        "sqlString": "\nSELECT \n  TO_CHAR(DATE_TRUNC('week', dn.date), 'YYYY-WW') AS \"Woche\",\n  COALESCE(dn.shipping_method, 'Unbekannt') AS \"Carrier\",\n  COUNT(dn.delivery_note_id) AS \"Anzahl_Versandbelege\"\nFROM delivery_notes dn\nWHERE dn.date >= CURRENT_DATE - INTERVAL '28 days'\n  AND dn.status NOT IN ('canceled', 'created')\nGROUP BY DATE_TRUNC('week', dn.date), dn.shipping_method\nORDER BY DATE_TRUNC('week', dn.date) ASC, dn.shipping_method ASC\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "kpi_grid"
+    ],
+    "side": [
+      "shipments_daily",
+      "carrier_mix",
+      "shipments_by_carrier"
+    ]
+  },
+  "linked_kpis": [
+    "return_rate",
+    "inventory_turnover",
+    "dead_stock_value"
+  ],
+  "locales": {
+    "en": {
+      "title": "Warehouse & Shipping",
+      "description": "Operations cockpit with daily shipments, OTIF, carrier mix and stock breakdown — populated with demo data, ready to switch to live KPIs."
+    },
+    "de": {
+      "title": "Lager & Versand",
+      "description": "Operations-Cockpit mit Tagesversand, OTIF, Carrier-Mix und Bestandsverteilung — gefüllt mit Beispieldaten, jederzeit auf Live-KPIs umschaltbar."
+    }
+  }
+}

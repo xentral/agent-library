@@ -1,0 +1,48 @@
+{
+  "order": 61,
+  "id": "quick-opos-snapshot",
+  "icon": "invoice",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "workflow",
+    "tools": [
+      "xentral_copilot"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.2
+  },
+  "locales": {
+    "de": {
+      "name": "OPOS-Snapshot ziehen",
+      "category": "Buchhaltung",
+      "description": "Aktueller Stand der offenen Posten — Top-Schuldner, Fälligkeit, kritische Posten.",
+      "tags": [
+        "Buchhaltung",
+        "Schnell-Aufgabe"
+      ],
+      "prefill": {
+        "name": "OPOS-Snapshot",
+        "description": "Foto der offenen Forderungen — Top-Schuldner, Altersstruktur, kritische Posten.",
+        "area": "Finanzen",
+        "instructions": "Du bist ein Buchhaltungs-Agent. Wenn der User dich startet:\n\n1. Frag den ERP-Co-Pilot nach allen offenen Debitorenposten.\n2. Bilde drei Buckets: 0-30 Tage / 31-60 Tage / über 60 Tage. Pro Bucket:\n   Anzahl Posten + Gesamtsumme.\n3. Liste die Top-10-Schuldner mit Gesamt-OPOS-Summe absteigend.\n4. Markiere jeden Eintrag, bei dem ein Posten älter als 90 Tage ist,\n   mit \"kritisch\".\n5. Schließe mit einer kurzen Empfehlung: welche 1-3 Kunden sollten\n   heute persönlich angerufen werden?\n\nKeine Aktionen ausführen, nur den Bericht liefern.\n"
+      }
+    },
+    "en": {
+      "name": "Pull open-items snapshot",
+      "category": "Accounting",
+      "description": "Current state of open receivables — top debtors, aging, critical items.",
+      "tags": [
+        "Accounting",
+        "Quick task"
+      ],
+      "prefill": {
+        "name": "Open Items Snapshot",
+        "description": "Photo of open receivables — top debtors, aging buckets, critical items.",
+        "area": "Finance",
+        "instructions": "You are an accounting agent. When the user starts you:\n\n1. Ask the ERP copilot for all open receivables.\n2. Build three buckets: 0-30 days / 31-60 days / over 60 days. Per bucket:\n   number of items + total amount.\n3. List the top 10 debtors by total open amount descending.\n4. Flag any entry where the oldest item is past 90 days as \"critical\".\n5. Finish with a brief recommendation: which 1-3 customers should be\n   called personally today?\n\nDo not take any action — only deliver the report.\n"
+      }
+    }
+  }
+}

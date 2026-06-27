@@ -1,0 +1,100 @@
+{
+  "id": "master_data",
+  "version": 2,
+  "icon": "database",
+  "category": "master_data",
+  "order": 140,
+  "recommended_kpis": [
+    "top_customer_share",
+    "average_order_value",
+    "dead_stock_value",
+    "inventory_turnover"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "Stammdaten — die kanonische Quelle für alle Dashboards.",
+          "en": "Master data — the canonical source for all dashboards."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "top_customer_share",
+          "average_order_value",
+          "inventory_turnover"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_key": "dashboards.mockup.kpi.title",
+        "kpis": [
+          "dead_stock_value",
+          "inventory_turnover",
+          "supplier_lead_time"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "products",
+            "label_key": "workspace.products",
+            "view": "products"
+          },
+          {
+            "id": "customers",
+            "label_key": "workspace.customers",
+            "view": "customers"
+          },
+          {
+            "id": "suppliers",
+            "label_key": "workspace.suppliers",
+            "view": "suppliers"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "top_customer_share",
+    "average_order_value",
+    "dead_stock_value",
+    "inventory_turnover",
+    "supplier_lead_time"
+  ],
+  "locales": {
+    "en": {
+      "title": "Master Data",
+      "description": "Customers, suppliers, products, price lists — the canonical source for all other dashboards."
+    },
+    "de": {
+      "title": "Stammdaten",
+      "description": "Kunden, Lieferanten, Produkte, Preislisten — die kanonische Quelle für alle anderen Dashboards."
+    }
+  }
+}

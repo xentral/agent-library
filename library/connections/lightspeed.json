@@ -1,0 +1,15 @@
+{
+  "id": "lightspeed",
+  "version": 1,
+  "name": "Lightspeed Retail",
+  "domain": "lightspeedhq.com",
+  "category": "pos",
+  "locales": {
+    "en": {
+      "description": "Filial-Verkäufe in Xentral ablegen, Bestand und Kunden synchronisieren."
+    },
+    "de": {
+      "description": "Filial-Verkäufe in Xentral ablegen, Bestand und Kunden synchronisieren."
+    }
+  }
+}

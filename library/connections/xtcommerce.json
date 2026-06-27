@@ -1,0 +1,15 @@
+{
+  "id": "xtcommerce",
+  "version": 1,
+  "name": "xt:Commerce",
+  "domain": "xt-commerce.com",
+  "category": "shop",
+  "locales": {
+    "en": {
+      "description": "xt:Commerce-Shop an Xentral koppeln — Order-Sync und Lager."
+    },
+    "de": {
+      "description": "xt:Commerce-Shop an Xentral koppeln — Order-Sync und Lager."
+    }
+  }
+}

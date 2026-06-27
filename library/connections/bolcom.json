@@ -1,0 +1,15 @@
+{
+  "id": "bolcom",
+  "version": 1,
+  "name": "Bol.com",
+  "domain": "bol.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Niederländischer Marktplatz — Aufträge importieren, Bestand pushen."
+    },
+    "de": {
+      "description": "Niederländischer Marktplatz — Aufträge importieren, Bestand pushen."
+    }
+  }
+}

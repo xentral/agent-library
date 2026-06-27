@@ -1,0 +1,27 @@
+{
+  "id": "average_order_value",
+  "version": 1,
+  "icon": "invoice",
+  "category": "sales",
+  "order": 130,
+  "kpi": {
+    "key": "average_order_value",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "sales",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Durchschnittlicher Auftragswert über alle Aufträge der letzten 30 Tage; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    ROUND(AVG(so.net_revenue), 2) AS \"Durchschnittlicher Auftragswert\"\nFROM sales_orders so\nWHERE so.status NOT IN ('created', 'canceled')\n  AND so.date >= DATEADD(day, -30, CURRENT_DATE)\n  AND so.date < CURRENT_DATE + 1\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Average order value",
+      "description": "Mean order value across all sales orders in the rolling 30-day window."
+    },
+    "de": {
+      "title": "Ø Auftragswert",
+      "description": "Mittlerer Auftragswert über alle Aufträge der letzten 30 Tage."
+    }
+  }
+}

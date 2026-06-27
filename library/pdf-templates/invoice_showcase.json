@@ -1,0 +1,184 @@
+{
+  "id": "invoice_showcase",
+  "version": 1,
+  "engine": "weasyprint",
+  "locales": {
+    "de": {
+      "title": "Rechnung (Showcase – QR, Barcode, alle Funktionen)",
+      "description": "Demo-Rechnung, die jede im Editor-Hilfetext beschriebene Funktion zeigt: Variablen, Schleifen mit Tabellenköpfen, bedingte Inhalte, generischer QR-Code (Dokumentlink), EPC/SEPA-QR (GiroCode), vCard-QR für den Briefkopf, EAN-13- und Code-128-Barcodes auf Positionen, @page-Kopf-/Fußzeile mit Seitenzähler, dekoratives Markup für PDF/UA-konforme Layout-Elemente. Ohne Compliance-Richtlinie nutzbar — reine Demonstration der Autorenfunktionen.\n"
+    },
+    "en": {
+      "title": "Invoice (Showcase – QR, barcode, all features)",
+      "description": "Demo invoice exercising every feature described in the editor help text: variables, loops with table headers, conditional content, generic QR (document link), EPC/SEPA QR (GiroCode), vCard QR for the letterhead, EAN-13 and Code-128 barcodes on line items, @page header/footer with page counter, decorative markup for PDF/UA-compliant layout elements. Usable without a compliance policy — pure showcase of the authoring features.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Invoice-Showcase-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute (or alt='' AND role='presentation')",
+    "tables MUST use <th scope='col'>",
+    "exactly one <h1> per document",
+    "decorative elements MUST be marked class='decorative'",
+    "<title> in <head> MUST be set and non-empty"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "financials",
+      "company",
+      "payment"
+    ]
+  },
+  "languages": [
+    "de"
+  ],
+  "locale": "de-DE",
+  "compliance_policy": {
+    "pdf_variant": "pdf/ua-1"
+  },
+  "html": "<!doctype html>\n<html lang=\"de\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Rechnung {{ data.documentNumber }}</title>\n</head>\n<body>\n\n\n  {# ───── Header: Logo + Adresse + vCard-QR ───── #}\n  <header class=\"doc-header\">\n    <div class=\"doc-header__brand\">\n      {# Logo: kommt aus Template-Setting (logo.svg neben meta.yaml ODER\n         hochgeladenes Bild im Editor). alt-Text bleibt Pflicht für PDF/UA.\n         Wenn kein Logo gesetzt ist, fällt es auf den Firmennamen zurück. #}\n      {% if assets.logo %}\n        <img src=\"{{ assets.logo }}\"\n             alt=\"Logo {{ data.company.name | default('Beispiel GmbH') }}\"\n             style=\"width: 50mm; height: auto;\">\n      {% else %}\n        <div class=\"logo logo--fallback\" aria-label=\"{{ data.company.name | default('Beispiel GmbH') }} Logo\">\n          <strong>{{ data.company.name | default('Beispiel GmbH') }}</strong>\n        </div>\n      {% endif %}\n    </div>\n    <div class=\"doc-header__vcard\">\n      <span class=\"qr-label\">Kontakt scannen</span>\n      <div class=\"qr-box\">\n        {{ vcard_qr(\n            name=data.company.ceo | default('Max Mustermann'),\n            email='kontakt@example.com',\n            org=data.company.name | default('Beispiel GmbH'),\n            url='https://example.com',\n            scale=3\n        ) }}\n      </div>\n    </div>\n  </header>\n\n  {# ───── Empfänger ───── #}\n  <section class=\"recipient\">\n    <p class=\"recipient__addr-line\">\n      {{ data.company.name | default('Beispiel GmbH') }} · {{ data.company.address | default('Marktplatz 1, 10115 Berlin') }}\n    </p>\n    <address>\n      {{ data.documentAddress.name }}<br>\n      {{ data.documentAddress.street }}<br>\n      {{ data.documentAddress.zipCode }} {{ data.documentAddress.city }}<br>\n      {{ data.documentAddress.country }}\n    </address>\n  </section>\n\n  {# ───── Titel + Meta ───── #}\n  <section class=\"doc-title\">\n    <h1>Rechnung {{ data.documentNumber }}</h1>\n    <table class=\"meta\">\n      <tbody>\n        <tr><th scope=\"row\">Rechnungsdatum</th><td>{{ data.documentDate }}</td></tr>\n        <tr><th scope=\"row\">Leistungsdatum</th><td>{{ data.serviceDate | default(data.documentDate) }}</td></tr>\n        <tr><th scope=\"row\">Kundennummer</th><td>{{ data.customerNumber | default('—') }}</td></tr>\n        {% if data.customerOrderNumber %}\n        <tr><th scope=\"row\">Ihre Bestellnummer</th><td>{{ data.customerOrderNumber }}</td></tr>\n        {% endif %}\n      </tbody>\n    </table>\n  </section>\n\n  {# ───── Positionen-Tabelle: scope-Attribut Pflicht für PDF/UA ───── #}\n  <section class=\"positions\">\n    <table class=\"items\">\n      <thead>\n        <tr>\n          <th scope=\"col\">Pos</th>\n          <th scope=\"col\">Artikel</th>\n          <th scope=\"col\">EAN</th>\n          <th scope=\"col\" class=\"num\">Menge</th>\n          <th scope=\"col\" class=\"num\">Einzelpreis</th>\n          <th scope=\"col\" class=\"num\">USt %</th>\n          <th scope=\"col\" class=\"num\">Gesamt</th>\n        </tr>\n      </thead>\n      <tbody>\n        {% for li in data.lineItems %}\n        <tr>\n          <td>{{ loop.index }}</td>\n          <td>\n            <strong>{{ li.name }}</strong>\n            {% if li.description %}\n            <div class=\"item-desc\">{{ li.description }}</div>\n            {% endif %}\n            <div class=\"item-meta\">{{ li.number }}</div>\n          </td>\n          <td class=\"barcode-cell\">\n            {% if li.ean and li.ean | length in [12, 13] %}\n              {{ barcode(li.ean, 'ean13', height=10, font_size=6, quiet_zone=1, write_text=false) }}\n            {% else %}\n              <span class=\"muted\">—</span>\n            {% endif %}\n          </td>\n          <td class=\"num\">{{ li.quantity | number }} {{ li.unit }}</td>\n          <td class=\"num\">{{ li.price.net | money }}</td>\n          <td class=\"num\">{{ li.effectiveTaxRate }}</td>\n          <td class=\"num\">{{ li.lineItemRevenue.net | money }}</td>\n        </tr>\n        {% endfor %}\n      </tbody>\n    </table>\n  </section>\n\n  {# ───── Summenblock ───── #}\n  <section class=\"totals\">\n    <table class=\"totals__table\">\n      <tbody>\n        <tr>\n          <th scope=\"row\">Nettobetrag</th>\n          <td class=\"num\">{{ data.totals.net | money }}</td>\n        </tr>\n        <tr>\n          <th scope=\"row\">zzgl. {{ data.financials.tax.taxRates.standard }} % USt</th>\n          <td class=\"num\">{{ ((data.totals.gross.amount | float) - (data.totals.net.amount | float)) | money }}</td>\n        </tr>\n        <tr class=\"grand\">\n          <th scope=\"row\">Gesamtbetrag</th>\n          <td class=\"num\">{{ data.totals.gross | money }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </section>\n\n  {# ───── Zahlung: Bankdaten + EPC/SEPA-QR (GiroCode) ───── #}\n  <section class=\"payment\">\n    <h2>Zahlung</h2>\n    <div class=\"payment__cols\">\n      <div class=\"payment__bank\">\n        <p>Bitte überweisen Sie den Betrag innerhalb von {{ data.financials.paymentTerms.paymentTargetDays | default(14) }} Tagen auf folgendes Konto:</p>\n        <dl>\n          <dt>IBAN</dt><dd>{{ data.payment.iban }}</dd>\n          <dt>BIC</dt><dd>{{ data.payment.bic }}</dd>\n          <dt>Bank</dt><dd>{{ data.payment.bankName }}</dd>\n          <dt>Verwendungszweck</dt><dd>{{ data.documentNumber }}</dd>\n        </dl>\n      </div>\n      <div class=\"payment__qr\">\n        <span class=\"qr-label\">SEPA-Überweisung scannen</span>\n        <div class=\"qr-box qr-box--lg\">\n          {{ epc_qr(\n              name=data.company.name | default('Beispiel GmbH'),\n              iban=data.payment.iban,\n              amount=data.totals.gross.amount,\n              reference=data.documentNumber,\n              scale=4\n          ) }}\n        </div>\n        <small class=\"muted\">EPC069-12 GiroCode · jede Banking-App scannt</small>\n      </div>\n    </div>\n  </section>\n\n  {# ───── Optionale Hinweise — nur rendern, wenn vorhanden ───── #}\n  {% if data.bodyOutroduction %}\n  <section class=\"notes\">\n    <h2>Hinweise</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n  {# ───── Beleg-Link als generischer QR (z.B. für öffentlich-geteilten PDF) ───── #}\n  {% if data.publicShareUrl %}\n  <section class=\"share\">\n    <div>\n      <h2>Online-Beleg</h2>\n      <p>Diese Rechnung ist auch online abrufbar (gleiche PDF, kein Login).</p>\n      <p class=\"muted-url\">{{ data.publicShareUrl }}</p>\n    </div>\n    <div class=\"qr-box\">\n      {{ data.publicShareUrl | qr_code(scale=3) }}\n    </div>\n  </section>\n  {% endif %}\n\n  {# ───── Decorative Trenner ───── #}\n  <hr class=\"decorative\" role=\"presentation\">\n\n  {# ───── Code-128-Barcode mit der Belegnummer (für interne Sortierung) ───── #}\n  <section class=\"doc-code\">\n    <span class=\"qr-label\">Beleg-ID</span>\n    {{ barcode(data.documentNumber, 'code128', height=8, font_size=7, quiet_zone=2) }}\n  </section>\n\n</body>\n</html>\n",
+  "css": "/* Showcase invoice styles — demonstrates @page rules, decorative class,\n   tabular numbers, page break controls, etc. */\n\n@page {\n  size: A4;\n  margin: 18mm 18mm 30mm 18mm;\n\n  /* Seitenzahl gehört in den Footer — die obere Variante aus base.css aus. */\n  @top-right { content: none; }\n\n  /* Mehrzeilige Pflichtangaben, verankert oben im unteren Rand mit Abstand\n     zur Blattkante. Seitenzahl mittig — alles auf einer Höhe. */\n  @bottom-left {\n    content: \"Beispiel Handels GmbH \\A Marktplatz 1 · 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Mustermann\";\n    font-size: 6.8pt; line-height: 1.45; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    vertical-align: top; padding-top: 5mm;\n  }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.8pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 5mm;\n  }\n  @bottom-right {\n    content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A Commerzbank Berlin · BIC COBADEFFXXX \\A IBAN DE89 3704 0044 0532 0130 00 \\A kontakt@example.com · +49 30 123456\";\n    font-size: 6.8pt; line-height: 1.45; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; white-space: pre-line;\n    text-align: right; vertical-align: top; padding-top: 5mm;\n  }\n}\n\n* { box-sizing: border-box; }\n\nbody {\n  font-family: 'Helvetica', 'Arial', sans-serif;\n  font-size: 10pt;\n  line-height: 1.45;\n  color: #111;\n  margin: 0;\n}\n\n/* \"decorative\" elements get marked as PDF Artifact by WeasyPrint when\n   role=\"presentation\" is set; screen readers skip them. CSS just gives\n   them their visual identity. */\n/* Kein bunter Gradient-Balken mehr — die professionelle Akzentlinie sitzt\n   als feine Unterkante des Briefkopfs (siehe .doc-header). */\nhr.decorative {\n  border: none;\n  border-top: 1px solid #e5e7eb;\n  margin: 8mm 0;\n}\n\n/* ───── Header ───── */\n.doc-header {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  gap: 12mm;\n  /* Professionelle Akzentlinie: feine, kräftige Unterkante des Briefkopfs\n     statt eines bunten Streifens — verankert Logo + Kontakt sauber. */\n  border-bottom: 0.8pt solid #1f2937;\n  padding-bottom: 5mm;\n  margin-bottom: 7mm;\n}\n/* Brand nimmt die volle freie Breite, QR bleibt fix rechts — der\n   Firmenname läuft so über die ganze Breite und bricht nicht um, auch\n   wenn er etwas länger ist. */\n.doc-header__brand {\n  flex: 1 1 auto;\n  min-width: 0;\n}\n.doc-header__brand .logo {\n  display: block;\n  max-width: 70mm;\n  max-height: 18mm;\n}\n.doc-header__brand .logo--fallback {\n  display: block;\n  font-size: 16pt;\n  letter-spacing: -0.01em;\n  white-space: nowrap;\n}\n.doc-header__sender {\n  font-size: 9pt;\n  color: #6b7280;\n  margin: 1mm 0 0;\n}\n.doc-header__vcard {\n  flex: 0 0 auto;\n  text-align: right;\n}\n\n/* QR boxes — fixed visual size so SVG inside scales nicely. */\n.qr-label {\n  display: block;\n  font-size: 8pt;\n  color: #6b7280;\n  margin-bottom: 1mm;\n}\n.qr-box {\n  width: 22mm;\n  height: 22mm;\n  display: inline-block;\n  border: 1px solid #f1f5f9;\n  padding: 1mm;\n}\n.qr-box--lg {\n  width: 28mm;\n  height: 28mm;\n}\n.qr-box svg {\n  width: 100%;\n  height: 100%;\n  display: block;\n}\n\n/* ───── Recipient ───── */\n.recipient {\n  margin: 8mm 0 6mm;\n}\n.recipient__addr-line {\n  font-size: 8pt;\n  text-decoration: underline;\n  color: #6b7280;\n  margin: 0 0 2mm;\n}\n.recipient address {\n  font-style: normal;\n  font-size: 11pt;\n  line-height: 1.5;\n}\n\n/* ───── Title + meta ───── */\n.doc-title h1 {\n  font-size: 18pt;\n  font-weight: 600;\n  margin: 0 0 3mm;\n}\n.meta {\n  border-collapse: collapse;\n  font-size: 9.5pt;\n}\n.meta th, .meta td { padding: 0.6mm 4mm 0.6mm 0; text-align: left; vertical-align: top; }\n.meta th { font-weight: 500; color: #6b7280; }\n\n/* ───── Positions table ───── */\n.positions { margin-top: 8mm; }\n.items {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 9.5pt;\n  font-variant-numeric: tabular-nums;\n}\n.items thead th {\n  font-size: 8.5pt;\n  text-transform: uppercase;\n  letter-spacing: 0.04em;\n  text-align: left;\n  padding: 2mm;\n  border-bottom: 1px solid #1f2937;\n  color: #1f2937;\n}\n.items thead th.num { text-align: right; }\n.items tbody td {\n  padding: 2.5mm 2mm;\n  border-bottom: 1px solid #f1f5f9;\n  vertical-align: top;\n}\n.items tbody td.num { text-align: right; }\n.items tbody tr { page-break-inside: avoid; }\n.item-desc { font-size: 9pt; color: #4b5563; margin: 0.5mm 0; }\n.item-meta { font-size: 8pt; color: #9ca3af; font-family: ui-monospace, monospace; }\n.barcode-cell svg { width: 22mm; height: 8mm; }\n.muted { color: #9ca3af; }\n\n/* ───── Totals ───── */\n.totals {\n  display: flex;\n  justify-content: flex-end;\n  margin-top: 4mm;\n  page-break-inside: avoid;\n}\n.totals__table {\n  border-collapse: collapse;\n  min-width: 70mm;\n  font-variant-numeric: tabular-nums;\n}\n.totals__table th, .totals__table td {\n  padding: 1.5mm 0 1.5mm 4mm;\n  text-align: right;\n}\n.totals__table th { font-weight: 500; color: #4b5563; }\n.totals__table td.num { font-weight: 600; }\n.totals__table tr.grand th,\n.totals__table tr.grand td {\n  border-top: 2px solid #1f2937;\n  font-size: 12pt;\n  font-weight: 700;\n  padding-top: 2.5mm;\n}\n\n/* ───── Payment block ───── */\n.payment {\n  margin-top: 10mm;\n  page-break-inside: avoid;\n}\n.payment h2 { font-size: 12pt; font-weight: 600; margin: 0 0 3mm; }\n.payment__cols {\n  display: flex;\n  gap: 8mm;\n  align-items: flex-start;\n}\n.payment__bank { flex: 1; }\n.payment__bank dl { display: grid; grid-template-columns: 32mm 1fr; gap: 0.5mm 4mm; margin: 0; }\n.payment__bank dt { color: #6b7280; font-size: 9pt; }\n.payment__bank dd { margin: 0; font-size: 10pt; }\n.payment__qr { text-align: right; }\n.payment__qr small { display: block; font-size: 7.5pt; margin-top: 1mm; }\n\n/* ───── Notes ───── */\n.notes { margin-top: 8mm; page-break-inside: avoid; }\n.notes h2 { font-size: 11pt; font-weight: 600; margin: 0 0 2mm; color: #374151; }\n\n/* ───── Share / Beleg-Link ───── */\n.share {\n  margin-top: 10mm;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 8mm;\n  background: #f8fafc;\n  border-radius: 2mm;\n  padding: 4mm 5mm;\n  page-break-inside: avoid;\n}\n.share h2 { font-size: 11pt; font-weight: 600; margin: 0 0 1mm; }\n.share p { margin: 0; font-size: 9.5pt; }\n.muted-url { font-family: ui-monospace, monospace; font-size: 8.5pt; color: #6b7280; word-break: break-all; }\n\n/* ───── Doc code at the very bottom ───── */\n.doc-code {\n  margin-top: 8mm;\n  text-align: center;\n}\n.doc-code svg { width: 60mm; height: 10mm; }\n",
+  "example_data": {
+    "documentNumber": "RE-2026-99001",
+    "documentDate": "2026-05-12",
+    "serviceDate": "2026-05-10",
+    "customerNumber": "10043",
+    "customerOrderNumber": "BST-2026-0815",
+    "publicShareUrl": "https://agent.xentral.com/share/abc12345-def6-7890-1234",
+    "documentAddress": {
+      "name": "Musterfirma GmbH",
+      "street": "Hauptstraße 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "country": "DE"
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "ean": "4006381333931",
+        "name": "Bürostuhl Modell A",
+        "description": "Ergonomisch, schwarz, mit Armlehnen",
+        "quantity": 2,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "249.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "498.00",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "592.62",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-007",
+        "ean": "4012345678901",
+        "name": "Schreibtisch 160×80",
+        "description": "Eiche natur, höhenverstellbar 65–125 cm",
+        "quantity": 1,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "489.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "489.00",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "581.91",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "service",
+        "number": "DL-MONTAGE",
+        "ean": "",
+        "name": "Aufbau-Service",
+        "description": "Auf-/Abbau, Entsorgung des Verpackungsmaterials",
+        "quantity": 1,
+        "unit": "h",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "85.00",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "85.00",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "101.15",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 19,
+          "reduced": 7
+        }
+      },
+      "paymentTerms": {
+        "paymentTargetDays": 14,
+        "paymentTargetDiscount": 2,
+        "paymentTargetDiscountDays": 7
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "1072.00",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "1275.68",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "bic": "COBADEFFXXX",
+      "bankName": "Commerzbank Berlin"
+    },
+    "bodyOutroduction": "Vielen Dank für Ihren Auftrag. Bei Rückfragen erreichen Sie uns unter +49 30 123456 oder per E-Mail an kontakt@example.com.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "vatId": "DE123456789",
+      "taxId": "13/456/78901",
+      "ceo": "Max Mustermann"
+    }
+  },
+  "assets": {
+    "logo": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMzIgNTYiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iWGVudHJhbCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMiwzKSBzY2FsZSgwLjA5NzY1NjI1KSI+PGcgdHJhbnNmb3JtPSJzY2FsZSgxNikiPjxwYXRoIGZpbGw9IiNFNjZEQ0IiIGQ9Ik0xNi4zMSAxMS40NjdoLS4wNTZjLTIuMzcxIDAtNC40NTItMS43NjYtNi4wMDItMy4zMWwtMS41MjUtMS41MmExLjU0IDEuNTQgMCAwIDEtLjMzNi0xLjY4NCAxLjU1NiAxLjU1NiAwIDAgMSAyLjUzLS41MDFsMS41MyAxLjUyMmMxLjAzOCAxLjAzMyAyLjU2IDIuNDAxIDMuODA4IDIuNDAxaC4wNTdjMS4yNDcgMCAyLjc3NC0xLjM3MSAzLjgwOC0yLjQwMWwxLjUyNC0xLjUyMmExLjU1IDEuNTUgMCAwIDEgMS42OTEtLjMzNCAxLjU1IDEuNTUgMCAwIDEgLjg0LjgzNSAxLjU0IDEuNTQgMCAwIDEtLjMzNyAxLjY4M2wtMS41MyAxLjUyM2MtMS41NSAxLjU0Mi0zLjYzIDMuMzA4LTYuMDAxIDMuMzA4Ii8+PHBhdGggZmlsbD0iIzI2RTNFNCIgZD0iTTIyLjczNyAyNy45OWExLjU1IDEuNTUgMCAwIDEtMS4wOTctLjQ1bC0xLjUyOS0xLjUyMWMtMS4wMzgtMS4wMzItMi41NTktMi40LTMuODA1LTIuNGgtLjA1N2MtMS4yNDYgMC0yLjc3MiAxLjM3LTMuODA2IDIuNGwtMS41MjggMS41MjNhMS41NTUgMS41NTUgMCAwIDEtMi41MjQtLjUgMS41NCAxLjU0IDAgMCAxIC4zMzYtMS42ODJsMS41MjgtMS41MjFjMS41NTQtMS41NDggMy42MzQtMy4zMiA2LjAyOC0zLjMwNmguMDI3YzIuMzcyIDAgNC40NSAxLjc2NSA1Ljk5OSAzLjMwNmwxLjUyOCAxLjUyMUExLjU0IDEuNTQgMCAwIDEgMjIuNzQxIDI4eiIvPjxwYXRoIGZpbGw9IiM1QjY0RUUiIGQ9Ik01LjU0NyAyMy43MzRBMS41NCAxLjU0IDAgMCAxIDQgMjIuMTg2YzAtLjQxLjE2My0uODA1LjQ1My0xLjA5NWwxLjUyNC0xLjUyN2MxLjAzOS0xLjA0IDIuNDItMi41NjkgMi40MDUtMy44MTZ2LS4wMjhjLjAxLTEuMjQ3LTEuMzctMi43Ny0yLjQwNS0zLjgxNmwtMS41MjQtMS41MjdhMS41NTEgMS41NTEgMCAwIDEgMS4wOTMtMi42NDNjLjQxIDAgLjgwMy4xNjMgMS4wOTQuNDUzbDEuNTI0IDEuNTI3YzEuNTUgMS41NTMgMy4zMjcgMy42NCAzLjMxNCA2LjAyLjAxMyAyLjM4MS0xLjc2NCA0LjQ2OC0zLjMxNSA2LjAyMkw2LjY0IDIzLjI4YTEuNTQgMS41NCAwIDAgMS0xLjA5My40NTMiLz48cGF0aCBmaWxsPSIjMjdFN0EyIiBkPSJNMjYuNDQ5IDIzLjc3MWExLjUzIDEuNTMgMCAwIDEtMS4wOTMtLjQ1NGwtMS41MjMtMS41MjZjLTEuNTUtMS41NTEtMy4zMjUtMy42MzctMy4zMS02LjAxOC0uMDE0LTIuMzc1IDEuNzYxLTQuNDYzIDMuMzEtNi4wMTZsMS41MjMtMS41MjZhMS41NDMgMS41NDMgMCAwIDEgMi42MzcgMS4wOTRjMCAuNDEtLjE2Mi44MDUtLjQ1MiAxLjA5NWwtMS41MjIgMS41MjZjLTEuMDQgMS4wNC0yLjQxOCAyLjU2Ni0yLjQwMiAzLjgxNXYuMDI2Yy0uMDExIDEuMjQ4IDEuMzY2IDIuNzc2IDIuNDAyIDMuODE2bDEuNTIzIDEuNTI2YTEuNTUgMS41NSAwIDAgMS0xLjA5MiAyLjY0OHoiLz48L2c+PC9nPjx0ZXh0IHg9IjYwIiB5PSIzOCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGZvbnQtd2VpZ2h0PSI3MDAiIGxldHRlci1zcGFjaW5nPSItMSIgZmlsbD0iIzBCMEQxMiI+eGVudHJhbDwvdGV4dD48L3N2Zz4="
+  }
+}

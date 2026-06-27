@@ -1,0 +1,15 @@
+{
+  "id": "galaxus",
+  "version": 1,
+  "name": "Galaxus",
+  "domain": "galaxus.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Galaxus-Marketplace (Digitec Galaxus) — DACH-Reichweite."
+    },
+    "de": {
+      "description": "Galaxus-Marketplace (Digitec Galaxus) — DACH-Reichweite."
+    }
+  }
+}

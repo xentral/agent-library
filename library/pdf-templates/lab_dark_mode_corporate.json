@@ -1,0 +1,147 @@
+{
+  "id": "lab_dark_mode_corporate",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Dark Mode Corporate (Proforma)",
+      "description": "Proforma-Rechnung im Vollflächen-Dunkel: Gradient-Akzent, Surface-Cards, Cyan-Total, Zoll-/HS-Code-Details."
+    },
+    "en": {
+      "title": "Xentral Labs · Dark Mode Corporate (Proforma Invoice)",
+      "description": "Full-bleed dark proforma invoice: gradient accent, surface cards, cyan total, customs/HS-code details."
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Proforma-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data['lineItems'] | default([]) %}\n\n{% block letterhead %}\n  <div class=\"dk-top\">\n    <div class=\"dk-brand\">\n      <svg class=\"dk-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <span class=\"dk-brandname\">{{ data.company.name | default('') }}</span>\n    </div>\n    <div class=\"dk-doc\">\n      <span class=\"dk-eyebrow\">{{ L.doc_title }}</span>\n      <span class=\"dk-docno\">{{ data.documentNumber }}</span>\n    </div>\n  </div>\n  <div class=\"dk-accent\"></div>\n{% endblock %}\n\n{% block content %}\n  <section class=\"dk-cards\">\n    <div class=\"dk-card\">\n      <div class=\"dk-k\">{{ L.recipient }}</div>\n      <div class=\"dk-strong\">{{ buyer.name }}</div>\n      {% if buyer.coName %}<div class=\"dk-dim\">{{ buyer.coName }}</div>{% endif %}\n      <div class=\"dk-dim\">{{ buyer.street }}</div>\n      <div class=\"dk-dim\">{{ buyer.zipCode }} {{ buyer.city }} · {{ buyer.country }}</div>\n    </div>\n    <div class=\"dk-card\">\n      <div class=\"dk-row\"><span class=\"dk-k\">{{ L.date }}</span><span>{{ data.documentDate | date }}</span></div>\n      <div class=\"dk-row\"><span class=\"dk-k\">Incoterms</span><span>{{ data.incoterms }}</span></div>\n      <div class=\"dk-row\"><span class=\"dk-k\">{{ L.reason_label }}</span><span>{{ data.reason }}</span></div>\n      <div class=\"dk-row\"><span class=\"dk-k\">{{ L.currency_label }}</span><span>{{ data.currency | default('EUR') }}</span></div>\n    </div>\n  </section>\n\n  <h1 class=\"visually-hidden\">{{ L.doc_title }} {{ data.documentNumber }}</h1>\n\n  <table class=\"dk-items\">\n    <thead><tr>\n      <th class=\"dk-c-pos\">#</th>\n      <th class=\"dk-c-desc\">{{ L.col_item }}</th>\n      <th class=\"dk-c-hs\">HS-Code</th>\n      <th class=\"dk-c-org\">{{ L.origin }}</th>\n      <th class=\"dk-c-qty\">{{ L.col_qty }}</th>\n      <th class=\"dk-c-total\">{{ L.col_value }}</th>\n    </tr></thead>\n    <tbody>\n      {% for p in items %}\n      <tr>\n        <td class=\"dk-c-pos\">{{ '%02d' | format(loop.index) }}</td>\n        <td class=\"dk-c-desc\"><strong>{{ p.name }}</strong><span class=\"dk-sku\">{{ p.number }}</span></td>\n        <td class=\"dk-c-hs mono\">{{ p.hsCode }}</td>\n        <td class=\"dk-c-org\">{{ p.origin }}</td>\n        <td class=\"dk-c-qty num\">{{ p.quantity | number }} {{ p.unit }}</td>\n        <td class=\"dk-c-total num\">{{ p.lineItemRevenue.net | money }}</td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <div class=\"dk-foot\">\n    <section class=\"dk-note\">\n      <div class=\"dk-k\">{{ L.note_label }}</div>\n      <p>{{ data.proformaNote | default(L.proforma_default) }}</p>\n    </section>\n    <section class=\"dk-totals\">\n      <div class=\"dk-trow\"><span>{{ L.goods_net }}</span><span class=\"num\">{{ data.totals.net | money }}</span></div>\n      <div class=\"dk-trow\"><span>{{ L.freight_label }}</span><span class=\"num\">{{ data.freight | default({'amount':0,'currency':'EUR'}) | money }}</span></div>\n      <div class=\"dk-trow dk-trow--grand\"><span>{{ L.grand }}</span><span class=\"num\">{{ data.totals.gross | money }}</span></div>\n    </section>\n  </div>\n\n  <footer class=\"dk-pagefoot\">\n    <span>{{ data.company.name }} · {{ data.company.address }}</span>\n    <span>Amtsgericht Stuttgart · HRB 654321 · Geschäftsführer: Max Beispiel</span>\n    <span>{{ L.vat_id }} {{ data.company.vatId | default('DE123456789') }} · EORI {{ data.company.eori | default('DE1234567890123') }}</span>\n  </footer>\n{% endblock %}",
+  "css": "@page { size: A4; margin: 0; }\n\nbody {\n  margin: 0;\n  padding: 16mm 18mm;\n  background: #0b0f17;\n  color: #e6eaf2;\n  font-family: 'Helvetica', 'Arial', sans-serif;\n  -webkit-print-color-adjust: exact;\n  print-color-adjust: exact;\n}\n.num { font-variant-numeric: tabular-nums; }\n.mono { font-family: 'Courier New', monospace; }\n.doc-header { display: block; margin: 0; }\n\n.dk-top { display: flex; align-items: center; justify-content: space-between; }\n.dk-brand { display: flex; align-items: center; gap: 3.5mm; }\n.dk-mark { height: 11mm; width: 11mm; display: block; }\n.dk-brandname { font-size: 12pt; font-weight: 700; color: #fff; letter-spacing: -0.01em; }\n.dk-doc { text-align: right; }\n.dk-eyebrow { display: block; font-size: 8pt; letter-spacing: 0.26em; text-transform: uppercase; color: #22d3ee; font-weight: 700; }\n.dk-docno { display: block; font-size: 16pt; font-weight: 800; color: #fff; margin-top: 1mm; }\n.dk-accent { height: 1.2mm; border-radius: 1mm; margin: 5mm 0 8mm; background: linear-gradient(90deg, #818cf8 0%, #22d3ee 50%, #21c39a 100%); }\n\n/* Cards */\n.dk-cards { display: flex; gap: 5mm; margin-bottom: 8mm; }\n.dk-card { flex: 1 1 0; background: #141a26; border: 1px solid #232b3b; border-radius: 3mm; padding: 5mm; }\n.dk-k { font-size: 7pt; letter-spacing: 0.16em; text-transform: uppercase; color: #6b7488; font-weight: 700; }\n.dk-strong { font-weight: 700; color: #fff; font-size: 11pt; margin-top: 1.5mm; }\n.dk-dim { color: #aeb6c6; font-size: 9.5pt; line-height: 1.5; }\n.dk-row { display: flex; justify-content: space-between; padding: 1.4mm 0; font-size: 9.5pt; }\n.dk-row .dk-k { align-self: center; }\n.dk-row span:last-child { color: #fff; font-weight: 600; }\n\n/* Items */\n.dk-items { width: 100%; border-collapse: collapse; margin-bottom: 8mm; }\n.dk-items thead th { font-size: 7pt; letter-spacing: 0.12em; text-transform: uppercase; color: #6b7488; font-weight: 700; text-align: left; padding: 0 3mm 3mm; border-bottom: 1px solid #2a3346; }\n.dk-items tbody td { padding: 3.2mm 3mm; border-bottom: 1px solid #1a2230; vertical-align: top; }\n.dk-c-pos { width: 10mm; color: #5a6urple; color: #5b6party; }\n.dk-c-pos { width: 10mm; color: #586079; }\n.dk-c-hs { width: 24mm; color: #aeb6c6; }\n.dk-c-org { width: 22mm; color: #aeb6c6; }\n.dk-c-qty { width: 22mm; text-align: right; color: #cfd5e2; }\n.dk-c-total { width: 30mm; text-align: right; font-weight: 700; color: #fff; }\n.dk-c-desc strong { color: #fff; font-weight: 700; }\n.dk-sku { display: block; color: #586079; font-size: 8pt; margin-top: 0.6mm; }\nthead th.dk-c-qty, thead th.dk-c-total { text-align: right; }\n\n/* Footer split */\n.dk-foot { display: flex; gap: 8mm; align-items: stretch; }\n.dk-note { flex: 1 1 0; }\n.dk-note p { color: #aeb6c6; font-size: 8.5pt; line-height: 1.5; margin-top: 1.6mm; max-width: 100mm; }\n.dk-totals { flex: 0 0 70mm; background: #141a26; border: 1px solid #232b3b; border-radius: 3mm; padding: 5mm; }\n.dk-trow { display: flex; justify-content: space-between; gap: 4mm; padding: 1.5mm 0; font-size: 10pt; color: #aeb6c6; }\n.dk-trow--grand { margin-top: 2mm; padding-top: 3mm; border-top: 1px solid #2a3346; font-size: 14pt; font-weight: 800; color: #fff; }\n.dk-trow--grand .num { color: #22d3ee; }\n\n.dk-pagefoot { display: flex; justify-content: space-between; margin-top: 12mm; padding-top: 4mm; border-top: 1px solid #1a2230; font-size: 7pt; color: #586079; }",
+  "example_data": {
+    "id": "50078",
+    "reason": "Vorauszahlung / Zoll",
+    "totals": {
+      "net": {
+        "amount": "4112.50",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "4292.50",
+        "currency": "EUR"
+      }
+    },
+    "company": {
+      "eori": "DE1234567890123",
+      "name": "Beispiel Industrieteile GmbH",
+      "vatId": "DE123456789",
+      "address": "Industriestraße 8, 70565 Stuttgart"
+    },
+    "freight": {
+      "amount": "180.00",
+      "currency": "EUR"
+    },
+    "currency": "EUR",
+    "language": "de",
+    "incoterms": "DAP Zürich (Incoterms 2020)",
+    "lineItems": [
+      {
+        "name": "Steuerungsmodul HW-200",
+        "unit": "Stk",
+        "hsCode": "8471.80",
+        "number": "HW-MOD-200",
+        "origin": "DE",
+        "quantity": 10,
+        "lineItemRevenue": {
+          "net": {
+            "amount": "3200.00",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "name": "Kabelkonfektion 1,5 m geschirmt",
+        "unit": "Stk",
+        "hsCode": "8544.42",
+        "number": "CBL-ASM-42",
+        "origin": "DE",
+        "quantity": 25,
+        "lineItemRevenue": {
+          "net": {
+            "amount": "462.50",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "name": "Aluminium-Gehäuse, eloxiert",
+        "unit": "Stk",
+        "hsCode": "7616.99",
+        "number": "ENC-ALU-10",
+        "origin": "DE",
+        "quantity": 10,
+        "lineItemRevenue": {
+          "net": {
+            "amount": "450.00",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "documentDate": "2026-06-20",
+    "proformaNote": "Diese Proforma-Rechnung dient ausschließlich Zoll- und Vorauszahlungszwecken und stellt keine umsatzsteuerliche Rechnung dar. Ausfuhrlieferung — umsatzsteuerfrei gemäß §6 UStG.",
+    "documentNumber": "PF-2026-00078",
+    "documentAddress": {
+      "city": "Zürich",
+      "name": "Helvetia Systems AG",
+      "vatId": "CHE-123.456.789",
+      "coName": "Procurement",
+      "street": "Bahnhofstrasse 21",
+      "country": "Schweiz",
+      "zipCode": "8001"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Proforma-Rechnung",
+      "recipient": "Empfänger",
+      "date": "Datum",
+      "reason_label": "Grund",
+      "currency_label": "Währung",
+      "col_item": "Position",
+      "origin": "Ursprung",
+      "col_qty": "Menge",
+      "col_value": "Warenwert",
+      "note_label": "Hinweis",
+      "goods_net": "Warenwert netto",
+      "freight_label": "Fracht / Versicherung",
+      "grand": "Gesamtwert",
+      "vat_id": "USt-IdNr.",
+      "proforma_default": "Diese Proforma-Rechnung dient ausschließlich Zoll- und Vorauszahlungszwecken und stellt keine umsatzsteuerliche Rechnung dar. Ausfuhrlieferung — umsatzsteuerfrei."
+    },
+    "en": {
+      "doc_title": "Proforma Invoice",
+      "recipient": "Recipient",
+      "date": "Date",
+      "reason_label": "Reason",
+      "currency_label": "Currency",
+      "col_item": "Item",
+      "origin": "Origin",
+      "col_qty": "Qty",
+      "col_value": "Value",
+      "note_label": "Note",
+      "goods_net": "Goods value (net)",
+      "freight_label": "Freight / insurance",
+      "grand": "Total value",
+      "vat_id": "VAT ID",
+      "proforma_default": "This proforma invoice serves customs and advance-payment purposes only and is not a VAT invoice. Export delivery — VAT-exempt."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "sla_breaches",
+  "version": 1,
+  "icon": "alert",
+  "category": "customer_service",
+  "order": 220,
+  "kpi": {
+    "key": "sla_breaches",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 4,
+    "initial_tone": "negative"
+  },
+  "locales": {
+    "en": {
+      "title": "SLA exceeded",
+      "description": "Inquiries past their target response window."
+    },
+    "de": {
+      "title": "SLA überschritten",
+      "description": "Anfragen, die ihr Antwortzeitfenster überschritten haben."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "csat",
+  "version": 1,
+  "icon": "star",
+  "category": "customer_service",
+  "order": 250,
+  "kpi": {
+    "key": "csat",
+    "unit": "/ 5",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 4.3,
+    "initial_tone": "positive"
+  },
+  "locales": {
+    "en": {
+      "title": "CSAT",
+      "description": "Customer satisfaction score from the latest survey window."
+    },
+    "de": {
+      "title": "CSAT",
+      "description": "Kundenzufriedenheit aus dem letzten Befragungsfenster."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "fedex",
+  "version": 1,
+  "name": "FedEx",
+  "domain": "fedex.com",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "FedEx-Versand und Tracking-Update für internationale Sendungen."
+    },
+    "de": {
+      "description": "FedEx-Versand und Tracking-Update für internationale Sendungen."
+    }
+  }
+}

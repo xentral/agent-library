@@ -1,0 +1,184 @@
+{
+  "id": "return_to_credit_note",
+  "version": 1,
+  "category": "customer_service",
+  "icon": "return",
+  "order": 120,
+  "popular": true,
+  "trigger_type": "erp-event",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Retoure geprüft → Gutschrift erzeugen",
+      "description": "Erstellt automatisch die Gutschrift, sobald eine Retoure als geprüft\nmarkiert wird, und entwirft gleich die passende Kunden-Mail dazu —\ndie Erstattung läuft ohne manuelle Belegerfassung an und der\nKundenservice muss nur noch gegenlesen und absenden.\n\n**Was Schritt für Schritt passiert**\n\n1. Eine Retoure wird als geprüft markiert — das ERP-Ereignis\n   startet den Workflow.\n2. Alle geprüften Retouren, zu denen noch keine Gutschrift\n   existiert, werden geladen.\n3. Für jede dieser Retouren einzeln wird eine Gutschrift mit den\n   geprüften Positionen angelegt und mit der Originalrechnung\n   verknüpft.\n4. Ein KI-Schritt entwirft eine kurze Kunden-Mail: Retoure\n   geprüft, Gutschrift mit Belegnummer anbei, Erstattung in\n   3–5 Werktagen.\n\n**Was verändert wird**\n\n- Je Retoure wird eine neue Gutschrift angelegt (mit Kunde,\n  geprüften Positionen und Bezug zur Originalrechnung).\n- Die Kunden-Mail wird nur entworfen, NICHT versendet — der\n  Versand bleibt beim Mitarbeitenden.\n- Die Retoure selbst wird nicht verändert.\n\n**Voraussetzungen und Grenzen**\n\n- Die Retouren müssen einen Prüfstatus und die geprüften\n  Positionen führen, und das ERP-Ereignis „Retoure geprüft\" muss\n  verfügbar sein.\n- Doppelte Gutschriften werden vermieden, weil nur Retouren ohne\n  bereits erstellte Gutschrift geladen werden —\n  Wiederholungsläufe sind dadurch unkritisch.\n- Der Mail-Entwurf stammt von einem Sprachmodell und sollte vor\n  dem Versand kurz gegengelesen werden.\n",
+      "recommended_when": "Sobald Retouren in nennenswertem Umfang anfallen",
+      "tags": [
+        "Kundenservice",
+        "Retoure",
+        "Gutschrift"
+      ]
+    },
+    "en": {
+      "name": "Return checked → create credit note",
+      "description": "Automatically creates the credit note as soon as a return is marked\nas checked, and drafts the matching customer mail right away — the\nrefund gets under way without manual document entry and customer\nservice only has to proofread and send.\n\n**What happens step by step**\n\n1. A return is marked as checked — the ERP event starts the\n   workflow.\n2. All checked returns that do not have a credit note yet are\n   loaded.\n3. For each of these returns, one by one, a credit note with the\n   checked positions is created and linked to the original\n   invoice.\n4. An AI step drafts a short customer mail: return checked,\n   credit note with document number attached, refund in 3-5\n   business days.\n\n**What gets changed**\n\n- One new credit note is created per return (with customer,\n  checked positions and a reference to the original invoice).\n- The customer mail is only drafted, NOT sent — sending remains\n  with the staff.\n- The return itself is not modified.\n\n**Prerequisites and limits**\n\n- The returns must carry a check status and the checked\n  positions, and the ERP event \"return checked\" must be\n  available.\n- Duplicate credit notes are avoided because only returns without\n  an existing credit note are loaded — re-runs are therefore\n  harmless.\n- The mail draft comes from a language model and should be\n  proofread briefly before sending.\n",
+      "recommended_when": "As soon as returns occur at scale",
+      "tags": [
+        "Customer service",
+        "Returns",
+        "Credit note"
+      ],
+      "node_titles": {
+        "n_trig": "When a return is marked as checked",
+        "n_query": "Load checked returns without a credit note",
+        "n_loop": "For each checked return, one by one",
+        "n_create": "Create a credit note with the checked positions",
+        "n_mail": "Draft the customer mail for the credit note"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-erp-event",
+        "config": {
+          "title": "Wenn eine Retoure als geprüft markiert wird",
+          "event": "return.checked"
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Geprüfte Retouren ohne Gutschrift laden",
+          "varName": "checkedReturns",
+          "entityKey": "SalesReturn",
+          "entityLabel": "Sales return",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "status": "checked",
+                "creditNoteCreated": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_loop",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "loop",
+        "config": {
+          "title": "Für jede geprüfte Retoure einzeln",
+          "varName": "returnOrder",
+          "items": "{{ checkedReturns.data }}"
+        }
+      }
+    },
+    {
+      "id": "n_create",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Gutschrift mit geprüften Positionen anlegen",
+          "varName": "createCreditNote",
+          "entityKey": "SalesCreditNote",
+          "entityLabel": "Sales credit note",
+          "operations": [
+            "create"
+          ],
+          "params": {
+            "create": {
+              "body": {
+                "customerId": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "customerId"
+                },
+                "positions": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "checkedPositions"
+                },
+                "invoiceRef": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "invoiceId"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_mail",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "agent",
+        "config": {
+          "title": "Kunden-Mail zur Gutschrift entwerfen",
+          "varName": "mailEntwurf",
+          "model": "gpt-5.1",
+          "prompt": "Draft a short mail to the customer: the return was checked, credit note {{ createCreditNote.documentNumber }} is attached, refund in 3-5 business days. Return the mail text only.\n"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_loop",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_loop",
+      "target": "n_create",
+      "sourceHandle": "a",
+      "targetHandle": "in:create"
+    },
+    {
+      "id": "e4",
+      "source": "n_create",
+      "target": "n_mail"
+    }
+  ]
+}

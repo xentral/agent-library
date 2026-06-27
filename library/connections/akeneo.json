@@ -1,0 +1,15 @@
+{
+  "id": "akeneo",
+  "version": 1,
+  "name": "Akeneo",
+  "domain": "akeneo.com",
+  "category": "pim",
+  "locales": {
+    "en": {
+      "description": "Produktstammdaten in Akeneo pflegen, nach Xentral pushen."
+    },
+    "de": {
+      "description": "Produktstammdaten in Akeneo pflegen, nach Xentral pushen."
+    }
+  }
+}

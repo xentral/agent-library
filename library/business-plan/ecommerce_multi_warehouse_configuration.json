@@ -1,0 +1,2349 @@
+{
+  "id": "ecommerce_multi_warehouse_configuration",
+  "business_model": "ecommerce_multi_warehouse",
+  "locales": {
+    "en": {
+      "options": {
+        "legal_forms": [
+          {
+            "id": "gmbh",
+            "label": "GmbH"
+          },
+          {
+            "id": "ug",
+            "label": "UG (haftungsbeschränkt)"
+          },
+          {
+            "id": "gmbh-cokg",
+            "label": "GmbH & Co. KG"
+          },
+          {
+            "id": "gbr",
+            "label": "GbR"
+          },
+          {
+            "id": "ag",
+            "label": "AG"
+          }
+        ],
+        "carriers": [
+          {
+            "id": "dhl",
+            "label": "DHL Geschäftskunden",
+            "default_active": true,
+            "default_service": "Paket National"
+          },
+          {
+            "id": "dhl-express",
+            "label": "DHL Express",
+            "default_active": false,
+            "default_service": "Express International"
+          },
+          {
+            "id": "dpd",
+            "label": "DPD",
+            "default_active": true,
+            "default_service": "Classic"
+          },
+          {
+            "id": "ups",
+            "label": "UPS",
+            "default_active": false,
+            "default_service": "Standard / Express Saver"
+          },
+          {
+            "id": "gls",
+            "label": "GLS",
+            "default_active": false,
+            "default_service": "BusinessParcel"
+          },
+          {
+            "id": "hermes",
+            "label": "Hermes",
+            "default_active": false,
+            "default_service": "Päckchen / Paket"
+          },
+          {
+            "id": "fedex",
+            "label": "FedEx",
+            "default_active": false,
+            "default_service": "International Priority"
+          },
+          {
+            "id": "pickup",
+            "label": "Selbstabholung",
+            "default_active": false,
+            "default_service": "— (kein Versand)"
+          }
+        ],
+        "versand_routing_modes": [
+          {
+            "id": "priority",
+            "label": "Prioritätsliste",
+            "hint": "Erster aktiver Carrier wird genommen, Fallback bei Ausfall."
+          },
+          {
+            "id": "cheapest",
+            "label": "Günstigster pro Paket",
+            "hint": "Carrier nach Kosten je Paket — braucht aktive Tarif-API."
+          },
+          {
+            "id": "fastest",
+            "label": "Schnellster",
+            "hint": "Carrier nach Lead-Time, höhere Kosten in Kauf nehmen."
+          },
+          {
+            "id": "rules",
+            "label": "Regelbasiert",
+            "hint": "Pro Land / Gewicht eigene Carrier-Wahl (Standard im D2C)."
+          }
+        ],
+        "payment_methods": [
+          {
+            "id": "vorkasse",
+            "label": "Vorkasse / Banküberweisung"
+          },
+          {
+            "id": "sepa",
+            "label": "SEPA-Lastschrift"
+          },
+          {
+            "id": "cc",
+            "label": "Kreditkarte"
+          },
+          {
+            "id": "paypal",
+            "label": "PayPal"
+          },
+          {
+            "id": "klarna",
+            "label": "Klarna / BNPL"
+          },
+          {
+            "id": "rechnung",
+            "label": "Rechnungskauf"
+          },
+          {
+            "id": "apple-pay",
+            "label": "Apple Pay"
+          },
+          {
+            "id": "google-pay",
+            "label": "Google Pay"
+          }
+        ],
+        "payment_risk_rules": [
+          {
+            "id": "no-rechnung-first",
+            "label": "Kein Rechnungskauf bei Erstbestellung"
+          },
+          {
+            "id": "no-bnpl-drittland",
+            "label": "Kein BNPL für Drittland"
+          },
+          {
+            "id": "no-sepa-low",
+            "label": "SEPA erst ab 5 € (Bankgebühren)"
+          },
+          {
+            "id": "fraud-block",
+            "label": "Auto-Block bei Fraud-Score > 80"
+          }
+        ],
+        "payment_providers": [
+          {
+            "id": "stripe",
+            "label": "Stripe",
+            "default_active": true,
+            "default_refund": "auto"
+          },
+          {
+            "id": "paypal",
+            "label": "PayPal",
+            "default_active": true,
+            "default_refund": "auto"
+          },
+          {
+            "id": "klarna",
+            "label": "Klarna",
+            "default_active": true,
+            "default_refund": "auto"
+          },
+          {
+            "id": "mollie",
+            "label": "Mollie",
+            "default_active": false,
+            "default_refund": "auto"
+          },
+          {
+            "id": "adyen",
+            "label": "Adyen",
+            "default_active": false,
+            "default_refund": "auto"
+          },
+          {
+            "id": "amazonpay",
+            "label": "Amazon Pay",
+            "default_active": false,
+            "default_refund": "auto"
+          }
+        ]
+      },
+      "name": "Multi-warehouse e-commerce",
+      "description": "Xentral configuration for an online retailer running stock in\nmultiple warehouses (own + 3PLs), with geo-based routing, per-\nwarehouse carrier mix, and pool-strategy decisions per channel.\nBigger setup than a single-shop boutique — the warehouse, sync,\nand routing modules carry most of the human input.\n",
+      "sidebar": [
+        {
+          "id": "overview",
+          "label": "Overview"
+        },
+        {
+          "id": "sync",
+          "label": "Sync status"
+        },
+        {
+          "group": "Company",
+          "items": [
+            {
+              "id": "unternehmen:firma",
+              "label": "Company profile"
+            },
+            {
+              "id": "unternehmen:bank",
+              "label": "Banking & payments"
+            }
+          ]
+        },
+        {
+          "group": "Master data",
+          "items": [
+            {
+              "id": "projekte",
+              "label": "Projects / brands"
+            },
+            {
+              "id": "stammdaten:artikel",
+              "label": "Articles"
+            },
+            {
+              "id": "stammdaten:kunden",
+              "label": "Customers"
+            },
+            {
+              "id": "stammdaten:lieferanten",
+              "label": "Suppliers"
+            },
+            {
+              "id": "stammdaten:nummernkreise",
+              "label": "Number ranges"
+            }
+          ]
+        },
+        {
+          "group": "Shop & channels",
+          "items": [
+            {
+              "id": "channels:shop",
+              "label": "Shop connector"
+            },
+            {
+              "id": "channels:marketplace",
+              "label": "Marketplaces"
+            },
+            {
+              "id": "channels:bestand-sync",
+              "label": "Stock sync (multi-pool)"
+            }
+          ]
+        },
+        {
+          "group": "Sales",
+          "items": [
+            {
+              "id": "vertrieb:auftraege",
+              "label": "Orders & workflow"
+            },
+            {
+              "id": "vertrieb:preise",
+              "label": "Prices & discounts"
+            },
+            {
+              "id": "vertrieb:gutscheine",
+              "label": "Vouchers"
+            }
+          ]
+        },
+        {
+          "group": "Payments",
+          "items": [
+            {
+              "id": "zahlungen:provider",
+              "label": "Payment providers"
+            },
+            {
+              "id": "zahlungen:arten",
+              "label": "Payment methods"
+            },
+            {
+              "id": "zahlungen:reconciliation",
+              "label": "Reconciliation"
+            }
+          ]
+        },
+        {
+          "group": "Shipping",
+          "items": [
+            {
+              "id": "versand:carrier",
+              "label": "Carriers (multi-region)"
+            },
+            {
+              "id": "versand:arten",
+              "label": "Shipping methods & costs"
+            },
+            {
+              "id": "versand:etiketten",
+              "label": "Labels & tracking"
+            }
+          ]
+        },
+        {
+          "group": "Warehouse & logistics",
+          "items": [
+            {
+              "id": "lager:own",
+              "label": "Own warehouses (multi)"
+            },
+            {
+              "id": "lager:fulfiller",
+              "label": "3PL fulfiller(s)"
+            },
+            {
+              "id": "lager:dropship",
+              "label": "Dropshipping"
+            }
+          ]
+        },
+        {
+          "group": "Returns",
+          "items": [
+            {
+              "id": "retouren:portal",
+              "label": "Returns portal"
+            },
+            {
+              "id": "retouren:gruende",
+              "label": "Reasons & windows"
+            },
+            {
+              "id": "retouren:reentry",
+              "label": "Restocking & B-stock"
+            }
+          ]
+        },
+        {
+          "group": "Finance & tax",
+          "items": [
+            {
+              "id": "finanzen:steuer",
+              "label": "Tax & OSS"
+            },
+            {
+              "id": "finanzen:buchhaltung",
+              "label": "Accounting & export"
+            }
+          ]
+        },
+        {
+          "group": "Communication",
+          "items": [
+            {
+              "id": "kommunikation:email",
+              "label": "E-mail templates"
+            },
+            {
+              "id": "kommunikation:smtp",
+              "label": "SMTP / provider"
+            }
+          ]
+        },
+        {
+          "group": "Users & permissions",
+          "items": [
+            {
+              "id": "benutzer:rollen",
+              "label": "Roles"
+            },
+            {
+              "id": "benutzer:mitarbeiter",
+              "label": "Team members"
+            }
+          ]
+        }
+      ],
+      "modules": {
+        "unternehmen:firma": {
+          "title": "Company profile",
+          "group": "Company",
+          "description": "Legal name, registration number, tax IDs, address, contact\ndetails and brand assets — appear on every invoice/document\nand email footer.\n",
+          "human_inputs": 8,
+          "sections": [
+            {
+              "id": "company-form",
+              "title": "Company & legal form",
+              "hint": "Wer steht auf dem Beleg? Pflichtangaben aus Handelsregister + Steueranmeldung.",
+              "human": [
+                {
+                  "text": "Confirm official company name",
+                  "why": "Must match the commercial register exactly — legally binding on every document"
+                },
+                {
+                  "text": "Confirm correct legal form",
+                  "why": "Determines mandatory document fields and liability — wrong form = wrong invoices"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "company_name",
+                  "type": "text",
+                  "label": "Firmenname (offiziell)",
+                  "default": "Beispiel D2C GmbH",
+                  "human": true,
+                  "human_why": "Muss exakt dem HR-Eintrag entsprechen — auf jedem Beleg rechtsverbindlich."
+                },
+                {
+                  "id": "legal_form",
+                  "type": "radio",
+                  "label": "Rechtsform",
+                  "default": "gmbh",
+                  "options_ref": "legal_forms",
+                  "human": true,
+                  "human_why": "Bestimmt Pflichtangaben & Haftung. Falsche Form führt zu falschen Belegen."
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "hr_number",
+                      "type": "text",
+                      "label": "Handelsregister-Nr.",
+                      "placeholder": "HRB 12345",
+                      "default": "HRB 12345"
+                    },
+                    {
+                      "id": "hr_court",
+                      "type": "text",
+                      "label": "Registergericht",
+                      "placeholder": "Amtsgericht …",
+                      "default": "Amtsgericht München"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "tax-identification",
+              "title": "Steuer-Identifikation",
+              "hint": "USt-ID erscheint auf jeder Rechnung. VIES-Validierung schützt vor Tippfehlern.",
+              "human": [
+                {
+                  "text": "Provide VAT ID and tax number",
+                  "why": "Issued by the tax office, not publicly retrievable"
+                },
+                {
+                  "text": "Decide on small-business regulation (§19 UStG)",
+                  "why": "Legal choice tied to expected annual revenue"
+                }
+              ],
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "ust_id",
+                      "type": "text",
+                      "label": "USt-ID",
+                      "default": "DE123456789",
+                      "placeholder": "DE123456789"
+                    },
+                    {
+                      "id": "tax_number",
+                      "type": "text",
+                      "label": "Steuernummer",
+                      "default": "143/123/45678",
+                      "placeholder": "143/123/45678",
+                      "human": true,
+                      "human_why": "Wird vom Finanzamt vergeben, nirgendwo öffentlich abrufbar."
+                    }
+                  ]
+                },
+                {
+                  "layout": "toggle-group",
+                  "fields": [
+                    {
+                      "id": "ustid_validate",
+                      "type": "toggle",
+                      "label": "USt-ID per VIES validieren (empfohlen)",
+                      "default": true
+                    },
+                    {
+                      "id": "kleinunternehmer",
+                      "type": "toggle",
+                      "label": "Kleinunternehmer-Regelung (§ 19 UStG) — keine USt auf Belegen",
+                      "default": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "address",
+              "title": "Anschrift",
+              "hint": "Geschäftsadresse für Belege und Korrespondenz. Abweichende Versandadresse pro Lager separat.",
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "street",
+                      "type": "text",
+                      "label": "Straße",
+                      "default": "Musterstr."
+                    },
+                    {
+                      "id": "house_no",
+                      "type": "text",
+                      "label": "Hausnummer",
+                      "default": "1",
+                      "max_width": 120
+                    }
+                  ]
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "zip",
+                      "type": "text",
+                      "label": "PLZ",
+                      "default": "80331",
+                      "max_width": 140
+                    },
+                    {
+                      "id": "city",
+                      "type": "text",
+                      "label": "Ort",
+                      "default": "München"
+                    },
+                    {
+                      "id": "country",
+                      "type": "text",
+                      "label": "Land",
+                      "default": "DE",
+                      "placeholder": "DE",
+                      "max_width": 100
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "contact",
+              "title": "Kontakt",
+              "hint": "Adressen, die in Belegen, Bestellbestätigungen und im Impressum auftauchen.",
+              "human": [
+                {
+                  "text": "Set up mailboxes and assign recipients",
+                  "why": "Internal org decision — who reads what"
+                },
+                {
+                  "text": "Provide phone hotline number (or none)",
+                  "why": "Service policy decision"
+                }
+              ],
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "main_email",
+                      "type": "email",
+                      "label": "Hauptmail / Belege",
+                      "default": "hello@d2c.de",
+                      "human": true,
+                      "human_why": "Welche Inbox liest die Mails — interne Org-Entscheidung."
+                    },
+                    {
+                      "id": "service_email",
+                      "type": "email",
+                      "label": "Service / Customer Care",
+                      "default": "service@d2c.de",
+                      "human": true,
+                      "human_why": "Routing zur CS-Mailbox, kein Default ableitbar."
+                    }
+                  ]
+                },
+                {
+                  "id": "hotline",
+                  "type": "tel",
+                  "label": "Hotline / Telefon",
+                  "default": "+49 89 1234567",
+                  "max_width": 220,
+                  "human": true,
+                  "human_why": "Service-Policy — eigene Nummer oder leer lassen."
+                }
+              ]
+            },
+            {
+              "id": "branding",
+              "title": "Branding",
+              "hint": "Logo + Brandfarbe + Belegfußzeile — wird in jedem PDF (Rechnung, Lieferschein, Mahnung) verwendet.",
+              "human": [
+                {
+                  "text": "Upload logo asset (transparent PNG, ≥ 600 px wide)",
+                  "why": "Brand asset not retrievable from any public source"
+                },
+                {
+                  "text": "Confirm brand color",
+                  "why": "Brand identity decision, not machine-derivable"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "logo_url",
+                  "type": "url",
+                  "label": "Logo-URL",
+                  "hint": "HTTPS-URL eines transparenten PNG, mind. 600 px breit.",
+                  "default": "",
+                  "placeholder": "https://cdn.d2c.de/logo.png",
+                  "human": true,
+                  "human_why": "Brand-Asset, liegt nirgendwo öffentlich abrufbar."
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "brand_color",
+                      "type": "text",
+                      "label": "Brandfarbe (Hex)",
+                      "default": "#6D7CFF",
+                      "placeholder": "#6D7CFF",
+                      "max_width": 160,
+                      "human": true,
+                      "human_why": "Marken-Identität, nicht maschinell entscheidbar."
+                    }
+                  ]
+                },
+                {
+                  "id": "beleg_footer",
+                  "type": "textarea",
+                  "label": "Belegfußzeile",
+                  "hint": "Pflichtangaben fürs Impressum auf Rechnungen — Firma, Anschrift, HR, USt-ID, Geschäftsführung.",
+                  "default": "Beispiel D2C GmbH · Musterstr. 1 · 80331 München · HRB 12345 · USt-ID DE123456789 · Geschäftsführer: …",
+                  "min_height": 80
+                }
+              ]
+            }
+          ]
+        },
+        "unternehmen:bank": {
+          "title": "Banking & payments",
+          "group": "Company",
+          "description": "Main account + SEPA + payment terms.",
+          "human_inputs": 3
+        },
+        "projekte": {
+          "title": "Projects / brands",
+          "group": "Master data",
+          "description": "Important when warehouses are split by brand.",
+          "human_inputs": 2
+        },
+        "stammdaten:artikel": {
+          "title": "Articles",
+          "group": "Master data",
+          "description": "Required fields + variants + tracking + images. Storage location mandatory across all warehouses.",
+          "human_inputs": 6
+        },
+        "stammdaten:kunden": {
+          "title": "Customers",
+          "group": "Master data",
+          "description": "B2C primary, B2B optional, customer groups.",
+          "human_inputs": 4
+        },
+        "stammdaten:lieferanten": {
+          "title": "Suppliers",
+          "group": "Master data",
+          "description": "D2C-light: Pflichtfelder + Default-Zahlungsbedingungen +\nDefault-Wareneingangs-Workflow.\n",
+          "sections": [
+            {
+              "id": "pflichtfelder",
+              "title": "Pflichtfelder beim Anlegen",
+              "hint": "Was zwingend gefüllt sein muss. Standard-Set deckt 95 % der Lieferanten ab.",
+              "fields": [
+                {
+                  "id": "pflicht",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "default": [
+                    "firma",
+                    "iban",
+                    "ustid",
+                    "ansprech"
+                  ],
+                  "options": [
+                    {
+                      "id": "firma",
+                      "label": "Firma"
+                    },
+                    {
+                      "id": "iban",
+                      "label": "IBAN"
+                    },
+                    {
+                      "id": "ustid",
+                      "label": "USt-ID"
+                    },
+                    {
+                      "id": "ansprech",
+                      "label": "Hauptansprechpartner"
+                    },
+                    {
+                      "id": "email",
+                      "label": "E-Mail"
+                    },
+                    {
+                      "id": "telefon",
+                      "label": "Telefon"
+                    },
+                    {
+                      "id": "lkz",
+                      "label": "Lieferanten-Kennzahl"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "defaults",
+              "title": "Defaults für neue Lieferanten",
+              "hint": "Vorbelegungen — pro Lieferant überschreibbar.",
+              "fields": [
+                {
+                  "id": "default_pay",
+                  "type": "radio",
+                  "label": "Standard-Zahlungsbedingung",
+                  "default": "rechnung_30",
+                  "options": [
+                    {
+                      "id": "vorkasse",
+                      "label": "Vorkasse"
+                    },
+                    {
+                      "id": "rechnung_14",
+                      "label": "Rechnung 14 Tage"
+                    },
+                    {
+                      "id": "rechnung_30",
+                      "label": "Rechnung 30 Tage"
+                    },
+                    {
+                      "id": "rechnung_60",
+                      "label": "Rechnung 60 Tage"
+                    }
+                  ]
+                },
+                {
+                  "id": "default_we",
+                  "type": "radio",
+                  "label": "Default-Wareneingangs-Workflow",
+                  "default": "stichprobe",
+                  "options": [
+                    {
+                      "id": "direkt",
+                      "label": "Direkt einlagern (Vertrauens-Lieferanten)"
+                    },
+                    {
+                      "id": "stichprobe",
+                      "label": "Stichprobe 10 % vor Einlagerung"
+                    },
+                    {
+                      "id": "voll",
+                      "label": "100 % QS vor Einlagerung"
+                    }
+                  ]
+                },
+                {
+                  "id": "bewertung",
+                  "type": "toggle",
+                  "label": "Lieferanten-Bewertung aktiv (Liefertreue · Qualität · Preis)",
+                  "default": true
+                }
+              ]
+            }
+          ]
+        },
+        "stammdaten:nummernkreise": {
+          "title": "Number ranges",
+          "group": "Master data",
+          "description": "Optional per-warehouse prefixes for traceability.",
+          "human_inputs": 1
+        },
+        "channels:shop": {
+          "title": "Shop connector",
+          "group": "Shop & channels",
+          "description": "One shop, sync orders to the warehouse routing engine.",
+          "human_inputs": 2
+        },
+        "channels:marketplace": {
+          "title": "Marketplaces",
+          "group": "Shop & channels",
+          "description": "Optional — when active, requires per-marketplace stock pool decision.",
+          "human_inputs": 3
+        },
+        "channels:bestand-sync": {
+          "title": "Stock sync (multi-pool)",
+          "group": "Shop & channels",
+          "description": "Multi-Channel-Bestandsverteilungs-Regeln.\n",
+          "sections": [
+            {
+              "id": "safety-buffer",
+              "title": "Sicherheits-Puffer",
+              "hint": "Wie viel Lagerbestand pro Channel zurückgehalten wird, um Overselling zu vermeiden.",
+              "fields": [
+                {
+                  "id": "puffer",
+                  "type": "number",
+                  "label": "Puffer in %",
+                  "default": "5",
+                  "min": 0,
+                  "max": 50,
+                  "max_width": 120
+                }
+              ]
+            },
+            {
+              "id": "sync-freq",
+              "title": "Sync-Frequenz",
+              "hint": "Wie oft der Bestand zwischen ERP und Channels abgeglichen wird.",
+              "fields": [
+                {
+                  "id": "frequency",
+                  "type": "radio",
+                  "label": "Modus",
+                  "default": "webhook",
+                  "options": [
+                    {
+                      "id": "webhook",
+                      "label": "Realtime per Webhook",
+                      "hint": "Bestes Setup"
+                    },
+                    {
+                      "id": "cron-5min",
+                      "label": "5-Min Cron + Webhook",
+                      "hint": "Fallback"
+                    },
+                    {
+                      "id": "cron-15min",
+                      "label": "15-Min Cron",
+                      "hint": "Nur ohne Webhook-Unterstützung"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "oos",
+              "title": "Out-of-Stock-Verhalten",
+              "hint": "Was passiert, wenn ein Artikel ausverkauft ist.",
+              "human": [
+                {
+                  "text": "Strategie wählen (hide / preorder / waitlist)",
+                  "why": "Brand-Promise — beeinflusst Customer Experience",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "oos",
+                  "type": "radio",
+                  "label": "Strategie",
+                  "default": "hide",
+                  "options": [
+                    {
+                      "id": "hide",
+                      "label": "Im Shop deaktivieren",
+                      "hint": "Saubere UX"
+                    },
+                    {
+                      "id": "preorder",
+                      "label": "Vorbestellung erlauben",
+                      "hint": "Anti-Loss, Risiko bei Lieferzeit-Slip"
+                    },
+                    {
+                      "id": "waitlist",
+                      "label": "Wartelisten-Anmeldung",
+                      "hint": "E-Mail bei Wiedereintreffen"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "reservation",
+              "title": "Reservation",
+              "hint": "Wann wird Bestand für eine Bestellung gesperrt.",
+              "fields": [
+                {
+                  "id": "reservation",
+                  "type": "radio",
+                  "label": "Trigger",
+                  "default": "order",
+                  "options": [
+                    {
+                      "id": "order",
+                      "label": "Bei Auftragseingang",
+                      "hint": "Standard, 24h-Hold ohne Zahlung"
+                    },
+                    {
+                      "id": "payment",
+                      "label": "Bei Zahlungseingang",
+                      "hint": "Konservativ"
+                    },
+                    {
+                      "id": "cart",
+                      "label": "Bei Warenkorb",
+                      "hint": "Aggressiv"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "vertrieb:auftraege": {
+          "title": "Orders & workflow",
+          "group": "Sales",
+          "description": "Status-Workflow + Auto-Beleg-Trigger + Hold-Bedingungen +\nTeillieferung + Storno-Frist.\n",
+          "sections": [
+            {
+              "id": "status-workflow",
+              "title": "Status-Workflow",
+              "hint": "Welche Belege automatisch erzeugt werden und wann.",
+              "fields": [
+                {
+                  "id": "auto_ls",
+                  "type": "toggle",
+                  "label": "Lieferschein automatisch bei Versand erzeugen",
+                  "default": true
+                },
+                {
+                  "id": "auto_rg",
+                  "type": "toggle",
+                  "label": "Rechnung automatisch erzeugen",
+                  "default": true
+                },
+                {
+                  "id": "rg_trigger",
+                  "type": "radio",
+                  "label": "Rechnungs-Trigger",
+                  "default": "shipment",
+                  "show_if": {
+                    "field": "auto_rg",
+                    "equals": true
+                  },
+                  "options": [
+                    {
+                      "id": "shipment",
+                      "label": "Bei Versand",
+                      "hint": "Standard im D2C"
+                    },
+                    {
+                      "id": "payment",
+                      "label": "Bei Zahlungseingang",
+                      "hint": "Bei Vorkasse-Geschäft"
+                    },
+                    {
+                      "id": "manual",
+                      "label": "Manuell auslösen",
+                      "hint": "Selten — verlangsamt Cash-Flow"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "holds",
+              "title": "Hold-Bedingungen",
+              "hint": "Wann eine Bestellung manuell freigegeben werden muss.",
+              "fields": [
+                {
+                  "id": "holds",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "default": [
+                    "bonitaet",
+                    "address"
+                  ],
+                  "options": [
+                    {
+                      "id": "bonitaet",
+                      "label": "Bonitäts-Limit überschritten"
+                    },
+                    {
+                      "id": "address",
+                      "label": "Adresse fragwürdig (Tippfehler / mehrere Versuche)"
+                    },
+                    {
+                      "id": "stock",
+                      "label": "Bestand 0 oder negativ"
+                    },
+                    {
+                      "id": "first",
+                      "label": "Erstbestellung ab Schwellenwert"
+                    },
+                    {
+                      "id": "fraud",
+                      "label": "Fraud-Score erhöht (vom Provider)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "delivery-cancel",
+              "title": "Lieferung & Stornos",
+              "hint": "Teillieferung, Storno-Frist, Mindestbestellwert.",
+              "human": [
+                {
+                  "text": "Mindestbestellwert entscheiden",
+                  "why": "Hängt am durchschnittlichen Warenkorb + Versandkosten-Modell",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "teil_lieferung",
+                  "type": "toggle",
+                  "label": "Teillieferung erlaubt + Auto-Backorder",
+                  "default": true
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "storno_frist",
+                      "type": "number",
+                      "label": "Storno-Frist (Tage)",
+                      "hint": "Gesetzlich 14 Tage Widerruf bei B2C.",
+                      "default": "14",
+                      "min": 0,
+                      "max_width": 120
+                    },
+                    {
+                      "id": "mindest_bw",
+                      "type": "number",
+                      "label": "Mindestbestellwert €",
+                      "hint": "0 = kein Mindestwert.",
+                      "default": "0",
+                      "min": 0,
+                      "max_width": 140
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "vertrieb:preise": {
+          "title": "Prices & discounts",
+          "group": "Sales",
+          "description": "Standard + B2B-net + B2C-gross. Tier pricing optional.",
+          "human_inputs": 4
+        },
+        "vertrieb:gutscheine": {
+          "title": "Vouchers",
+          "group": "Sales",
+          "description": "Gutschein-Typen + Code-Format + Default-Gültigkeit + Mindest-\nbestellwert.\n",
+          "sections": [
+            {
+              "id": "voucher-types",
+              "title": "Gutschein-Typen",
+              "hint": "Welche Arten von Codes überhaupt verfügbar sind.",
+              "fields": [
+                {
+                  "id": "types",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "default": [
+                    "percent",
+                    "fix",
+                    "shipping"
+                  ],
+                  "options": [
+                    {
+                      "id": "percent",
+                      "label": "%-Rabatt"
+                    },
+                    {
+                      "id": "fix",
+                      "label": "Festbetrag €"
+                    },
+                    {
+                      "id": "shipping",
+                      "label": "Versandfrei"
+                    },
+                    {
+                      "id": "product",
+                      "label": "Gratis-Artikel"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "code-defaults",
+              "title": "Code-Format & Defaults",
+              "hint": "Standardwerte für neue Gutscheine.",
+              "human": [
+                {
+                  "text": "Default-Mindestbestellwert entscheiden",
+                  "why": "Hebel gegen Margenverlust — Strategie pro Brand",
+                  "inline": true
+                },
+                {
+                  "text": "Kombinierbarkeit mit anderen Aktionen",
+                  "why": "Doppel-Rabatt-Risiko — Strategie-Entscheidung",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "code_format",
+                  "type": "radio",
+                  "label": "Code-Format",
+                  "default": "auto-8",
+                  "options": [
+                    {
+                      "id": "auto-8",
+                      "label": "Auto-generiert 8-stellig"
+                    },
+                    {
+                      "id": "auto-12",
+                      "label": "Auto-generiert 12-stellig"
+                    },
+                    {
+                      "id": "manual",
+                      "label": "Manuell pro Code vergeben"
+                    }
+                  ]
+                },
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "default_days",
+                      "type": "number",
+                      "label": "Default-Gültigkeit (Tage)",
+                      "default": "30",
+                      "min": 0,
+                      "max_width": 120
+                    },
+                    {
+                      "id": "default_min",
+                      "type": "number",
+                      "label": "Default-Mindestbestellwert €",
+                      "default": "25",
+                      "min": 0,
+                      "max_width": 140
+                    }
+                  ]
+                },
+                {
+                  "id": "combinable",
+                  "type": "toggle",
+                  "label": "Mit anderen Aktionen kombinierbar (Doppel-Rabatt-Risiko)",
+                  "default": false
+                }
+              ]
+            }
+          ]
+        },
+        "zahlungen:provider": {
+          "title": "Payment providers",
+          "group": "Payments",
+          "description": "Pro Provider Account-Daten + Webhook-URL + Refund-Berechtigung.\nProvider-Anbindung erfolgt mit den jeweiligen API-Keys aus\nder Schnittstellen-Sektion.\n",
+          "sections": [
+            {
+              "id": "providers",
+              "title": "Zahlungsanbieter",
+              "hint": "Welche Provider aktiv sind und ob Auto-Refund per API erlaubt ist.",
+              "human": [
+                {
+                  "text": "Provider-Accounts anlegen (Stripe / PayPal / Klarna)",
+                  "why": "KYC + Vertragsabschluss können nur Geschäftsführer",
+                  "inline": true
+                },
+                {
+                  "text": "API-Keys + Webhook-Secrets eintragen",
+                  "why": "Sensible Credentials, liegen nur im Provider-Dashboard",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "providers",
+                  "type": "matrix",
+                  "rows_ref": "payment_providers",
+                  "columns": [
+                    {
+                      "id": "active",
+                      "type": "checkbox",
+                      "label": "Aktiv"
+                    },
+                    {
+                      "id": "refund",
+                      "type": "select",
+                      "label": "Refund",
+                      "options": [
+                        {
+                          "id": "auto",
+                          "label": "Auto (per API)"
+                        },
+                        {
+                          "id": "manual",
+                          "label": "Manuell"
+                        },
+                        {
+                          "id": "none",
+                          "label": "Nicht möglich"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "auto-recon",
+              "title": "Auto-Reconciliation",
+              "hint": "Auto-Match gleicht Provider-Auszahlungen mit Bankkonto und offenen Forderungen ab.",
+              "fields": [
+                {
+                  "id": "auto_match",
+                  "type": "toggle",
+                  "label": "Auto-Match mit Bankkonto aktiv",
+                  "default": true
+                },
+                {
+                  "id": "match_toleranz",
+                  "type": "number",
+                  "label": "Match-Toleranz (€)",
+                  "hint": "Differenz unterhalb wird auto-akzeptiert.",
+                  "default": "0.02",
+                  "min": 0,
+                  "step": 0.01,
+                  "max_width": 120
+                }
+              ]
+            }
+          ]
+        },
+        "zahlungen:arten": {
+          "title": "Payment methods",
+          "group": "Payments",
+          "description": "Aktive Zahlungsarten im Checkout + Default-Mix pro Land +\nRisiko-Regeln gegen Fraud und Zahlungsausfälle.\n",
+          "sections": [
+            {
+              "id": "available-methods",
+              "title": "Verfügbare Zahlungsarten",
+              "hint": "Was im Checkout angeboten wird. Provider-Verfügbarkeit prüft der Agent automatisch.",
+              "fields": [
+                {
+                  "id": "methods",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "options_ref": "payment_methods",
+                  "default": [
+                    "vorkasse",
+                    "paypal",
+                    "klarna",
+                    "cc",
+                    "sepa"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "country-mix",
+              "title": "Pro-Land-Mix",
+              "hint": "Welche Zahlungsarten in welchem Land Default sind. Agent setzt Standard-Mix pro Land.",
+              "fields": [
+                {
+                  "id": "country_mix",
+                  "type": "auto-detect",
+                  "source": "Markt-Standard pro Land + aktive Provider",
+                  "items": [
+                    {
+                      "label": "DE",
+                      "value": "PayPal · SEPA · Klarna"
+                    },
+                    {
+                      "label": "AT",
+                      "value": "Klarna · PayPal"
+                    },
+                    {
+                      "label": "CH",
+                      "value": "Kreditkarte · Vorkasse"
+                    },
+                    {
+                      "label": "NL",
+                      "value": "iDEAL · PayPal"
+                    },
+                    {
+                      "label": "FR",
+                      "value": "Kreditkarte · PayPal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "risk-rules",
+              "title": "Risiko-Regeln",
+              "hint": "Schutz vor Fraud + Zahlungsausfällen.",
+              "fields": [
+                {
+                  "id": "rules",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "options_ref": "payment_risk_rules",
+                  "default": [
+                    "no-rechnung-first",
+                    "no-bnpl-drittland"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "zahlungen:reconciliation": {
+          "title": "Reconciliation",
+          "group": "Payments",
+          "description": "Auto-Match + Auszahlungs-Splitting + Chargeback-Workflow.\n",
+          "sections": [
+            {
+              "id": "auto-match",
+              "title": "Auto-Match",
+              "hint": "Auto-Match gleicht Provider-Auszahlungen mit Bankkonto und offenen Forderungen ab.",
+              "fields": [
+                {
+                  "id": "auto_match",
+                  "type": "toggle",
+                  "label": "Auto-Match mit Bankkonto aktiv",
+                  "default": true
+                },
+                {
+                  "id": "tolerance",
+                  "type": "number",
+                  "label": "Match-Toleranz (€)",
+                  "hint": "Differenz unterhalb wird auto-akzeptiert.",
+                  "default": "0.02",
+                  "min": 0,
+                  "step": 0.01,
+                  "max_width": 140,
+                  "show_if": {
+                    "field": "auto_match",
+                    "equals": true
+                  }
+                }
+              ]
+            },
+            {
+              "id": "payout-splitting",
+              "title": "Auszahlungs-Splitting",
+              "hint": "Provider auszahlen auf separate Konten — bessere Buchhaltungs-Übersicht.",
+              "fields": [
+                {
+                  "id": "splitting",
+                  "type": "toggle",
+                  "label": "Pro Provider/Marktplatz auf eigenes Bankkonto",
+                  "default": true
+                }
+              ]
+            },
+            {
+              "id": "chargeback",
+              "title": "Chargeback-Workflow",
+              "hint": "Was passiert, wenn ein Provider eine Zahlung zurückfordert.",
+              "fields": [
+                {
+                  "id": "chargeback_mode",
+                  "type": "radio",
+                  "label": "Verhalten",
+                  "default": "auto-storno",
+                  "options": [
+                    {
+                      "id": "auto-storno",
+                      "label": "Auto-Storno + Lager-Reservation lösen",
+                      "hint": "Standard"
+                    },
+                    {
+                      "id": "manual",
+                      "label": "Manuelle Prüfung",
+                      "hint": "Konservativ"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "versand:carrier": {
+          "title": "Carriers (multi-region)",
+          "group": "Shipping",
+          "description": "Active carriers + account numbers + service levels +\nmulti-carrier routing strategy.\n",
+          "human_inputs": 2,
+          "sections": [
+            {
+              "id": "active-carriers",
+              "title": "Aktive Versanddienstleister",
+              "hint": "Welche Carrier sind angebunden? Pro Carrier brauchst du Account-Nr + API-Zugang. API-Keys werden in „Schnittstellen → API & Webhooks\" gepflegt.",
+              "human": [
+                {
+                  "text": "Sign carrier contracts (DHL EKP, DPD, UPS)",
+                  "why": "Business-customer rates require contract negotiation"
+                },
+                {
+                  "text": "Provide account number + API keys",
+                  "why": "Contract data only known to the contract holder"
+                }
+              ],
+              "fields": [
+                {
+                  "id": "carriers",
+                  "type": "matrix",
+                  "rows_ref": "carriers",
+                  "pick_one_column": "default",
+                  "default_pick": "dhl",
+                  "columns": [
+                    {
+                      "id": "active",
+                      "type": "checkbox",
+                      "label": "Aktiv"
+                    },
+                    {
+                      "id": "account_nr",
+                      "type": "text",
+                      "label": "Account-Nr.",
+                      "placeholder": "EKP / Account-Nr.",
+                      "human": true,
+                      "human_why": "Vertragsdaten sind nur dem Vertragspartner bekannt.",
+                      "disabled_when_inactive": true
+                    },
+                    {
+                      "id": "service",
+                      "type": "text",
+                      "label": "Service-Level",
+                      "disabled_when_inactive": true
+                    },
+                    {
+                      "id": "default",
+                      "type": "radio-pick",
+                      "label": "Default"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "multi-carrier-routing",
+              "title": "Multi-Carrier-Routing",
+              "hint": "Wie wird pro Auftrag der Carrier gewählt, wenn mehrere aktiv sind?",
+              "fields": [
+                {
+                  "id": "routing_mode",
+                  "type": "radio",
+                  "label": "Strategie",
+                  "default": "rules",
+                  "options_ref": "versand_routing_modes"
+                }
+              ]
+            }
+          ]
+        },
+        "versand:arten": {
+          "title": "Shipping methods & costs",
+          "group": "Shipping",
+          "description": "Geo-based costs, per-warehouse cutoff times.",
+          "human_inputs": 3
+        },
+        "versand:etiketten": {
+          "title": "Labels & tracking",
+          "group": "Shipping",
+          "description": "Etiketten-Drucker + Format + Tracking-Mails + Retouren-Label-\nPolicy.\n",
+          "sections": [
+            {
+              "id": "label-printer",
+              "title": "Etiketten-Drucker",
+              "hint": "Welcher Drucker im Lager. Format setzt der Agent passend zum Drucker.",
+              "fields": [
+                {
+                  "id": "printer_status",
+                  "type": "auto-detect",
+                  "source": "CUPS-/IPP-Detection im Lager-Netz",
+                  "items": [
+                    {
+                      "label": "Drucker erkannt",
+                      "value": "Zebra GK420d",
+                      "ok": true
+                    },
+                    {
+                      "label": "Treiber-Status",
+                      "value": "aktiv",
+                      "ok": true
+                    }
+                  ]
+                },
+                {
+                  "id": "format",
+                  "type": "radio",
+                  "label": "Format",
+                  "default": "a6-thermo",
+                  "options": [
+                    {
+                      "id": "a6-thermo",
+                      "label": "DIN A6 thermo (Standard)"
+                    },
+                    {
+                      "id": "a4-laser",
+                      "label": "DIN A4 laser (kostengünstig)"
+                    },
+                    {
+                      "id": "roll-100",
+                      "label": "100 mm Rolle"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "tracking-mail",
+              "title": "Tracking-Mail",
+              "hint": "Auto-Mail an den Kunden mit Trackingnummer + Link.",
+              "fields": [
+                {
+                  "id": "tracking_mail",
+                  "type": "toggle",
+                  "label": "Auto-Mail beim Etikettendruck an den Kunden",
+                  "default": true
+                }
+              ]
+            },
+            {
+              "id": "retoure-label",
+              "title": "Retouren-Label",
+              "hint": "Wie der Kunde sein Rücksende-Label bekommt.",
+              "human": [
+                {
+                  "text": "Modus entscheiden (prepaid / self-service / on-request)",
+                  "why": "Service-Policy — prepaid = premium D2C, self-service reduziert Friction-Returns",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "retoure_label",
+                  "type": "radio",
+                  "label": "Modus",
+                  "default": "prepaid",
+                  "options": [
+                    {
+                      "id": "prepaid",
+                      "label": "Prepaid auto-generiert",
+                      "hint": "D2C-Standard für Premium-Brands"
+                    },
+                    {
+                      "id": "self-portal",
+                      "label": "Self-Service im Portal",
+                      "hint": "Kunde druckt selber"
+                    },
+                    {
+                      "id": "on-request",
+                      "label": "Auf Anfrage durch CS",
+                      "hint": "Schreckt Friction-Returns ab"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "lager:own": {
+          "title": "Own warehouses (multi)",
+          "group": "Warehouse & logistics",
+          "description": "2-5 warehouses typical. Each with own activities, pick method, inventory mode.",
+          "human_inputs": 8
+        },
+        "lager:fulfiller": {
+          "title": "3PL fulfiller(s)",
+          "group": "Warehouse & logistics",
+          "description": "Optional but common for international expansion.",
+          "human_inputs": 5
+        },
+        "lager:dropship": {
+          "title": "Dropshipping",
+          "group": "Warehouse & logistics",
+          "description": "Optional fallback for long-tail items.",
+          "human_inputs": 3
+        },
+        "retouren:portal": {
+          "title": "Returns portal",
+          "group": "Returns",
+          "description": "Self-service portal — returns route back to origin warehouse.",
+          "human_inputs": 2
+        },
+        "retouren:gruende": {
+          "title": "Reasons & windows",
+          "group": "Returns",
+          "description": "Standard set + per-channel/marketplace windows.",
+          "human_inputs": 0
+        },
+        "retouren:reentry": {
+          "title": "Restocking & B-stock",
+          "group": "Returns",
+          "description": "A-stock to origin warehouse, B-stock to outlet channel.",
+          "human_inputs": 2
+        },
+        "finanzen:steuer": {
+          "title": "Tax & OSS",
+          "group": "Finance & tax",
+          "description": "DE-Standardsätze + OSS-Aktivierung + EU-Länderliste +\nReverse-Charge + Drittland-Handling.\n",
+          "sections": [
+            {
+              "id": "de-rates",
+              "title": "DE-Steuersätze",
+              "hint": "Pflicht-Defaults für deutsche Belege. Pro Artikel/Warengruppe kann der Satz überschrieben werden.",
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "standard_satz",
+                      "type": "number",
+                      "label": "Standard-Satz (%)",
+                      "default": "19",
+                      "min": 0,
+                      "max": 30,
+                      "max_width": 100
+                    },
+                    {
+                      "id": "reduziert_satz",
+                      "type": "number",
+                      "label": "Reduzierter Satz (%)",
+                      "default": "7",
+                      "min": 0,
+                      "max": 30,
+                      "max_width": 100
+                    }
+                  ]
+                },
+                {
+                  "id": "kleinunternehmer",
+                  "type": "toggle",
+                  "label": "Kleinunternehmer (§ 19 UStG) — keine USt auf Belegen, OSS nicht relevant",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "id": "oss",
+              "title": "OSS — One-Stop-Shop für EU-B2C",
+              "hint": "Pflicht ab 10.000 € EU-grenzüberschreitendem B2C-Umsatz pro Jahr. Du meldest in DE für alle EU-Länder, wir buchen pro Land den richtigen USt-Satz.",
+              "human": [
+                {
+                  "text": "OSS aktiv schalten + EU-Länder bedienen + beim BZSt anmelden",
+                  "why": "Rechtliche Anmeldung beim BZSt + Markteintritts-Strategie",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "oss_aktiv",
+                  "type": "toggle",
+                  "label": "OSS-Verfahren aktiv",
+                  "default": true,
+                  "show_if": {
+                    "field": "kleinunternehmer",
+                    "equals": false
+                  }
+                },
+                {
+                  "id": "oss_laender",
+                  "type": "checkbox-multi",
+                  "label": "Aktive EU-Länder",
+                  "default": [
+                    "at",
+                    "fr",
+                    "it",
+                    "es",
+                    "nl",
+                    "be"
+                  ],
+                  "show_if": {
+                    "field": "oss_aktiv",
+                    "equals": true
+                  },
+                  "options": [
+                    {
+                      "id": "at",
+                      "label": "Österreich"
+                    },
+                    {
+                      "id": "fr",
+                      "label": "Frankreich"
+                    },
+                    {
+                      "id": "it",
+                      "label": "Italien"
+                    },
+                    {
+                      "id": "es",
+                      "label": "Spanien"
+                    },
+                    {
+                      "id": "nl",
+                      "label": "Niederlande"
+                    },
+                    {
+                      "id": "be",
+                      "label": "Belgien"
+                    },
+                    {
+                      "id": "pl",
+                      "label": "Polen"
+                    },
+                    {
+                      "id": "cz",
+                      "label": "Tschechien"
+                    },
+                    {
+                      "id": "dk",
+                      "label": "Dänemark"
+                    },
+                    {
+                      "id": "se",
+                      "label": "Schweden"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "reverse-charge",
+              "title": "EU-B2B (Reverse-Charge)",
+              "hint": "Bei valider USt-ID des Empfängers wird die Rechnung netto ausgestellt — der Empfänger schuldet die Steuer. ZM-Meldung an Bundeszentralamt fällig.",
+              "fields": [
+                {
+                  "id": "reverse_charge",
+                  "type": "toggle",
+                  "label": "Reverse-Charge bei valider USt-ID automatisch anwenden",
+                  "default": true
+                },
+                {
+                  "id": "zm_frequenz",
+                  "type": "radio",
+                  "label": "ZM-Meldung Frequenz",
+                  "default": "quarterly",
+                  "options": [
+                    {
+                      "id": "monthly",
+                      "label": "Monatlich"
+                    },
+                    {
+                      "id": "quarterly",
+                      "label": "Quartalsweise (Standard)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "drittland",
+              "title": "Drittland",
+              "hint": "Wie wird mit Versand außerhalb der EU umgegangen? Bei Ausfuhr ist der Ausfuhrnachweis (Zoll-Beleg) Pflicht für Steuerfreiheit.",
+              "human": [
+                {
+                  "text": "Drittland-Strategie entscheiden (bedient/blockiert/IOSS)",
+                  "why": "Komplexitäts-Entscheidung — Zoll-Doku + Versand sind Aufwand",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "drittland_mode",
+                  "type": "radio",
+                  "label": "Modus",
+                  "default": "export-frei",
+                  "options": [
+                    {
+                      "id": "export-frei",
+                      "label": "Export steuerfrei + Ausfuhrnachweis (Standard)"
+                    },
+                    {
+                      "id": "ioss",
+                      "label": "IOSS für Kleinsendungen unter 150 €"
+                    },
+                    {
+                      "id": "blocked",
+                      "label": "Drittland blockieren (kein Versand außerhalb EU)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finanzen:buchhaltung": {
+          "title": "Accounting & export",
+          "group": "Finance & tax",
+          "description": "Buchhaltungs-Software + Kontenrahmen + Export-Frequenz +\nKostenstellen.\n",
+          "sections": [
+            {
+              "id": "software",
+              "title": "Buchhaltungs-Software",
+              "hint": "Welche Buchhaltungs-Software für den Export.",
+              "human": [
+                {
+                  "text": "Stack festlegen + Credentials hinterlegen",
+                  "why": "Vertrag mit DATEV/Lex/sevDesk + Account beim Steuerberater nötig",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "software",
+                  "type": "radio",
+                  "label": "Buchhaltungs-Software",
+                  "default": "datev",
+                  "options": [
+                    {
+                      "id": "datev",
+                      "label": "DATEV"
+                    },
+                    {
+                      "id": "lex",
+                      "label": "Lexware Office (Lex)"
+                    },
+                    {
+                      "id": "sevdesk",
+                      "label": "sevDesk"
+                    },
+                    {
+                      "id": "buchhaltungsbutler",
+                      "label": "BuchhaltungsButler"
+                    },
+                    {
+                      "id": "other",
+                      "label": "Andere"
+                    }
+                  ]
+                },
+                {
+                  "id": "api_token",
+                  "type": "password",
+                  "label": "API-Token / Login",
+                  "placeholder": "••••••"
+                },
+                {
+                  "id": "tax_advisor_email",
+                  "type": "email",
+                  "label": "Steuerberater-E-Mail (optional)",
+                  "hint": "Für monatliche Auto-Reports."
+                }
+              ]
+            },
+            {
+              "id": "chart-frequency",
+              "title": "Kontenrahmen + Frequenz",
+              "hint": "Welcher Kontenrahmen, wie oft Export.",
+              "fields": [
+                {
+                  "id": "chart",
+                  "type": "radio",
+                  "label": "Kontenrahmen",
+                  "default": "skr03",
+                  "options": [
+                    {
+                      "id": "skr03",
+                      "label": "SKR03 (Standard)"
+                    },
+                    {
+                      "id": "skr04",
+                      "label": "SKR04 (Industrie)"
+                    }
+                  ]
+                },
+                {
+                  "id": "frequency",
+                  "type": "radio",
+                  "label": "Export-Frequenz",
+                  "default": "monthly",
+                  "options": [
+                    {
+                      "id": "realtime",
+                      "label": "Realtime (jeder Beleg)"
+                    },
+                    {
+                      "id": "weekly",
+                      "label": "Wöchentlich"
+                    },
+                    {
+                      "id": "monthly",
+                      "label": "Monatlich (Standard)"
+                    },
+                    {
+                      "id": "quarterly",
+                      "label": "Quartalsweise"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "kommunikation:email": {
+          "title": "E-mail templates",
+          "group": "Communication",
+          "description": "Pro-Trigger E-Mail-Templates auto-generiert aus Logo +\nBrandfarbe + Footer + aktiven Sprachen + Marken.\n",
+          "sections": [
+            {
+              "id": "triggers",
+              "title": "Aktive Trigger",
+              "hint": "Pro Trigger generiert der Agent ein Template aus Logo + Brandfarbe + Belegfußzeile (alles aus Firmendaten). Pro Sprache + Marke automatisch.",
+              "fields": [
+                {
+                  "id": "triggers",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "default": [
+                    "order-confirm",
+                    "payment",
+                    "shipment",
+                    "return",
+                    "refund",
+                    "cancel"
+                  ],
+                  "options": [
+                    {
+                      "id": "order-confirm",
+                      "label": "Bestellbestätigung"
+                    },
+                    {
+                      "id": "payment",
+                      "label": "Zahlungseingang"
+                    },
+                    {
+                      "id": "shipment",
+                      "label": "Versand + Tracking"
+                    },
+                    {
+                      "id": "return",
+                      "label": "Retoure eingegangen"
+                    },
+                    {
+                      "id": "refund",
+                      "label": "Erstattung ausgezahlt"
+                    },
+                    {
+                      "id": "cancel",
+                      "label": "Storno"
+                    },
+                    {
+                      "id": "dunning",
+                      "label": "Mahnung"
+                    },
+                    {
+                      "id": "review-request",
+                      "label": "Bewertungs-Anfrage"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "auto-gen",
+              "title": "Auto-Generierung",
+              "hint": "Was der Agent aus den vorhandenen Daten ableitet.",
+              "fields": [
+                {
+                  "id": "auto_gen_status",
+                  "type": "auto-detect",
+                  "source": "Firmendaten + Kunden-Sprachen + Projekte",
+                  "items": [
+                    {
+                      "label": "Sprachen",
+                      "value": "DE · EN (aus Kunden-Settings)"
+                    },
+                    {
+                      "label": "Marken",
+                      "value": "1 Brand (aus Projekte)"
+                    },
+                    {
+                      "label": "Variablen",
+                      "value": "Anrede · Auftrag · Tracking · Beleg-PDF · Logo"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "brand-voice",
+              "title": "Brand-Voice (optional)",
+              "hint": "Wenn ihr eine spezifische Tonalität wollt — sonst nutzt der Agent neutrale Standard-Texte.",
+              "fields": [
+                {
+                  "id": "tone",
+                  "type": "radio",
+                  "label": "Tonalität",
+                  "default": "neutral",
+                  "options": [
+                    {
+                      "id": "neutral",
+                      "label": "Neutral / formell",
+                      "hint": "Standard, B2B-tauglich"
+                    },
+                    {
+                      "id": "casual",
+                      "label": "Locker / per du",
+                      "hint": "D2C-Lifestyle"
+                    },
+                    {
+                      "id": "premium",
+                      "label": "Premium / zurückhaltend",
+                      "hint": "Gehobene Marken"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "test-send",
+              "title": "Test-Versand",
+              "hint": "Der Agent verschickt vor Live-Schaltung Beispiel-Mails an diese Adresse zur Freigabe.",
+              "human": [
+                {
+                  "text": "Test-Adresse liefern",
+                  "why": "Interne E-Mail für Review vor Go-Live",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "test_mail",
+                  "type": "email",
+                  "label": "Test-Adresse",
+                  "placeholder": "dein.name@eigene-domain.de"
+                }
+              ]
+            }
+          ]
+        },
+        "kommunikation:smtp": {
+          "title": "SMTP / provider",
+          "group": "Communication",
+          "description": "E-Mail-Versand-Provider + Absender-Domain + DNS-Records +\nBounce-Handling.\n",
+          "sections": [
+            {
+              "id": "provider-domain",
+              "title": "Provider & Domain",
+              "hint": "Welcher Versand-Provider, welche Absender-Domain. Der Agent prüft DNS (SPF/DKIM/DMARC) live und meldet ungültige Records zurück.",
+              "human": [
+                {
+                  "text": "Provider-Account anlegen + DNS-Records pflegen",
+                  "why": "Vertrag mit Drittanbieter + DNS-Zugang für SPF/DKIM",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "provider",
+                  "type": "radio",
+                  "label": "Provider",
+                  "default": "sendgrid",
+                  "options": [
+                    {
+                      "id": "sendgrid",
+                      "label": "SendGrid"
+                    },
+                    {
+                      "id": "postmark",
+                      "label": "Postmark"
+                    },
+                    {
+                      "id": "mailgun",
+                      "label": "Mailgun"
+                    },
+                    {
+                      "id": "ses",
+                      "label": "AWS SES"
+                    },
+                    {
+                      "id": "own",
+                      "label": "Eigener SMTP"
+                    }
+                  ]
+                },
+                {
+                  "id": "api_key",
+                  "type": "password",
+                  "label": "API-Key / Login",
+                  "placeholder": "••••••"
+                },
+                {
+                  "id": "domain",
+                  "type": "text",
+                  "label": "Absender-Domain",
+                  "default": "eigene-domain.de"
+                },
+                {
+                  "id": "dns_status",
+                  "type": "auto-detect",
+                  "source": "DNS-Lookup auf Domain",
+                  "status": "DMARC-Empfehlung als Aufgabe angelegt",
+                  "items": [
+                    {
+                      "label": "SPF",
+                      "value": "eingerichtet",
+                      "ok": true
+                    },
+                    {
+                      "label": "DKIM",
+                      "value": "eingerichtet",
+                      "ok": true
+                    },
+                    {
+                      "label": "DMARC",
+                      "value": "p=none → soll p=quarantine",
+                      "ok": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "sender-addresses",
+              "title": "Absender-Adressen",
+              "hint": "Welche Mailboxen verwendet werden. Müssen auf der oben hinterlegten Domain liegen.",
+              "human": [
+                {
+                  "text": "Mailbox-Namen wählen (belege@ / service@ / …)",
+                  "why": "Interne Mailbox-Routing-Entscheidung"
+                }
+              ],
+              "fields": [
+                {
+                  "layout": "row",
+                  "fields": [
+                    {
+                      "id": "beleg_mail",
+                      "type": "email",
+                      "label": "Belege",
+                      "default": "belege@eigene-domain.de"
+                    },
+                    {
+                      "id": "service_mail",
+                      "type": "email",
+                      "label": "Customer Service",
+                      "default": "service@eigene-domain.de"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "bounce-handling",
+              "title": "Bounce-Handling",
+              "hint": "Standard-Verhalten bei Hard-Bounces und Beschwerden — verhindert Reputations-Schaden.",
+              "fields": [
+                {
+                  "id": "auto_suppress",
+                  "type": "toggle",
+                  "label": "Auto-Suppression bei Hard-Bounce + Beschwerden",
+                  "default": true
+                }
+              ]
+            }
+          ]
+        },
+        "benutzer:rollen": {
+          "title": "Roles",
+          "group": "Users & permissions",
+          "description": "Vordefinierte Rollen (Admin / Lager / Customer Service /\nBuchhaltung / Marketing) + Berechtigungs-Matrix + 4-Augen-\nPrinzip + 2FA.\n",
+          "sections": [
+            {
+              "id": "active-roles",
+              "title": "Aktive Rollen",
+              "hint": "Standard-Rollen-Set. Berechtigungs-Matrix legt der Agent automatisch an.",
+              "fields": [
+                {
+                  "id": "rollen",
+                  "type": "checkbox-multi",
+                  "label": "",
+                  "default": [
+                    "admin",
+                    "lager",
+                    "cs",
+                    "buchhaltung"
+                  ],
+                  "options": [
+                    {
+                      "id": "admin",
+                      "label": "Admin"
+                    },
+                    {
+                      "id": "lager",
+                      "label": "Lager"
+                    },
+                    {
+                      "id": "cs",
+                      "label": "Customer Service"
+                    },
+                    {
+                      "id": "buchhaltung",
+                      "label": "Buchhaltung"
+                    },
+                    {
+                      "id": "marketing",
+                      "label": "Marketing"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "four-eyes",
+              "title": "4-Augen-Prinzip",
+              "hint": "Ab welchem Betrag eine zweite Person bestätigen muss.",
+              "human": [
+                {
+                  "text": "Schwellen für Refund / Lieferanten-Zahlung setzen",
+                  "why": "Compliance-Policy abhängig von Geschäftsrisiko + Audit-Anforderungen",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "vier_augen",
+                  "type": "number",
+                  "label": "Schwelle in € (Refund · Lieferanten-Zahlung)",
+                  "default": "200",
+                  "min": 0,
+                  "max_width": 140
+                }
+              ]
+            },
+            {
+              "id": "tfa-rezert",
+              "title": "2FA & Re-Zertifizierung",
+              "hint": "Sicherheits-Defaults für die Admin-Rolle.",
+              "fields": [
+                {
+                  "id": "tfa_admin",
+                  "type": "toggle",
+                  "label": "2FA-Pflicht für Admin-Rolle",
+                  "default": true
+                },
+                {
+                  "id": "re_zert",
+                  "type": "radio",
+                  "label": "Re-Zertifizierung der Berechtigungen",
+                  "default": "halbjahr",
+                  "options": [
+                    {
+                      "id": "quartal",
+                      "label": "Quartalsweise"
+                    },
+                    {
+                      "id": "halbjahr",
+                      "label": "Halbjährlich"
+                    },
+                    {
+                      "id": "jahr",
+                      "label": "Jährlich"
+                    },
+                    {
+                      "id": false,
+                      "label": "Off (nicht empfohlen)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "benutzer:mitarbeiter": {
+          "title": "Team members",
+          "group": "Users & permissions",
+          "description": "User-Liste mit Rollen-Zuordnung + 2FA + optionaler SSO.\n",
+          "sections": [
+            {
+              "id": "team",
+              "title": "Team-Mitglieder",
+              "hint": "Wer Zugang zum System bekommt + welche Rolle.",
+              "human": [
+                {
+                  "text": "Team-Liste pflegen + Rollen zuweisen",
+                  "why": "Wer im Team welche Rolle hat — interne Org-Entscheidung",
+                  "inline": true
+                }
+              ],
+              "fields": [
+                {
+                  "id": "users",
+                  "type": "auto-detect",
+                  "source": "Wird gepflegt sobald Mitarbeiter angelegt sind",
+                  "items": [
+                    {
+                      "label": "Mitarbeiter-Liste",
+                      "value": "Noch keine Mitarbeiter angelegt."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "sso",
+              "title": "Single Sign-On (SSO)",
+              "hint": "Optional: Login via Firmen-IdP statt eigener Passwörter.",
+              "fields": [
+                {
+                  "id": "sso",
+                  "type": "radio",
+                  "label": "IdP",
+                  "default": false,
+                  "options": [
+                    {
+                      "id": false,
+                      "label": "Off"
+                    },
+                    {
+                      "id": "google",
+                      "label": "Google Workspace"
+                    },
+                    {
+                      "id": "microsoft",
+                      "label": "Microsoft 365"
+                    },
+                    {
+                      "id": "saml",
+                      "label": "SAML / OIDC (custom)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

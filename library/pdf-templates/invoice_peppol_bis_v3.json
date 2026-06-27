@@ -1,0 +1,277 @@
+{
+  "id": "invoice_peppol_bis_v3",
+  "version": 1,
+  "engine": "weasyprint",
+  "locales": {
+    "de": {
+      "title": "Rechnung (Peppol BIS 3.0 / UBL)",
+      "description": "E-Rechnung für Partner in den Niederlanden und der EU: PDF/A-3a mit eingebettetem Peppol-BIS-3.0-UBL-XML und PDF/UA-1-Tagging."
+    },
+    "en": {
+      "title": "Invoice (Peppol BIS Billing 3.0 / UBL)",
+      "description": "E-invoice for partners in the Netherlands and EU. PDF/A-3a with embedded Peppol BIS Billing 3.0 UBL XML + PDF/UA-1 tagging.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Invoice-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-a-3a",
+    "pdf-ua-1",
+    "peppol-bis-3"
+  ],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every <img> MUST have a non-empty alt attribute",
+    "exactly one <h1> per document",
+    "company.vatId MUST be a valid EU VAT-ID",
+    "documentAddress.country MUST be ISO 3166-1 alpha-2",
+    "Peppol BIS 3.0 attachment is generated from the same data object as the HTML body"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "documentAddress",
+      "lineItems",
+      "totals",
+      "financials",
+      "company"
+    ],
+    "documentAddress": {
+      "required": [
+        "name",
+        "street",
+        "zipCode",
+        "city",
+        "country"
+      ]
+    },
+    "lineItems": {
+      "item": {
+        "required": [
+          "number",
+          "name",
+          "quantity",
+          "unit",
+          "effectiveTaxRate",
+          "price",
+          "lineItemRevenue"
+        ]
+      }
+    },
+    "totals": {
+      "required": [
+        "net",
+        "gross"
+      ]
+    },
+    "financials": {
+      "required": [
+        "tax"
+      ]
+    },
+    "company": {
+      "required": [
+        "name",
+        "vatId"
+      ]
+    }
+  },
+  "languages": [
+    "de",
+    "en",
+    "nl"
+  ],
+  "compliance_policy": {
+    "pdf_variant": "pdf/a-3a",
+    "xmp": {
+      "pdfuaid_part": 1
+    },
+    "attachments": [
+      {
+        "filename": "peppol-invoice.xml",
+        "mime": "application/xml",
+        "relationship": "Alternative",
+        "description": "Peppol BIS Billing 3.0 invoice (UBL 2.1)",
+        "content_template": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Invoice\n  xmlns=\"urn:oasis:names:specification:ubl:schema:xsd:Invoice-2\"\n  xmlns:cac=\"urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2\"\n  xmlns:cbc=\"urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2\">\n\n  <!-- Peppol BIS Billing 3.0 conformance -->\n  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>\n  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>\n\n  <!-- BT-1 Invoice number -->\n  <cbc:ID>{{ data.documentNumber }}</cbc:ID>\n  <!-- BT-2 Issue date -->\n  <cbc:IssueDate>{{ data.documentDate }}</cbc:IssueDate>\n  {% if data.financials.paymentTerms.paymentTargetDays %}\n  <!-- BT-9 Due date — derived: issueDate + paymentTargetDays -->\n  <cbc:DueDate>{{ data.documentDate }}</cbc:DueDate>\n  {% endif %}\n  <!-- BT-3 Invoice type code (380 = Commercial invoice) -->\n  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>\n  {% if data.bodyOutroduction %}\n  <cbc:Note>{{ data.bodyOutroduction }}</cbc:Note>\n  {% endif %}\n  <!-- BT-5 Invoice currency -->\n  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>\n  {% if data.customerOrderNumber %}\n  <cac:OrderReference>\n    <cbc:ID>{{ data.customerOrderNumber }}</cbc:ID>\n  </cac:OrderReference>\n  {% endif %}\n\n  <!-- Seller (Supplier) -->\n  <cac:AccountingSupplierParty>\n    <cac:Party>\n      <cac:PartyName>\n        <cbc:Name>{{ data.company.name }}</cbc:Name>\n      </cac:PartyName>\n      <cac:PostalAddress>\n        <cbc:StreetName>{{ data.company.address | default('') }}</cbc:StreetName>\n        <cac:Country>\n          <cbc:IdentificationCode>DE</cbc:IdentificationCode>\n        </cac:Country>\n      </cac:PostalAddress>\n      <!-- BT-31 Seller VAT identifier -->\n      <cac:PartyTaxScheme>\n        <cbc:CompanyID>{{ data.company.vatId }}</cbc:CompanyID>\n        <cac:TaxScheme>\n          <cbc:ID>VAT</cbc:ID>\n        </cac:TaxScheme>\n      </cac:PartyTaxScheme>\n      <cac:PartyLegalEntity>\n        <cbc:RegistrationName>{{ data.company.name }}</cbc:RegistrationName>\n        {% if data.company.taxId %}\n        <cbc:CompanyID>{{ data.company.taxId }}</cbc:CompanyID>\n        {% endif %}\n      </cac:PartyLegalEntity>\n    </cac:Party>\n  </cac:AccountingSupplierParty>\n\n  <!-- Buyer (Customer) -->\n  <cac:AccountingCustomerParty>\n    <cac:Party>\n      <cac:PartyName>\n        <cbc:Name>{{ data.documentAddress.name }}</cbc:Name>\n      </cac:PartyName>\n      <cac:PostalAddress>\n        <cbc:StreetName>{{ data.documentAddress.street }}</cbc:StreetName>\n        <cbc:CityName>{{ data.documentAddress.city }}</cbc:CityName>\n        <cbc:PostalZone>{{ data.documentAddress.zipCode }}</cbc:PostalZone>\n        <cac:Country>\n          <cbc:IdentificationCode>{{ data.documentAddress.country | default('NL') }}</cbc:IdentificationCode>\n        </cac:Country>\n      </cac:PostalAddress>\n      <cac:PartyLegalEntity>\n        <cbc:RegistrationName>{{ data.documentAddress.name }}</cbc:RegistrationName>\n      </cac:PartyLegalEntity>\n    </cac:Party>\n  </cac:AccountingCustomerParty>\n\n  <!-- Payment means / IBAN -->\n  {% if data.payment.iban %}\n  <cac:PaymentMeans>\n    <!-- 30 = Credit transfer (UNTDID 4461) -->\n    <cbc:PaymentMeansCode>30</cbc:PaymentMeansCode>\n    <cbc:PaymentID>{{ data.documentNumber }}</cbc:PaymentID>\n    <cac:PayeeFinancialAccount>\n      <cbc:ID>{{ data.payment.iban | replace(' ', '') }}</cbc:ID>\n      {% if data.payment.bankName %}\n      <cbc:Name>{{ data.payment.bankName }}</cbc:Name>\n      {% endif %}\n      {% if data.payment.bic %}\n      <cac:FinancialInstitutionBranch>\n        <cbc:ID>{{ data.payment.bic }}</cbc:ID>\n      </cac:FinancialInstitutionBranch>\n      {% endif %}\n    </cac:PayeeFinancialAccount>\n  </cac:PaymentMeans>\n  {% endif %}\n\n  <!-- Tax breakdown -->\n  {% set vat_amount = (data.totals.gross.amount | float) - (data.totals.net.amount | float) %}\n  <cac:TaxTotal>\n    <cbc:TaxAmount currencyID=\"EUR\">{{ '%.2f' % vat_amount }}</cbc:TaxAmount>\n    <cac:TaxSubtotal>\n      <cbc:TaxableAmount currencyID=\"EUR\">{{ data.totals.net.amount }}</cbc:TaxableAmount>\n      <cbc:TaxAmount currencyID=\"EUR\">{{ '%.2f' % vat_amount }}</cbc:TaxAmount>\n      <cac:TaxCategory>\n        <!-- S = Standard rate (UNTDID 5305) -->\n        <cbc:ID>S</cbc:ID>\n        <cbc:Percent>{{ data.financials.tax.taxRates.standard }}</cbc:Percent>\n        <cac:TaxScheme>\n          <cbc:ID>VAT</cbc:ID>\n        </cac:TaxScheme>\n      </cac:TaxCategory>\n    </cac:TaxSubtotal>\n  </cac:TaxTotal>\n\n  <!-- Document totals (BT-106 / 109 / 112 / 115) -->\n  <cac:LegalMonetaryTotal>\n    <cbc:LineExtensionAmount currencyID=\"EUR\">{{ data.totals.net.amount }}</cbc:LineExtensionAmount>\n    <cbc:TaxExclusiveAmount currencyID=\"EUR\">{{ data.totals.net.amount }}</cbc:TaxExclusiveAmount>\n    <cbc:TaxInclusiveAmount currencyID=\"EUR\">{{ data.totals.gross.amount }}</cbc:TaxInclusiveAmount>\n    <cbc:PayableAmount currencyID=\"EUR\">{{ data.totals.gross.amount }}</cbc:PayableAmount>\n  </cac:LegalMonetaryTotal>\n\n  <!-- Invoice lines -->\n  {% for li in data.lineItems %}\n  <cac:InvoiceLine>\n    <cbc:ID>{{ loop.index }}</cbc:ID>\n    <cbc:InvoicedQuantity unitCode=\"C62\">{{ li.quantity }}</cbc:InvoicedQuantity>\n    <cbc:LineExtensionAmount currencyID=\"EUR\">{{ li.lineItemRevenue.net.amount }}</cbc:LineExtensionAmount>\n    <cac:Item>\n      <cbc:Name>{{ li.name }}</cbc:Name>\n      {% if li.description %}\n      <cbc:Description>{{ li.description }}</cbc:Description>\n      {% endif %}\n      {% if li.number %}\n      <cac:SellersItemIdentification>\n        <cbc:ID>{{ li.number }}</cbc:ID>\n      </cac:SellersItemIdentification>\n      {% endif %}\n      <cac:ClassifiedTaxCategory>\n        <cbc:ID>S</cbc:ID>\n        <cbc:Percent>{{ li.effectiveTaxRate }}</cbc:Percent>\n        <cac:TaxScheme>\n          <cbc:ID>VAT</cbc:ID>\n        </cac:TaxScheme>\n      </cac:ClassifiedTaxCategory>\n    </cac:Item>\n    <cac:Price>\n      <cbc:PriceAmount currencyID=\"EUR\">{{ li.price.net.amount }}</cbc:PriceAmount>\n    </cac:Price>\n  </cac:InvoiceLine>\n  {% endfor %}\n</Invoice>\n"
+      }
+    ]
+  },
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{# i18n — neue Sprachen hier + in meta.yaml.languages ergaenzen. #}\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer  = data.documentAddress | default({}) %}\n{% set items  = data.lineItems | default([]) %}\n{% set tax_pt = ((data.financials or {}).paymentTerms) | default({}) %}\n\n{% block content %}\n\n  <div class=\"head-cols\">\n    <div class=\"head-cols__addr\">\n      {% with buyer=buyer, title='Empfänger' %}\n        {% include \"_base/_partials/recipient.html.j2\" %}\n      {% endwith %}\n    </div>\n    <div class=\"head-cols__info\">\n      <section class=\"box-info\" data-box=\"info\" aria-labelledby=\"info-heading\">\n        <h2 id=\"info-heading\" class=\"visually-hidden\">{{ L.doc_title }}</h2>\n        <table>\n          <tbody>\n            {% if data.documentDate %}<tr><th scope=\"row\">{{ L.invoice_date }}</th><td>{{ data.documentDate }}</td></tr>{% endif %}\n            {% if data.serviceDate %}<tr><th scope=\"row\">{{ L.service_date }}</th><td>{{ data.serviceDate }}</td></tr>{% endif %}\n            {% if data.customerNumber %}<tr><th scope=\"row\">{{ L.customer_number }}</th><td>{{ data.customerNumber }}</td></tr>{% endif %}\n            {% if data.customerOrderNumber %}<tr><th scope=\"row\">{{ L.reference }}</th><td>{{ data.customerOrderNumber }}</td></tr>{% endif %}\n            {% if data.company.vatId %}<tr><th scope=\"row\">USt-IdNr.</th><td>{{ data.company.vatId }}</td></tr>{% endif %}\n          </tbody>\n        </table>\n      </section>\n    </div>\n  </div>\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  {# Positions-Tabelle. #}\n  {% with title=L.positions, caption=L.positions_caption, items=items, labels=L,\n          columns=['pos','article','qty','unit_price','vat','total'] %}\n    {% include \"_base/_partials/items.html.j2\" %}\n  {% endwith %}\n\n  {# Summen mit USt-Aufgliederung. #}\n  {% with items=items, totals=(data.totals or {}), labels=L %}\n    {% include \"_base/_partials/totals.html.j2\" %}\n  {% endwith %}\n\n  {# Zahlungsbedingungen + Bankverbindung. #}\n  {% if tax_pt.paymentTargetDays or data.payment %}\n  <section class=\"box-payment\" data-box=\"payment\" aria-labelledby=\"payment-heading\">\n    <h2 id=\"payment-heading\">{{ L.payment_heading }}</h2>\n    {% if tax_pt.paymentTargetDays %}\n    <p>\n      {{ L.pay_within }} <strong>{{ tax_pt.paymentTargetDays }} {{ L.pay_days }}</strong>\n      {% if tax_pt.paymentTargetDiscount and tax_pt.paymentTargetDiscountDays %}\n        ({{ L.pay_or_disc }} {{ tax_pt.paymentTargetDiscount }}&nbsp;% {{ L.pay_disc_within }}\n        {{ tax_pt.paymentTargetDiscountDays }} {{ L.pay_disc_days }})\n      {% endif %}\n      {{ L.pay_ref }} <strong>{{ data.documentNumber }}</strong>.\n    </p>\n    {% endif %}\n    {% if data.payment %}\n    <dl>\n      {% if data.payment.iban %}<dt>{{ L.iban }}</dt><dd>{{ data.payment.iban }}</dd>{% endif %}\n      {% if data.payment.bic %}<dt>{{ L.bic }}</dt><dd>{{ data.payment.bic }}</dd>{% endif %}\n      {% if data.payment.bankName %}<dt>{{ L.bank }}</dt><dd>{{ data.payment.bankName }}</dd>{% endif %}\n    </dl>\n    {% endif %}\n  </section>\n  {% endif %}\n\n  {# Hinweise / Outro. #}\n  {% if data.bodyOutroduction %}\n  <section class=\"box-notes\" data-box=\"notes\" aria-labelledby=\"notes-heading\">\n    <h2 id=\"notes-heading\">{{ L.notes_heading }}</h2>\n    <p>{{ data.bodyOutroduction }}</p>\n  </section>\n  {% endif %}\n\n{% endblock %}\n",
+  "css": "/* ── Xentral Original: klassisch DIN, schwarz auf weiß, keine Farbflächen ── */\n.doc-header__brand { max-width: 100%; flex: 1 1 auto; min-width: 0; }\n.doc-header__sender { display: none; }\n.box-subject h1 { font-size: 13pt; }\n\n.head-cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; margin: 8mm 0 6mm; }\n.head-cols__addr { flex: 1 1 auto; min-width: 0; }\n.head-cols__addr .box-recipient { margin: 0; }\n.head-cols__info { flex: 0 0 66mm; }\n.head-cols__info .box-info { margin: 0; }\n.head-cols__info .box-info table { width: 100%; border-collapse: collapse; }\n.head-cols__info .box-info th { white-space: nowrap; padding: 0.6mm 4mm 0.6mm 0; }\n.head-cols__info .box-info td { text-align: right; }\n\n.box-payment dl { display: grid; grid-template-columns: 24mm 1fr; gap: 0.5mm 4mm; margin: 2mm 0 0; font-size: 9.5pt; }\n.box-payment dt { color: #6b7280; }\n.box-payment dd { margin: 0; }\n\n@page {\n  @top-right { content: none; }\n  @bottom-center {\n    content: \"Seite \" counter(page) \" von \" counter(pages);\n    font-size: 6.5pt; color: #6b7280;\n    font-family: 'Helvetica', 'Arial', sans-serif; vertical-align: top; padding-top: 4mm;\n  }\n}\n",
+  "example_data": {
+    "id": "11420",
+    "documentNumber": "RE-2026-00321",
+    "documentDate": "2026-05-10",
+    "serviceDate": "2026-05-08",
+    "language": "de",
+    "customerNumber": "10043",
+    "customerOrderNumber": "Bestellung MUS-4711",
+    "documentAddress": {
+      "name": "Musterfirma GmbH",
+      "street": "Hauptstraße 12",
+      "zipCode": "70174",
+      "city": "Stuttgart",
+      "country": "DE"
+    },
+    "effectiveAddresses": {
+      "soldTo": {
+        "name": "Musterfirma GmbH",
+        "street": "Hauptstraße 12",
+        "zipCode": "70174",
+        "city": "Stuttgart",
+        "country": "DE"
+      }
+    },
+    "lineItems": [
+      {
+        "type": "product",
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "description": "Ergonomisch, schwarz, mit Armlehnen",
+        "quantity": 2,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "249.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "498.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "592.62000000",
+            "currency": "EUR"
+          }
+        }
+      },
+      {
+        "type": "product",
+        "number": "ART-007",
+        "name": "Schreibtisch 160x80",
+        "quantity": 1,
+        "unit": "Stk",
+        "effectiveTaxRate": 19,
+        "price": {
+          "net": {
+            "amount": "489.00000000",
+            "currency": "EUR"
+          }
+        },
+        "lineItemRevenue": {
+          "net": {
+            "amount": "489.00000000",
+            "currency": "EUR"
+          },
+          "gross": {
+            "amount": "581.91000000",
+            "currency": "EUR"
+          }
+        }
+      }
+    ],
+    "financials": {
+      "tax": {
+        "taxation": "domestic",
+        "taxRates": {
+          "standard": 19,
+          "reduced": 7
+        }
+      },
+      "paymentTerms": {
+        "paymentTargetDays": 14,
+        "paymentTargetDiscount": 2,
+        "paymentTargetDiscountDays": 7
+      }
+    },
+    "totals": {
+      "net": {
+        "amount": "987.00000000",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "1174.53000000",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "bic": "COBADEFFXXX",
+      "bankName": "Commerzbank Berlin"
+    },
+    "bodyOutroduction": "Vielen Dank für Ihren Auftrag.",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "vatId": "DE123456789",
+      "taxId": "13/456/78901",
+      "ceo": "Max Beispiel"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Rechnung",
+      "invoice_date": "Rechnungsdatum",
+      "service_date": "Leistungsdatum",
+      "customer_number": "Kundennummer",
+      "reference": "Ihre Bestellnummer",
+      "positions": "Positionen",
+      "positions_caption": "Rechnungspositionen",
+      "col_pos": "Pos",
+      "col_article": "Artikel",
+      "col_qty": "Menge",
+      "col_unit_price": "Einzelpreis",
+      "col_vat": "USt",
+      "col_total": "Gesamt",
+      "net_total": "Nettobetrag",
+      "vat_label": "USt",
+      "vat_on": "auf",
+      "gross_total": "Gesamtbetrag",
+      "payment_heading": "Zahlungsbedingungen",
+      "pay_within": "Bitte überweisen Sie den Betrag innerhalb von",
+      "pay_days": "Tagen",
+      "pay_or_disc": "oder mit",
+      "pay_disc_within": "Skonto innerhalb von",
+      "pay_disc_days": "Tagen",
+      "pay_ref": "unter Angabe der Rechnungsnummer",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "notes_heading": "Hinweise"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "invoice_date": "Invoice date",
+      "service_date": "Service date",
+      "customer_number": "Customer no.",
+      "reference": "Your order no.",
+      "positions": "Items",
+      "positions_caption": "Invoice items",
+      "col_pos": "Pos",
+      "col_article": "Item",
+      "col_qty": "Qty",
+      "col_unit_price": "Unit price",
+      "col_vat": "VAT",
+      "col_total": "Total",
+      "net_total": "Net total",
+      "vat_label": "VAT",
+      "vat_on": "on",
+      "gross_total": "Grand total",
+      "payment_heading": "Payment terms",
+      "pay_within": "Please transfer the amount within",
+      "pay_days": "days",
+      "pay_or_disc": "or with",
+      "pay_disc_within": "discount within",
+      "pay_disc_days": "days",
+      "pay_ref": "quoting invoice number",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bank": "Bank",
+      "notes_heading": "Notes"
+    }
+  }
+}

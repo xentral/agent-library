@@ -1,0 +1,137 @@
+{
+  "id": "purchasing",
+  "version": 2,
+  "icon": "cart",
+  "category": "purchasing",
+  "order": 120,
+  "recommended_kpis": [
+    "open_purchase_orders",
+    "purchase_orders_total",
+    "purchase_volume_mtd",
+    "purchase_orders_today",
+    "supplier_lead_time",
+    "open_payables",
+    "dpo"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "18 offene Bestellungen, **3** überfällig bei Lieferanten.",
+          "en": "18 open purchase orders, **3** overdue at suppliers."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "open_purchase_orders",
+          "supplier_lead_time",
+          "dpo"
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "type": "AttentionBlock",
+      "config": {
+        "kind": "procurement"
+      }
+    },
+    {
+      "id": "kpi_grid_ops",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Operativ",
+          "en": "Operational"
+        },
+        "kpis": [
+          "purchase_orders_total",
+          "open_purchase_orders",
+          "purchase_volume_mtd",
+          "purchase_orders_today"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Supply Chain",
+          "en": "Supply chain"
+        },
+        "kpis": [
+          "open_payables",
+          "dead_stock_value",
+          "inventory_turnover"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "inbox",
+            "label_key": "workspace.inquiries",
+            "view": "inbox",
+            "scope": "procurement"
+          },
+          {
+            "id": "orders",
+            "label_key": "workspace.purchaseOrders",
+            "view": "purchase_orders",
+            "default_status_filter": "released,sent"
+          },
+          {
+            "id": "clearing",
+            "label_key": "workspace.grIrClearing",
+            "view": "goods_receipt"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "attention",
+      "kpi_grid_ops",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "open_purchase_orders",
+    "purchase_orders_total",
+    "purchase_volume_mtd",
+    "purchase_orders_today",
+    "supplier_lead_time",
+    "dpo",
+    "open_payables",
+    "dead_stock_value",
+    "inventory_turnover"
+  ],
+  "locales": {
+    "en": {
+      "title": "Purchasing",
+      "description": "Supplier orders, reorder proposals, incoming goods receipts."
+    },
+    "de": {
+      "title": "Einkauf",
+      "description": "Lieferantenbestellungen, Nachbestell-Vorschläge, Wareneingänge."
+    }
+  }
+}

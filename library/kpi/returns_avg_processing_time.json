@@ -1,0 +1,27 @@
+{
+  "id": "returns_avg_processing_time",
+  "version": 1,
+  "icon": "clock",
+  "category": "logistics",
+  "order": 322,
+  "kpi": {
+    "key": "returns_avg_processing_time",
+    "unit": "days",
+    "value_type": "duration",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": -1,
+    "prompt": "Durchschnittliche Anzahl Tage zwischen Retoureneingang und ausgestellter Erstattung aus Retouren der letzten 30 Tage; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    ROUND(AVG(DATEDIFF(day, rs.date, cn.date))::DECIMAL(18,2), 2) AS durchschnittliche_tage_bis_erstattung\nFROM return_shipments rs\nINNER JOIN credit_notes cn\n    ON cn.credit_note_id = rs.credit_note_id\nWHERE rs.status IN ('released', 'sent', 'completed')\n  AND cn.status IN ('released', 'sent', 'completed')\n  AND rs.date >= DATEADD(day, -30, CURRENT_DATE)\n  AND rs.date <= CURRENT_DATE\n  AND cn.date >= rs.date\n  AND cn.date <= CURRENT_DATE\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Returns avg processing time",
+      "description": "Average days between return arrival and refund being issued."
+    },
+    "de": {
+      "title": "Bearbeitung Ø",
+      "description": "Mittlere Tage von Retouren-Eingang bis zur Erstattung."
+    }
+  }
+}

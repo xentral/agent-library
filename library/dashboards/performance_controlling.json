@@ -1,0 +1,322 @@
+{
+  "id": "performance_controlling",
+  "version": 1,
+  "icon": "chart-bar",
+  "category": "management",
+  "order": 60,
+  "recommended_kpis": [
+    "revenue_today",
+    "revenue_mtd",
+    "open_receivables",
+    "open_payables",
+    "dso",
+    "dpo",
+    "overdue_dunning",
+    "cash_runway_30d",
+    "ready_to_ship_today",
+    "blocked_orders",
+    "outbound_on_time_rate",
+    "return_rate",
+    "inventory_turnover",
+    "dead_stock_value",
+    "open_inquiries",
+    "sla_breaches",
+    "avg_response_time",
+    "csat",
+    "first_contact_resolution",
+    "escalations_today",
+    "open_purchase_orders",
+    "purchase_volume_mtd",
+    "supplier_lead_time",
+    "automation_rate",
+    "done_today",
+    "intervention_required"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "**Performance Controlling — Cross-Functional Sicht.** Die kritischsten KPIs aus jedem Bereich auf einen Blick.",
+          "en": "**Performance controlling — cross-functional view.** The most critical KPIs from every area at a glance."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_text": {
+          "de": "Heute auf einen Blick",
+          "en": "Today at a glance"
+        },
+        "kpis": [
+          "revenue_today",
+          "revenue_mtd",
+          "open_receivables"
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "type": "AttentionBlock",
+      "config": {
+        "kind": "dashboard"
+      }
+    },
+    {
+      "id": "kpi_grid_finance",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Finance",
+          "en": "Finance"
+        },
+        "kpis": [
+          "open_payables",
+          "open_receivables",
+          "dso",
+          "dpo",
+          "overdue_dunning",
+          "cash_runway_30d"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid_operations",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Operations",
+          "en": "Operations"
+        },
+        "kpis": [
+          "ready_to_ship_today",
+          "blocked_orders",
+          "outbound_on_time_rate",
+          "return_rate",
+          "inventory_turnover",
+          "dead_stock_value"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid_service",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Kundenservice",
+          "en": "Customer Service"
+        },
+        "kpis": [
+          "open_inquiries",
+          "sla_breaches",
+          "avg_response_time",
+          "csat",
+          "first_contact_resolution",
+          "escalations_today"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid_purchasing",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Einkauf",
+          "en": "Purchasing"
+        },
+        "kpis": [
+          "open_purchase_orders",
+          "purchase_volume_mtd",
+          "supplier_lead_time",
+          "open_payables"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid_ai",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "AI / Automatisierung",
+          "en": "AI / Automation"
+        },
+        "kpis": [
+          "automation_rate",
+          "done_today",
+          "intervention_required",
+          "first_contact_resolution"
+        ]
+      }
+    },
+    {
+      "id": "revenue_trend",
+      "type": "LineChart",
+      "config": {
+        "title_text": {
+          "de": "Umsatz pro Monat (12 Monate)",
+          "en": "Revenue per month (12 months)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Umsatz pro Monat aus Rechnungen, letzte 12 Monate, als Zeitreihe",
+        "sqlString": "SELECT\n  TO_CHAR(DATE_TRUNC('month', i.date), 'YYYY-MM') AS \"Monat\",\n  ROUND(SUM(i.net_revenue), 2) AS \"Umsatz\"\nFROM invoices i\nWHERE i.status NOT IN ('canceled', 'created', 'unknown')\n  AND i.date >= DATEADD(month, -12, DATE_TRUNC('month', CURRENT_DATE))\n  AND i.date < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\nGROUP BY 1\nORDER BY 1;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "revenue_vs_ly",
+      "type": "AreaChart",
+      "config": {
+        "title_text": {
+          "de": "Umsatz YTD vs. Vorjahr",
+          "en": "Revenue YTD vs. prior year"
+        },
+        "dataSource": "prompt",
+        "prompt": "Umsatz pro Monat aktuelles Jahr (YTD) im Vergleich zum Vorjahr aus Rechnungen, zwei Serien",
+        "sqlString": "WITH invoice_metrics AS (\n  SELECT\n    date_trunc('month', i.date) AS month_start,\n    EXTRACT(year FROM i.date) AS sales_year,\n    SUM(i.net_revenue) AS net_revenue\n  FROM invoices i\n  WHERE i.status NOT IN ('created', 'canceled', 'unknown')\n    AND i.date BETWEEN date_trunc('year', current_date) - interval '1 year' AND current_date\n  GROUP BY 1, 2\n)\nSELECT\n  to_char(m.month_start, 'YYYY-MM') AS \"Monat\",\n  ROUND(SUM(CASE WHEN m.sales_year = EXTRACT(year FROM current_date) THEN m.net_revenue ELSE 0 END), 2) AS \"Umsatz aktuelles Jahr (YTD)\",\n  ROUND(SUM(CASE WHEN m.sales_year = EXTRACT(year FROM current_date) - 1 THEN m.net_revenue ELSE 0 END), 2) AS \"Umsatz Vorjahr\"\nFROM invoice_metrics m\nGROUP BY 1\nORDER BY 1;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "margin_gauge",
+      "type": "GaugeChart",
+      "config": {
+        "title_text": {
+          "de": "Bruttomarge (laufender Monat)",
+          "en": "Gross margin (current month)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Bruttomarge im laufenden Monat in Prozent aus Rechnungen, ein einzelner Wert",
+        "sqlString": "WITH invoice_metrics AS (\n  SELECT\n    SUM(i.net_revenue) AS net_revenue,\n    SUM(i.net_profit) AS cm1\n  FROM invoices i\n  WHERE i.status NOT IN ('canceled', 'created')\n    AND i.date >= DATE_TRUNC('month', CURRENT_DATE)\n    AND i.date < DATEADD(month, 1, DATE_TRUNC('month', CURRENT_DATE))\n)\nSELECT ROUND((cm1::NUMERIC(23,8) / NULLIF(net_revenue::NUMERIC(23,8), 0)) * 100, 2) AS \"Bruttomarge in %\"\nFROM invoice_metrics;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": 900
+      }
+    },
+    {
+      "id": "automation_gauge",
+      "type": "GaugeChart",
+      "config": {
+        "preset": "automation_rate"
+      }
+    },
+    {
+      "id": "sla_gauge",
+      "type": "GaugeChart",
+      "config": {
+        "preset": "sla_today"
+      }
+    },
+    {
+      "id": "revenue_by_channel",
+      "type": "StackedBarChart",
+      "config": {
+        "title_text": {
+          "de": "Umsatz nach Vertriebskanal (6 Monate)",
+          "en": "Revenue by sales channel (6 months)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Umsatz pro Monat gruppiert nach Vertriebskanal (Projekt), letzte 6 Monate, gestapelt",
+        "sqlString": "WITH relevant_sales AS (\n    SELECT so.sales_order_id, so.project_id, so.date, so.status, so.net_revenue\n    FROM sales_orders so\n    WHERE so.status <> 'created'\n      AND so.date >= DATEADD(month, -6, CURRENT_DATE)\n),\nmonthly_sales AS (\n    SELECT DATE_TRUNC('month', date) AS month_start, project_id, SUM(net_revenue) AS revenue\n    FROM relevant_sales\n    GROUP BY 1, 2\n)\nSELECT\n    TO_CHAR(ms.month_start, 'YYYY-MM') AS \"Monat\",\n    p.name AS \"Projekt / Vertriebskanal\",\n    ROUND(ms.revenue, 2) AS \"Umsatz\"\nFROM monthly_sales ms\nLEFT JOIN projects p ON ms.project_id = p.project_id\nORDER BY ms.month_start ASC, \"Umsatz\" DESC;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "top_customers",
+      "type": "HorizontalBarChart",
+      "config": {
+        "title_text": {
+          "de": "Top 10 Kunden (YTD)",
+          "en": "Top 10 customers (YTD)"
+        },
+        "dataSource": "prompt",
+        "prompt": "Top 10 Kunden nach Umsatz aus Rechnungen seit Jahresanfang, absteigend",
+        "sqlString": "SELECT a.name AS \"Kunde\", SUM(i.xen_net_revenue) AS \"Umsatz\"\nFROM invoices i\nLEFT JOIN addresses a ON i.address_id = a.address_id\nWHERE i.status NOT IN ('canceled', 'created') AND i.date >= DATE_TRUNC('year', CURRENT_DATE)\nGROUP BY a.address_id, a.name\nORDER BY \"Umsatz\" DESC\nLIMIT 10;\n",
+        "cacheMode": "cached",
+        "cacheTtlSeconds": -1
+      }
+    },
+    {
+      "id": "ai_hours_saved",
+      "type": "LineChart",
+      "config": {
+        "preset": "ai_hours_saved"
+      }
+    },
+    {
+      "id": "automation_by_process",
+      "type": "HorizontalBarChart",
+      "config": {
+        "preset": "automation_by_process"
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "attention",
+      "kpi_grid_finance",
+      "kpi_grid_operations",
+      "kpi_grid_service",
+      "kpi_grid_purchasing",
+      "kpi_grid_ai"
+    ],
+    "side": [
+      "revenue_trend",
+      "revenue_vs_ly",
+      [
+        "margin_gauge",
+        "automation_gauge",
+        "sla_gauge"
+      ],
+      "revenue_by_channel",
+      "top_customers",
+      "ai_hours_saved",
+      "automation_by_process"
+    ]
+  },
+  "linked_kpis": [
+    "revenue_today",
+    "revenue_mtd",
+    "open_receivables",
+    "open_payables",
+    "dso",
+    "dpo",
+    "overdue_dunning",
+    "cash_runway_30d",
+    "ready_to_ship_today",
+    "blocked_orders",
+    "outbound_on_time_rate",
+    "return_rate",
+    "inventory_turnover",
+    "dead_stock_value",
+    "open_inquiries",
+    "sla_breaches",
+    "avg_response_time",
+    "csat",
+    "first_contact_resolution",
+    "escalations_today",
+    "open_purchase_orders",
+    "purchase_volume_mtd",
+    "supplier_lead_time",
+    "automation_rate",
+    "done_today",
+    "intervention_required"
+  ],
+  "locales": {
+    "en": {
+      "title": "Performance Controlling",
+      "description": "Cross-functional KPI cockpit for controlling — the most critical metrics from Finance, Operations, Customer Service, Procurement and AI on one page. Read-only — controlling observes, does not act directly."
+    },
+    "de": {
+      "title": "Performance Controlling",
+      "description": "Bereichsübergreifendes KPI-Cockpit für Controlling — die wichtigsten Kennzahlen aus Finance, Operations, Customer Service, Einkauf und AI auf einer Seite. Read-only — Controlling beobachtet, handelt nicht direkt."
+    }
+  }
+}

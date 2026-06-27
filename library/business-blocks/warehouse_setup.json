@@ -1,0 +1,144 @@
+{
+  "id": "warehouse_setup",
+  "version": 1,
+  "type": "setup",
+  "category": "logistics",
+  "process_group": "Lager",
+  "icon": "warehouse",
+  "order": 30,
+  "popular": true,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "handbook_url": "https://help.xentral.com/hc/de/articles/360016722900",
+  "subcards": [
+    "warehouse_locations",
+    "warehouse_lagertyp",
+    "warehouse_barcodes",
+    "warehouse_project"
+  ],
+  "locales": {
+    "en": {
+      "name": "Warehouse Setup",
+      "description": "Create the primary warehouse in Xentral. Shelf locations, barcode labels,\nstorage types and project assignments are configured in the subcards below.\n",
+      "tags": [
+        "Warehouse",
+        "Logistics",
+        "Setup"
+      ],
+      "documentation": {
+        "overview": "Creates the top-level Lager entity in Xentral. A warehouse is the\norganisational container for all inventory — goods receipts, stock\nreservations and picking all reference a Lager.\n\nXentral's warehouse structure has two levels:\n  1. Lager — the room, building or logical area (this card)\n  2. Lagerplätze — shelf or bin locations within the warehouse\n     (warehouse_locations subcard)\n\nThis card covers step 1 only. The subcards below handle the remaining\nsetup steps: shelf locations (required), storage types (optional),\nbarcode labels (optional), and project assignment (multi-channel only).\n\nDone state: Lager record exists in Xentral with a name. Subcards track\ntheir own done states independently.\n",
+        "capabilities": [
+          "Lager entity creation in Xentral (Lager > Lagerverwaltung > + NEU)",
+          "Optional warehouse address for external or consignment locations",
+          "Subcards for full warehouse configuration (locations, types, labels, project)"
+        ],
+        "inputs": [
+          "Warehouse name (max 15 characters)",
+          "Optional address (only for off-site or 3PL warehouses)"
+        ],
+        "outputs": [
+          "Lager record active in Xentral",
+          "Foundation for all subsequent inventory operations"
+        ],
+        "notes": "Warehouse names must not exceed 15 characters — longer names cause errors\nwhen generating barcode labels for shelf locations (warehouse_barcodes subcard).\n\nFor multiple warehouses (main + returns, or multi-location), run this card\nonce per warehouse. Each instance is independent.\n"
+      },
+      "sections": [
+        {
+          "id": "warehouse_identity",
+          "title": "Warehouse",
+          "hint": "Name and optional address. Subcards handle shelf locations and further configuration.",
+          "human": [
+            {
+              "text": "Warehouse name (Lagerbezeichnung)",
+              "why": "Operator-defined — must be unique and recognisable to the warehouse team. Max 15 characters enforced by Xentral barcode label generation. Never derivable; must be provided by the operator.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "lager_name",
+              "type": "text",
+              "label": "Warehouse name",
+              "placeholder": "e.g. Main Warehouse, Lager1, Berlin — max 15 characters",
+              "default": "",
+              "human": true,
+              "human_why": "Operator-defined. Max 15 characters — longer names cause errors when printing shelf barcode labels. Choose a name the warehouse team will recognise on pick lists and delivery notes.\n"
+            },
+            {
+              "id": "lager_adresse",
+              "type": "text",
+              "label": "Warehouse address (optional)",
+              "placeholder": "Street, ZIP, city — only for external or consignment warehouses",
+              "default": "",
+              "human": false,
+              "human_why": "Only required if this warehouse is at a different location than the company address — e.g. off-site storage or an external 3PL address. Leave blank for on-premise warehouses.\n",
+              "advanced": true
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "name": "Lager einrichten",
+      "description": "Erstelle das primäre Lager in Xentral. Lagerplätze, Barcode-Etiketten,\nLagertypen und Projektzuordnungen werden in den Unterkarten unten konfiguriert.\n",
+      "tags": [
+        "Lager",
+        "Logistik",
+        "Einrichtung"
+      ],
+      "documentation": {
+        "overview": "Erstellt die übergeordnete Lager-Entität in Xentral. Ein Lager ist der\norganisatorische Container für alle Bestände — Wareneingänge, Bestandsreservierungen\nund Kommissionierungen referenzieren alle ein Lager.\n\nDie Lagerstruktur in Xentral hat zwei Ebenen:\n  1. Lager — der Raum, das Gebäude oder der logische Bereich (diese Karte)\n  2. Lagerplätze — Regal- oder Fachpositionen innerhalb des Lagers\n     (Unterkarte warehouse_locations)\n\nDiese Karte deckt nur Schritt 1 ab. Die Unterkarten unten behandeln die verbleibenden\nEinrichtungsschritte: Lagerplätze (erforderlich), Lagertypen (optional),\nBarcode-Etiketten (optional) und Projektzuordnung (nur Multi-Channel).\n\nFertig-Zustand: Lager-Datensatz existiert in Xentral mit einem Namen. Unterkarten\nverfolgen ihren eigenen Fertig-Zustand unabhängig.\n",
+        "capabilities": [
+          "Lager-Anlage in Xentral (Lager > Lagerverwaltung > + NEU)",
+          "Optionale Lageradresse für externe oder Konsignationslager",
+          "Unterkarten für vollständige Lagerkonfiguration (Lagerplätze, Typen, Etiketten, Projekt)"
+        ],
+        "inputs": [
+          "Lagername (max. 15 Zeichen)",
+          "Optionale Adresse (nur für externe oder 3PL-Lager)"
+        ],
+        "outputs": [
+          "Lager-Datensatz aktiv in Xentral",
+          "Grundlage für alle nachfolgenden Bestandsoperationen"
+        ],
+        "notes": "Lagernamen dürfen 15 Zeichen nicht überschreiten — längere Namen verursachen Fehler\nbeim Erstellen von Barcode-Etiketten für Lagerplätze (Unterkarte warehouse_barcodes).\n\nFür mehrere Lager (Haupt + Retouren oder mehrere Standorte) diese Karte\npro Lager einmal ausführen. Jede Instanz ist unabhängig.\n"
+      },
+      "sections": [
+        {
+          "id": "warehouse_identity",
+          "title": "Lager",
+          "hint": "Name und optionale Adresse. Unterkarten verwalten Lagerplätze und weitere Konfigurationen.",
+          "human": [
+            {
+              "text": "Lagername (Lagerbezeichnung)",
+              "why": "Vom Betreiber definiert — muss eindeutig und für das Lagerteam erkennbar sein. Max. 15 Zeichen, erzwungen durch die Barcode-Etikettenerstellung von Xentral. Nie ableitbar; muss vom Betreiber angegeben werden.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "lager_name",
+              "type": "text",
+              "label": "Lagername",
+              "placeholder": "z.B. Hauptlager, Lager1, Berlin — max. 15 Zeichen",
+              "default": "",
+              "human": true,
+              "human_why": "Vom Betreiber definiert. Max. 15 Zeichen — längere Namen verursachen Fehler beim Drucken von Lagerplatz-Barcode-Etiketten. Wähle einen Namen, den das Lagerteam auf Kommissionierlisten und Lieferscheinen wiedererkennt.\n"
+            },
+            {
+              "id": "lager_adresse",
+              "type": "text",
+              "label": "Lageradresse (optional)",
+              "placeholder": "Straße, PLZ, Ort — nur für externe oder Konsignationslager",
+              "default": "",
+              "human": false,
+              "human_why": "Nur erforderlich, wenn sich dieses Lager an einem anderen Standort als die Unternehmensadresse befindet — z.B. externes Lager oder eine externe 3PL-Adresse. Bei betriebsinternen Lagern leer lassen.\n",
+              "advanced": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": true
+}

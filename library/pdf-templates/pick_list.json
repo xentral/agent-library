@@ -1,0 +1,156 @@
+{
+  "id": "pick_list",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Pickliste (mit Barcodes)",
+      "description": "Lager-Pickliste — Positionen gruppiert nach Lagerplatz, mit einem Code-128-ähnlichen Barcode pro Zeile für Handscanner und einer Checkbox zur Pick-Bestätigung. Der Kopf trägt die Auftragsnummer, die Pickerzuordnung und einen Tour-Barcode. Die Barcode-Balken sind CSS-Gradienten (nur visuell); ein echtes Code-128-/EAN-13-Bild benötigt eine Barcode-Bibliothek auf dem Server.\n"
+    },
+    "en": {
+      "title": "Pick list (with barcodes)",
+      "description": "Warehouse pick list — line items grouped by storage location, with a Code-128-style barcode per row for handheld scanning and a checkbox to confirm the pick. Header carries the order number, picker assignment and a tour barcode. Barcode bars are CSS gradients (visual only); a real Code-128 / EAN-13 image needs a barcode library on the server.\n"
+    }
+  },
+  "v3_endpoint": "/api/v3/salesOrders/{id}?include=all",
+  "filename_pattern": "PickList-{documentNumber}.pdf",
+  "compliance": [],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "every barcode element MUST have an accessible label (data-code or aria-label)",
+    "checkboxes MUST be visually large enough for pen-marking (>= 4mm)"
+  ],
+  "schema": {
+    "required": [
+      "documentNumber",
+      "documentDate",
+      "lineItems",
+      "documentAddress"
+    ],
+    "documentAddress": {
+      "required": [
+        "name"
+      ]
+    },
+    "lineItems": {
+      "item": {
+        "required": [
+          "number",
+          "name",
+          "quantity",
+          "unit"
+        ],
+        "optional": [
+          "storageLocation",
+          "weight",
+          "ean"
+        ]
+      }
+    },
+    "optional": [
+      "language",
+      "picker",
+      "tourNumber",
+      "waveNumber"
+    ]
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set items = data.lineItems | default([]) %}\n\n{% block content %}\n\n  <section class=\"box-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }} {{ data.documentNumber }}</h1>\n  </section>\n\n  <section class=\"pick-meta\" aria-labelledby=\"pick-meta-heading\">\n    <h2 id=\"pick-meta-heading\" class=\"sr-only\">{{ L.doc_title }}</h2>\n    <dl class=\"pick-meta__dl\">\n      <div><dt>{{ L.order_no }}</dt><dd>{{ data.documentNumber }}</dd></div>\n      <div><dt>{{ L.pick_date }}</dt><dd>{{ data.documentDate }}</dd></div>\n      {% if data.picker %}<div><dt>{{ L.picker }}</dt><dd>{{ data.picker }}</dd></div>{% endif %}\n      {% if data.tourNumber %}<div><dt>{{ L.tour }}</dt><dd>{{ data.tourNumber }}</dd></div>{% endif %}\n      {% if data.waveNumber %}<div><dt>{{ L.wave }}</dt><dd>{{ data.waveNumber }}</dd></div>{% endif %}\n      <div class=\"pick-meta__addr\"><dt>{{ L.consignee }}</dt><dd>\n        {{ data.documentAddress.name }}<br>\n        {% if data.documentAddress.street %}{{ data.documentAddress.street }}<br>{% endif %}\n        {% if data.documentAddress.zipCode or data.documentAddress.city %}{{ data.documentAddress.zipCode }} {{ data.documentAddress.city }}{% endif %}\n      </dd></div>\n    </dl>\n    {% if data.tourBarcode %}\n    <div class=\"pick-meta__tour\" aria-label=\"{{ L.tour_barcode }}: {{ data.tourBarcode }}\">\n      <div class=\"pick-meta__tour-label\">{{ L.tour_barcode }}</div>\n      <div class=\"barcode\" data-code=\"{{ data.tourBarcode }}\"></div>\n      <div class=\"barcode__caption\">{{ data.tourBarcode }}</div>\n    </div>\n    {% endif %}\n  </section>\n\n  <table class=\"pick-table\" aria-label=\"{{ L.doc_title }}\">\n    <thead>\n      <tr>\n        <th scope=\"col\" class=\"pick-table__col-loc\">{{ L.col_loc }}</th>\n        <th scope=\"col\" class=\"pick-table__col-bar\">{{ L.col_sku }}</th>\n        <th scope=\"col\" class=\"pick-table__col-name\">{{ L.col_name }}</th>\n        <th scope=\"col\" class=\"pick-table__col-qty\">{{ L.col_qty }}</th>\n        <th scope=\"col\" class=\"pick-table__col-unit\">{{ L.col_unit }}</th>\n        <th scope=\"col\" class=\"pick-table__col-check\">{{ L.col_check }}</th>\n      </tr>\n    </thead>\n    <tbody>\n      {% for it in items %}\n      <tr>\n        <td class=\"pick-table__col-loc\">{{ it.storageLocation | default('—') }}</td>\n        <td class=\"pick-table__col-bar\">\n          <div class=\"barcode barcode--row\" data-code=\"{{ it.number }}\"></div>\n          <div class=\"barcode__caption barcode__caption--row\">{{ it.number }}</div>\n        </td>\n        <td class=\"pick-table__col-name\">\n          {{ it.name }}\n          {% if it.ean %}<div class=\"pick-table__ean\">{{ L.col_ean }} {{ it.ean }}</div>{% endif %}\n        </td>\n        <td class=\"pick-table__col-qty\"><strong>{{ it.quantity | number }}</strong></td>\n        <td class=\"pick-table__col-unit\">{{ it.unit }}</td>\n        <td class=\"pick-table__col-check\"><span class=\"pick-checkbox\" aria-hidden=\"true\"></span></td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <section class=\"pick-signatures\" aria-labelledby=\"pick-sig-heading\">\n    <h2 id=\"pick-sig-heading\" class=\"sr-only\">Signatures</h2>\n    <div class=\"pick-sig\">\n      <div class=\"pick-sig__line\"></div>\n      <div class=\"pick-sig__label\">{{ L.sig_picker }}</div>\n    </div>\n    <div class=\"pick-sig\">\n      <div class=\"pick-sig__line\"></div>\n      <div class=\"pick-sig__label\">{{ L.sig_quality }}</div>\n    </div>\n  </section>\n\n{% endblock %}\n",
+  "css": "/* Pickliste — scanbare Tabelle. Compact + groß genug für die typischen\n   Handheld-Scanner. Barcodes als CSS-Streifen (Visual-Placeholder),\n   echte Codes brauchen ein Barcode-Lib oder image-src. */\n\n.sr-only {\n  position: absolute;\n  width: 1px; height: 1px;\n  overflow: hidden;\n  clip: rect(0 0 0 0);\n}\n\n.pick-meta {\n  margin-bottom: 6mm;\n  padding-bottom: 4mm;\n  border-bottom: 0.3mm solid #d1d5db;\n  display: grid;\n  grid-template-columns: 1fr 60mm;\n  gap: 6mm;\n  align-items: start;\n}\n.pick-meta__dl {\n  display: grid;\n  grid-template-columns: repeat(2, max-content 1fr);\n  gap: 1mm 4mm;\n  margin: 0;\n  font-size: 9.5pt;\n}\n.pick-meta__dl > div {\n  display: contents;\n}\n.pick-meta__dl dt {\n  font-weight: 700;\n  color: #4b5563;\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  align-self: center;\n}\n.pick-meta__dl dd { margin: 0; }\n.pick-meta__addr dd { line-height: 1.35; }\n\n.pick-meta__tour {\n  text-align: center;\n  padding: 2mm;\n  border: 0.3mm solid #d1d5db;\n  border-radius: 1mm;\n}\n.pick-meta__tour-label {\n  font-size: 8pt;\n  font-weight: 700;\n  letter-spacing: 0.4px;\n  text-transform: uppercase;\n  color: #4b5563;\n  margin-bottom: 2mm;\n}\n\n/* Barcode — CSS-Streifen-Placeholder. Echte Bars werden später als\n   <img>-Element vom Backend ersetzt (Code-128 / EAN-13). */\n.barcode {\n  height: 12mm;\n  background:\n    repeating-linear-gradient(\n      to right,\n      #111827 0 0.5mm,\n      transparent 0.5mm 0.8mm,\n      #111827 0.8mm 1.2mm,\n      transparent 1.2mm 1.8mm,\n      #111827 1.8mm 2.3mm,\n      transparent 2.3mm 2.9mm,\n      #111827 2.9mm 3.2mm,\n      transparent 3.2mm 4mm\n    );\n  margin: 0 auto;\n  max-width: 100%;\n}\n.barcode--row {\n  height: 7mm;\n  width: 36mm;\n  margin: 0;\n}\n.barcode__caption {\n  font-family: monospace;\n  font-size: 8.5pt;\n  text-align: center;\n  margin-top: 1mm;\n  letter-spacing: 0.5pt;\n}\n.barcode__caption--row {\n  font-size: 7.5pt;\n  text-align: left;\n  letter-spacing: 0.3pt;\n}\n\n.pick-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 9.5pt;\n  margin-top: 2mm;\n}\n.pick-table thead th {\n  font-size: 8pt;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n  text-align: left;\n  background: #f3f4f6;\n  border-bottom: 0.4mm solid #6b7280;\n  padding: 2mm 3mm;\n  color: #374151;\n}\n.pick-table tbody td {\n  padding: 2.5mm 3mm;\n  border-bottom: 0.2mm solid #e5e7eb;\n  vertical-align: middle;\n}\n.pick-table__col-loc {\n  width: 22mm;\n  font-weight: 700;\n  font-family: monospace;\n  font-size: 10pt;\n  letter-spacing: 0.5pt;\n}\n.pick-table__col-bar  { width: 40mm; }\n.pick-table__col-qty  {\n  width: 18mm;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  font-size: 12pt;\n}\n.pick-table__col-unit { width: 14mm; color: #6b7280; }\n.pick-table__col-check { width: 12mm; text-align: center; }\n.pick-table__ean {\n  font-size: 8pt;\n  color: #6b7280;\n  margin-top: 0.5mm;\n}\n\n.pick-checkbox {\n  display: inline-block;\n  width: 6mm;\n  height: 6mm;\n  border: 0.4mm solid #111827;\n  border-radius: 0.5mm;\n}\n\n.pick-signatures {\n  margin-top: 12mm;\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 12mm;\n}\n.pick-sig__line {\n  border-bottom: 0.3mm solid #111827;\n  height: 16mm;\n}\n.pick-sig__label {\n  font-size: 9pt;\n  color: #6b7280;\n  margin-top: 1mm;\n}\n",
+  "example_data": {
+    "documentNumber": "AUF-2026-04412",
+    "documentDate": "2026-05-12",
+    "language": "de",
+    "picker": "M. Schulze",
+    "tourNumber": "T-027",
+    "waveNumber": "W-009",
+    "tourBarcode": "T027-W009-2026051",
+    "documentAddress": {
+      "name": "Beispiel Logistik GmbH",
+      "street": "Lagerstraße 45",
+      "zipCode": "70378",
+      "city": "Stuttgart"
+    },
+    "lineItems": [
+      {
+        "number": "ART-001",
+        "name": "Bürostuhl Modell A",
+        "ean": "4012345678901",
+        "storageLocation": "A-12-03",
+        "quantity": 2,
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-007",
+        "name": "Schreibtisch 160×80",
+        "ean": "4012345678949",
+        "storageLocation": "B-04-07",
+        "quantity": 1,
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-019",
+        "name": "Tischlampe LED warmweiß",
+        "ean": "4012345679113",
+        "storageLocation": "C-22-14",
+        "quantity": 4,
+        "unit": "Stk"
+      },
+      {
+        "number": "ART-038",
+        "name": "Kabelkanal 1,5 m schwarz",
+        "ean": "4012345679519",
+        "storageLocation": "D-08-02",
+        "quantity": 6,
+        "unit": "Stk"
+      }
+    ],
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Pickliste",
+      "order_no": "Auftragsnr.",
+      "pick_date": "Pickdatum",
+      "picker": "Picker",
+      "tour": "Tour",
+      "wave": "Welle",
+      "consignee": "Lieferadresse",
+      "col_loc": "Lagerort",
+      "col_ean": "EAN",
+      "col_sku": "Artikel",
+      "col_name": "Bezeichnung",
+      "col_qty": "Menge",
+      "col_unit": "Einheit",
+      "col_check": "✓",
+      "tour_barcode": "Tour-Code",
+      "sig_picker": "Unterschrift Picker",
+      "sig_quality": "Qualitätskontrolle"
+    },
+    "en": {
+      "doc_title": "Pick list",
+      "order_no": "Order no.",
+      "pick_date": "Pick date",
+      "picker": "Picker",
+      "tour": "Tour",
+      "wave": "Wave",
+      "consignee": "Ship-to",
+      "col_loc": "Bin",
+      "col_ean": "EAN",
+      "col_sku": "Item",
+      "col_name": "Description",
+      "col_qty": "Qty",
+      "col_unit": "Unit",
+      "col_check": "✓",
+      "tour_barcode": "Tour code",
+      "sig_picker": "Picker signature",
+      "sig_quality": "QA"
+    }
+  }
+}

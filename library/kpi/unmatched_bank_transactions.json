@@ -1,0 +1,27 @@
+{
+  "id": "unmatched_bank_transactions",
+  "version": 1,
+  "icon": "alertTriangle",
+  "category": "finance",
+  "order": 420,
+  "kpi": {
+    "key": "unmatched_bank_transactions",
+    "unit": "count",
+    "value_type": "number",
+    "group": "finance",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Bankbuchungen auf dem aktuellen Konto, die keiner Rechnung oder Zahlung zugeordnet sind; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  COUNT(*) AS \"Anzahl Bankbuchungen\"\nFROM bank_statements bs\nLEFT JOIN incoming_bank_statements ibs\n  ON bs.bank_statement_id = ibs.bank_statement_id\nLEFT JOIN outgoing_bank_statements obs\n  ON bs.bank_statement_id = obs.bank_statement_id\nWHERE\n  bs.account_id = (\n    SELECT account_id\n    FROM accounts\n    WHERE is_active = TRUE\n      AND is_deleted = FALSE\n    ORDER BY last_import DESC NULLS LAST, account_id DESC\n    LIMIT 1\n  )\n  AND bs.has_import_error = FALSE\n  AND COALESCE(bs.document_of_origin_id, 0) = 0\n  AND COALESCE(bs.preselection_document_of_origin_id, 0) = 0\n  AND ibs.incoming_bank_statement_id IS NULL\n  AND obs.outgoing_bank_statement_id IS NULL;\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Unmatched transactions",
+      "description": "Bank transactions on the account that the system could not link to any invoice or payment."
+    },
+    "de": {
+      "title": "Unzugeordnet",
+      "description": "Bankbuchungen auf dem Konto, die das System keiner Rechnung oder Zahlung zuordnen konnte."
+    }
+  }
+}

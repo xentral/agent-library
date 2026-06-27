@@ -1,0 +1,75 @@
+{
+  "order": 20,
+  "id": "daily-customer-service-briefing",
+  "icon": "inbox",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "customer_service"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Kundenservice-Briefing",
+      "category": "Customer Service",
+      "description": "CS-Tagesbriefing — SLA-Verstöße, Eskalationen, VIP-Tickets, Retouren-Backlog — täglich um 07:00.",
+      "tags": [
+        "Customer Service",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Kundenservice-Briefing",
+        "description": "3-4 wichtigsten CS-Themen für den Tag — SLA, Eskalationen, VIP-Tickets, Retouren.",
+        "area": "Kundenservice",
+        "briefing": {
+          "bucket_title": "Kundenservice",
+          "angles": [
+            "SLA-Verstöße & überfällige Tickets (älter als die SLA-Frist)",
+            "Eskalationen — Beschwerden, Reklamationen, kritische Fälle",
+            "VIP-Tickets / wichtige Kunden mit offenen Anfragen",
+            "Retouren-Backlog (überfällige Bearbeitung, ungelöste Cases)",
+            "CS-Agent-Jobs in requires_intervention (Refund/Return, Order-Management, Reklamations-Triage hängen)",
+            "Antwortzeit-Trends (heute schlechter als gestern?)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Customer Service Briefing",
+      "category": "Customer Service",
+      "description": "CS daily briefing — SLA breaches, escalations, VIP tickets, returns backlog — every day at 07:00.",
+      "tags": [
+        "Customer Service",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Customer Service Briefing",
+        "description": "Top 3-4 CS topics for today — SLA, escalations, VIP tickets, returns.",
+        "area": "Customer Service",
+        "briefing": {
+          "bucket_title": "Customer Service",
+          "angles": [
+            "SLA breaches & overdue tickets (older than the SLA window)",
+            "Escalations — complaints, claims, critical cases",
+            "VIP tickets / important customers with open requests",
+            "Returns backlog (overdue handling, unresolved cases)",
+            "CS agent jobs in requires_intervention (Refund/Return, Order Management, Complaint Triage stuck)",
+            "Response-time trends (worse today than yesterday?)"
+          ]
+        }
+      }
+    }
+  }
+}

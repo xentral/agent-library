@@ -1,0 +1,203 @@
+{
+  "id": "lab_minimal_enterprise",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "Xentral Labs · Minimal Enterprise (Rechnung)",
+      "description": "Minimalistische Rechnung im Stripe/Linear-Stil: viel Weißraum, ein Indigo-Akzent, Hairline-Tabelle, tabellarische Ziffern."
+    },
+    "en": {
+      "title": "Xentral Labs · Minimal Enterprise (Invoice)",
+      "description": "Minimal Stripe/Linear-style invoice: generous whitespace, single indigo accent, hairline table, tabular figures."
+    }
+  },
+  "v3_endpoint": "/api/v3/invoices/{id}?include=all",
+  "filename_pattern": "Rechnung-{documentNumber}.pdf",
+  "compliance": [
+    "pdf-ua-1"
+  ],
+  "constraints": [],
+  "schema": {},
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n{% block title %}{{ L.doc_title }} {{ data.documentNumber }}{% endblock %}\n\n{% set buyer = data.documentAddress | default({}) %}\n{% set items = data.lineItems | default([]) %}\n{% set pay = data.payment | default({}) %}\n\n{% block letterhead %}\n  <div class=\"me-head\">\n    <div class=\"me-head__brand\">\n      <svg class=\"me-mark\" viewBox=\"0 0 32 32\" role=\"img\" aria-label=\"{{ data.company.name | default('Logo') }}\" fill=\"none\"><path fill=\"#E66DCB\" d=\"M16.31 11.467h-.056c-2.371 0-4.452-1.766-6.002-3.31l-1.525-1.52a1.54 1.54 0 0 1-.336-1.684 1.556 1.556 0 0 1 2.53-.501l1.53 1.522c1.038 1.033 2.56 2.401 3.808 2.401h.057c1.247 0 2.774-1.371 3.808-2.401l1.524-1.522a1.55 1.55 0 0 1 1.691-.334 1.55 1.55 0 0 1 .84.835 1.54 1.54 0 0 1-.337 1.683l-1.53 1.523c-1.55 1.542-3.63 3.308-6.001 3.308\"></path>\n  <path fill=\"#26E3E4\" d=\"M22.737 27.99a1.55 1.55 0 0 1-1.097-.45l-1.529-1.521c-1.038-1.032-2.559-2.4-3.805-2.4h-.057c-1.246 0-2.772 1.37-3.806 2.4l-1.528 1.523a1.555 1.555 0 0 1-2.524-.5 1.54 1.54 0 0 1 .336-1.682l1.528-1.521c1.554-1.548 3.634-3.32 6.028-3.306h.027c2.372 0 4.45 1.765 5.999 3.306l1.528 1.521A1.54 1.54 0 0 1 22.741 28z\"></path>\n  <path fill=\"#5B64EE\" d=\"M5.547 23.734A1.54 1.54 0 0 1 4 22.186c0-.41.163-.805.453-1.095l1.524-1.527c1.039-1.04 2.42-2.569 2.405-3.816v-.028c.01-1.247-1.37-2.77-2.405-3.816l-1.524-1.527a1.551 1.551 0 0 1 1.093-2.643c.41 0 .803.163 1.094.453l1.524 1.527c1.55 1.553 3.327 3.64 3.314 6.02.013 2.381-1.764 4.468-3.315 6.022L6.64 23.28a1.54 1.54 0 0 1-1.093.453\"></path>\n  <path fill=\"#27E7A2\" d=\"M26.449 23.771a1.53 1.53 0 0 1-1.093-.454l-1.523-1.526c-1.55-1.551-3.325-3.637-3.31-6.018-.014-2.375 1.761-4.463 3.31-6.016l1.523-1.526a1.544 1.544 0 0 1 2.637 1.094c0 .41-.163.805-.452 1.095l-1.522 1.526c-1.04 1.04-2.418 2.566-2.403 3.815v.026c-.01 1.248 1.367 2.776 2.403 3.816l1.523 1.526a1.55 1.55 0 0 1-1.092 2.648z\"></path></svg>\n      <span class=\"me-brandname\">{{ data.company.name | default('') }}</span>\n    </div>\n    <div class=\"me-head__doc\">\n      <span class=\"me-eyebrow\">{{ L.doc_title }}</span>\n      <span class=\"me-docno\">{{ data.documentNumber }}</span>\n    </div>\n  </div>\n{% endblock %}\n\n{% block content %}\n  <div class=\"me-rule\"></div>\n\n  <section class=\"me-meta\">\n    <div class=\"me-meta__col me-meta__col--to\">\n      <div class=\"me-meta__label\">{{ L.bill_to }}</div>\n      <div class=\"me-meta__strong\">{{ buyer.name }}</div>\n      {% if buyer.coName %}<div>{{ buyer.coName }}</div>{% endif %}\n      <div>{{ buyer.street }}</div>\n      <div>{{ buyer.zipCode }} {{ buyer.city }}</div>\n      <div>{{ buyer.country }}</div>\n    </div>\n    <div class=\"me-meta__col\">\n      <div class=\"me-meta__label\">{{ L.date_label }}</div>\n      <div class=\"me-meta__strong\">{{ data.documentDate | date }}</div>\n      <div class=\"me-meta__label me-meta__label--mt\">{{ L.cust_no }}</div>\n      <div>{{ data.customerNumber }}</div>\n    </div>\n    <div class=\"me-meta__col\">\n      <div class=\"me-meta__label\">{{ L.due }}</div>\n      <div class=\"me-meta__strong\">{{ data.dueDate | date }}</div>\n      <div class=\"me-meta__label me-meta__label--mt\">{{ L.ref }}</div>\n      <div>{{ data.customerOrderNumber }}</div>\n    </div>\n    <div class=\"me-meta__col me-meta__col--amount\">\n      <div class=\"me-meta__label\">{{ L.amount_label }}</div>\n      <div class=\"me-amount\">{{ data.totals.gross | money }}</div>\n      <div><span class=\"me-chip\">{{ L.status_open }}</span></div>\n    </div>\n  </section>\n\n  <h1 class=\"visually-hidden\">{{ L.doc_title }} {{ data.documentNumber }}</h1>\n\n  <table class=\"me-items\">\n    <thead><tr>\n      <th scope=\"col\" class=\"me-c-pos\">{{ L.col_pos }}</th>\n      <th scope=\"col\" class=\"me-c-desc\">{{ L.col_desc }}</th>\n      <th scope=\"col\" class=\"me-c-qty\">{{ L.col_qty }}</th>\n      <th scope=\"col\" class=\"me-c-price\">{{ L.col_unit }}</th>\n      <th scope=\"col\" class=\"me-c-total\">{{ L.col_amount }}</th>\n    </tr></thead>\n    <tbody>\n      {% for p in items %}\n      <tr>\n        <td class=\"me-c-pos\">{{ '%02d' | format(loop.index) }}</td>\n        <td class=\"me-c-desc\"><strong>{{ p.name }}</strong>{% if p.description %}<span class=\"me-desc\">{{ p.description }}</span>{% endif %}<span class=\"me-sku\">{{ p.number }}</span></td>\n        <td class=\"me-c-qty num\">{{ p.quantity | number }} {{ p.unit }}</td>\n        <td class=\"me-c-price num\">{{ p.price.net | money }}</td>\n        <td class=\"me-c-total num\">{{ p.lineItemRevenue.net | money }}</td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n\n  <div class=\"me-foot\">\n    <section class=\"me-pay\">\n      <div class=\"me-meta__label\">{{ L.pay_details }}</div>\n      <dl class=\"me-pay__grid\">\n        <dt>IBAN</dt><dd>{{ pay.iban }}</dd>\n        <dt>BIC</dt><dd>{{ pay.bic }}</dd>\n        <dt>Bank</dt><dd>{{ pay.bankName }}</dd>\n        <dt>{{ L.reference }}</dt><dd>{{ data.documentNumber }}</dd>\n      </dl>\n    </section>\n    <section class=\"me-totals\">\n      <div class=\"me-trow\"><span>{{ L.subtotal }}</span><span class=\"num\">{{ data.totals.net | money }}</span></div>\n      {% for rate, group in (items | selectattr('effectiveTaxRate','defined')) | groupby('effectiveTaxRate') %}\n        {% set ns = namespace(s=0.0) %}\n        {% for it in group %}{% set ns.s = ns.s + (it.lineItemRevenue.net.amount | default(0) | float) %}{% endfor %}\n        {% if rate %}<div class=\"me-trow\"><span>{{ L.vat_pre }} {{ rate }} % {{ L.vat_label }}</span><span class=\"num\">{{ (ns.s * (rate|float)/100.0) | money(currency='EUR') }}</span></div>{% endif %}\n      {% endfor %}\n      <div class=\"me-trow me-trow--grand\"><span>{{ L.grand }}</span><span class=\"num\">{{ data.totals.gross | money }}</span></div>\n    </section>\n  </div>\n\n  {% if data.bodyOutroduction %}<p class=\"me-note\">{{ data.bodyOutroduction }}</p>{% endif %}\n{% endblock %}",
+  "css": "@page {\n  size: A4; margin: 20mm 20mm 26mm 20mm;\n  @bottom-left { content: \"Beispiel Handels GmbH · Marktplatz 1 · 10115 Berlin \\A Amtsgericht Charlottenburg · HRB 123456 \\A Geschäftsführer: Max Beispiel\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; vertical-align: top; padding-top: 4mm; }\n  @bottom-center { content: \"Seite \" counter(page) \" von \" counter(pages); font-size: 6.5pt; color: #8a8a8a; white-space: nowrap; vertical-align: top; padding-top: 4mm; }\n  @bottom-right { content: \"USt-IdNr. DE123456789 · St.-Nr. 13/456/78901 \\A IBAN DE89 3704 0044 0532 0130 00 · BIC COBADEFFXXX\"; font-size: 6.5pt; line-height: 1.45; color: #8a8a8a; white-space: pre-line; text-align: right; vertical-align: top; padding-top: 4mm; }\n}\n\nbody { color: #0b0b0f; font-family: 'Helvetica', 'Arial', sans-serif; }\n.num { font-variant-numeric: tabular-nums; }\n\n/* Header */\n.doc-header { display: block; margin: 0; }\n.me-head { display: flex; align-items: center; justify-content: space-between; }\n.me-head__brand { display: flex; align-items: center; gap: 3.5mm; }\n.me-mark { height: 11mm; width: 11mm; display: block; }\n.me-brandname { font-size: 12pt; font-weight: 700; letter-spacing: -0.01em; }\n.me-head__doc { text-align: right; }\n.me-eyebrow { display: block; font-size: 8pt; letter-spacing: 0.32em; text-transform: uppercase; color: #5b53ff; font-weight: 700; }\n.me-docno { display: block; font-size: 15pt; font-weight: 700; letter-spacing: -0.01em; margin-top: 1mm; }\n\n.me-rule { height: 2px; background: #5b53ff; margin: 7mm 0 8mm; width: 28mm; border-radius: 2px; }\n\n.me-meta { display: flex; gap: 7mm; margin-bottom: 11mm; }\n.me-meta__col { flex: 1 1 0; min-width: 0; }\n.me-meta__col--to { flex: 1.5 1 0; }\n.me-meta__col--amount { flex: 0 0 42mm; }\n.me-meta__col > div { line-height: 1.5; }\n.me-meta__label { display: block; font-size: 7pt; letter-spacing: 0.18em; text-transform: uppercase; color: #9499a3; font-weight: 600; margin-bottom: 1.6mm; }\n.me-meta__label--mt { margin-top: 4.5mm; }\n.me-meta__strong { font-weight: 700; }\n.me-amount { font-size: 19pt; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; margin-bottom: 2.5mm; }\n.me-chip { display: inline-block; font-size: 7.5pt; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #b45309; background: #fef3c7; border-radius: 999px; padding: 1mm 3mm; }\n\n.me-items { width: 100%; border-collapse: collapse; margin-bottom: 9mm; }\n.me-items thead th { font-size: 7pt; letter-spacing: 0.16em; text-transform: uppercase; color: #9499a3; font-weight: 600; text-align: left; padding: 0 0 2.5mm; border-bottom: 1px solid #1a1a22; }\n.me-items tbody td { padding: 3.4mm 0; border-bottom: 1px solid #ededf0; vertical-align: top; }\n.me-c-pos { width: 12mm; color: #b6bac2; font-variant-numeric: tabular-nums; }\n.me-c-qty { width: 24mm; text-align: right; }\n.me-c-price { width: 30mm; text-align: right; color: #4b5563; }\n.me-c-total { width: 32mm; text-align: right; font-weight: 700; }\n.me-c-desc strong { font-weight: 700; }\n.me-desc { display: block; color: #6b7280; font-size: 9pt; margin-top: 0.6mm; }\n.me-sku { display: block; color: #b6bac2; font-size: 8pt; letter-spacing: 0.04em; margin-top: 0.6mm; }\nthead th.me-c-qty, thead th.me-c-price, thead th.me-c-total { text-align: right; }\n\n.me-foot { display: flex; justify-content: space-between; gap: 14mm; align-items: flex-start; }\n.me-pay { flex: 1 1 0; }\n.me-pay__grid { display: grid; grid-template-columns: 26mm 1fr; gap: 1mm 4mm; margin: 2mm 0 0; font-size: 9.5pt; }\n.me-pay__grid dt { color: #9499a3; }\n.me-pay__grid dd { margin: 0; font-variant-numeric: tabular-nums; }\n.me-totals { flex: 0 0 72mm; }\n.me-trow { display: flex; justify-content: space-between; padding: 2mm 0; font-size: 10pt; }\n.me-trow span:first-child { color: #4b5563; }\n.me-trow--grand { margin-top: 1.5mm; padding-top: 3.5mm; border-top: 2px solid #1a1a22; font-size: 13pt; font-weight: 700; }\n.me-trow--grand span:first-child { color: #0b0b0f; }\n.me-trow--grand .num { color: #5b53ff; }\n\n.me-note { margin-top: 11mm; padding-top: 5mm; border-top: 1px solid #ededf0; color: #6b7280; font-size: 9pt; max-width: 120mm; }",
+  "example_data": {
+    "id": "11501",
+    "totals": {
+      "net": {
+        "amount": "23000.00",
+        "currency": "EUR"
+      },
+      "gross": {
+        "amount": "27370.00",
+        "currency": "EUR"
+      }
+    },
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "email": "billing@beispiel-handel.de",
+      "phone": "+49 30 1234567-0",
+      "vatId": "DE123456789",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "website": "www.beispiel-handel.de"
+    },
+    "dueDate": "2026-07-02",
+    "payment": {
+      "bic": "COBADEFFXXX",
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "bankName": "Commerzbank Berlin"
+    },
+    "language": "de",
+    "lineItems": [
+      {
+        "name": "Plattform-Lizenz Enterprise",
+        "type": "service",
+        "unit": "Jahr",
+        "price": {
+          "net": {
+            "amount": "12000.00",
+            "currency": "EUR"
+          }
+        },
+        "number": "PLT-ENT-Y",
+        "quantity": 1,
+        "description": "Jahreslizenz, unbegrenzte Workflows, SLA 99,9 %",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "12000.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      },
+      {
+        "name": "Zusätzliche Nutzer-Lizenzen",
+        "type": "service",
+        "unit": "Stk",
+        "price": {
+          "net": {
+            "amount": "180.00",
+            "currency": "EUR"
+          }
+        },
+        "number": "SEAT-ADD",
+        "quantity": 25,
+        "description": "Named Seats, monatlich kündbar",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "4500.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      },
+      {
+        "name": "Onboarding & Datenmigration",
+        "type": "service",
+        "unit": "Pauschal",
+        "price": {
+          "net": {
+            "amount": "3500.00",
+            "currency": "EUR"
+          }
+        },
+        "number": "ONB-MIG",
+        "quantity": 1,
+        "description": "Setup, Import Altdaten, 2 Schulungstage",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "3500.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      },
+      {
+        "name": "Premium Support",
+        "type": "service",
+        "unit": "Monat",
+        "price": {
+          "net": {
+            "amount": "250.00",
+            "currency": "EUR"
+          }
+        },
+        "number": "SUP-PREM",
+        "quantity": 12,
+        "description": "Dedizierter Customer Success Manager",
+        "lineItemRevenue": {
+          "net": {
+            "amount": "3000.00",
+            "currency": "EUR"
+          }
+        },
+        "effectiveTaxRate": 19
+      }
+    ],
+    "documentDate": "2026-06-18",
+    "customerNumber": "K-10043",
+    "documentNumber": "RE-2026-04417",
+    "documentAddress": {
+      "city": "Hamburg",
+      "name": "Northwind Logistics GmbH",
+      "vatId": "DE298765432",
+      "coName": "Frau Dr. Petra Vogel",
+      "street": "Hafenstraße 18",
+      "country": "Deutschland",
+      "zipCode": "20457"
+    },
+    "bodyOutroduction": "Zahlbar innerhalb von 14 Tagen ohne Abzug. Bei Fragen zur Rechnung wenden Sie sich bitte an billing@beispiel-handel.de und nennen Sie die Rechnungsnummer.",
+    "customerOrderNumber": "PO-2026-ACME-118"
+  },
+  "assets": {
+    "logo": "data:image/png;base64,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"
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Rechnung",
+      "bill_to": "Rechnung an",
+      "date_label": "Rechnungsdatum",
+      "cust_no": "Kundennummer",
+      "due": "Fällig bis",
+      "ref": "Ihre Referenz",
+      "amount_label": "Rechnungsbetrag",
+      "status_open": "offen",
+      "col_pos": "Pos",
+      "col_desc": "Beschreibung",
+      "col_qty": "Menge",
+      "col_unit": "Einzelpreis",
+      "col_amount": "Betrag",
+      "pay_details": "Zahlungsdetails",
+      "reference": "Verwendung",
+      "subtotal": "Zwischensumme",
+      "vat_pre": "zzgl.",
+      "vat_label": "USt",
+      "grand": "Gesamtbetrag"
+    },
+    "en": {
+      "doc_title": "Invoice",
+      "bill_to": "Bill to",
+      "date_label": "Invoice date",
+      "cust_no": "Customer no.",
+      "due": "Due by",
+      "ref": "Your reference",
+      "amount_label": "Amount due",
+      "status_open": "open",
+      "col_pos": "No.",
+      "col_desc": "Description",
+      "col_qty": "Qty",
+      "col_unit": "Unit price",
+      "col_amount": "Amount",
+      "pay_details": "Payment details",
+      "reference": "Reference",
+      "subtotal": "Subtotal",
+      "vat_pre": "plus",
+      "vat_label": "VAT",
+      "grand": "Total"
+    }
+  }
+}

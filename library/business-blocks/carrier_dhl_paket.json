@@ -1,0 +1,601 @@
+{
+  "id": "carrier_dhl_paket",
+  "version": 1,
+  "type": "connector",
+  "category": "logistics",
+  "process_group": "Versand",
+  "icon": "truck",
+  "order": 21,
+  "popular": true,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral",
+    "DHL"
+  ],
+  "handbook_url": "https://help.xentral.com/hc/de/articles/22351516713244",
+  "depends_on": [
+    {
+      "card": "company_basics",
+      "required": true,
+      "reason": "Sender address and name pulled from company master data"
+    },
+    {
+      "card": "printer_setup",
+      "required": false,
+      "reason": "Label printer assignment — card can be saved without it but label printing will be blocked"
+    }
+  ],
+  "locales": {
+    "en": {
+      "name": "DHL Paket National",
+      "description": "Connect Xentral to DHL for domestic parcel shipping. One instance covers\none DHL product — run this card once for Paket National. Use a separate\ncard for Warenpost, Sperrgut or Express.\n",
+      "tags": [
+        "Carrier",
+        "Connector",
+        "Shipping",
+        "Logistics"
+      ],
+      "documentation": {
+        "overview": "Sets up DHL Paket National as a Versandart in Xentral so the pack station\ncan generate DHL labels directly from delivery notes.\n\nEach DHL product booked in the DHL Geschäftskundenportal requires its own\ncard instance with a separate Abrechnungsnummer. Paket National, Warenpost\nand Sperrgut are each a separate card.\n\nSender address and label printer are pre-filled from upstream cards\n(company_basics and printer_setup). These fields are shown greyed out and\ncan be overridden if the DHL account is registered to a different address\nor if a warehouse-specific printer is needed.\n\nAPI credentials (Benutzername + Passwort) are submitted via the Connect\nauthenticate action — they are never stored in this card. The Authenticate\nbutton pushes credentials to Connect → Versandanbieter and returns a\nconnection status. Save the card only after authentication confirms success.\n\nReturn labels (DHL Retoure) require a separate Versandart in Xentral and\na separate card instance. A signpost to that next step is included at the\nbottom of this card.\n",
+        "capabilities": [
+          "DHL Paket National label generation from Versandzentrum",
+          "Sender address pre-filled from company_basics (overridable)",
+          "Standard package dimensions as defaults for label generation",
+          "Label printer pre-filled from printer_setup (overridable)",
+          "Connect-based credential authentication — no credential storage in card",
+          "Return label signpost to DHL Retoure card"
+        ],
+        "inputs": [
+          "DHL Geschäftskundenportal credentials (Benutzername + Passwort)",
+          "14-digit Abrechnungsnummer for Paket National",
+          "Sender address (pre-filled from company_basics, overridable)",
+          "Label printer (pre-filled from printer_setup, overridable)"
+        ],
+        "outputs": [
+          "DHL Versandart active in Xentral → Einstellungen → Versandarten",
+          "Label printer assigned for Paket National labels",
+          "Standard package dimensions registered for the DHL API call",
+          "Connect authentication entry for DHL Geschäftskundenportal"
+        ],
+        "notes": "The DHL handbook requires the sender address to match the Geschäftskundenportal\naccount registration exactly — character for character including the e-mail.\nIf company_basics pre-fill differs from the DHL account registration, override\nthe sender fields here.\n\nPackage dimensions default to 15 × 20 × 30 cm (typical D2C D2C). Operator\nshould verify against their most common shipment — DHL flags dimension\nmismatches at label generation.\n\nPrinter Setup (printer_setup) is currently a stub and out of MVP scope.\nThe drucker_versandlabel field must be filled manually until that card is\nimplemented.\n"
+      },
+      "sections": [
+        {
+          "id": "authentication",
+          "title": "DHL authentication",
+          "hint": "Credentials and account number. Credentials go to Connect — not stored in this card.",
+          "human": [
+            {
+              "text": "Benutzername (DHL Geschäftskundenportal login)",
+              "why": "Operator-specific account credential — must be provided directly by operator"
+            },
+            {
+              "text": "Passwort (DHL Geschäftskundenportal)",
+              "why": "Submitted via Connect authenticate action — never stored in this card"
+            },
+            {
+              "text": "Abrechnungsnummer (14-digit, Paket National)",
+              "why": "Product-specific billing number from DHL Geschäftskundenportal: Profil → Vertragsdaten → Vertragsdatenübersicht. One number per booked DHL product — never derivable; must be provided by operator.\n"
+            },
+            {
+              "text": "Click Authenticate after entering credentials above",
+              "why": "Pushes Benutzername + Passwort to Connect → Versandanbieter. Card should not be saved until authentication returns success."
+            }
+          ],
+          "fields": [
+            {
+              "id": "benutzername",
+              "type": "text",
+              "label": "Benutzername",
+              "placeholder": "Your DHL Geschäftskunden login",
+              "default": "",
+              "human": true,
+              "human_why": "DHL Geschäftskundenportal login — must be provided directly by operator."
+            },
+            {
+              "id": "passwort",
+              "type": "secret",
+              "label": "Passwort",
+              "placeholder": "••••••••",
+              "default": "",
+              "human": true,
+              "human_why": "DHL account password — submitted via Connect authenticate action and passed directly to Connect → Versandanbieter. Never stored in this card or visible in the onboarding plan.\n"
+            },
+            {
+              "id": "abrechnungsnummer",
+              "type": "text",
+              "label": "Abrechnungsnummer (Paket National)",
+              "placeholder": "12345678901234 — 14 digits",
+              "default": "",
+              "human": true,
+              "human_why": "14-digit billing number for DHL Paket National. Found in DHL Geschäftskundenportal: Profil → Vertragsdaten → Vertragsdatenübersicht. Each booked DHL product has its own number.\n"
+            },
+            {
+              "id": "connect_authenticate",
+              "type": "action",
+              "label": "Connect with DHL",
+              "action": "connect_authenticate",
+              "provider": "dhl",
+              "triggers": [
+                "benutzername",
+                "passwort",
+                "abrechnungsnummer"
+              ],
+              "human": true,
+              "human_why": "Operator clicks Authenticate after entering credentials. Submits Benutzername + Passwort to Connect → Versandanbieter. Do not save the card until authentication returns a success status.\n"
+            }
+          ]
+        },
+        {
+          "id": "product",
+          "title": "DHL product",
+          "hint": "This card is locked to DHL Paket National. Create a separate card for Warenpost, Sperrgut or Express.",
+          "human": [],
+          "fields": [
+            {
+              "id": "standard_produkt",
+              "type": "radio",
+              "label": "DHL product",
+              "options": [
+                {
+                  "value": "Paket National",
+                  "label": "Paket National"
+                }
+              ],
+              "default": "Paket National",
+              "locked": true,
+              "human": false,
+              "human_why": "Fixed for this card. Each DHL product requires its own instance with a separate Abrechnungsnummer."
+            }
+          ]
+        },
+        {
+          "id": "sender_address",
+          "title": "Sender address",
+          "hint": "Pre-filled from Company Basics. Override only if the DHL account is registered to a different address.",
+          "human": [
+            {
+              "text": "Override sender address if it differs from company_basics",
+              "why": "Must match the DHL Geschäftskundenportal account registration exactly. company_basics values are pre-filled as defaults — operator confirms or overrides per field.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "absender_name",
+              "type": "text",
+              "label": "Sender name",
+              "default": "",
+              "human": false,
+              "human_why": "Pre-filled from company_basics.legal_name. Override if the DHL account is registered under a different name.\n",
+              "source": "company_basics.legal_name",
+              "overwritable": true
+            },
+            {
+              "id": "absender_strasse",
+              "type": "text",
+              "label": "Street and number",
+              "default": "",
+              "human": false,
+              "human_why": "Pre-filled from company_basics.street. Override if sender address differs.",
+              "source": "company_basics.street",
+              "overwritable": true
+            },
+            {
+              "id": "absender_plz_ort",
+              "type": "text",
+              "label": "ZIP / city",
+              "default": "",
+              "human": false,
+              "human_why": "Pre-filled from company_basics (zip + city). Override if sender address differs.",
+              "source": "company_basics.zip",
+              "overwritable": true
+            },
+            {
+              "id": "absender_email",
+              "type": "email",
+              "label": "Sender e-mail",
+              "default": "",
+              "human": false,
+              "human_why": "Pre-filled from company_basics.contact_email. Must match the e-mail in the DHL Geschäftskundenportal exactly — character for character. Override if registered under a different e-mail.\n",
+              "source": "company_basics.contact_email",
+              "overwritable": true
+            },
+            {
+              "id": "absender_land",
+              "type": "text",
+              "label": "Country (ISO-2)",
+              "placeholder": "DE",
+              "default": "DE",
+              "human": false,
+              "human_why": "Pre-filled from company_basics.country. Defaults to DE.",
+              "source": "company_basics.country",
+              "overwritable": true
+            }
+          ]
+        },
+        {
+          "id": "package_defaults",
+          "title": "Default package dimensions",
+          "hint": "Used for DHL label generation. Pre-set to typical D2C defaults — adjust to your most common shipment size.",
+          "human": [],
+          "fields": [
+            {
+              "id": "standard_hoehe_cm",
+              "type": "number",
+              "label": "Standard height (cm)",
+              "default": 15,
+              "human": false,
+              "human_why": "Pre-set to 15 cm (typical D2C shipment). Operator should override if their standard package height differs. DHL Paket National max: 60 cm.\n",
+              "overwritable": true
+            },
+            {
+              "id": "standard_breite_cm",
+              "type": "number",
+              "label": "Standard width (cm)",
+              "default": 20,
+              "human": false,
+              "human_why": "Pre-set to 20 cm. Override if standard package width differs.",
+              "overwritable": true
+            },
+            {
+              "id": "standard_laenge_cm",
+              "type": "number",
+              "label": "Standard length (cm)",
+              "default": 30,
+              "human": false,
+              "human_why": "Pre-set to 30 cm. Override if standard package length differs.",
+              "overwritable": true
+            }
+          ]
+        },
+        {
+          "id": "label_printing",
+          "title": "Label printing",
+          "hint": "Printer pre-filled from Printer Setup card. That card is a stub in MVP — fill manually for now.",
+          "human": [
+            {
+              "text": "Label printer name",
+              "why": "Printer Setup (printer_setup) is out of MVP scope. Operator must enter the printer name manually. Pre-fill will work automatically once the printer_setup card is implemented.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "drucker_versandlabel",
+              "type": "text",
+              "label": "Label printer",
+              "placeholder": "e.g. Zebra ZD421 — Pack Station 1",
+              "default": "",
+              "human": false,
+              "human_why": "Pre-filled from printer_setup.printer_name once that card is configured. Currently a stub (MVP out of scope) — operator must enter the printer name manually.\n",
+              "source": "printer_setup.printer_name",
+              "overwritable": true
+            },
+            {
+              "id": "versand_email",
+              "type": "radio",
+              "label": "Shipping notification email",
+              "options": [
+                {
+                  "value": "Standard",
+                  "label": "Standard — inherit project settings"
+                },
+                {
+                  "value": "Keine",
+                  "label": "None"
+                },
+                {
+                  "value": "Eigene Textvorlage",
+                  "label": "Custom template"
+                }
+              ],
+              "default": "Standard",
+              "human": false,
+              "human_why": "Defaults to Standard (inherits project logistics settings). Only surface this field if the operator explicitly asks about shipping notification behaviour.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "returns",
+          "title": "Return labels",
+          "hint": "DHL Retoure requires a separate card — see note below.",
+          "human": [],
+          "fields": [
+            {
+              "id": "retouren_hinweis",
+              "type": "info",
+              "label": "DHL Retoure",
+              "text": "Return labels for DHL require a separate Versandart in Xentral. Once this card is active, create a new card instance for DHL Retoure — it needs its own Abrechnungsnummer for the DHL Retoure product (booked separately in the DHL Geschäftskundenportal).\n"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "name": "DHL Paket National",
+      "description": "Xentral mit DHL für den nationalen Paketversand verbinden. Eine Instanz deckt\nein DHL-Produkt ab — diese Karte einmal für Paket National ausführen. Für\nWarenpost, Sperrgut oder Express eine separate Karte verwenden.\n",
+      "tags": [
+        "Spediteur",
+        "Anbindung",
+        "Versand",
+        "Logistik"
+      ],
+      "documentation": {
+        "overview": "Richtet DHL Paket National als Versandart in Xentral ein, sodass die Packstation\nDHL-Labels direkt aus Lieferscheinen generieren kann.\n\nJedes im DHL Geschäftskundenportal gebuchte DHL-Produkt benötigt eine eigene\nKarteninstanz mit einer separaten Abrechnungsnummer. Paket National, Warenpost\nund Sperrgut sind jeweils eine separate Karte.\n\nAbsenderadresse und Etikettendrucker werden aus vorgelagerten Karten vorausgefüllt\n(company_basics und printer_setup). Diese Felder werden ausgegraut angezeigt und\nkönnen überschrieben werden, wenn das DHL-Konto auf eine andere Adresse registriert\nist oder ein lagerspezifischer Drucker benötigt wird.\n\nAPI-Zugangsdaten (Benutzername + Passwort) werden über die Connect-Authenticate-Aktion\nübermittelt — sie werden nie in dieser Karte gespeichert. Der Authenticate-Button\nüberträgt die Zugangsdaten an Connect → Versandanbieter und gibt einen\nVerbindungsstatus zurück. Die Karte erst speichern, nachdem die Authentifizierung\nerfolgreich bestätigt wurde.\n\nRetouren-Labels (DHL Retoure) erfordern eine separate Versandart in Xentral und\neine separate Karteninstanz. Ein Hinweis auf den nächsten Schritt befindet sich\nam Ende dieser Karte.\n",
+        "capabilities": [
+          "DHL Paket National Etikettengenerierung aus dem Versandzentrum",
+          "Absenderadresse aus company_basics vorausgefüllt (überschreibbar)",
+          "Standard-Paketmaße als Vorgaben für die Etikettengenerierung",
+          "Etikettendrucker aus printer_setup vorausgefüllt (überschreibbar)",
+          "Connect-basierte Zugangsdaten-Authentifizierung — keine Zugangsdatenspeicherung in der Karte",
+          "Hinweis auf Retouren-Label zur DHL Retoure-Karte"
+        ],
+        "inputs": [
+          "DHL Geschäftskundenportal-Zugangsdaten (Benutzername + Passwort)",
+          "14-stellige Abrechnungsnummer für Paket National",
+          "Absenderadresse (aus company_basics vorausgefüllt, überschreibbar)",
+          "Etikettendrucker (aus printer_setup vorausgefüllt, überschreibbar)"
+        ],
+        "outputs": [
+          "DHL Versandart aktiv in Xentral → Einstellungen → Versandarten",
+          "Etikettendrucker für Paket National-Labels zugewiesen",
+          "Standard-Paketmaße für den DHL API-Aufruf registriert",
+          "Connect-Authentifizierungseintrag für DHL Geschäftskundenportal"
+        ],
+        "notes": "Das DHL-Handbuch erfordert, dass die Absenderadresse exakt mit der Registrierung im\nGeschäftskundenportal übereinstimmt — Zeichen für Zeichen, einschließlich der E-Mail.\nWenn die Vorausfüllung aus company_basics von der DHL-Kontoregistrierung abweicht,\ndie Absenderfelder hier überschreiben.\n\nPaketmaße sind standardmäßig 15 × 20 × 30 cm (typischer D2C-Versand). Der Betreiber\nsollte dies anhand seiner häufigsten Sendung überprüfen — DHL meldet Maßabweichungen\nbei der Etikettengenerierung.\n\nDrucker-Setup (printer_setup) ist derzeit ein Stub und außerhalb des MVP-Umfangs.\nDas Feld drucker_versandlabel muss manuell ausgefüllt werden, bis diese Karte\nimplementiert ist.\n"
+      },
+      "sections": [
+        {
+          "id": "authentication",
+          "title": "DHL-Authentifizierung",
+          "hint": "Zugangsdaten und Kontonummer. Zugangsdaten gehen an Connect — werden nicht in dieser Karte gespeichert.",
+          "human": [
+            {
+              "text": "Benutzername (DHL Geschäftskundenportal-Login)",
+              "why": "Kontospezifische Zugangsdaten — müssen direkt vom Betreiber angegeben werden"
+            },
+            {
+              "text": "Passwort (DHL Geschäftskundenportal)",
+              "why": "Wird über die Connect-Authenticate-Aktion übermittelt — wird nie in dieser Karte gespeichert"
+            },
+            {
+              "text": "Abrechnungsnummer (14-stellig, Paket National)",
+              "why": "Produktspezifische Abrechnungsnummer aus dem DHL Geschäftskundenportal: Profil → Vertragsdaten → Vertragsdatenübersicht. Eine Nummer pro gebuchtem DHL-Produkt — nie ableitbar; muss vom Betreiber angegeben werden.\n"
+            },
+            {
+              "text": "Nach Eingabe der Zugangsdaten auf Authentifizieren klicken",
+              "why": "Überträgt Benutzername + Passwort an Connect → Versandanbieter. Karte nicht speichern, bis die Authentifizierung einen Erfolgsstatus zurückgibt."
+            }
+          ],
+          "fields": [
+            {
+              "id": "benutzername",
+              "type": "text",
+              "label": "Benutzername",
+              "placeholder": "Ihr DHL Geschäftskunden-Login",
+              "default": "",
+              "human": true,
+              "human_why": "DHL Geschäftskundenportal-Login — muss direkt vom Betreiber angegeben werden."
+            },
+            {
+              "id": "passwort",
+              "type": "secret",
+              "label": "Passwort",
+              "placeholder": "••••••••",
+              "default": "",
+              "human": true,
+              "human_why": "DHL-Kontopasswort — wird über die Connect-Authenticate-Aktion übermittelt und direkt an Connect → Versandanbieter weitergeleitet. Wird nie in dieser Karte gespeichert oder im Onboarding-Plan angezeigt.\n"
+            },
+            {
+              "id": "abrechnungsnummer",
+              "type": "text",
+              "label": "Abrechnungsnummer (Paket National)",
+              "placeholder": "12345678901234 — 14 Stellen",
+              "default": "",
+              "human": true,
+              "human_why": "14-stellige Abrechnungsnummer für DHL Paket National. Im DHL Geschäftskundenportal zu finden: Profil → Vertragsdaten → Vertragsdatenübersicht. Jedes gebuchte DHL-Produkt hat eine eigene Nummer.\n"
+            },
+            {
+              "id": "connect_authenticate",
+              "type": "action",
+              "label": "Mit DHL verbinden",
+              "action": "connect_authenticate",
+              "provider": "dhl",
+              "triggers": [
+                "benutzername",
+                "passwort",
+                "abrechnungsnummer"
+              ],
+              "human": true,
+              "human_why": "Betreiber klickt auf Authentifizieren nach Eingabe der Zugangsdaten. Überträgt Benutzername + Passwort an Connect → Versandanbieter. Karte nicht speichern, bis die Authentifizierung einen Erfolgsstatus zurückgibt.\n"
+            }
+          ]
+        },
+        {
+          "id": "product",
+          "title": "DHL-Produkt",
+          "hint": "Diese Karte ist auf DHL Paket National festgelegt. Für Warenpost, Sperrgut oder Express eine separate Karte erstellen.",
+          "human": [],
+          "fields": [
+            {
+              "id": "standard_produkt",
+              "type": "radio",
+              "label": "DHL-Produkt",
+              "options": [
+                {
+                  "value": "Paket National",
+                  "label": "Paket National"
+                }
+              ],
+              "default": "Paket National",
+              "locked": true,
+              "human": false,
+              "human_why": "Für diese Karte festgelegt. Jedes DHL-Produkt benötigt eine eigene Instanz mit einer separaten Abrechnungsnummer."
+            }
+          ]
+        },
+        {
+          "id": "sender_address",
+          "title": "Absenderadresse",
+          "hint": "Aus Grunddaten des Unternehmens vorausgefüllt. Nur überschreiben, wenn das DHL-Konto auf eine andere Adresse registriert ist.",
+          "human": [
+            {
+              "text": "Absenderadresse überschreiben, wenn sie von company_basics abweicht",
+              "why": "Muss exakt mit der Registrierung im DHL Geschäftskundenportal übereinstimmen. Werte aus company_basics werden als Standardwerte vorausgefüllt — Betreiber bestätigt oder überschreibt pro Feld.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "absender_name",
+              "type": "text",
+              "label": "Absendername",
+              "default": "",
+              "human": false,
+              "human_why": "Aus company_basics.legal_name vorausgefüllt. Überschreiben, wenn das DHL-Konto auf einen anderen Namen registriert ist.\n",
+              "source": "company_basics.legal_name",
+              "overwritable": true
+            },
+            {
+              "id": "absender_strasse",
+              "type": "text",
+              "label": "Straße und Hausnummer",
+              "default": "",
+              "human": false,
+              "human_why": "Aus company_basics.street vorausgefüllt. Überschreiben, wenn die Absenderadresse abweicht.",
+              "source": "company_basics.street",
+              "overwritable": true
+            },
+            {
+              "id": "absender_plz_ort",
+              "type": "text",
+              "label": "PLZ / Ort",
+              "default": "",
+              "human": false,
+              "human_why": "Aus company_basics (PLZ + Ort) vorausgefüllt. Überschreiben, wenn die Absenderadresse abweicht.",
+              "source": "company_basics.zip",
+              "overwritable": true
+            },
+            {
+              "id": "absender_email",
+              "type": "email",
+              "label": "Absender-E-Mail",
+              "default": "",
+              "human": false,
+              "human_why": "Aus company_basics.contact_email vorausgefüllt. Muss exakt mit der E-Mail im DHL Geschäftskundenportal übereinstimmen — Zeichen für Zeichen. Überschreiben, wenn unter einer anderen E-Mail registriert.\n",
+              "source": "company_basics.contact_email",
+              "overwritable": true
+            },
+            {
+              "id": "absender_land",
+              "type": "text",
+              "label": "Land (ISO-2)",
+              "placeholder": "DE",
+              "default": "DE",
+              "human": false,
+              "human_why": "Aus company_basics.country vorausgefüllt. Standard ist DE.",
+              "source": "company_basics.country",
+              "overwritable": true
+            }
+          ]
+        },
+        {
+          "id": "package_defaults",
+          "title": "Standard-Paketmaße",
+          "hint": "Werden für die DHL-Etikettengenerierung verwendet. Auf typische D2C-Standardwerte voreingestellt — an die häufigste Versandgröße anpassen.",
+          "human": [],
+          "fields": [
+            {
+              "id": "standard_hoehe_cm",
+              "type": "number",
+              "label": "Standardhöhe (cm)",
+              "default": 15,
+              "human": false,
+              "human_why": "Auf 15 cm voreingestellt (typischer D2C-Versand). Betreiber sollte überschreiben, wenn die Standardpakethöhe abweicht. DHL Paket National max: 60 cm.\n",
+              "overwritable": true
+            },
+            {
+              "id": "standard_breite_cm",
+              "type": "number",
+              "label": "Standardbreite (cm)",
+              "default": 20,
+              "human": false,
+              "human_why": "Auf 20 cm voreingestellt. Überschreiben, wenn die Standardpaketbreite abweicht.",
+              "overwritable": true
+            },
+            {
+              "id": "standard_laenge_cm",
+              "type": "number",
+              "label": "Standardlänge (cm)",
+              "default": 30,
+              "human": false,
+              "human_why": "Auf 30 cm voreingestellt. Überschreiben, wenn die Standardpaketlänge abweicht.",
+              "overwritable": true
+            }
+          ]
+        },
+        {
+          "id": "label_printing",
+          "title": "Etikettendruck",
+          "hint": "Drucker aus der Drucker-Setup-Karte vorausgefüllt. Diese Karte ist im MVP ein Stub — vorerst manuell ausfüllen.",
+          "human": [
+            {
+              "text": "Name des Etikettendruckers",
+              "why": "Drucker-Setup (printer_setup) ist außerhalb des MVP-Umfangs. Betreiber muss den Druckernamen manuell eingeben. Vorausfüllung funktioniert automatisch, sobald die printer_setup-Karte implementiert ist.\n"
+            }
+          ],
+          "fields": [
+            {
+              "id": "drucker_versandlabel",
+              "type": "text",
+              "label": "Etikettendrucker",
+              "placeholder": "z.B. Zebra ZD421 — Packstation 1",
+              "default": "",
+              "human": false,
+              "human_why": "Aus printer_setup.printer_name vorausgefüllt, sobald diese Karte konfiguriert ist. Derzeit ein Stub (MVP außerhalb des Umfangs) — Betreiber muss den Druckernamen manuell eingeben.\n",
+              "source": "printer_setup.printer_name",
+              "overwritable": true
+            },
+            {
+              "id": "versand_email",
+              "type": "radio",
+              "label": "Versandbenachrichtigungs-E-Mail",
+              "options": [
+                {
+                  "value": "Standard",
+                  "label": "Standard — Projekteinstellungen übernehmen"
+                },
+                {
+                  "value": "Keine",
+                  "label": "Keine"
+                },
+                {
+                  "value": "Eigene Textvorlage",
+                  "label": "Eigene Vorlage"
+                }
+              ],
+              "default": "Standard",
+              "human": false,
+              "human_why": "Standard übernimmt die Projektlogistikeinstellungen. Dieses Feld nur anzeigen, wenn der Betreiber explizit nach dem Versandbenachrichtigungsverhalten fragt.\n",
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "id": "returns",
+          "title": "Retouren-Labels",
+          "hint": "DHL Retoure erfordert eine separate Karte — siehe Hinweis unten.",
+          "human": [],
+          "fields": [
+            {
+              "id": "retouren_hinweis",
+              "type": "info",
+              "label": "DHL Retoure",
+              "text": "Retouren-Labels für DHL erfordern eine separate Versandart in Xentral. Sobald diese Karte aktiv ist, eine neue Karteninstanz für DHL Retoure erstellen — sie benötigt eine eigene Abrechnungsnummer für das DHL Retoure-Produkt (separat im DHL Geschäftskundenportal gebucht).\n"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": true
+}

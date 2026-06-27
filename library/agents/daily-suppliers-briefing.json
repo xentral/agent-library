@@ -1,0 +1,79 @@
+{
+  "order": 62,
+  "id": "daily-suppliers-briefing",
+  "icon": "archive",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "master_data_suppliers"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Lieferanten-Briefing",
+      "category": "Stammdaten",
+      "description": "Lieferanten-Tagesbriefing — Dubletten, fehlende Pflichtfelder, abgelaufene Konditionen, Performance — täglich um 07:00.",
+      "tags": [
+        "Stammdaten",
+        "Lieferanten",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Lieferanten-Briefing",
+        "description": "3-4 wichtigsten Lieferanten-Stammdaten-Themen für den Tag — Dubletten, Pflichtfelder, Konditionen, Performance.",
+        "area": "Stammdaten",
+        "briefing": {
+          "bucket_title": "Lieferanten",
+          "angles": [
+            "Lieferanten-Dubletten (gleiche USt-ID/IBAN/Adresse mehrfach)",
+            "Fehlende Pflichtfelder (IBAN, USt-ID, Zahlungsbedingungen, Kontaktperson)",
+            "Abgelaufene oder bald auslaufende Konditionen / Rahmenverträge",
+            "Lieferanten ohne hinterlegte Artikel (toter Stamm)",
+            "Single-Source-Risiken (Artikel nur bei einem Lieferanten verfügbar)",
+            "Performance-Auffälligkeiten (Lieferverzug, Reklamationsquote hoch)",
+            "Lieferanten-Agent-Jobs in requires_intervention (Lieferanten-RFQ, Bestellvorschlag hängen)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Supplier Briefing",
+      "category": "Master Data",
+      "description": "Supplier daily briefing — duplicates, missing fields, expired terms, performance — every day at 07:00.",
+      "tags": [
+        "Master Data",
+        "Suppliers",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Supplier Briefing",
+        "description": "Top 3-4 supplier master-data topics for today — duplicates, fields, terms, performance.",
+        "area": "Master Data",
+        "briefing": {
+          "bucket_title": "Suppliers",
+          "angles": [
+            "Supplier duplicates (same VAT ID/IBAN/address more than once)",
+            "Missing required fields (IBAN, VAT ID, payment terms, contact person)",
+            "Expired or soon-expiring terms / framework agreements",
+            "Suppliers with no linked products (dead records)",
+            "Single-source risks (products only available from one supplier)",
+            "Performance issues (delivery delays, high complaint rate)",
+            "Supplier agent jobs in requires_intervention (Supplier RFQ, Reorder Proposal stuck)"
+          ]
+        }
+      }
+    }
+  }
+}

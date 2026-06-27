@@ -1,0 +1,15 @@
+{
+  "id": "conrad",
+  "version": 1,
+  "name": "Conrad",
+  "domain": "conrad.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Conrad-Marketplace — Aufträge importieren, Bestand pflegen."
+    },
+    "de": {
+      "description": "Conrad-Marketplace — Aufträge importieren, Bestand pflegen."
+    }
+  }
+}

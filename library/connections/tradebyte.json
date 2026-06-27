@@ -1,0 +1,15 @@
+{
+  "id": "tradebyte",
+  "version": 1,
+  "name": "Tradebyte",
+  "domain": "tradebyte.com",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Marketplace-Integrator (Zalando, Otto u.a.) — Aufträge & Listings."
+    },
+    "de": {
+      "description": "Marketplace-Integrator (Zalando, Otto u.a.) — Aufträge & Listings."
+    }
+  }
+}

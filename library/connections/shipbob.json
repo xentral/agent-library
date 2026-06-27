@@ -1,0 +1,15 @@
+{
+  "id": "shipbob",
+  "version": 1,
+  "name": "ShipBob",
+  "domain": "shipbob.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "Globales 3PL-Netzwerk — Bestand verteilen, Aufträge automatisch versenden."
+    },
+    "de": {
+      "description": "Globales 3PL-Netzwerk — Bestand verteilen, Aufträge automatisch versenden."
+    }
+  }
+}

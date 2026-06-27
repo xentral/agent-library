@@ -1,0 +1,99 @@
+{
+  "id": "agb_template",
+  "version": 1,
+  "engine": "gotenberg_chromium",
+  "locales": {
+    "de": {
+      "title": "AGB (Vorlage)",
+      "description": "Generisches AGB-Gerüst, gegliedert in zehn Standardabschnitte — Geltungsbereich, Vertragsschluss, Preise & Zahlung, Lieferung, Eigentumsvorbehalt, Gewährleistung, Haftung, Streitbeilegung, Gerichtsstand, salvatorische Klausel. Reines Gerüst mit Platzhaltertext — Formulierungen, Gerichtsstand und Branchenspezifika im Editor verfeinern (oder vor Veröffentlichung anwaltlich prüfen lassen).\n"
+    },
+    "en": {
+      "title": "Terms & Conditions (template)",
+      "description": "Generic German T&Cs (AGB) scaffold structured into ten standard sections — scope, conclusion of contract, prices & payment, delivery, retention of title, warranty, liability, dispute resolution, jurisdiction, severability. Pure scaffold with placeholder text — refine wording, jurisdiction and industry specifics in the editor (or have it checked by a lawyer before publishing).\n"
+    }
+  },
+  "filename_pattern": "AGB-{company}.pdf",
+  "compliance": [],
+  "constraints": [
+    "html lang attribute MUST be set on <html>",
+    "exactly one <h1> per document",
+    "heading hierarchy MUST be contiguous (h1 → h2 only)",
+    "company footer MUST include name + address + jurisdiction"
+  ],
+  "schema": {
+    "required": [
+      "company",
+      "effectiveDate"
+    ],
+    "optional": [
+      "language",
+      "sections"
+    ],
+    "company": {
+      "required": [
+        "name"
+      ],
+      "optional": [
+        "address",
+        "vatId",
+        "registrationCourt",
+        "registrationNumber",
+        "ceo"
+      ]
+    }
+  },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "html": "{% extends \"_base/base.html.j2\" %}\n\n{# AGB-Muster — 10 Standard-Sektionen. Sprache: DE/EN. Default DE.\n   Sections-Liste kann via data.sections überschrieben werden (Backend\n   liefert eigene Texte), sonst werden Platzhalter-Texte gerendert. #}\n\n\n{% block title %}{{ L.doc_title }} — {{ data.company.name | default('') }}{% endblock %}\n\n{% set defaultSections = [\n  ('scope',        'Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge, die zwischen ' ~ data.company.name | default('uns') ~ ' und unseren Kunden geschlossen werden. Abweichende Bedingungen des Kunden werden nicht anerkannt, es sei denn, wir stimmen ihrer Geltung ausdrücklich schriftlich zu.'),\n  ('contract',     'Die Darstellung der Waren in unserem Shop / Angebot stellt kein verbindliches Angebot dar. Mit Bestellung gibt der Kunde ein verbindliches Angebot zum Abschluss eines Kaufvertrags ab. Der Vertrag kommt zustande, wenn wir die Bestellung durch eine Auftragsbestätigung in Textform annehmen oder die Ware versenden.'),\n  ('prices',       'Alle Preise verstehen sich in der jeweils gültigen Währung inkl. der gesetzlichen Umsatzsteuer und zuzüglich anfallender Versandkosten. Die Zahlung erfolgt nach Wahl des Kunden per Rechnung, Lastschrift, Kreditkarte oder den im Bestellprozess angebotenen Zahlungsdienstleistern. Bei Zahlung auf Rechnung ist der Rechnungsbetrag ohne Abzug innerhalb von 14 Tagen ab Rechnungsdatum fällig.'),\n  ('delivery',     'Die Lieferung erfolgt an die vom Kunden angegebene Lieferadresse. Lieferfristen sind, sofern nicht ausdrücklich als verbindlich vereinbart, unverbindliche Richtwerte. Der Gefahrübergang erfolgt mit Übergabe der Ware an den Kunden bzw. an die von ihm beauftragte Transportperson.'),\n  ('retention',    'Bis zur vollständigen Zahlung des Kaufpreises bleibt die gelieferte Ware unser Eigentum. Eine Weiterveräußerung, Verpfändung oder Sicherungsübereignung vor vollständiger Bezahlung ist nicht gestattet.'),\n  ('warranty',     'Es gelten die gesetzlichen Gewährleistungsrechte. Bei Verbrauchern beträgt die Verjährungsfrist für Mängelansprüche zwei Jahre ab Lieferung; bei Unternehmern verkürzt sie sich auf zwölf Monate.'),\n  ('liability',    'Wir haften unbeschränkt bei Vorsatz, grober Fahrlässigkeit, bei Verletzung von Leben, Körper oder Gesundheit sowie nach den Vorschriften des Produkthaftungsgesetzes. Im Übrigen ist die Haftung auf den vorhersehbaren, vertragstypischen Schaden begrenzt.'),\n  ('odr',          'Die EU-Kommission stellt unter http://ec.europa.eu/consumers/odr/ eine Plattform zur Online-Streitbeilegung bereit. Wir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.'),\n  ('jurisdiction', 'Gerichtsstand für alle Streitigkeiten aus diesem Vertragsverhältnis ist, soweit der Kunde Kaufmann, juristische Person des öffentlichen Rechts oder öffentlich-rechtliches Sondervermögen ist, unser Geschäftssitz. Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts (CISG).'),\n  ('severability', 'Sollten einzelne Bestimmungen dieser AGB ganz oder teilweise unwirksam sein oder werden, so wird hierdurch die Wirksamkeit der übrigen Bestimmungen nicht berührt. An die Stelle der unwirksamen Bestimmung tritt diejenige wirksame Regelung, die dem wirtschaftlichen Zweck der unwirksamen Bestimmung am nächsten kommt.'),\n] %}\n\n{% block content %}\n\n  {# Pflicht-Disclaimer ganz oben — diese AGB sind ein generisches Muster,\n     keine Anwaltsleistung, keine Rechtsberatung und nicht für den\n     produktiven Einsatz freigegeben. Vor dem Verwenden in eigenen\n     Verträgen / im Webshop von einem auf E-Commerce spezialisierten\n     Juristen prüfen und an Geschäftsmodell + Jurisdiktion anpassen.\n     Der Hinweis kann via `data.hideDisclaimer: true` ausgeblendet werden\n     (z.B. wenn ein Anwalt die Vorlage finalisiert hat und sie dann\n     produktiv ausgespielt wird). */ #}\n  {% if not data.hideDisclaimer %}\n  <section class=\"agb-disclaimer\" role=\"note\" aria-labelledby=\"agb-disclaimer-title\">\n    <div class=\"agb-disclaimer__title\" id=\"agb-disclaimer-title\">\n      {% if _LANG == 'en' %}⚠ Sample only — not for productive use{% else %}⚠ Nur Muster — nicht produktiv verwenden{% endif %}\n    </div>\n    <p class=\"agb-disclaimer__body\">\n      {% if _LANG == 'en' %}\n      This document is a generic terms-and-conditions scaffold provided as\n      a starting point. It does <strong>not constitute legal advice</strong>\n      and is <strong>not a substitute</strong> for review by a qualified\n      lawyer. Wording, jurisdiction and industry-specific clauses must be\n      adapted to your business and the applicable law before publication\n      or contractual use. The author of this template assumes no\n      liability for damages arising from its use without prior legal\n      review.\n      {% else %}\n      Dieses Dokument ist ein generisches AGB-Muster und dient\n      ausschließlich als Ausgangspunkt. Es stellt <strong>keine\n      Rechtsberatung</strong> dar und ist <strong>kein Ersatz</strong>\n      für die Prüfung durch eine zugelassene Anwältin oder einen\n      zugelassenen Anwalt. Wortlaut, Gerichtsstand und branchen­\n      spezifische Klauseln sind vor Veröffentlichung oder vertraglicher\n      Verwendung an Geschäftsmodell und anwendbares Recht anzupassen.\n      Für Schäden aus der Nutzung dieser Vorlage ohne vorherige\n      Rechts­prüfung wird keine Haftung übernommen.\n      {% endif %}\n    </p>\n  </section>\n  {% endif %}\n\n  <section class=\"box-subject agb-subject\" data-box=\"subject\">\n    <h1>{{ L.doc_title }}</h1>\n    <p class=\"agb-effective\">{{ L.effective_date }} {{ data.effectiveDate }}</p>\n    <p class=\"agb-company\">{{ data.company.name }}{% if data.company.address %} · {{ data.company.address }}{% endif %}</p>\n  </section>\n\n  {% for key, fallback_body in defaultSections %}\n  <section class=\"agb-section\" aria-labelledby=\"agb-{{ key }}\">\n    <h2 id=\"agb-{{ key }}\">{{ L.sec[key] }}</h2>\n    <p>{{ ((data.sections or {})[key]) | default(fallback_body) }}</p>\n  </section>\n  {% endfor %}\n\n  {# Footer mit den firmen-rechtlichen Pflichtangaben — Position, Adresse,\n     Handelsregister, USt-ID, Geschäftsführer. Macht das Dokument selbst\n     bei verlorener Briefkopfzeile rechtssicher zuordenbar. #}\n  <section class=\"agb-footer\" aria-labelledby=\"agb-footer-heading\">\n    <h2 id=\"agb-footer-heading\" class=\"agb-footer__title\">{{ data.company.name }}</h2>\n    {% if data.company.address %}<p class=\"agb-footer__line\">{{ data.company.address }}</p>{% endif %}\n    <p class=\"agb-footer__meta\">\n      {% if data.company.ceo %}Geschäftsführer: {{ data.company.ceo }}{% endif %}\n      {% if data.company.registrationCourt and data.company.registrationNumber %}\n        {% if data.company.ceo %} · {% endif %}{{ data.company.registrationCourt }} {{ data.company.registrationNumber }}\n      {% endif %}\n      {% if data.company.vatId %}\n        {% if data.company.ceo or data.company.registrationCourt %} · {% endif %}USt-ID: {{ data.company.vatId }}\n      {% endif %}\n    </p>\n  </section>\n\n{% endblock %}\n",
+  "css": "/* AGB-Muster — Briefkopf-ähnlich, mehrseitig. Paragraphen-Lesefluss\n   priorisiert (Zeilenhöhe + Spalten-Breite). */\n\n/* Pflicht-Disclaimer ganz oben — rot getöntes Warn-Banner,\n   visuell unübersehbar. Mit Border-Left als Akzent + leichter\n   Hintergrundtönung. */\n.agb-disclaimer {\n  margin: 0 0 8mm;\n  padding: 4mm 6mm;\n  border-left: 1.2mm solid #dc2626;\n  background: rgba(239, 68, 68, 0.06);\n  border-radius: 0 1.5mm 1.5mm 0;\n  page-break-inside: avoid;\n  page-break-after: avoid;\n}\n.agb-disclaimer__title {\n  font-size: 10pt;\n  font-weight: 700;\n  color: #991b1b;\n  margin-bottom: 2mm;\n  text-transform: uppercase;\n  letter-spacing: 0.3px;\n}\n.agb-disclaimer__body {\n  font-size: 9.5pt;\n  line-height: 1.5;\n  color: #7f1d1d;\n  margin: 0;\n}\n\n.agb-subject {\n  margin-bottom: 6mm;\n  padding-bottom: 4mm;\n  border-bottom: 0.2mm solid #d1d5db;\n}\n.agb-subject h1 {\n  font-size: 18pt;\n  font-weight: 700;\n  margin: 0;\n  letter-spacing: -0.2pt;\n}\n.agb-effective {\n  font-size: 10pt;\n  color: #6b7280;\n  margin: 1mm 0 0;\n}\n.agb-company {\n  font-size: 10pt;\n  color: #4b5563;\n  margin: 1mm 0 0;\n}\n\n.agb-section {\n  margin: 6mm 0;\n  page-break-inside: avoid;\n}\n.agb-section h2 {\n  font-size: 11pt;\n  font-weight: 700;\n  margin: 0 0 1.5mm;\n  color: #111827;\n}\n.agb-section p {\n  font-size: 10pt;\n  line-height: 1.55;\n  text-align: justify;\n  hyphens: auto;\n  -webkit-hyphens: auto;\n  margin: 0;\n  color: #1f2937;\n}\n\n.agb-footer {\n  margin-top: 10mm;\n  padding-top: 4mm;\n  border-top: 0.2mm solid #d1d5db;\n  font-size: 9pt;\n  color: #6b7280;\n  page-break-inside: avoid;\n}\n.agb-footer__title {\n  font-size: 9pt;\n  font-weight: 700;\n  letter-spacing: 0.3px;\n  text-transform: uppercase;\n  color: #9ca3af;\n  margin: 0 0 1mm;\n}\n.agb-footer__line { margin: 0.5mm 0; }\n.agb-footer__meta { margin: 1.5mm 0 0; }\n",
+  "example_data": {
+    "effectiveDate": "2026-06-01",
+    "language": "de",
+    "company": {
+      "name": "Beispiel Handels GmbH",
+      "address": "Marktplatz 1, 10115 Berlin",
+      "vatId": "DE123456789",
+      "registrationCourt": "Amtsgericht Berlin-Charlottenburg HRB",
+      "registrationNumber": "98765 B",
+      "ceo": "Max Beispiel"
+    }
+  },
+  "translations": {
+    "de": {
+      "doc_title": "Allgemeine Geschäftsbedingungen",
+      "effective_date": "Gültig ab",
+      "placeholder": "Hier den Volltext der jeweiligen Klausel einsetzen oder im Editor per Chat anpassen.",
+      "sec": {
+        "scope": "§ 1 Geltungsbereich",
+        "contract": "§ 2 Vertragsschluss",
+        "prices": "§ 3 Preise, Versandkosten und Zahlung",
+        "delivery": "§ 4 Lieferung und Lieferzeit",
+        "retention": "§ 5 Eigentumsvorbehalt",
+        "warranty": "§ 6 Gewährleistung",
+        "liability": "§ 7 Haftung",
+        "odr": "§ 8 Online-Streitbeilegung",
+        "jurisdiction": "§ 9 Gerichtsstand und anwendbares Recht",
+        "severability": "§ 10 Salvatorische Klausel"
+      }
+    },
+    "en": {
+      "doc_title": "Terms & Conditions",
+      "effective_date": "Effective from",
+      "placeholder": "Insert the full text of the clause here or refine via the editor chat.",
+      "sec": {
+        "scope": "§ 1 Scope",
+        "contract": "§ 2 Conclusion of contract",
+        "prices": "§ 3 Prices, shipping and payment",
+        "delivery": "§ 4 Delivery",
+        "retention": "§ 5 Retention of title",
+        "warranty": "§ 6 Warranty",
+        "liability": "§ 7 Liability",
+        "odr": "§ 8 Online dispute resolution",
+        "jurisdiction": "§ 9 Jurisdiction and applicable law",
+        "severability": "§ 10 Severability"
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "sevdesk",
+  "version": 1,
+  "name": "sevdesk",
+  "domain": "sevdesk.de",
+  "category": "accounting",
+  "locales": {
+    "en": {
+      "description": "Cloud-Buchhaltung — Belege und Zahlungen synchronisieren."
+    },
+    "de": {
+      "description": "Cloud-Buchhaltung — Belege und Zahlungen synchronisieren."
+    }
+  }
+}

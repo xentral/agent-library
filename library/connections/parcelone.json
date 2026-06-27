@@ -1,0 +1,15 @@
+{
+  "id": "parcelone",
+  "version": 1,
+  "name": "ParcelOne",
+  "domain": "parcelone.com",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Multi-Carrier-Plattform mit konsolidiertem Tracking."
+    },
+    "de": {
+      "description": "Multi-Carrier-Plattform mit konsolidiertem Tracking."
+    }
+  }
+}

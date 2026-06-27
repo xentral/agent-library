@@ -1,0 +1,15 @@
+{
+  "id": "hornbach",
+  "version": 1,
+  "name": "Hornbach",
+  "domain": "hornbach.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "Hornbach-Marketplace — Aufträge synchronisieren, Bestand pflegen."
+    },
+    "de": {
+      "description": "Hornbach-Marketplace — Aufträge synchronisieren, Bestand pflegen."
+    }
+  }
+}

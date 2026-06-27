@@ -1,0 +1,15 @@
+{
+  "id": "fiege",
+  "version": 1,
+  "name": "Fiege Logistik",
+  "domain": "fiege.com",
+  "category": "fulfillment",
+  "locales": {
+    "en": {
+      "description": "B2C/B2B-Fulfillment für Mittelstand und Konzerne — Lagerführung, Pick & Pack, Returns-Handling."
+    },
+    "de": {
+      "description": "B2C/B2B-Fulfillment für Mittelstand und Konzerne — Lagerführung, Pick & Pack, Returns-Handling."
+    }
+  }
+}

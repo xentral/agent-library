@@ -1,0 +1,15 @@
+{
+  "id": "logoix",
+  "version": 1,
+  "name": "LogoiX",
+  "domain": "logoix.com",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "Internationaler Versand-Aggregator — viele Carrier in einer Anbindung."
+    },
+    "de": {
+      "description": "Internationaler Versand-Aggregator — viele Carrier in einer Anbindung."
+    }
+  }
+}

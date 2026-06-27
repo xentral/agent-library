@@ -1,0 +1,27 @@
+{
+  "id": "shipped_today",
+  "version": 1,
+  "icon": "check",
+  "category": "logistics",
+  "order": 303,
+  "kpi": {
+    "key": "shipped_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "inventory",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Versandbelege mit Belegdatum heute; ein einzelner Datensatz.",
+    "sql_string": "SELECT\n    COUNT(*) AS \"Anzahl Versandbelege heute\"\nFROM\n    shipments s\nWHERE\n    s.sent_at = CURRENT_DATE\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Shipped today",
+      "description": "Parcels handed over to the carrier since midnight."
+    },
+    "de": {
+      "title": "Heute versendet",
+      "description": "Pakete, die seit Mitternacht an den Versanddienstleister übergeben wurden."
+    }
+  }
+}

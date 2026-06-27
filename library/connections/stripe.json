@@ -1,0 +1,26 @@
+{
+  "id": "stripe",
+  "version": 1,
+  "name": "Stripe",
+  "domain": "stripe.com",
+  "category": "payment",
+  "locales": {
+    "en": {
+      "description": "Zahlungseingänge automatisch zuordnen, Auszahlungen abgleichen.",
+      "human_inputs": [
+        "Stripe restricted API key (read_only sufficient for reconciliation)",
+        "Webhook signing secret (for payment_intent.succeeded events)",
+        "Default fee account number (for matching Stripe-fee bookings)"
+      ]
+    },
+    "de": {
+      "description": "Zahlungseingänge automatisch zuordnen, Auszahlungen abgleichen.",
+      "human_inputs": [
+        "Stripe Restricted-API-Key (read_only reicht für Reconciliation)",
+        "Webhook-Signing-Secret für payment_intent.succeeded-Events",
+        "Standard-Gebühren-Konto-Nummer (zur Verbuchung der Stripe-Gebühr)"
+      ]
+    }
+  },
+  "source": "https://marketplace.xentral.com/zahlungsanbieter/stripe"
+}

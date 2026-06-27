@@ -1,0 +1,168 @@
+{
+  "id": "logistics",
+  "version": 2,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 110,
+  "recommended_kpis": [
+    "ready_to_ship_today",
+    "blocked_orders",
+    "shipped_today",
+    "open_parcels",
+    "outbound_lead_time",
+    "outbound_on_time_rate",
+    "returns_today",
+    "returns_to_review",
+    "returns_awaiting_refund",
+    "returns_avg_processing_time",
+    "returns_resale_rate",
+    "return_rate",
+    "inventory_turnover",
+    "dead_stock_value"
+  ],
+  "widgets": [
+    {
+      "id": "greeting",
+      "type": "GreetingCard",
+      "config": {
+        "subtitle": {
+          "de": "25 Lieferaufträge stehen an. **3** sind blockiert.",
+          "en": "25 outbound orders queued. **3** are blocked."
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "title_key": "dashboards.mockup.hero.title",
+        "kpis": [
+          "return_rate",
+          "inventory_turnover",
+          "dead_stock_value"
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "type": "AttentionBlock",
+      "config": {
+        "kind": "logistics"
+      }
+    },
+    {
+      "id": "kpi_grid_shipping",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Versand",
+          "en": "Shipping"
+        },
+        "kpis": [
+          "ready_to_ship_today",
+          "blocked_orders",
+          "shipped_today",
+          "open_parcels",
+          "outbound_lead_time",
+          "outbound_on_time_rate"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid_returns",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Retouren",
+          "en": "Returns"
+        },
+        "kpis": [
+          "returns_today",
+          "returns_to_review",
+          "returns_awaiting_refund",
+          "returns_avg_processing_time",
+          "returns_resale_rate"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Lager",
+          "en": "Warehouse"
+        },
+        "kpis": [
+          "inventory_turnover",
+          "dead_stock_value",
+          "supplier_lead_time"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "orders",
+            "label_key": "workspace.logTabDeliveries",
+            "view": "sales_orders",
+            "default_status_filter": "released"
+          },
+          {
+            "id": "returns",
+            "label_key": "workspace.logTabReturns",
+            "view": "return_orders",
+            "default_status_filter": "released"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "split",
+    "main": [
+      "greeting",
+      "hero",
+      "attention",
+      "kpi_grid_shipping",
+      "kpi_grid_returns",
+      "kpi_grid"
+    ],
+    "side": [
+      "tabs"
+    ]
+  },
+  "linked_kpis": [
+    "return_rate",
+    "ready_to_ship_today",
+    "blocked_orders",
+    "shipped_today",
+    "open_parcels",
+    "outbound_lead_time",
+    "outbound_on_time_rate",
+    "returns_today",
+    "returns_to_review",
+    "returns_awaiting_refund",
+    "returns_avg_processing_time",
+    "returns_resale_rate",
+    "inventory_turnover",
+    "dead_stock_value",
+    "supplier_lead_time"
+  ],
+  "default_briefings": [
+    "daily-logistics-briefing"
+  ],
+  "locales": {
+    "en": {
+      "title": "Logistics",
+      "description": "Inbound and outbound goods, shipments, stock movements."
+    },
+    "de": {
+      "title": "Logistik",
+      "description": "Wareneingänge und -ausgänge, Sendungen, Lagerbewegungen."
+    }
+  }
+}

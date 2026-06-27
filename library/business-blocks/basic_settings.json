@@ -1,0 +1,180 @@
+{
+  "id": "basic_settings",
+  "version": 2,
+  "type": "setup",
+  "category": "onboarding",
+  "process_group": "Foundation",
+  "icon": "building",
+  "order": 10,
+  "popular": true,
+  "required_plan": "free",
+  "integrations": [
+    "Xentral"
+  ],
+  "handbook_url": "https://help.xentral.com/hc/de/articles/360016760679",
+  "locales": {
+    "en": {
+      "name": "Company Data",
+      "description": "Enter the company's legal name, registered address, and tax number in Xentral Grundeinstellungen. Required before any document, shipment, or country-based workflow can run.",
+      "tags": [
+        "Foundation",
+        "Setup"
+      ],
+      "documentation": {
+        "overview": "Covers Einstellungen > Grundeinstellungen > Firmendaten in Xentral (accessible via system search: \"Firmendaten\").\n\nStores the company's legal identity: name, registered address, and tax ID. These values appear on all outgoing documents (invoices, delivery notes, offers) and drive country-specific logic for warehouses, shipping, and tax.\n\nNo blocking dependencies — this card can be the very first step.\nMust be completed before: payment_methods, warehouse_setup, chart_of_accounts, and any document template.\n\nNote: Grundeinstellungen are system-wide. Project- or sales-channel-level settings (e.g. email templates, mail addresses) can override them per Xentral documentation.\n",
+        "capabilities": [
+          "Set the company's legal name (shown on documents and in the Xentral UI for the team)",
+          "Store the registered address (street, postal code, city, ISO country code)",
+          "Enter the VAT ID or tax number (Umsatzsteuer-ID / Steuernummer)",
+          "Add SEPA Gläubiger ID for SEPA direct debit collection",
+          "Add EORI number for businesses importing or exporting goods to/from the EU"
+        ],
+        "inputs": [
+          "Legal company name",
+          "Registered address (street, PLZ, city, ISO country code)",
+          "VAT ID or tax number",
+          "SEPA Gläubiger ID (only if Lastschrifteinzug is used)",
+          "EORI number (only if EU import/export applies)"
+        ],
+        "outputs": [
+          "Firmendaten saved in Xentral Grundeinstellungen",
+          "Company name visible in Xentral UI and on all outgoing documents",
+          "ISO country code set — unlocks Lagerort, shipping, and Länderkonfigurationen"
+        ],
+        "notes": "The ISO country code (Land) is especially critical — it gates Lagerort creation, shipping setup, and country-based tax rules. Enter the two-letter ISO code (DE, AT, CH, etc.).\n\nUSTID and Steuernummer are separate fields in the Xentral UI but only one typically applies. German companies usually use the Umsatzsteuer-ID (format: DE + 9 digits).\n\nSEPA Gläubiger ID is a legal prerequisite for running Lastschrifteinzug — only needed if the business collects payments via SEPA direct debit.\n\nEORI number is required by customs authorities for any EU cross-border import or export.\n"
+      },
+      "sections": [
+        {
+          "id": "firmenanschrift",
+          "title": "Company address (Firmenanschrift)",
+          "hint": "All fields are required by Xentral. Enter the legal registered address of the company's headquarters — not a trade name or operational address.",
+          "human": [
+            {
+              "text": "Legal company name and registered address",
+              "why": "These details appear on every outgoing document and identify the business in the system. Must reflect the legal entity exactly."
+            }
+          ],
+          "fields": [
+            {
+              "id": "firmenname",
+              "type": "text",
+              "label": "Company name (Name)",
+              "placeholder": "e.g. Mustermann GmbH",
+              "human": true,
+              "human_why": "Legal name of the company as registered. Shown in the Xentral UI for the team and printed on all outgoing documents. Must match the legal entity name exactly — not a trade name."
+            },
+            {
+              "id": "strasse",
+              "type": "text",
+              "label": "Street and house number (Straße)",
+              "placeholder": "e.g. Musterstraße 12",
+              "human": true,
+              "human_why": "Street of the registered address. Printed on invoices, delivery notes, and offers."
+            },
+            {
+              "id": "plz",
+              "type": "text",
+              "label": "Postal code (PLZ)",
+              "placeholder": "e.g. 80331",
+              "human": true,
+              "human_why": "Postal code of the registered address."
+            },
+            {
+              "id": "ort",
+              "type": "text",
+              "label": "City (Ort)",
+              "placeholder": "e.g. München",
+              "human": true,
+              "human_why": "City of the registered address."
+            },
+            {
+              "id": "land",
+              "type": "text",
+              "label": "Country ISO code (Land)",
+              "placeholder": "e.g. DE, AT, CH",
+              "human": true,
+              "human_why": "Two-letter ISO country code of the company's registered country. Required for Lagerort creation, shipping configuration, and country-specific tax rules. DE = Germany, AT = Austria, CH = Switzerland."
+            },
+            {
+              "id": "ustid_steuernummer",
+              "type": "text",
+              "label": "VAT ID or tax number (USTID / Steuernummer)",
+              "placeholder": "e.g. DE123456789",
+              "human": true,
+              "human_why": "Umsatzsteuer-ID (EU VAT format: DE + 9 digits) or Steuernummer depending on legal form. German GmbHs use the Umsatzsteuer-ID. Required for correct tax handling on all documents."
+            }
+          ]
+        },
+        {
+          "id": "additional_identifiers",
+          "title": "Additional identifiers",
+          "hint": "Only needed for specific use cases. Leave blank if not applicable.",
+          "fields": [
+            {
+              "id": "sepa_glaeubiger_id",
+              "type": "text",
+              "label": "SEPA Creditor ID (SEPA Gläubiger ID)",
+              "placeholder": "e.g. DE98ZZZ09999999999",
+              "advanced": true,
+              "human": true,
+              "human_why": "Legal prerequisite for running SEPA Lastschrifteinzug (direct debit collection). Issued by the company's bank or Bundesbank. Only needed if this business collects payments via SEPA direct debit — leave blank otherwise."
+            },
+            {
+              "id": "eori_nummer",
+              "type": "text",
+              "label": "EORI number (EORI Nummer)",
+              "placeholder": "e.g. DE1234567890",
+              "advanced": true,
+              "human": true,
+              "human_why": "Required for businesses that import goods into the EU or export from the EU. Issued by the national customs authority. Leave blank if no cross-border trade outside the EU applies."
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "name": "Grundeinstellungen",
+      "description": "Konfiguriere die zentralen Systemeinstellungen in den Xentral Grundeinstellungen — Nummernkreise,\nStandard-Belegverhalten, Lagerverwaltung und Mahnwesen. Erforderlich,\nbevor ein Order-to-Cash-Prozess gestartet werden kann.\n",
+      "tags": [
+        "Foundation",
+        "Einrichtung"
+      ],
+      "documentation": {
+        "overview": "Deckt Einstellungen > Grundeinstellungen in Xentral ab. Diese Einstellungen definieren\nsystemweite Standards, die jeden Auftrag, jede Rechnung und jedes Dokument betreffen.\n\nMuss abgeschlossen sein vor: payment_methods, chart_of_accounts, warehouse_setup.\nHängt ab von: company_basics (Firmenname und Adresse müssen zuerst vorhanden sein).\n",
+        "capabilities": [
+          "Dokumenten-Nummernkreise (Nummernkreise) für Aufträge, Rechnungen, Lieferscheine konfigurieren",
+          "Standard-Belegverhalten festlegen (E-Mail automatisch senden, automatisch drucken, in Archiv kopieren)",
+          "Lagerverwaltung aktivieren/deaktivieren",
+          "Mahnwesen konfigurieren (Mahnwesen an/aus, Stufen, Gebühren)",
+          "Standardsprache und Datums-/Zahlenformat festlegen"
+        ],
+        "inputs": [
+          "Nummernkreis-Startwerte pro Belegtyp",
+          "Einstellung für Lagerverwaltung",
+          "Mahnwesen an/aus und Gebührenstruktur"
+        ],
+        "outputs": [
+          "Xentral Grundeinstellungen konfiguriert",
+          "System bereit für Order-to-Cash-Verarbeitung"
+        ],
+        "notes": "STUB — fields not yet authored. Scope to be defined with Bene before WOZ-12.\n\nKnown field areas for v1:\n- Nummernkreise (Aufträge, Rechnungen, Lieferscheine, Gutschriften)\n- Lagerverwaltung aktiv (toggle)\n- Mahnwesen aktiv (toggle)\n- Standard-Sprache / Locale\n"
+      },
+      "sections": [
+        {
+          "id": "stub_placeholder",
+          "title": "[Stub — noch nicht verfasst]",
+          "hint": "Felder für diese Karte sind noch nicht definiert. Siehe documentation.notes für den geplanten Umfang.",
+          "fields": [
+            {
+              "id": "stub_info",
+              "type": "info",
+              "label": "Stub-Karte",
+              "text": "basic_settings ist noch nicht vollständig verfasst. Felder werden Nummernkreise, Lagerverwaltung, Mahnwesen und Spracheinstellungen abdecken. Umfang ist mit Bene vor dem PR zu bestätigen.\n"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": true
+}

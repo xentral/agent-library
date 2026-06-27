@@ -1,0 +1,26 @@
+{
+  "id": "intervention_required",
+  "version": 1,
+  "icon": "alert",
+  "category": "customer_service",
+  "order": 202,
+  "kpi": {
+    "key": "intervention_required",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 6,
+    "initial_tone": "warn"
+  },
+  "locales": {
+    "en": {
+      "title": "Needs intervention",
+      "description": "Inquiries an agent could not finish on its own and is waiting for a human decision."
+    },
+    "de": {
+      "title": "Eingriff nötig",
+      "description": "Vorgänge, die ein Agent nicht selbst lösen konnte und auf eine menschliche Entscheidung warten."
+    }
+  }
+}

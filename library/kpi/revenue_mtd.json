@@ -1,0 +1,27 @@
+{
+  "id": "revenue_mtd",
+  "version": 1,
+  "icon": "trendUp",
+  "category": "sales",
+  "order": 110,
+  "kpi": {
+    "key": "revenue_mtd",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "sales",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Summe Umsatz aus Rechnungen seit Monatsbeginn (Spalte 1), plus Summe Umsatz im Vormonat (Spalte 2); ein einzelner Datensatz.",
+    "sql_string": "SELECT\n  ROUND(SUM(CASE\n    WHEN date >= DATE_TRUNC('month', CURRENT_DATE) AND date <= CURRENT_DATE\n      THEN net_revenue\n    ELSE 0\n  END), 2) AS \"Umsatz seit Monatsbeginn\",\n  ROUND(SUM(CASE\n    WHEN date >= DATEADD(month, -1, DATE_TRUNC('month', CURRENT_DATE))\n     AND date < DATE_TRUNC('month', CURRENT_DATE)\n      THEN net_revenue\n    ELSE 0\n  END), 2) AS \"Umsatz Vormonat\"\nFROM invoices\nWHERE status NOT IN ('canceled', 'created', 'unknown');\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Revenue MTD",
+      "description": "Gross sales month-to-date, compared to the prior month."
+    },
+    "de": {
+      "title": "Umsatz (laufender Monat)",
+      "description": "Bruttoumsatz seit Monatsbeginn im Vergleich zum Vormonat."
+    }
+  }
+}

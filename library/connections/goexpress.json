@@ -1,0 +1,15 @@
+{
+  "id": "goexpress",
+  "version": 1,
+  "name": "GO! Express",
+  "domain": "general-overnight.com",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "GO! Express-Versand — Same-Day, Direct- und Premium-Lieferungen."
+    },
+    "de": {
+      "description": "GO! Express-Versand — Same-Day, Direct- und Premium-Lieferungen."
+    }
+  }
+}

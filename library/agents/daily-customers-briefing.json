@@ -1,0 +1,79 @@
+{
+  "order": 61,
+  "id": "daily-customers-briefing",
+  "icon": "briefcase",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "schedule",
+    "cadence": "daily",
+    "schedule_time": "07:00",
+    "tools": [
+      "xentral_copilot",
+      "xentral_agent_jobs",
+      "xentral_operations_tasks"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 1.0,
+    "briefing": {
+      "bucket_key": "master_data_customers"
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Tägliches Kunden-Briefing",
+      "category": "Stammdaten",
+      "description": "Kunden-Tagesbriefing — Dubletten, fehlende Pflichtfelder, Bonitätsrisiken, VIP-Pflege — täglich um 07:00.",
+      "tags": [
+        "Stammdaten",
+        "Kunden",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Tägliches Kunden-Briefing",
+        "description": "3-4 wichtigsten Kunden-Stammdaten-Themen für den Tag — Dubletten, Pflichtfelder, Bonität, VIPs.",
+        "area": "Stammdaten",
+        "briefing": {
+          "bucket_title": "Kunden",
+          "angles": [
+            "Kunden-Dubletten (gleiche Adresse/USt-ID/E-Mail mehrfach)",
+            "Fehlende Pflichtfelder (USt-ID, Zahlungsbedingungen, Lieferadresse)",
+            "Bonitätsrisiken (überfällige OPOS, gesperrte Kunden)",
+            "Inaktive Kunden > 12 Monate (Reaktivierung oder Archiv)",
+            "VIP-/Top-Kunden ohne aktuelle Aktivität (Pflege empfohlen)",
+            "Neuanlagen der letzten 24h ohne vollständige Stammdaten",
+            "Kunden-Agent-Jobs in requires_intervention (Adressänderung, Lead-Score hängen)"
+          ]
+        }
+      }
+    },
+    "en": {
+      "name": "Daily Customer Briefing",
+      "category": "Master Data",
+      "description": "Customer daily briefing — duplicates, missing fields, credit risks, VIP care — every day at 07:00.",
+      "tags": [
+        "Master Data",
+        "Customers",
+        "Routine"
+      ],
+      "prefill": {
+        "name": "Daily Customer Briefing",
+        "description": "Top 3-4 customer master-data topics for today — duplicates, fields, credit, VIPs.",
+        "area": "Master Data",
+        "briefing": {
+          "bucket_title": "Customers",
+          "angles": [
+            "Customer duplicates (same address/VAT ID/email more than once)",
+            "Missing required fields (VAT ID, payment terms, shipping address)",
+            "Credit risks (overdue receivables, blocked customers)",
+            "Inactive customers > 12 months (reactivate or archive)",
+            "VIP / top customers with no recent activity (outreach recommended)",
+            "Records created in the last 24h with incomplete master data",
+            "Customer agent jobs in requires_intervention (Address Change, Lead Score stuck)"
+          ]
+        }
+      }
+    }
+  }
+}

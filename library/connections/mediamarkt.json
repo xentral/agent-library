@@ -1,0 +1,15 @@
+{
+  "id": "mediamarkt",
+  "version": 1,
+  "name": "MediaMarkt/Saturn",
+  "domain": "mediamarkt.de",
+  "category": "marketplace",
+  "locales": {
+    "en": {
+      "description": "MediaMarkt- und Saturn-Marketplace — Aufträge und Inventory."
+    },
+    "de": {
+      "description": "MediaMarkt- und Saturn-Marketplace — Aufträge und Inventory."
+    }
+  }
+}

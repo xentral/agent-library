@@ -1,0 +1,160 @@
+{
+  "order": 330,
+  "id": "product-desc",
+  "icon": "edit",
+  "integrations": [
+    "Shopify",
+    "PIM"
+  ],
+  "prefill": {
+    "agent_type": "form",
+    "tools": [
+      "xentral_copilot",
+      "xentral_fileshare"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.7
+  },
+  "locales": {
+    "de": {
+      "name": "Produkt-Beschreibung Generator",
+      "category": "Marketing",
+      "description": "Schreibt SEO-optimierte Produkttexte für Shop + Marktplätze in mehreren Sprachen.",
+      "tags": [
+        "Marketing",
+        "Sortiment"
+      ],
+      "prefill": {
+        "name": "Produkt-Beschreibung Generator",
+        "description": "Erzeugt SEO-Texte für einen Artikel — Shop, Marktplatz, Mehrsprachen.",
+        "area": "Marketing",
+        "form_meta": {
+          "audience": "internal",
+          "fields": [
+            {
+              "id": "sku",
+              "label": "Artikelnummer",
+              "type": "text",
+              "placeholder": "z.B. 4006381333931",
+              "required": true
+            },
+            {
+              "id": "product_name",
+              "label": "Produktname",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "key_features",
+              "label": "Hauptmerkmale (Stichpunkte)",
+              "type": "textarea",
+              "placeholder": "z.B. wasserdicht, 25 g leicht, recyceltes Material",
+              "required": true
+            },
+            {
+              "id": "target_marketplace",
+              "label": "Zielkanal",
+              "type": "select",
+              "options": [
+                "Shop",
+                "Amazon",
+                "eBay",
+                "Otto"
+              ],
+              "required": true
+            },
+            {
+              "id": "languages",
+              "label": "Sprachen",
+              "type": "text",
+              "placeholder": "de, en, fr",
+              "required": true
+            },
+            {
+              "id": "tone",
+              "label": "Tonfall",
+              "type": "select",
+              "options": [
+                "sachlich",
+                "emotional",
+                "sportlich",
+                "premium"
+              ]
+            }
+          ]
+        },
+        "instructions": "Du bist Produkt-Texter für einen Online-Shop. Aufgabe: pro übergebener\nArtikelnummer SEO-optimierte Beschreibungen erzeugen.\n\nVorgehen pro Einreichung:\n1. Lese den Artikel via ERP-Co-Pilot ein — vorhandene Daten,\n   Kategorie, bisherige Texte (falls vorhanden).\n2. Erzeuge pro angeforderter Sprache:\n   - 1 Headline (max. 70 Zeichen, marktplatz-konform).\n   - 1 Bullet-Liste mit 3–5 Merkmalen (kein Marketing-Geschwafel).\n   - 1 Fließtext-Beschreibung (120–180 Wörter, im gewählten Tonfall).\n3. Berücksichtige marktplatz-spezifische Regeln:\n   - Amazon: keine Garantien, keine HTML-Tags, USPs in Bullets.\n   - eBay: 80-Zeichen-Titel, Schlüsselwort-fokussiert.\n   - Otto: kurze Sätze, neutraler Tonfall.\n4. Lege das Ergebnis als CSV-Datei ins Fileshare ab (Spalten:\n   sku, language, marketplace, title, bullets, description).\n5. Antworte mit einer kurzen Zusammenfassung + Dateiname.\n\nSchreibe niemals erfundene technische Daten — wenn ein Merkmal\nnicht in den Stammdaten steht, frag den Co-Pilot oder lass es weg.\n"
+      }
+    },
+    "en": {
+      "name": "Product Description Generator",
+      "category": "Marketing",
+      "description": "Writes SEO-optimized product copy for shop + marketplaces in multiple languages.",
+      "tags": [
+        "Marketing",
+        "Catalog"
+      ],
+      "prefill": {
+        "name": "Product Description Generator",
+        "description": "Generates SEO copy for a single SKU — shop, marketplace, multi-language.",
+        "area": "Marketing",
+        "form_meta": {
+          "audience": "internal",
+          "fields": [
+            {
+              "id": "sku",
+              "label": "SKU",
+              "type": "text",
+              "placeholder": "e.g. 4006381333931",
+              "required": true
+            },
+            {
+              "id": "product_name",
+              "label": "Product name",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "key_features",
+              "label": "Key features (bullet points)",
+              "type": "textarea",
+              "placeholder": "e.g. waterproof, 25 g lightweight, recycled material",
+              "required": true
+            },
+            {
+              "id": "target_marketplace",
+              "label": "Target channel",
+              "type": "select",
+              "options": [
+                "Shop",
+                "Amazon",
+                "eBay",
+                "Otto"
+              ],
+              "required": true
+            },
+            {
+              "id": "languages",
+              "label": "Languages",
+              "type": "text",
+              "placeholder": "en, de, fr",
+              "required": true
+            },
+            {
+              "id": "tone",
+              "label": "Tone of voice",
+              "type": "select",
+              "options": [
+                "factual",
+                "emotional",
+                "sporty",
+                "premium"
+              ]
+            }
+          ]
+        },
+        "instructions": "You write product copy for an online shop. Task: per SKU,\nproduce SEO-optimised descriptions.\n\nPer submission:\n1. Read the product via ERP copilot — existing master data,\n   category, prior copy (if any).\n2. For each requested language produce:\n   - 1 headline (max 70 chars, marketplace-compliant).\n   - 1 bullet list with 3–5 features (no marketing fluff).\n   - 1 prose description (120–180 words, in the requested tone).\n3. Respect marketplace rules:\n   - Amazon: no warranties, no HTML, USPs in bullets.\n   - eBay: 80-char title, keyword-focused.\n   - Otto: short sentences, neutral tone.\n4. Save the result as CSV in fileshare (columns: sku, language,\n   marketplace, title, bullets, description).\n5. Reply with a short summary + filename.\n\nNever invent technical specs — if a feature isn't in the master\ndata, ask the copilot or leave it out.\n"
+      }
+    }
+  }
+}

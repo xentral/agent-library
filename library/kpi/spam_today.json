@@ -1,0 +1,25 @@
+{
+  "id": "spam_today",
+  "version": 1,
+  "icon": "archive",
+  "category": "customer_service",
+  "order": 205,
+  "kpi": {
+    "key": "spam_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "push",
+    "initial_value": 18
+  },
+  "locales": {
+    "en": {
+      "title": "Spam today",
+      "description": "Mails filtered out as spam since midnight."
+    },
+    "de": {
+      "title": "Spam heute",
+      "description": "Seit Mitternacht als Spam aussortierte Mails."
+    }
+  }
+}

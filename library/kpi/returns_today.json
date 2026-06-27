@@ -1,0 +1,27 @@
+{
+  "id": "returns_today",
+  "version": 1,
+  "icon": "return",
+  "category": "customer_service",
+  "order": 210,
+  "kpi": {
+    "key": "returns_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "customer_service",
+    "value_source": "cached",
+    "cache_ttl_seconds": 900,
+    "prompt": "Anzahl Retouren-Aufträge aus der Tabelle return_orders, deren Belegdatum heute ist; nur ein einzelner Datensatz mit dem Count.",
+    "sql_string": "SELECT\n    COUNT(DISTINCT rs.return_shipment_id) AS return_orders_count\nFROM return_shipments rs\nWHERE rs.date = CURRENT_DATE\n  AND rs.status NOT IN ('created', 'canceled', 'unknown');\n"
+  },
+  "locales": {
+    "en": {
+      "title": "Returns today",
+      "description": "Return orders created in Xentral today — pulls straight from the return_orders table."
+    },
+    "de": {
+      "title": "Retouren heute",
+      "description": "Heute in Xentral angelegte Retouren-Belege — direkt aus der return_orders Tabelle."
+    }
+  }
+}

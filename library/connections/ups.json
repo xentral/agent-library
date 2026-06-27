@@ -1,0 +1,16 @@
+{
+  "id": "ups",
+  "version": 1,
+  "name": "UPS",
+  "domain": "ups.com",
+  "category": "shipping",
+  "locales": {
+    "en": {
+      "description": "UPS-Versandintegration mit Tracking-Update."
+    },
+    "de": {
+      "description": "UPS-Versandintegration mit Tracking-Update."
+    }
+  },
+  "source": "https://marketplace.xentral.com/versanddienstleister/ups"
+}

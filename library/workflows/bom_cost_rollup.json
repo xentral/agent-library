@@ -1,0 +1,202 @@
+{
+  "id": "bom_cost_rollup",
+  "version": 1,
+  "category": "warehouse",
+  "icon": "warehouse",
+  "order": 170,
+  "trigger_type": "schedule",
+  "orientation": "vertical",
+  "locales": {
+    "de": {
+      "name": "Nächtliche Stücklisten-EK-Kalkulation",
+      "description": "Berechnet jede Nacht den Einkaufspreis jeder Stückliste rekursiv von\nunten nach oben neu und schreibt das Ergebnis als kalkulierten EK an\ndie Produkte zurück. Verschachtelte Stücklisten beliebiger Tiefe\nwerden über eine While-Schleife mit Arbeitsliste abgearbeitet — eine\nStückliste wird erst bewertet, wenn alle ihre Unter-Stücklisten\nfertig sind. Zugekaufte Artikel (Blätter) nehmen ihren eigenen\nEinkaufspreis.\n\n**So funktioniert der Algorithmus**\n\n```\nArbeitsliste = alle Stücklisten\nsolange die Arbeitsliste nicht leer ist:\n ├─ oberste Stückliste hat ungerechnete Unter-Stücklisten\n │    └─ Unter-Stücklisten zuerst auf die Liste → zurückstellen\n └─ sonst bewerten → Σ ( Stückpreis(Bauteil) × Menge ) → merken\ndanach: alle EK-Werte in einem Schritt zurückschreiben\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Der Zeitplan startet den Lauf jede Nacht um 02:00 Uhr.\n2. Alle Stücklisten-Produkte werden geladen und als Arbeitsliste\n   vorgemerkt.\n3. Die Schleife läuft, solange noch Stücklisten zu bewerten sind:\n   In jedem Durchgang wird die oberste Stückliste der Arbeitsliste\n   betrachtet.\n4. Hat sie noch ungerechnete Unter-Stücklisten, werden diese zuerst\n   auf die Arbeitsliste gelegt und die Stückliste zurückgestellt.\n5. Sonst wird sie bewertet, indem für jedes Bauteil der Stückpreis\n   (bei bereits gerechneten Unter-Stücklisten deren Summe, bei\n   zugekauften Artikeln der eigene Einkaufspreis) mit der Menge\n   multipliziert und aufsummiert wird.\n6. Sobald die Arbeitsliste leer ist, stoppt die Schleife sofort,\n   und alle berechneten EK-Werte werden in einem Schritt an die\n   Produkte zurückgeschrieben.\n\n**Was verändert wird**\n\n- Überschreibt das Feld „Kalkulierter EK\" (auf 4 Nachkommastellen\n  gerundet) an jeder bewerteten Stückliste.\n- Zugekaufte Artikel werden nur gelesen, nie verändert.\n\n**Voraussetzungen und Grenzen**\n\n- Nutzt die Business-Entities „Product\" und „BillOfMaterials\" —\n  diese sind nicht auf jeder Instanz verfügbar; in dem Fall die\n  Schwester-Vorlagen „Stücklisten-EK rekursiv kalkulieren\n  (Self-Call)\" bzw. „Stücklisten-EK rekursiv (nur kalkulierter EK)\"\n  verwenden, die die rohe Xentral-API nutzen.\n- Ein zugekaufter Artikel ohne gepflegten Einkaufspreis zählt als 0.\n- Die Schleife ist auf 1000 Durchläufe begrenzt — das begrenzt die\n  Gesamtzahl der pro Lauf verarbeiteten Stücklisten-Knoten, nicht\n  die Verschachtelungstiefe; sehr große Kataloge über die\n  Startliste seitenweise abarbeiten.\n",
+      "recommended_when": "Sobald mehrstufige Stücklisten gepflegt werden",
+      "tags": [
+        "Logistik",
+        "Stückliste",
+        "Kalkulation"
+      ]
+    },
+    "en": {
+      "name": "Nightly BOM cost rollup",
+      "description": "Recomputes the purchase cost of every bill of materials bottom-up\neach night and writes the result back to the products as their\ncalculated purchase price. Nested BOMs of any depth are processed\nvia a while loop over a work list — a BOM is costed only after all\nits sub-BOMs are done. Purchased articles (leaves) take their own\npurchase price.\n\n**How the algorithm works**\n\n```\nwork list = all BOMs\nwhile the work list is not empty:\n ├─ topmost BOM still has uncosted sub-BOMs\n │    └─ push the sub-BOMs onto the list first → defer the BOM\n └─ otherwise cost it → Σ ( unit price(component) × qty ) → record\nafterwards: write all computed costs back in one step\n```\n\n**What happens step by step**\n\n1. The schedule starts the run every night at 02:00.\n2. All BOM products are loaded and queued on a work list.\n3. The loop runs while any BOMs are left to cost: each pass looks\n   at the topmost BOM on the work list.\n4. If it still has uncosted sub-BOMs, those are pushed onto the\n   work list first and the BOM is deferred.\n5. Otherwise it is costed by multiplying each component's unit\n   price (the rolled-up total for already costed sub-BOMs, the\n   article's own purchase price for purchased parts) by its\n   quantity and summing up.\n6. The instant the work list is empty the loop stops, and all\n   computed costs are written back to the products in one step.\n\n**What gets changed**\n\n- Overwrites the \"calculated purchase price\" field (rounded to 4\n  decimal places) on every costed bill of materials.\n- Purchased articles are only read, never modified.\n\n**Prerequisites and limits**\n\n- Uses the \"Product\" and \"BillOfMaterials\" business entities —\n  these are not available on every instance; in that case use the\n  sibling templates \"Recursive BOM cost rollup (self-call)\" or\n  \"Recursive BOM cost rollup (calculated EK only)\", which use the\n  raw Xentral API.\n- A purchased article with no maintained purchase price counts\n  as 0.\n- The loop is capped at 1000 iterations — that bounds the total\n  number of BOM nodes processed per run, not the nesting depth;\n  page the seed list for very large catalogs.\n",
+      "recommended_when": "Once multi-level bills of materials are maintained",
+      "tags": [
+        "Logistics",
+        "Bill of materials",
+        "Costing"
+      ],
+      "node_titles": {
+        "n_trig": "Start every night at 02:00",
+        "n_query": "Load all BOM products from Xentral",
+        "n_seed": "Build the work list of all BOMs",
+        "n_while": "While BOMs are still waiting to be costed",
+        "n_test": "Is any BOM left on the work list?",
+        "n_step": "Cost one BOM or defer it behind its sub-BOMs",
+        "n_write": "Write the computed costs back to the products"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "n_trig",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 80
+      },
+      "data": {
+        "typeId": "trigger-schedule",
+        "config": {
+          "title": "Start jede Nacht um 02:00 Uhr",
+          "schedule": {
+            "frequency": "daily",
+            "time": "02:00"
+          }
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Alle Stücklisten-Produkte aus Xentral laden",
+          "varName": "bomProducts",
+          "entityKey": "Product",
+          "entityLabel": "Product",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "isBom": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_seed",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 560
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Arbeitsliste aller Stücklisten aufbauen",
+          "varName": "seedStack",
+          "code": "rows = bomProducts.get('data', []) if isinstance(bomProducts, dict) else (bomProducts or [])\ncontext['stack'] = [p['id'] for p in rows]\ncontext['cost'] = {}\nlog(f\"{len(context['stack'])} root BOM(s)\")\n"
+        }
+      }
+    },
+    {
+      "id": "n_while",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "data": {
+        "typeId": "while",
+        "config": {
+          "title": "Solange noch Stücklisten zu bewerten sind"
+        }
+      }
+    },
+    {
+      "id": "n_test",
+      "type": "wfNode",
+      "position": {
+        "x": 380,
+        "y": 800
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Ist noch eine Stückliste auf der Arbeitsliste?",
+          "varName": "workLeft",
+          "code": "result = len(context.get('stack', [])) > 0\n"
+        }
+      }
+    },
+    {
+      "id": "n_step",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1040
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Eine Stückliste bewerten oder zurückstellen",
+          "varName": "costOneBom",
+          "code": "node_id = context['stack'][-1]\ncomps = (business_entity_op('BillOfMaterials', 'list', {'query': {'parentId': node_id}}).get('data') or [])\npending = [c for c in comps if c.get('isBom') and c['componentId'] not in context['cost']]\nif pending:\n    for c in pending:\n        context['stack'].append(c['componentId'])\nelse:\n    context['stack'].pop()\n    total = 0.0\n    for c in comps:\n        cid = c['componentId']\n        unit = context['cost'].get(cid)\n        if unit is None:\n            prod = business_entity_op('Product', 'read', {'path': {'uuid': cid}})\n            unit = float(prod.get('purchasePrice') or 0)\n            context['cost'][cid] = unit\n        total += unit * float(c.get('quantity') or 0)\n    context['cost'][node_id] = total\n"
+        }
+      }
+    },
+    {
+      "id": "n_write",
+      "type": "wfNode",
+      "position": {
+        "x": 80,
+        "y": 1280
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Berechnete EK-Werte an die Produkte zurückschreiben",
+          "varName": "writeBack",
+          "code": "for pid, cost in context.get('cost', {}).items():\n    business_entity_op('Product', 'update', {'path': {'uuid': pid}, 'body': {'calculatedPurchasePrice': round(cost, 4)}})\nlog(f\"Updated {len(context.get('cost', {}))} product cost(s).\")\n"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n_trig",
+      "target": "n_query",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e2",
+      "source": "n_query",
+      "target": "n_seed",
+      "sourceHandle": "data:list"
+    },
+    {
+      "id": "e3",
+      "source": "n_seed",
+      "target": "n_while"
+    },
+    {
+      "id": "e4",
+      "source": "n_while",
+      "target": "n_test",
+      "sourceHandle": "cond"
+    },
+    {
+      "id": "e5",
+      "source": "n_while",
+      "target": "n_step",
+      "sourceHandle": "a"
+    },
+    {
+      "id": "e6",
+      "source": "n_while",
+      "target": "n_write",
+      "sourceHandle": "b"
+    }
+  ]
+}

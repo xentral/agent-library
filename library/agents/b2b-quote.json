@@ -1,0 +1,201 @@
+{
+  "order": 220,
+  "id": "b2b-quote",
+  "icon": "briefcase",
+  "integrations": [
+    "Xentral"
+  ],
+  "prefill": {
+    "agent_type": "form",
+    "tools": [
+      "xentral_copilot",
+      "xentral_pdf_templates",
+      "xentral_email",
+      "xentral_crm"
+    ],
+    "model": "sonnet-4-6",
+    "temperature": 0.4
+  },
+  "locales": {
+    "de": {
+      "name": "B2B-Angebotsanfrage",
+      "category": "Vertrieb",
+      "description": "Externes Formular für Geschäftskunden — Bedarf erfassen, der Agent erstellt einen Angebots-Entwurf und routet an den Vertrieb.",
+      "tags": [
+        "Vertrieb",
+        "B2B"
+      ],
+      "prefill": {
+        "name": "B2B-Angebotsanfrage",
+        "description": "Geschäftskunde stellt eine Anfrage — Agent erstellt Angebot und legt einen CRM-Lead an.",
+        "area": "Vertrieb",
+        "form_meta": {
+          "audience": "external",
+          "fields": [
+            {
+              "id": "company_name",
+              "label": "Firma",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "contact_name",
+              "label": "Ansprechpartner:in",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "contact_email",
+              "label": "E-Mail",
+              "type": "email",
+              "required": true
+            },
+            {
+              "id": "contact_phone",
+              "label": "Telefon (optional)",
+              "type": "text"
+            },
+            {
+              "id": "vat_id",
+              "label": "USt-ID (für Netto-Angebot)",
+              "type": "text",
+              "placeholder": "z.B. DE123456789"
+            },
+            {
+              "id": "industry",
+              "label": "Branche",
+              "type": "select",
+              "options": [
+                "Gastronomie",
+                "Einzelhandel",
+                "Großhandel",
+                "Industrie",
+                "Verein / Non-Profit",
+                "sonstiges"
+              ]
+            },
+            {
+              "id": "products",
+              "label": "Bedarf — Produkte + Menge (eine Zeile pro Position)",
+              "type": "textarea",
+              "placeholder": "Espresso Forte 1 kg × 25\nFilter Brava 500 g × 40",
+              "required": true
+            },
+            {
+              "id": "target_delivery",
+              "label": "Wunsch-Liefertermin",
+              "type": "date"
+            },
+            {
+              "id": "budget_signal",
+              "label": "Budgetrahmen (optional)",
+              "type": "select",
+              "options": [
+                "unter 500 €",
+                "500–2.000 €",
+                "2.000–10.000 €",
+                "über 10.000 €"
+              ]
+            },
+            {
+              "id": "notes",
+              "label": "Sonstige Hinweise",
+              "type": "textarea"
+            }
+          ]
+        },
+        "instructions": "Du bist der B2B-Angebots-Agent. Wenn ein Geschäftskunde das\nFormular abschickt:\n\n1. Validiere Mindest-Bestellwert (MOQ) pro Artikel über den\n   Co-Pilot. Bei Unter-MOQ: Hinweis im Antwort-Block und\n   Aufrunden auf nächste gültige Staffel vorschlagen.\n2. USt-ID checken (Pattern-Validierung pro Land). Wenn\n   gültig: Netto-Angebot. Wenn fehlt: Brutto-Angebot mit\n   Hinweis „USt-ID nachreichen für Netto\".\n3. Erstelle in Xentral einen neuen B2B-Auftrag im Status\n   „Angebot/Entwurf\" mit allen Positionen, gewünschtem\n   Liefertermin und den Kundendaten.\n4. Rendere via PDF-Vorlage „Angebot\" das Dokument.\n5. Lege im CRM einen Lead an (Firma, Kontakt, Branche,\n   Budget-Signal, Link zum Angebot). Score-Empfehlung:\n   - Bedarf > 2.000 € + USt-ID gültig → hot lead.\n   - Sonst → warm.\n6. Antwort-Mail an die angegebene Adresse: Angebot als\n   PDF-Anhang, Hinweis auf Gültigkeitsdauer (14 Tage),\n   Nennung des Sales-Ansprechpartners. NICHT auto-versenden\n   — nur Entwurf. Vertrieb muss approven.\n\nBei Sonderfällen (Industriekunde, Sonderkonditionen, Mengen\n> Standard-Staffel): Eskalations-Task an Sales, kein\nautomatisches Angebot. Antwortmail dann nur Eingangsbestätigung\nmit Zeit-Erwartung.\n\nInternes Format am Schluss: Angebots-Nummer, Lead-ID, Score,\nStatus (auto / eskaliert).\n"
+      }
+    },
+    "en": {
+      "name": "B2B quote request",
+      "category": "Sales",
+      "description": "External form for business customers — capture demand; the agent builds a quote draft and routes it to sales.",
+      "tags": [
+        "Sales",
+        "B2B"
+      ],
+      "prefill": {
+        "name": "B2B quote request",
+        "description": "Business customer sends a quote request — agent builds the quote and creates a CRM lead.",
+        "area": "Sales",
+        "form_meta": {
+          "audience": "external",
+          "fields": [
+            {
+              "id": "company_name",
+              "label": "Company",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "contact_name",
+              "label": "Contact person",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "contact_email",
+              "label": "Email",
+              "type": "email",
+              "required": true
+            },
+            {
+              "id": "contact_phone",
+              "label": "Phone (optional)",
+              "type": "text"
+            },
+            {
+              "id": "vat_id",
+              "label": "VAT ID (for net pricing)",
+              "type": "text",
+              "placeholder": "e.g. DE123456789"
+            },
+            {
+              "id": "industry",
+              "label": "Industry",
+              "type": "select",
+              "options": [
+                "Hospitality",
+                "Retail",
+                "Wholesale",
+                "Industrial",
+                "Non-profit / club",
+                "other"
+              ]
+            },
+            {
+              "id": "products",
+              "label": "Demand — products + quantity (one line per item)",
+              "type": "textarea",
+              "placeholder": "Espresso Forte 1 kg × 25\nFilter Brava 500 g × 40",
+              "required": true
+            },
+            {
+              "id": "target_delivery",
+              "label": "Requested delivery date",
+              "type": "date"
+            },
+            {
+              "id": "budget_signal",
+              "label": "Budget range (optional)",
+              "type": "select",
+              "options": [
+                "under €500",
+                "€500–€2,000",
+                "€2,000–€10,000",
+                "over €10,000"
+              ]
+            },
+            {
+              "id": "notes",
+              "label": "Other notes",
+              "type": "textarea"
+            }
+          ]
+        },
+        "instructions": "You are the B2B quote agent. When a business customer submits\nthe form:\n\n1. Validate minimum order quantity (MOQ) per item via the\n   copilot. Below MOQ: note it in the response and propose\n   rounding up to the next valid tier.\n2. Check the VAT ID (country-specific pattern). If valid: net\n   quote. If missing: gross quote with a note \"submit VAT ID\n   for net pricing\".\n3. Create a new B2B order in Xentral with status \"quote /\n   draft\", all line items, requested delivery date and\n   customer details.\n4. Render the document via the \"Quote\" PDF template.\n5. Create a CRM lead (company, contact, industry, budget\n   signal, link to quote). Score recommendation:\n   - Demand > €2,000 + valid VAT ID → hot lead.\n   - Otherwise → warm.\n6. Reply mail to the customer: quote as PDF attachment, note\n   validity (14 days), name of the sales contact. Do NOT\n   auto-send — draft only. Sales must approve.\n\nFor edge cases (industrial customer, special pricing,\nquantities beyond standard tier): escalation task to sales,\nno auto-quote. Reply mail then only confirms receipt with\ntime expectation.\n\nInternal final summary: quote number, lead ID, score, status\n(auto / escalated).\n"
+      }
+    }
+  }
+}
