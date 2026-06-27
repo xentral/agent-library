@@ -311,6 +311,8 @@
     }
   },
   "skills": [
+    "skills/xentral-dashboards",
+    "skills/xentral-kpi",
     "skills/xentral-onboarding-coach",
     "skills/xentral-pdf-templates",
     "skills/xentral-workflows"
