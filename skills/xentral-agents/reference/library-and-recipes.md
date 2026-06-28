@@ -37,7 +37,7 @@ slug must match exactly.
 ## Recipes
 
 ### First agent enable
-- Read `business_plan.profile` — routing and defaults key off `business_model`,
+- Read `business_model.profile` — routing and defaults key off `business_model`,
   `automation`, `tone`.
 - List candidates filtered by plan + category. Recommend one to start
   (often a return/refund form for B2C, an inbox handler for finance-heavy).

@@ -83,6 +83,20 @@ section). Types: `LineChart`, `BarChart`, `AreaChart`, `DonutChart`,
 `LineChart` (time series) or `BarChart` (categorical) are the safe
 defaults.
 
+#### Start from the chart library
+Before hand-writing a chart, check the **chart library** — a catalogue
+of pre-baked, reusable chart cards (`library/charts/`, exposed read-only
+at `GET /chart/library` and `/chart/library/{card_id}`). Each card ships
+a chart `type`, a `cache_mode` (`live` | `cached` | `snapshot`), a
+natural-language `prompt` and a ready `sql_string`, categorised by
+domain (`sales`, `customers`, `orders`, `inventory`, `logistics`,
+`purchasing`, `finance`) — e.g. `revenue_monthly_trend`,
+`top_customers_ytd`, `carrier_mix`. Charts are **not driven by their own
+MCP tool**; a library card is the starting payload you drop into a chart
+widget here (the `chart.type` + `sql_string`/`prompt` map straight onto
+the widget's data source). Clone the closest card and adapt rather than
+writing SQL from a blank slate.
+
 ### Interactive — let the user trigger an agent from the dashboard
 | `type` | Purpose | Core config keys |
 |---|---|---|

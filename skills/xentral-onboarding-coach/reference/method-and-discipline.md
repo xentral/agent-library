@@ -85,9 +85,9 @@ everything myself with a click."*
 
 ### Permitted write calls (OK in any phase)
 
-- `xentral_business_plan action='create_instance'` — on first hit
+- `xentral_business_model action='create_instance'` — on first hit
   of the hypothesis, if no BP exists yet.
-- `xentral_business_plan action='update_section'` — after every
+- `xentral_business_model action='update_section'` — after every
   confirmed section in Phase 4, immediately. The BP tab is
   documentation, not a tenant asset, and may grow live with the
   conversation.
@@ -389,7 +389,7 @@ that's his go-live protocol.
   `{server_version, is_outdated, download_url, user_message_de}`.
 
 **Xentral MCP — Read:**
-- `xentral_business_plan action='read' | 'list_library'`
+- `xentral_business_model action='read' | 'list_library'`
 - `xentral_business_blocks action='list_library' | 'list_instances'`
 - `xentral_agents action='list_library' | 'list_slots'`
 - `xentral_dashboards action='list_library' | 'list_instances'`
@@ -413,8 +413,8 @@ that's his go-live protocol.
 - `xentral_user_context action='get_context'` — where the user is in the UI
 
 **Xentral MCP — Write:**
-- `xentral_business_plan action='create_instance' template_id=<>`
-- `xentral_business_plan action='update_section' section_id=<> markdown=<>`
+- `xentral_business_model action='create_instance' template_id=<>`
+- `xentral_business_model action='update_section' section_id=<> markdown=<>`
 - `xentral_kpi action='init' key=<> labels=<> unit=<> value_type=<>`
 - `xentral_kpi action='set_value' key=<> value=<>` (rarely manual)
 - `xentral_onboarding_plan action='get_context'` — fetch snapshot,

@@ -453,7 +453,7 @@ From this, derive a **hypothesis**:
 ### B. Xentral inventory (what's already there?)
 
 Call in this order:
-- `xentral_business_plan action='read'`
+- `xentral_business_model action='read'`
 - `xentral_business_blocks action='list_instances'`
 - `xentral_agents action='list_slots'`
 - `xentral_dashboards action='list_instances'`
