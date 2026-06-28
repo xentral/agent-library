@@ -128,7 +128,7 @@ examples from the chosen industry:
 
 You may **read** `xentral_business_blocks` and `xentral_agents` to
 quote real library cards — but **never write**. No `create_instance`,
-no business plan, no plan items in this path.
+no business model, no plan items in this path.
 
 **Step T.3 — Closing question.**
 
