@@ -8,6 +8,9 @@ description: >
   layout. Use when the user wants an overview page ("how is the business doing
   right now?"), a CEO/operations cockpit, or to add/arrange widgets — not for
   analysing a single record or defining new metrics (use xentral-kpi for that).
+examples:
+  - "Set up a CEO cockpit with revenue, open receivables and overdue orders."
+  - "Build a logistics dashboard for shipping and open parcels."
 ---
 
 # Dashboards

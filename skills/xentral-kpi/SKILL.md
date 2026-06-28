@@ -8,6 +8,10 @@ description: >
   duplicating a number across the product, and how dashboard cards read from
   the store. Use when the user wants to track a new business metric, record a
   computed value, or ask for the current value/history of a KPI.
+examples:
+  - "Track a KPI for open returns awaiting refund."
+  - "What is my current DSO?"
+  - "Track revenue month-to-date."
 ---
 
 # KPI

@@ -9,6 +9,10 @@ description: >
   Use when the user wants to automate a recurring business routine — dunning /
   OPOS escalation, low-stock reorder, document validation, prepayment-order
   cleanup, return-to-credit-note, BOM cost rollup, invoice-after-shipment.
+examples:
+  - "Build a workflow that cancels prepayment orders unpaid after 7 days."
+  - "Set up a multi-stage dunning escalation for overdue invoices."
+  - "Turn every return into a credit note automatically."
 ---
 
 # Workflows

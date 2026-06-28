@@ -8,6 +8,10 @@ description: >
   transactional documents, e-invoice compliance, free documents, and
   layout/styling. Use whenever the user wants to create, restyle, or fix a PDF
   document template in Xentral.
+examples:
+  - "Create an invoice PDF template in our corporate design."
+  - "Make a ZUGFeRD-compliant e-invoice template."
+  - "Adjust the delivery note: columns position, article, quantity."
 ---
 
 # Building Xentral PDF documents (Belege)

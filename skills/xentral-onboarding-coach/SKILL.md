@@ -11,6 +11,9 @@ description: >
   Triggers: "set up Xentral", "start onboarding", "create business plan", and
   requests to automate customer service, dunning/OPOS, purchasing, shipping,
   reporting, or marketplace connections.
+examples:
+  - "Help me set up my new Xentral tenant."
+  - "Create a business plan for my shop."
 ---
 
 # Xentral Onboarding Coach
