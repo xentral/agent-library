@@ -1,0 +1,241 @@
+{
+  "order": 300,
+  "slug": "pick",
+  "source": "builtin",
+  "name": "Pick",
+  "category": "logistics",
+  "category_label": "Logistik",
+  "summary": "Mobile Pick-App: Artikel für Pakete in optimaler Laufreihenfolge einsammeln und Versand auslösen.",
+  "locales": {
+    "de": {
+      "name": "Pick",
+      "summary": "Mobile Pick-App: Artikel für Pakete in optimaler Laufreihenfolge einsammeln und Versand auslösen."
+    },
+    "en": {
+      "name": "Pick",
+      "summary": "Mobile picking app: collect items for parcels in optimal walking order and trigger shipping."
+    }
+  },
+  "accent": "#0EA5E9",
+  "platform": "mobile",
+  "entities": [
+    {
+      "key": "PickTask",
+      "label": "Pickauftrag",
+      "fields": [
+        {
+          "name": "salesOrder",
+          "type": "relation → SalesOrder",
+          "required": true
+        },
+        {
+          "name": "product",
+          "type": "relation → Product"
+        },
+        {
+          "name": "bin",
+          "type": "string"
+        },
+        {
+          "name": "quantity",
+          "type": "integer"
+        },
+        {
+          "name": "status",
+          "type": "enum(open, picked, shipped)"
+        }
+      ]
+    }
+  ],
+  "linked_entities": [
+    "SalesOrder",
+    "DeliveryNote",
+    "Product"
+  ],
+  "mcp_tools": [
+    {
+      "name": "next_pick",
+      "description": "Liefert die nächste Pickposition in optimaler Laufreihenfolge.",
+      "params": []
+    },
+    {
+      "name": "confirm_pick",
+      "description": "Bestätigt eine gepickte Position per Scan.",
+      "params": [
+        {
+          "name": "taskId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "sku",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "close_parcel",
+      "description": "Schließt das Paket ab und erzeugt das Versandlabel.",
+      "params": [
+        {
+          "name": "orderId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "carrier",
+          "type": "string",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "form": {
+    "home": "pk_list",
+    "screens": [
+      {
+        "id": "pk_list",
+        "name": "Pickliste",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c42",
+            "type": "heading",
+            "props": {
+              "text": "Pickliste"
+            }
+          },
+          {
+            "id": "c43",
+            "type": "text",
+            "props": {
+              "text": "Sammle die Artikel für das aktuelle Paket in optimaler Laufreihenfolge."
+            }
+          },
+          {
+            "id": "c44",
+            "type": "table",
+            "props": {
+              "label": "Positionen",
+              "columns": "Artikel, Lagerplatz, Menge, Status",
+              "dataSource": "Product"
+            }
+          },
+          {
+            "id": "c45",
+            "type": "input",
+            "props": {
+              "label": "Artikel scannen",
+              "placeholder": "EAN bestätigen",
+              "value": "",
+              "dataSource": "Product"
+            }
+          },
+          {
+            "id": "c46",
+            "type": "button",
+            "props": {
+              "text": "Position gepickt",
+              "variant": "primary",
+              "action": "tool:confirm_pick"
+            }
+          },
+          {
+            "id": "c47",
+            "type": "button",
+            "props": {
+              "text": "Paket abschließen",
+              "variant": "secondary",
+              "action": "dialog:pk_done"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pk_orders",
+        "name": "Aufträge",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c48",
+            "type": "heading",
+            "props": {
+              "text": "Offene Aufträge"
+            }
+          },
+          {
+            "id": "c49",
+            "type": "text",
+            "props": {
+              "text": "Wähle den nächsten Auftrag zum Kommissionieren."
+            }
+          },
+          {
+            "id": "c50",
+            "type": "table",
+            "props": {
+              "label": "Aufträge",
+              "columns": "Auftrag, Kunde, Positionen, Priorität",
+              "dataSource": "SalesOrder"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pk_done",
+        "name": "Paket abschließen",
+        "type": "dialog",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "c51",
+            "type": "heading",
+            "props": {
+              "text": "Paket abschließen"
+            }
+          },
+          {
+            "id": "c52",
+            "type": "text",
+            "props": {
+              "text": "Alle Positionen gepickt? Das Paket wird zum Versand übergeben."
+            }
+          },
+          {
+            "id": "c53",
+            "type": "select",
+            "props": {
+              "label": "Versanddienstleister",
+              "options": "DHL, DPD, UPS, GLS",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c54",
+            "type": "button",
+            "props": {
+              "text": "Abschließen & Label drucken",
+              "variant": "primary",
+              "action": "tool:close_parcel"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "app.yaml",
+      "lang": "yaml",
+      "content": "name: Pick\nversion: 1\nplatform: mobile\nentities:\n  - PickTask\nscreens:\n  - pk_list\n  - pk_orders"
+    },
+    {
+      "path": "rules/route.py",
+      "lang": "python",
+      "content": "def optimize(tasks, layout):\n    \"\"\"Sortiert offene Pickpositionen nach kürzestem Laufweg.\"\"\"\n    return sorted(tasks, key=lambda t: layout.distance_to(t.bin))\n"
+    }
+  ]
+}

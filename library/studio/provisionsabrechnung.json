@@ -1,0 +1,306 @@
+{
+  "order": 500,
+  "slug": "provisionsabrechnung",
+  "source": "builtin",
+  "name": "Provisionsabrechnung",
+  "category": "finance",
+  "category_label": "Finanzen",
+  "summary": "Desktop-App zur Provisionsabrechnung: Sätze je Vertreter definieren — abhängig von Kunde, Artikel oder Artikelkategorie — und Läufe starten.",
+  "locales": {
+    "de": {
+      "name": "Provisionsabrechnung",
+      "summary": "Desktop-App zur Provisionsabrechnung: Sätze je Vertreter definieren — abhängig von Kunde, Artikel oder Artikelkategorie — und Läufe starten."
+    },
+    "en": {
+      "name": "Commission settlement",
+      "summary": "Desktop app for commission settlement: define rates per sales rep — by customer, product or product category — and run batches."
+    }
+  },
+  "accent": "#EC4899",
+  "platform": "web",
+  "entities": [
+    {
+      "key": "CommissionRule",
+      "label": "Provisionsregel",
+      "fields": [
+        {
+          "name": "salesRep",
+          "type": "relation → User",
+          "required": true
+        },
+        {
+          "name": "scope",
+          "type": "enum(customer, product, category)",
+          "required": true
+        },
+        {
+          "name": "reference",
+          "type": "string"
+        },
+        {
+          "name": "rate",
+          "type": "percent",
+          "required": true
+        },
+        {
+          "name": "basis",
+          "type": "enum(revenue, margin)"
+        },
+        {
+          "name": "validFrom",
+          "type": "date"
+        }
+      ]
+    },
+    {
+      "key": "CommissionStatement",
+      "label": "Provisionsabrechnung",
+      "fields": [
+        {
+          "name": "period",
+          "type": "month"
+        },
+        {
+          "name": "salesRep",
+          "type": "relation → User"
+        },
+        {
+          "name": "amount",
+          "type": "money"
+        },
+        {
+          "name": "status",
+          "type": "enum(open, paid)"
+        }
+      ]
+    }
+  ],
+  "linked_entities": [
+    "User",
+    "Customer",
+    "Product",
+    "SalesInvoice"
+  ],
+  "mcp_tools": [
+    {
+      "name": "list_rules",
+      "description": "Liefert alle Provisionsregeln.",
+      "params": [
+        {
+          "name": "salesRepId",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "save_rule",
+      "description": "Legt eine Provisionsregel an oder aktualisiert sie.",
+      "params": [
+        {
+          "name": "salesRepId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "scope",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "rate",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "run_commission_batch",
+      "description": "Startet den Provisionslauf für eine Periode.",
+      "params": [
+        {
+          "name": "period",
+          "type": "string",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "form": {
+    "home": "pv_rules",
+    "screens": [
+      {
+        "id": "pv_rules",
+        "name": "Provisionsregeln",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c72",
+            "type": "heading",
+            "props": {
+              "text": "Provisionsregeln"
+            }
+          },
+          {
+            "id": "c73",
+            "type": "text",
+            "props": {
+              "text": "Definiere Provisionssätze je Vertreter — abhängig von Kunde, Artikel oder Artikelkategorie."
+            }
+          },
+          {
+            "id": "c74",
+            "type": "table",
+            "props": {
+              "label": "Regeln",
+              "columns": "Vertreter, Bezug, Referenz, Satz, Basis",
+              "dataSource": "User"
+            }
+          },
+          {
+            "id": "c75",
+            "type": "button",
+            "props": {
+              "text": "Regel hinzufügen",
+              "variant": "primary",
+              "action": "dialog:pv_rule"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pv_run",
+        "name": "Abrechnung",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c76",
+            "type": "heading",
+            "props": {
+              "text": "Provisionsabrechnung"
+            }
+          },
+          {
+            "id": "c77",
+            "type": "select",
+            "props": {
+              "label": "Zeitraum",
+              "options": "Mai 2026, April 2026, Q1 2026",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c78",
+            "type": "table",
+            "props": {
+              "label": "Abrechnung",
+              "columns": "Vertreter, Umsatz, Deckungsbeitrag, Provision, Status",
+              "dataSource": "SalesInvoice"
+            }
+          },
+          {
+            "id": "c79",
+            "type": "button",
+            "props": {
+              "text": "Abrechnungslauf starten",
+              "variant": "primary",
+              "action": "tool:run_commission_batch"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pv_rule",
+        "name": "Regel hinzufügen",
+        "type": "dialog",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "c80",
+            "type": "heading",
+            "props": {
+              "text": "Provisionsregel"
+            }
+          },
+          {
+            "id": "c81",
+            "type": "select",
+            "props": {
+              "label": "Vertreter",
+              "options": "Anna Berger, Michael Schneider, Sandra Wimmer",
+              "dataSource": "User"
+            }
+          },
+          {
+            "id": "c82",
+            "type": "select",
+            "props": {
+              "label": "Bezug",
+              "options": "Kunde, Artikel, Artikelkategorie",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c83",
+            "type": "input",
+            "props": {
+              "label": "Referenz",
+              "placeholder": "z. B. Kategorie Schrauben",
+              "value": "",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c84",
+            "type": "number",
+            "props": {
+              "label": "Satz (%)",
+              "value": "3.5",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c85",
+            "type": "select",
+            "props": {
+              "label": "Basis",
+              "options": "Umsatz, Deckungsbeitrag",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c86",
+            "type": "date",
+            "props": {
+              "label": "Gültig ab",
+              "value": ""
+            }
+          },
+          {
+            "id": "c87",
+            "type": "button",
+            "props": {
+              "text": "Regel speichern",
+              "variant": "primary",
+              "action": "tool:save_rule"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "app.yaml",
+      "lang": "yaml",
+      "content": "name: Provisionsabrechnung\nversion: 1\nplatform: web\nentities:\n  - CommissionRule\n  - CommissionStatement\nscreens:\n  - pv_rules\n  - pv_run\ntrigger:\n  schedule: \"0 2 1 * *\"   # Monatsanfang"
+    },
+    {
+      "path": "rules/commission.py",
+      "lang": "python",
+      "content": "def commission_for(invoice, rule):\n    \"\"\"Provision einer Rechnung nach Regel-Bezug + Basis.\"\"\"\n    if not rule.matches(invoice):\n        return 0.0\n    base = invoice.margin if rule.basis == 'margin' else invoice.revenue\n    return round(base * rule.rate / 100, 2)\n"
+    }
+  ]
+}

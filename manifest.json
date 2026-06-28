@@ -292,6 +292,16 @@
         "library/pdf-templates/xentral_classic_rechnung.json"
       ]
     },
+    "studio": {
+      "count": 5,
+      "files": [
+        "library/studio/aussendienst.json",
+        "library/studio/bestellvorschlag.json",
+        "library/studio/lager.json",
+        "library/studio/pick.json",
+        "library/studio/provisionsabrechnung.json"
+      ]
+    },
     "workflows": {
       "count": 12,
       "files": [
@@ -311,10 +321,12 @@
     }
   },
   "skills": [
+    "skills/xentral-agents",
     "skills/xentral-dashboards",
     "skills/xentral-kpi",
     "skills/xentral-onboarding-coach",
     "skills/xentral-pdf-templates",
+    "skills/xentral-studio",
     "skills/xentral-workflows"
   ],
   "checksums": {
@@ -568,6 +580,11 @@
     "library/pdf-templates/xentral_classic_gutschrift.json": "sha256-92fccae38a399ddb0b9cbddc3289204cbbfbbb5800fd5fb8c5bc0156e69c94dd",
     "library/pdf-templates/xentral_classic_lieferschein.json": "sha256-4447c1693ccbea6c5d36905f7e681c34b6f7ddea5564e226e357397ec834e150",
     "library/pdf-templates/xentral_classic_rechnung.json": "sha256-b00a64b0a55bf65f0db8fe5d13a6a7d704a97722c0e7bd46ea70cb107a199e92",
+    "library/studio/aussendienst.json": "sha256-60ee46543b9f0fd18bfab28d141920ec1352e4c2cc7bcf3b01e538d501e57513",
+    "library/studio/bestellvorschlag.json": "sha256-c0eb11e98ac2e21708f0eebb3a3c568a2453e45ef9a9164d3a0b27bb7889485f",
+    "library/studio/lager.json": "sha256-805954cf90d45003be050ca9ef221312c4fc4727a316f89014e9880b571ab385",
+    "library/studio/pick.json": "sha256-15e3b20a02dc5578b7fcf8c7e871c6852a150bb169b3a502d7b979faf66bb52c",
+    "library/studio/provisionsabrechnung.json": "sha256-fbdd3aff67b7670fa1369e5a2a8e9ef3cb919a1d71370b088f5bda65f2869c00",
     "library/workflows/auto_release_paid_orders.json": "sha256-1d89e4a38ae1f6f55fc59de4f848ba3493a62c1f77cbf56409f42aa844f41869",
     "library/workflows/bom_cost_rollup.json": "sha256-69dee77ce552d3353bf6e3809e893f3e0baa1263a9bd3322e189d03066ce7502",
     "library/workflows/bom_cost_rollup_recursive.json": "sha256-9ef03962c137b479da3c40924bfead386d5da869924ff5ca9abde8503e332002",
