@@ -72,7 +72,7 @@ Do **not** invoke when:
 
 Before creating or modifying a dashboard:
 
-1. **Read `business_plan.profile`** — `business_model` and
+1. **Read `business_model.profile`** — `business_model` and
    `automation` tell you which widgets make sense. A B2B
    distributor with low automation cares about open orders and
    overdue invoices; a B2C webshop cares about today's

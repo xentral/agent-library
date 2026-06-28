@@ -37,7 +37,7 @@ slug must match exactly.
 ## Recipes
 
 ### First agent enable
-- Read `business_plan.profile` — routing and defaults key off `business_model`,
+- Read `business_model.profile` — routing and defaults key off `business_model`,
   `automation`, `tone`.
 - List candidates filtered by plan + category. Recommend one to start
   (often a return/refund form for B2C, an inbox handler for finance-heavy).
@@ -85,7 +85,7 @@ slug must match exactly.
   still creates a `requires_intervention` job — never throw the work away.
 - **Retry preserves context** — the original request + previous timeline are
   passed back; don't restart from scratch.
-- **Agents must not silently mutate config** (Business Plan, Bausteine). They
+- **Agents must not silently mutate config** (Business Model, Bausteine). They
   write a task/job for the operator instead.
 - Slot data lives in its own namespace (`custom_agents/<license>/agents.*`),
-  decoupled from the business plan.
+  decoupled from the business model.

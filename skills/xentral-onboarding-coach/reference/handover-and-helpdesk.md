@@ -178,8 +178,8 @@ this reason, nobody will know later why the block/agent/etc. was
 set up.
 
 **Content bar (2–4 sentences, no telegram style):**
-- **Anchor in the Business Plan or in Phase 2 research** — e.g.
-  "Business Plan: `business_model=D2C`, `sales_channels=[Shopify]`"
+- **Anchor in the Business Model or in Phase 2 research** — e.g.
+  "Business Model: `business_model=D2C`, `sales_channels=[Shopify]`"
   or "Phase 2 research: footer shows DHL + GLS, own warehouse
   detectable from careers section".
 - **Impact for the customer** — what concretely changes or gets

@@ -3,7 +3,7 @@
 ## Recipes (common flows)
 
 1. **First-time dashboards setup.**
-   - Read `business_plan.profile`.
+   - Read `business_model.profile`.
    - List built-ins matched to the profile (e.g. for `b2b` +
      `wholesale` → "Open orders", "Customer credit risk",
      "Supplier deliveries").

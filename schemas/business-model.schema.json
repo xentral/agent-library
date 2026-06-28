@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "business-plan library item",
+  "title": "business-model library item",
   "type": "object",
   "required": [
     "id",

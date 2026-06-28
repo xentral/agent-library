@@ -303,13 +303,13 @@ BP). They steer Phase 4, 5 and 7.
 
 → Once goal + mode are chosen: Phase 4.
 
-## PHASE 4 — Auto-fill the Business Plan
+## PHASE 4 — Auto-fill the Business Model
 
-Call `xentral_business_plan action='read'`.
+Call `xentral_business_model action='read'`.
 
 - **One already exists**: show the user which sections are already
   filled and ask as multi-choice:
-  > You already have a business plan. What do you want to do?
+  > You already have a business model. What do you want to do?
   >   (1) Keep it as is, only fill gaps
   >   (2) Completely new based on research
   >   (3) Go through section by section
@@ -348,15 +348,15 @@ Defaults for sections 6 + 7 (for `Full Setup`):
 - `goals` — "Increase orders per employee by 30% in 90 days, make
   return rate transparent" — (1)/(2)
 
-Save with `xentral_business_plan action='update_section'` after
+Save with `xentral_business_model action='update_section'` after
 every confirmed section.
 
 After Phase 4 ends (depending on mode 2 / 5 / 7 sections), briefly
 and calmly:
 - `First Use Case`: "Profile fits — we can sharpen the rest later
-  in the Business Plan tab."
+  in the Business Model tab."
 - `Three Use Cases` / `Full Setup`: "Profile filled — adjustable
-  any time in the Business Plan tab."
+  any time in the Business Model tab."
 
 → Phase 5.
 
@@ -415,7 +415,7 @@ xentral_onboarding_plan action='get_context' locale='de'
 ```
 
 You get back:
-- `business_plan` — the confirmed BP
+- `business_model` — the confirmed BP
 - `libraries` — all cards from blocks, agents, dashboards,
   connections, PDFs, KPIs (with descriptions + `human_inputs`)
 - `existing` — which slugs are already active (don't propose
