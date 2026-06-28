@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "studio library item",
+  "type": "object",
+  "required": [
+    "accent",
+    "category",
+    "category_label",
+    "form",
+    "linked_entities",
+    "name",
+    "order",
+    "platform",
+    "slug",
+    "source",
+    "summary"
+  ],
+  "properties": {
+    "accent": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "category_label": {
+      "type": "string"
+    },
+    "entities": {
+      "type": "array"
+    },
+    "files": {
+      "type": "array"
+    },
+    "form": {
+      "type": "object",
+      "required": [
+        "home",
+        "screens"
+      ],
+      "properties": {
+        "home": {
+          "type": "string"
+        },
+        "screens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "type",
+              "components"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "screen",
+                  "dialog"
+                ]
+              },
+              "inMenu": {
+                "type": "boolean"
+              },
+              "components": {
+                "type": "array"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "linked_entities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "locales": {
+      "type": "object"
+    },
+    "mcp_tools": {
+      "type": "array"
+    },
+    "name": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "mobile",
+        "web"
+      ]
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "source": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

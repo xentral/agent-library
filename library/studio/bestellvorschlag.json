@@ -1,0 +1,297 @@
+{
+  "order": 100,
+  "slug": "bestellvorschlag",
+  "source": "builtin",
+  "name": "Bestellvorschlag",
+  "category": "logistics",
+  "category_label": "Einkauf",
+  "summary": "Tabelle aller Artikel mit automatischem Nachbestellvorschlag aus Bestand, Verbrauch, Wachstum und Saisonalität.",
+  "locales": {
+    "de": {
+      "name": "Bestellvorschlag",
+      "summary": "Tabelle aller Artikel mit automatischem Nachbestellvorschlag aus Bestand, Verbrauch, Wachstum und Saisonalität."
+    },
+    "en": {
+      "name": "Reorder proposals",
+      "summary": "Table of all items with an automatic reorder proposal derived from stock, consumption, growth and seasonality."
+    }
+  },
+  "accent": "#6D7CFF",
+  "platform": "web",
+  "entities": [
+    {
+      "key": "PurchaseProposal",
+      "label": "Bestellvorschlag",
+      "fields": [
+        {
+          "name": "product",
+          "type": "relation → Product",
+          "required": true
+        },
+        {
+          "name": "currentStock",
+          "type": "integer"
+        },
+        {
+          "name": "minStock",
+          "type": "integer"
+        },
+        {
+          "name": "proposedQty",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "growthFactor",
+          "type": "percent"
+        },
+        {
+          "name": "seasonalFactor",
+          "type": "percent"
+        },
+        {
+          "name": "preferredSupplier",
+          "type": "relation → Supplier"
+        },
+        {
+          "name": "targetDate",
+          "type": "date"
+        },
+        {
+          "name": "status",
+          "type": "enum(draft, approved, ordered)"
+        }
+      ]
+    }
+  ],
+  "linked_entities": [
+    "Product",
+    "Supplier",
+    "PurchaseOrder"
+  ],
+  "mcp_tools": [
+    {
+      "name": "list_proposals",
+      "description": "Liefert die aktuellen Bestellvorschläge.",
+      "params": [
+        {
+          "name": "supplierId",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "recalc_proposals",
+      "description": "Berechnet Vorschläge neu aus Bestand, Verbrauch, Wachstum und Saisonalität.",
+      "params": [
+        {
+          "name": "growthPct",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "approve_proposals",
+      "description": "Bündelt freigegebene Vorschläge zu Bestellungen und sendet sie an die Lieferanten.",
+      "params": [
+        {
+          "name": "proposalIds",
+          "type": "string[]",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "form": {
+    "home": "bv_home",
+    "screens": [
+      {
+        "id": "bv_home",
+        "name": "Bestellvorschläge",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c1",
+            "type": "heading",
+            "props": {
+              "text": "Bestellvorschläge"
+            }
+          },
+          {
+            "id": "c2",
+            "type": "text",
+            "props": {
+              "text": "Automatisch berechnete Nachbestellungen auf Basis von Bestand, Verbrauch und Prognose."
+            }
+          },
+          {
+            "id": "c3",
+            "type": "section",
+            "props": {
+              "text": "Parameter"
+            }
+          },
+          {
+            "id": "c4",
+            "type": "number",
+            "props": {
+              "label": "Erwartetes Wachstum (%)",
+              "value": "8",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c5",
+            "type": "toggle",
+            "props": {
+              "label": "Saisonalität berücksichtigen",
+              "value": "on"
+            }
+          },
+          {
+            "id": "c6",
+            "type": "number",
+            "props": {
+              "label": "Sicherheitsbestand (Tage)",
+              "value": "14",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c7",
+            "type": "select",
+            "props": {
+              "label": "Beschaffungsstrategie",
+              "options": "Min/Max, Bedarfsprognose, Feste Bestellmenge",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c8",
+            "type": "button",
+            "props": {
+              "text": "Vorschläge neu berechnen",
+              "variant": "primary",
+              "action": "tool:recalc_proposals"
+            }
+          },
+          {
+            "id": "c9",
+            "type": "divider",
+            "props": {}
+          },
+          {
+            "id": "c10",
+            "type": "section",
+            "props": {
+              "text": "Vorschläge"
+            }
+          },
+          {
+            "id": "c11",
+            "type": "table",
+            "props": {
+              "label": "Artikel",
+              "columns": "Artikel, Bestand, Mindestbestand, Vorschlag, Lieferant, Liefertermin",
+              "dataSource": "Product"
+            }
+          },
+          {
+            "id": "c12",
+            "type": "button",
+            "props": {
+              "text": "Bestellungen freigeben",
+              "variant": "primary",
+              "action": "dialog:bv_release"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bv_history",
+        "name": "Historie",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c13",
+            "type": "heading",
+            "props": {
+              "text": "Bestellhistorie"
+            }
+          },
+          {
+            "id": "c14",
+            "type": "text",
+            "props": {
+              "text": "Freigegebene Bestellungen der letzten Wochen."
+            }
+          },
+          {
+            "id": "c15",
+            "type": "table",
+            "props": {
+              "label": "Bestellungen",
+              "columns": "Datum, Lieferant, Positionen, Wert, Status",
+              "dataSource": "PurchaseOrder"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bv_release",
+        "name": "Bestellungen freigeben",
+        "type": "dialog",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "c16",
+            "type": "heading",
+            "props": {
+              "text": "Bestellungen freigeben"
+            }
+          },
+          {
+            "id": "c17",
+            "type": "text",
+            "props": {
+              "text": "Die ausgewählten Vorschläge werden je Lieferant zu Bestellungen gebündelt und versendet."
+            }
+          },
+          {
+            "id": "c18",
+            "type": "toggle",
+            "props": {
+              "label": "Per E-Mail an Lieferanten senden",
+              "value": "on"
+            }
+          },
+          {
+            "id": "c19",
+            "type": "button",
+            "props": {
+              "text": "Jetzt freigeben",
+              "variant": "primary",
+              "action": "tool:approve_proposals"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "app.yaml",
+      "lang": "yaml",
+      "content": "name: Bestellvorschlag\nversion: 1\nplatform: web\nentities:\n  - PurchaseProposal\nscreens:\n  - bv_home\n  - bv_history\ntrigger:\n  schedule: \"0 6 * * 1-5\"   # werktags 06:00 neu berechnen"
+    },
+    {
+      "path": "rules/reorder.py",
+      "lang": "python",
+      "content": "def proposal_qty(stock, avg_daily_use, lead_days, growth_pct, seasonal):\n    \"\"\"Nachbestellmenge inkl. Wachstum + Saisonfaktor.\"\"\"\n    demand = avg_daily_use * lead_days\n    demand *= (1 + growth_pct / 100)\n    demand *= seasonal.factor_for_now()\n    return max(0, round(demand - stock))\n"
+    }
+  ]
+}

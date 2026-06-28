@@ -1,0 +1,244 @@
+{
+  "order": 400,
+  "slug": "aussendienst",
+  "source": "builtin",
+  "name": "Außendienst B2B",
+  "category": "sales",
+  "category_label": "Vertrieb",
+  "summary": "Mobile App für den Außendienst: Kundenakte ansehen und unterwegs schnell Aufträge für einen Kunden platzieren.",
+  "locales": {
+    "de": {
+      "name": "Außendienst B2B",
+      "summary": "Mobile App für den Außendienst: Kundenakte ansehen und unterwegs schnell Aufträge für einen Kunden platzieren."
+    },
+    "en": {
+      "name": "Field sales B2B",
+      "summary": "Mobile app for field sales: view the customer file and quickly place orders for a customer on the go."
+    }
+  },
+  "accent": "#F59E0B",
+  "platform": "mobile",
+  "entities": [],
+  "linked_entities": [
+    "Customer",
+    "SalesOrder",
+    "Product",
+    "SalesInvoice"
+  ],
+  "mcp_tools": [
+    {
+      "name": "search_customers",
+      "description": "Sucht Kunden nach Name oder Kundennummer.",
+      "params": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "get_customer",
+      "description": "Liefert die Kundenakte inkl. Kennzahlen und letzter Aufträge.",
+      "params": [
+        {
+          "name": "customerId",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "create_order",
+      "description": "Legt einen Auftrag für einen Kunden an.",
+      "params": [
+        {
+          "name": "customerId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "lines",
+          "type": "object[]",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "form": {
+    "home": "b2_customers",
+    "screens": [
+      {
+        "id": "b2_customers",
+        "name": "Kunden",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c55",
+            "type": "heading",
+            "props": {
+              "text": "Kunden"
+            }
+          },
+          {
+            "id": "c56",
+            "type": "input",
+            "props": {
+              "label": "Kunde suchen",
+              "placeholder": "Name oder Kundennummer",
+              "value": "",
+              "dataSource": "Customer"
+            }
+          },
+          {
+            "id": "c57",
+            "type": "table",
+            "props": {
+              "label": "Kunden",
+              "columns": "Kunde, Ort, Offener Saldo, Letzter Auftrag",
+              "dataSource": "Customer"
+            }
+          },
+          {
+            "id": "c58",
+            "type": "button",
+            "props": {
+              "text": "Kundenakte öffnen",
+              "variant": "secondary",
+              "action": "screen:b2_file"
+            }
+          }
+        ]
+      },
+      {
+        "id": "b2_file",
+        "name": "Kundenakte",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "c59",
+            "type": "heading",
+            "props": {
+              "text": "Kundenakte"
+            }
+          },
+          {
+            "id": "c60",
+            "type": "text",
+            "props": {
+              "text": "Müller Metallbau GmbH · Grafing · Kundennr. 10248"
+            }
+          },
+          {
+            "id": "c61",
+            "type": "section",
+            "props": {
+              "text": "Kennzahlen"
+            }
+          },
+          {
+            "id": "c62",
+            "type": "table",
+            "props": {
+              "label": "Übersicht",
+              "columns": "Kennzahl, Wert",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c63",
+            "type": "section",
+            "props": {
+              "text": "Letzte Aufträge"
+            }
+          },
+          {
+            "id": "c64",
+            "type": "table",
+            "props": {
+              "label": "Aufträge",
+              "columns": "Datum, Auftrag, Wert, Status",
+              "dataSource": "SalesOrder"
+            }
+          },
+          {
+            "id": "c65",
+            "type": "button",
+            "props": {
+              "text": "Auftrag anlegen",
+              "variant": "primary",
+              "action": "dialog:b2_order"
+            }
+          }
+        ]
+      },
+      {
+        "id": "b2_order",
+        "name": "Auftrag anlegen",
+        "type": "dialog",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "c66",
+            "type": "heading",
+            "props": {
+              "text": "Neuer Auftrag"
+            }
+          },
+          {
+            "id": "c67",
+            "type": "select",
+            "props": {
+              "label": "Artikel",
+              "options": "V2A Schraube 4.8x16, Edelstahlblech 2mm, Winkel 90 Grad",
+              "dataSource": "Product"
+            }
+          },
+          {
+            "id": "c68",
+            "type": "number",
+            "props": {
+              "label": "Menge",
+              "value": "100",
+              "dataSource": ""
+            }
+          },
+          {
+            "id": "c69",
+            "type": "date",
+            "props": {
+              "label": "Wunschtermin",
+              "value": ""
+            }
+          },
+          {
+            "id": "c70",
+            "type": "textarea",
+            "props": {
+              "label": "Notiz",
+              "placeholder": "Optional…"
+            }
+          },
+          {
+            "id": "c71",
+            "type": "button",
+            "props": {
+              "text": "Auftrag platzieren",
+              "variant": "primary",
+              "action": "tool:create_order"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "app.yaml",
+      "lang": "yaml",
+      "content": "name: Aussendienst B2B\nversion: 1\nplatform: mobile\nscreens:\n  - b2_customers\n  - b2_file\nuses:\n  - Customer\n  - SalesOrder"
+    }
+  ]
+}
