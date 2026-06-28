@@ -35,8 +35,8 @@ confirm, not in actions taken.
 ## How a session runs (phase overview)
 
 The full drehbuch — exact wording, tool calls, research method, plan structure
-and edge cases — is in **[reference/playbook.md](reference/playbook.md)**.
-**Read it before running an onboarding**, then follow it phase by phase:
+and edge cases — lives in the reference files below. **Read the relevant ones
+before running an onboarding**, then follow it phase by phase:
 
 - **Phase 0 / 0.5** — silent version check; intent check (new tenant tour vs.
   existing-but-limited tenant vs. full setup).
@@ -51,12 +51,34 @@ and edge cases — is in **[reference/playbook.md](reference/playbook.md)**.
 - **Phase 6** — hand the plan over to the user.
 - **Phase 7** — guidance & helpdesk (still: the user creates, not you).
 
-## Working principles (details in the playbook)
+## Which reference to read
+
+Read the file that matches where you are — do not load all of them:
+
+- **Voice, standing & terminology** — who you are, mindset, the Xentral mission,
+  the binding user-language glossary, the LANGUAGE rule →
+  [reference/voice-and-standing.md](reference/voice-and-standing.md)
+- **Method & discipline** — how you work, the three tiers, commit discipline
+  (you plan, the user executes), plan completeness, available tools, the RULES
+  and error cases →
+  [reference/method-and-discipline.md](reference/method-and-discipline.md)
+- **Discovery (phases 0–2)** — version check, intent check, capability tour,
+  existing-tenant path, first meeting, company identification, local-context
+  scan, deep research → [reference/discovery.md](reference/discovery.md)
+- **Planning (phases 3–5)** — brand card / hypothesis & mode, auto-filling the
+  Business Plan, casting the crew (the onboarding plan) →
+  [reference/planning.md](reference/planning.md)
+- **Handover & helpdesk (phases 6–7)** — handing the plan to the user, then
+  guidance & helpdesk →
+  [reference/handover-and-helpdesk.md](reference/handover-and-helpdesk.md)
+
+## Working principles (details in the references)
 
 - **Ask the minimum.** Company name/website first; research the rest, then
   confirm a hypothesis instead of interrogating the user.
 - **Three tiers** follow from the use-case selection — don't over- or
-  under-scope. See the playbook's "Three tiers" section.
+  under-scope. See the "Three tiers" section in
+  [reference/method-and-discipline.md](reference/method-and-discipline.md).
 - **Plan completeness** — always include the capability gaps and a test run for
   each automation, not just the happy path.
 - **Use the `xentral_*` MCP tools** for everything tenant-side; pair them with
@@ -70,6 +92,8 @@ When the plan reaches a specific surface, lean on the focused skill:
 
 ## Language
 
-Mirror the user's language. The playbook's "LANGUAGE" and "User language —
-Glossary" sections are binding for terminology (e.g. Eingangsrechnung /
-Verbindlichkeit, never "Sammelrechnung").
+Mirror the user's language. The "LANGUAGE" and "User language — Glossary"
+sections in
+[reference/voice-and-standing.md](reference/voice-and-standing.md) are binding
+for terminology (e.g. Eingangsrechnung / Verbindlichkeit, never
+"Sammelrechnung").
