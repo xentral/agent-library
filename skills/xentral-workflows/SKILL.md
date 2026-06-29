@@ -53,7 +53,7 @@ When the operator asks for a workflow:
 5. **Wire the edges.** Trigger → source → optionally loop → condition → action(s).
 6. **Save.** `init` with the assembled `{nodes, edges}` graph.
 
-Node positions: lay them out **vertically** — `x = 80`, and step `y` by the card's height (~200 after a plain node, +40 per extra operation on a resource node, ~+70 after a branch node whose Yes/No labels hang below it; see the orientation note above). Do **not** use a flat 140 step — multi-row entity cards and branch labels would overlap the node below. The user can still rearrange, but the saved plan must render without overlaps.
+Node positions: always lay them out **horizontally, left → right** — keep `y` constant (e.g. `y = 80`) and step `x` by ~400 per node (cards are ~320px wide); a branch offsets its two lines by `y` ±200 for the Yes/No paths. Set `"orientation": "horizontal"` to match. **Never build vertical** — it is only a manual toggle the user can flip in the editor, not something an agent emits. The user can still rearrange, but the saved plan must render without overlaps, so over-space rather than risk cards overlapping the next node.
 
 ## MCP agent loop: build, check, learn
 

@@ -5,7 +5,7 @@
   "icon": "warehouse",
   "order": 170,
   "trigger_type": "schedule",
-  "orientation": "vertical",
+  "orientation": "horizontal",
   "locales": {
     "de": {
       "name": "Nächtliche Stücklisten-EK-Kalkulation",
@@ -43,7 +43,7 @@
       "type": "wfNode",
       "position": {
         "x": 80,
-        "y": 80
+        "y": 300
       },
       "data": {
         "typeId": "trigger-schedule",
@@ -60,8 +60,8 @@
       "id": "n_query",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 320
+        "x": 480,
+        "y": 300
       },
       "data": {
         "typeId": "business-entity",
@@ -87,8 +87,8 @@
       "id": "n_seed",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 560
+        "x": 880,
+        "y": 300
       },
       "data": {
         "typeId": "code",
@@ -103,8 +103,8 @@
       "id": "n_while",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 800
+        "x": 1280,
+        "y": 300
       },
       "data": {
         "typeId": "while",
@@ -117,8 +117,8 @@
       "id": "n_test",
       "type": "wfNode",
       "position": {
-        "x": 380,
-        "y": 800
+        "x": 1680,
+        "y": 20
       },
       "data": {
         "typeId": "code",
@@ -133,8 +133,8 @@
       "id": "n_step",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 1040
+        "x": 1680,
+        "y": 300
       },
       "data": {
         "typeId": "code",
@@ -149,8 +149,8 @@
       "id": "n_write",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 1280
+        "x": 1680,
+        "y": 580
       },
       "data": {
         "typeId": "code",
