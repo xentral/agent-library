@@ -89,6 +89,26 @@ only when no template is close.
 7. **Ship:** `set_enabled` (`slug` + `enabled`) — drafts are invisible to the
    team until enabled. `delete` (`slug`) hard-deletes a custom app.
 
+## Editing the OPEN app (focus = studio_app)
+
+When the focus block shows `entity_type=studio_app`, the user is in the Studio
+IDE on that `slug`. Edit it in place with the granular actions instead of
+re-sending the whole `form` — the IDE re-hydrates automatically (no reload
+hint to the user):
+
+- `compose_ui` (`slug` + `request`) — natural-language screen authoring. Pass
+  ONE complete instruction in the user's language; a validated composer
+  rewrites the screens and drops any hallucinated component/binding. This is
+  the preferred way to change the UI.
+- `write_file` / `delete_file` (`slug` + `path`, `+ content`, `lang`) — edit one
+  Python code file of the app.
+- `upsert_tool` / `delete_tool` (`slug` + `tool_name`, `+ tool_description`,
+  `params`, `entrypoint`) — create/update/remove one MCP tool callable from a
+  button via `tool:<name>`. `entrypoint` is the path of an existing code file.
+
+A button that calls new logic = `write_file` (the logic) + `upsert_tool` (wire
+it) + `compose_ui` (the button with `action: tool:<name>`), in one turn.
+
 ## Which reference to read
 
 - **Component catalogue** — every component type (layout, text, input, data,
@@ -109,3 +129,5 @@ only when no template is close.
 - Don't pile every field onto one screen — one job per screen, one primary
   button (see the design patterns).
 - Don't ship an app the team can't see — remember `set_enabled`.
+- Don't hand-write the full `form` JSON to change the OPEN app — use
+  `compose_ui`; it validates and the IDE re-hydrates on its own.
