@@ -5,7 +5,7 @@
   "icon": "invoice",
   "order": 130,
   "trigger_type": "schedule",
-  "orientation": "vertical",
+  "orientation": "horizontal",
   "locales": {
     "de": {
       "name": "Tägliche Liste offener Posten (Entwurf)",
@@ -40,7 +40,7 @@
       "type": "wfNode",
       "position": {
         "x": 80,
-        "y": 80
+        "y": 300
       },
       "data": {
         "typeId": "trigger-schedule",
@@ -64,8 +64,8 @@
       "id": "n_query",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 320
+        "x": 480,
+        "y": 300
       },
       "data": {
         "typeId": "business-entity",
@@ -91,8 +91,8 @@
       "id": "n_compose",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 560
+        "x": 880,
+        "y": 300
       },
       "data": {
         "typeId": "agent",
@@ -108,8 +108,8 @@
       "id": "n_out",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 800
+        "x": 1280,
+        "y": 300
       },
       "data": {
         "typeId": "output",

@@ -6,7 +6,7 @@
   "order": 120,
   "popular": true,
   "trigger_type": "erp-event",
-  "orientation": "vertical",
+  "orientation": "horizontal",
   "locales": {
     "de": {
       "name": "Retoure geprüft → Gutschrift erzeugen",
@@ -42,7 +42,7 @@
       "type": "wfNode",
       "position": {
         "x": 80,
-        "y": 80
+        "y": 300
       },
       "data": {
         "typeId": "trigger-erp-event",
@@ -56,8 +56,8 @@
       "id": "n_query",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 320
+        "x": 480,
+        "y": 300
       },
       "data": {
         "typeId": "business-entity",
@@ -84,8 +84,8 @@
       "id": "n_loop",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 560
+        "x": 880,
+        "y": 300
       },
       "data": {
         "typeId": "loop",
@@ -100,8 +100,8 @@
       "id": "n_create",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 800
+        "x": 1280,
+        "y": 300
       },
       "data": {
         "typeId": "business-entity",
@@ -141,8 +141,8 @@
       "id": "n_mail",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 1040
+        "x": 1680,
+        "y": 300
       },
       "data": {
         "typeId": "agent",

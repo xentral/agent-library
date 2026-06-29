@@ -5,7 +5,7 @@
   "icon": "warehouse",
   "order": 180,
   "trigger_type": "schedule",
-  "orientation": "vertical",
+  "orientation": "horizontal",
   "locales": {
     "de": {
       "name": "Stammdaten-Check über den ganzen Katalog",
@@ -43,7 +43,7 @@
       "type": "wfNode",
       "position": {
         "x": 80,
-        "y": 80
+        "y": 300
       },
       "data": {
         "typeId": "trigger-schedule",
@@ -63,8 +63,8 @@
       "id": "n_init",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 320
+        "x": 480,
+        "y": 300
       },
       "data": {
         "typeId": "code",
@@ -79,8 +79,8 @@
       "id": "n_while",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 560
+        "x": 880,
+        "y": 300
       },
       "data": {
         "typeId": "while",
@@ -93,8 +93,8 @@
       "id": "n_more",
       "type": "wfNode",
       "position": {
-        "x": 380,
-        "y": 560
+        "x": 1280,
+        "y": 20
       },
       "data": {
         "typeId": "code",
@@ -109,8 +109,8 @@
       "id": "n_scan",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 800
+        "x": 1280,
+        "y": 300
       },
       "data": {
         "typeId": "code",
@@ -125,8 +125,8 @@
       "id": "n_report",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 1040
+        "x": 1280,
+        "y": 580
       },
       "data": {
         "typeId": "code",
@@ -141,8 +141,8 @@
       "id": "n_out",
       "type": "wfNode",
       "position": {
-        "x": 80,
-        "y": 1280
+        "x": 1680,
+        "y": 300
       },
       "data": {
         "typeId": "output",
