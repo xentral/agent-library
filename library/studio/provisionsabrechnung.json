@@ -150,22 +150,41 @@
             }
           },
           {
-            "id": "c74",
-            "type": "table",
+            "id": "c200",
+            "type": "card",
             "props": {
-              "label": "Regeln",
-              "columns": "Vertreter, Bezug, Referenz, Satz, Basis",
-              "dataSource": "User"
-            }
-          },
-          {
-            "id": "c75",
-            "type": "button",
-            "props": {
-              "text": "Regel hinzufügen",
-              "variant": "primary",
-              "action": "dialog:pv_rule"
-            }
+              "title": "Aktive Regeln",
+              "description": "Alle hinterlegten Provisionssätze auf einen Blick."
+            },
+            "children": [
+              {
+                "id": "c74",
+                "type": "table",
+                "props": {
+                  "label": "Regeln",
+                  "columns": "Vertreter, Bezug, Referenz, Satz, Basis",
+                  "dataSource": "User"
+                }
+              },
+              {
+                "id": "c201",
+                "type": "actionbar",
+                "props": {
+                  "align": "right"
+                },
+                "children": [
+                  {
+                    "id": "c75",
+                    "type": "button",
+                    "props": {
+                      "text": "Regel hinzufügen",
+                      "variant": "primary",
+                      "action": "dialog:pv_rule"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -183,31 +202,152 @@
             }
           },
           {
-            "id": "c77",
-            "type": "select",
+            "id": "c202",
+            "type": "grid",
             "props": {
-              "label": "Zeitraum",
-              "options": "Mai 2026, April 2026, Q1 2026",
-              "dataSource": ""
-            }
+              "columns": "3"
+            },
+            "children": [
+              {
+                "id": "c203",
+                "type": "kpibox",
+                "props": {
+                  "label": "Provision (Monat)",
+                  "value": "18.420 €",
+                  "delta": "+12,4 %",
+                  "tone": "up"
+                }
+              },
+              {
+                "id": "c204",
+                "type": "kpibox",
+                "props": {
+                  "label": "Abgerechnet",
+                  "value": "12.960 €",
+                  "delta": "70 %",
+                  "tone": "neutral"
+                }
+              },
+              {
+                "id": "c205",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "5.460 €",
+                  "delta": "3 Vertreter",
+                  "tone": "down"
+                }
+              }
+            ]
           },
           {
-            "id": "c78",
-            "type": "table",
+            "id": "c206",
+            "type": "card",
             "props": {
-              "label": "Abrechnung",
-              "columns": "Vertreter, Umsatz, Deckungsbeitrag, Provision, Status",
-              "dataSource": "SalesInvoice"
-            }
+              "title": "Periode wählen",
+              "description": "Lege den Abrechnungszeitraum und den Stichtag fest."
+            },
+            "children": [
+              {
+                "id": "c207",
+                "type": "radiocards",
+                "props": {
+                  "label": "Zeitraum",
+                  "options": "Mai 2026, April 2026, Q1 2026"
+                }
+              },
+              {
+                "id": "c208",
+                "type": "calendar",
+                "props": {
+                  "label": "Stichtag"
+                }
+              }
+            ]
           },
           {
-            "id": "c79",
-            "type": "button",
+            "id": "c209",
+            "type": "grid",
             "props": {
-              "text": "Abrechnungslauf starten",
-              "variant": "primary",
-              "action": "tool:run_commission_batch"
-            }
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "c210",
+                "type": "card",
+                "props": {
+                  "title": "Provision je Monat",
+                  "description": "Entwicklung der ausgeschütteten Provision."
+                },
+                "children": [
+                  {
+                    "id": "c211",
+                    "type": "chart",
+                    "props": {
+                      "label": "Provision je Monat",
+                      "kind": "line",
+                      "data": "12400, 13800, 15200, 14100, 16900, 18420"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "c212",
+                "type": "card",
+                "props": {
+                  "title": "Anteil je Vertriebler",
+                  "description": "Verteilung der Provision im aktuellen Lauf."
+                },
+                "children": [
+                  {
+                    "id": "c213",
+                    "type": "chart",
+                    "props": {
+                      "label": "Anteil je Vertriebler",
+                      "kind": "donut",
+                      "data": "42, 31, 27"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "c214",
+            "type": "card",
+            "props": {
+              "title": "Abrechnung je Vertreter",
+              "description": "Umsatz, Deckungsbeitrag und Provision für die gewählte Periode."
+            },
+            "children": [
+              {
+                "id": "c78",
+                "type": "table",
+                "props": {
+                  "label": "Abrechnung",
+                  "columns": "Vertreter, Umsatz, Deckungsbeitrag, Provision, Status",
+                  "dataSource": "SalesInvoice"
+                }
+              },
+              {
+                "id": "c215",
+                "type": "actionbar",
+                "props": {
+                  "align": "right"
+                },
+                "children": [
+                  {
+                    "id": "c79",
+                    "type": "button",
+                    "props": {
+                      "text": "Abrechnungslauf starten",
+                      "variant": "primary",
+                      "action": "tool:run_commission_batch"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -226,56 +366,54 @@
           },
           {
             "id": "c81",
-            "type": "select",
+            "type": "formfield",
             "props": {
               "label": "Vertreter",
-              "options": "Anna Berger, Michael Schneider, Sandra Wimmer",
-              "dataSource": "User"
+              "fieldType": "select",
+              "options": "Anna Berger, Michael Schneider, Sandra Wimmer"
             }
           },
           {
             "id": "c82",
-            "type": "select",
+            "type": "formfield",
             "props": {
               "label": "Bezug",
-              "options": "Kunde, Artikel, Artikelkategorie",
-              "dataSource": ""
+              "fieldType": "select",
+              "options": "Kunde, Artikel, Artikelkategorie"
             }
           },
           {
             "id": "c83",
-            "type": "input",
+            "type": "formfield",
             "props": {
               "label": "Referenz",
-              "placeholder": "z. B. Kategorie Schrauben",
-              "value": "",
-              "dataSource": ""
+              "fieldType": "text",
+              "placeholder": "z. B. Kategorie Schrauben"
             }
           },
           {
             "id": "c84",
-            "type": "number",
+            "type": "formfield",
             "props": {
               "label": "Satz (%)",
-              "value": "3.5",
-              "dataSource": ""
+              "fieldType": "number"
             }
           },
           {
             "id": "c85",
-            "type": "select",
+            "type": "formfield",
             "props": {
               "label": "Basis",
-              "options": "Umsatz, Deckungsbeitrag",
-              "dataSource": ""
+              "fieldType": "select",
+              "options": "Umsatz, Deckungsbeitrag"
             }
           },
           {
             "id": "c86",
-            "type": "date",
+            "type": "formfield",
             "props": {
               "label": "Gültig ab",
-              "value": ""
+              "fieldType": "date"
             }
           },
           {

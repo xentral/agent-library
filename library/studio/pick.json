@@ -115,41 +115,98 @@
             }
           },
           {
-            "id": "c44",
-            "type": "table",
+            "id": "pk_kpis",
+            "type": "grid",
             "props": {
-              "label": "Positionen",
-              "columns": "Artikel, Lagerplatz, Menge, Status",
-              "dataSource": "Product"
-            }
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "pk_kpi_open",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offene Positionen",
+                  "value": "14",
+                  "delta": "-3",
+                  "tone": "down"
+                }
+              },
+              {
+                "id": "pk_kpi_done",
+                "type": "kpibox",
+                "props": {
+                  "label": "Heute gepickt",
+                  "value": "127",
+                  "delta": "+18",
+                  "tone": "up"
+                }
+              }
+            ]
           },
           {
-            "id": "c45",
-            "type": "input",
+            "id": "pk_card_list",
+            "type": "card",
             "props": {
-              "label": "Artikel scannen",
-              "placeholder": "EAN bestätigen",
-              "value": "",
-              "dataSource": "Product"
-            }
+              "title": "Positionen",
+              "description": "Abarbeiten in optimaler Laufreihenfolge."
+            },
+            "children": [
+              {
+                "id": "c44",
+                "type": "table",
+                "props": {
+                  "label": "Positionen",
+                  "columns": "Artikel, Lagerplatz, Menge, Status",
+                  "dataSource": "Product"
+                }
+              }
+            ]
           },
           {
-            "id": "c46",
-            "type": "button",
+            "id": "pk_card_scan",
+            "type": "card",
             "props": {
-              "text": "Position gepickt",
-              "variant": "primary",
-              "action": "tool:confirm_pick"
-            }
-          },
-          {
-            "id": "c47",
-            "type": "button",
-            "props": {
-              "text": "Paket abschließen",
-              "variant": "secondary",
-              "action": "dialog:pk_done"
-            }
+              "title": "Scannen & bestätigen",
+              "description": "Artikel scannen und Position abhaken."
+            },
+            "children": [
+              {
+                "id": "c45",
+                "type": "barcode",
+                "props": {
+                  "label": "Artikel scannen",
+                  "placeholder": "EAN bestätigen",
+                  "dataSource": "Product"
+                }
+              },
+              {
+                "id": "pk_scan_actions",
+                "type": "actionbar",
+                "props": {
+                  "align": "left"
+                },
+                "children": [
+                  {
+                    "id": "c46",
+                    "type": "button",
+                    "props": {
+                      "text": "Position gepickt",
+                      "variant": "primary",
+                      "action": "tool:confirm_pick"
+                    }
+                  },
+                  {
+                    "id": "c47",
+                    "type": "button",
+                    "props": {
+                      "text": "Paket abschließen",
+                      "variant": "secondary",
+                      "action": "dialog:pk_done"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -174,13 +231,42 @@
             }
           },
           {
-            "id": "c50",
-            "type": "table",
+            "id": "pk_card_trend",
+            "type": "card",
             "props": {
-              "label": "Aufträge",
-              "columns": "Auftrag, Kunde, Positionen, Priorität",
-              "dataSource": "SalesOrder"
-            }
+              "title": "Erledigte Picks der Woche",
+              "description": "Abgeschlossene Pickaufträge pro Tag."
+            },
+            "children": [
+              {
+                "id": "pk_chart_week",
+                "type": "chart",
+                "props": {
+                  "label": "Picks pro Tag",
+                  "kind": "bar",
+                  "data": "82, 96, 74, 110, 121, 64, 30"
+                }
+              }
+            ]
+          },
+          {
+            "id": "pk_card_orders",
+            "type": "card",
+            "props": {
+              "title": "Aufträge",
+              "description": "Nach Priorität sortiert."
+            },
+            "children": [
+              {
+                "id": "c50",
+                "type": "table",
+                "props": {
+                  "label": "Aufträge",
+                  "columns": "Auftrag, Kunde, Positionen, Priorität",
+                  "dataSource": "SalesOrder"
+                }
+              }
+            ]
           }
         ]
       },
@@ -205,22 +291,32 @@
             }
           },
           {
-            "id": "c53",
-            "type": "select",
+            "id": "pk_card_done",
+            "type": "card",
             "props": {
-              "label": "Versanddienstleister",
-              "options": "DHL, DPD, UPS, GLS",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c54",
-            "type": "button",
-            "props": {
-              "text": "Abschließen & Label drucken",
-              "variant": "primary",
-              "action": "tool:close_parcel"
-            }
+              "title": "Versand",
+              "description": "Dienstleister wählen und Label erzeugen."
+            },
+            "children": [
+              {
+                "id": "c53",
+                "type": "formfield",
+                "props": {
+                  "label": "Versanddienstleister",
+                  "fieldType": "select",
+                  "options": "DHL, DPD, UPS, GLS"
+                }
+              },
+              {
+                "id": "c54",
+                "type": "button",
+                "props": {
+                  "text": "Abschließen & Label drucken",
+                  "variant": "primary",
+                  "action": "tool:close_parcel"
+                }
+              }
+            ]
           }
         ]
       }

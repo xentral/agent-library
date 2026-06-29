@@ -150,48 +150,50 @@
             }
           },
           {
-            "id": "c21",
-            "type": "text",
+            "id": "lg_in_card",
+            "type": "card",
             "props": {
-              "text": "Wareneingang auf einen Lagerplatz buchen."
-            }
-          },
-          {
-            "id": "c22",
-            "type": "input",
-            "props": {
-              "label": "Artikel scannen",
-              "placeholder": "EAN / SKU",
-              "value": "",
-              "dataSource": "Product"
-            }
-          },
-          {
-            "id": "c23",
-            "type": "number",
-            "props": {
-              "label": "Menge",
-              "value": "1",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c24",
-            "type": "select",
-            "props": {
-              "label": "Lagerplatz",
-              "options": "A-01-01, A-01-02, B-02-03, WE-Zone",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c25",
-            "type": "button",
-            "props": {
-              "text": "Einlagern",
-              "variant": "primary",
-              "action": "tool:stock_in"
-            }
+              "title": "Wareneingang buchen",
+              "description": "Artikel scannen, Menge und Lagerplatz wählen."
+            },
+            "children": [
+              {
+                "id": "c22",
+                "type": "barcode",
+                "props": {
+                  "label": "Artikel scannen",
+                  "placeholder": "EAN / SKU",
+                  "dataSource": "Product"
+                }
+              },
+              {
+                "id": "c23",
+                "type": "formfield",
+                "props": {
+                  "label": "Menge",
+                  "fieldType": "number",
+                  "placeholder": "1"
+                }
+              },
+              {
+                "id": "c24",
+                "type": "formfield",
+                "props": {
+                  "label": "Lagerplatz",
+                  "fieldType": "select",
+                  "options": "A-01-01, A-01-02, B-02-03, WE-Zone"
+                }
+              },
+              {
+                "id": "c25",
+                "type": "button",
+                "props": {
+                  "text": "Einlagern",
+                  "variant": "primary",
+                  "action": "tool:stock_in"
+                }
+              }
+            ]
           }
         ]
       },
@@ -209,48 +211,49 @@
             }
           },
           {
-            "id": "c27",
-            "type": "text",
+            "id": "lg_out_card",
+            "type": "card",
             "props": {
-              "text": "Warenausgang von einem Lagerplatz buchen."
-            }
-          },
-          {
-            "id": "c28",
-            "type": "input",
-            "props": {
-              "label": "Artikel scannen",
-              "placeholder": "EAN / SKU",
-              "value": "",
-              "dataSource": "Product"
-            }
-          },
-          {
-            "id": "c29",
-            "type": "number",
-            "props": {
-              "label": "Menge",
-              "value": "1",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c30",
-            "type": "select",
-            "props": {
-              "label": "Grund",
-              "options": "Verkauf, Schwund, Korrektur",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c31",
-            "type": "button",
-            "props": {
-              "text": "Auslagern",
-              "variant": "primary",
-              "action": "tool:stock_out"
-            }
+              "title": "Warenausgang buchen",
+              "description": "Artikel scannen und Grund des Abgangs angeben."
+            },
+            "children": [
+              {
+                "id": "c28",
+                "type": "barcode",
+                "props": {
+                  "label": "Artikel scannen",
+                  "placeholder": "EAN / SKU",
+                  "dataSource": "Product"
+                }
+              },
+              {
+                "id": "c29",
+                "type": "formfield",
+                "props": {
+                  "label": "Menge",
+                  "fieldType": "number",
+                  "placeholder": "1"
+                }
+              },
+              {
+                "id": "c30",
+                "type": "radiocards",
+                "props": {
+                  "label": "Grund",
+                  "options": "Verkauf, Schwund, Korrektur"
+                }
+              },
+              {
+                "id": "c31",
+                "type": "button",
+                "props": {
+                  "text": "Auslagern",
+                  "variant": "primary",
+                  "action": "tool:stock_out"
+                }
+              }
+            ]
           }
         ]
       },
@@ -268,57 +271,59 @@
             }
           },
           {
-            "id": "c33",
-            "type": "text",
+            "id": "lg_move_card",
+            "type": "card",
             "props": {
-              "text": "Ware von einem Lagerplatz auf einen anderen umbuchen."
-            }
-          },
-          {
-            "id": "c34",
-            "type": "input",
-            "props": {
-              "label": "Artikel scannen",
-              "placeholder": "EAN / SKU",
-              "value": "",
-              "dataSource": "Product"
-            }
-          },
-          {
-            "id": "c35",
-            "type": "select",
-            "props": {
-              "label": "Von Lagerplatz",
-              "options": "A-01-01, A-01-02, B-02-03",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c36",
-            "type": "select",
-            "props": {
-              "label": "Nach Lagerplatz",
-              "options": "A-01-01, A-01-02, B-02-03",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c37",
-            "type": "number",
-            "props": {
-              "label": "Menge",
-              "value": "1",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c38",
-            "type": "button",
-            "props": {
-              "text": "Umlagern",
-              "variant": "primary",
-              "action": "tool:transfer"
-            }
+              "title": "Ware umbuchen",
+              "description": "Von einem Lagerplatz auf einen anderen umlagern."
+            },
+            "children": [
+              {
+                "id": "c34",
+                "type": "barcode",
+                "props": {
+                  "label": "Artikel scannen",
+                  "placeholder": "EAN / SKU",
+                  "dataSource": "Product"
+                }
+              },
+              {
+                "id": "c35",
+                "type": "formfield",
+                "props": {
+                  "label": "Von Lagerplatz",
+                  "fieldType": "select",
+                  "options": "A-01-01, A-01-02, B-02-03"
+                }
+              },
+              {
+                "id": "c36",
+                "type": "formfield",
+                "props": {
+                  "label": "Nach Lagerplatz",
+                  "fieldType": "select",
+                  "options": "A-01-01, A-01-02, B-02-03"
+                }
+              },
+              {
+                "id": "c37",
+                "type": "formfield",
+                "props": {
+                  "label": "Menge",
+                  "fieldType": "number",
+                  "placeholder": "1"
+                }
+              },
+              {
+                "id": "c38",
+                "type": "button",
+                "props": {
+                  "text": "Umlagern",
+                  "variant": "primary",
+                  "action": "tool:transfer"
+                }
+              }
+            ]
           }
         ]
       },
@@ -336,23 +341,80 @@
             }
           },
           {
-            "id": "c40",
-            "type": "input",
+            "id": "lg_stock_kpis",
+            "type": "grid",
             "props": {
-              "label": "Suche",
-              "placeholder": "Artikel oder Lagerplatz",
-              "value": "",
-              "dataSource": ""
-            }
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "lg_kpi_total",
+                "type": "kpibox",
+                "props": {
+                  "label": "Bestand gesamt",
+                  "value": "12480",
+                  "delta": "+3.1%",
+                  "tone": "up"
+                }
+              },
+              {
+                "id": "lg_kpi_in",
+                "type": "kpibox",
+                "props": {
+                  "label": "Wareneingänge heute",
+                  "value": "42",
+                  "delta": "+8",
+                  "tone": "up"
+                }
+              }
+            ]
           },
           {
-            "id": "c41",
-            "type": "table",
+            "id": "lg_stock_chart_card",
+            "type": "card",
             "props": {
-              "label": "Bestände",
-              "columns": "Artikel, Lagerplatz, Menge",
-              "dataSource": "Product"
-            }
+              "title": "Wareneingänge der Woche",
+              "description": "Gebuchte Eingänge je Wochentag."
+            },
+            "children": [
+              {
+                "id": "lg_chart_week",
+                "type": "chart",
+                "props": {
+                  "label": "Eingänge pro Tag",
+                  "kind": "bar",
+                  "data": "8, 14, 11, 19, 23, 6, 4"
+                }
+              }
+            ]
+          },
+          {
+            "id": "lg_stock_list_card",
+            "type": "card",
+            "props": {
+              "title": "Bestände",
+              "description": "Aktuelle Mengen je Artikel und Lagerplatz."
+            },
+            "children": [
+              {
+                "id": "c40",
+                "type": "formfield",
+                "props": {
+                  "label": "Suche",
+                  "fieldType": "text",
+                  "placeholder": "Artikel oder Lagerplatz"
+                }
+              },
+              {
+                "id": "c41",
+                "type": "table",
+                "props": {
+                  "label": "Bestände",
+                  "columns": "Artikel, Lagerplatz, Menge",
+                  "dataSource": "Product"
+                }
+              }
+            ]
           }
         ]
       }
