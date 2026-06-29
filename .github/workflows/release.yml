@@ -77,3 +77,21 @@ jobs:
           git push origin HEAD:main
           git push origin "$v"
           gh release create "$v" --title "$v" --generate-notes
+
+      - name: Notify consumer to bump LIBRARY_VERSION
+        env:
+          # Cross-repo dispatch needs a token with access to the (private)
+          # consumer repo — the default GITHUB_TOKEN is scoped to this repo only.
+          # Set AGENT_HUB_DISPATCH_TOKEN (org PAT / GitHub-App) as a secret.
+          GH_TOKEN: ${{ secrets.AGENT_HUB_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "AGENT_HUB_DISPATCH_TOKEN not set — skipping cross-repo dispatch."
+            echo "Release ${{ steps.ver.outputs.version }} is tagged; bump LIBRARY_VERSION manually or set the secret."
+            exit 0
+          fi
+          printf '{"event_type":"agent-library-release","client_payload":{"version":"%s"}}' \
+            "${{ steps.ver.outputs.version }}" \
+            | gh api repos/xentral/agent-hub-labs/dispatches --method POST --input -
+          echo "Dispatched agent-library-release (${{ steps.ver.outputs.version }}) to agent-hub-labs."
