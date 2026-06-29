@@ -3,17 +3,19 @@ name: release
 # Auto-release on every merge to main. The backend (xentral/agent-hub-labs)
 # pins an explicit tag via LIBRARY_VERSION and downloads that tag's tarball, so
 # library/skill content only reaches staging/prod once a NEW tag exists. This
-# workflow removes the "remember to cut a tag" step: it computes the next
-# date-based version (YYYY.MM.PATCH), writes it into manifest.json +
-# .claude-plugin/plugin.json, commits `chore(release): X`, tags X, and creates
-# a GitHub Release. Renovate in the consumer repo then opens the bump PR.
+# workflow removes the "remember to cut a tag" step.
+#
+# TAG-ONLY: main is review-protected, so we never push a commit there. The
+# workflow bumps manifest.json + .claude-plugin/plugin.json, commits that
+# locally, tags it, and pushes ONLY the tag (+ a GitHub Release). main's copy
+# of those version fields lags cosmetically — the consumer reads the tag
+# tarball, which carries the correct versions.
 
 on:
   push:
     branches: [main]
+  workflow_dispatch: {}
 
-# Never run two releases at once (back-to-back merges would race on the patch
-# number); let each finish before the next starts.
 concurrency:
   group: release
   cancel-in-progress: false
@@ -23,35 +25,50 @@ permissions:
 
 jobs:
   release:
-    # Skip the workflow's OWN release commit (else it would re-trigger forever),
-    # and honour a `[skip release]` escape hatch in the commit subject.
-    if: >-
-      ${{ !startsWith(github.event.head_commit.message, 'chore(release):')
-          && !contains(github.event.head_commit.message, '[skip release]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Opt-out check (commit SUBJECT only)
+        id: guard
+        run: |
+          set -euo pipefail
+          # Only the subject line — checking the whole message would match a
+          # body that merely mentions "[skip release]" (which is exactly how an
+          # earlier version skipped itself).
+          subject="$(git log -1 --format=%s)"
+          if printf '%s' "$subject" | grep -q '\[skip release\]'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Subject opts out of release: $subject"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Compute next version
+        if: steps.guard.outputs.skip != 'true'
         id: ver
         run: |
           set -euo pipefail
           ym="$(date -u +%Y.%m)"                 # e.g. 2026.06
           latest="$(git tag --list "${ym}.*" --sort=-version:refname | head -1)"
           if [ -n "$latest" ]; then
-            patch="${latest##*.}"                 # trailing number of the tag
-            next="${ym}.$((patch + 1))"
+            next="${ym}.$(( ${latest##*.} + 1 ))"
           else
-            next="${ym}.1"                        # first release this month
+            next="${ym}.1"
           fi
           echo "version=$next" >> "$GITHUB_OUTPUT"
           echo "Next version: $next"
 
-      - name: Bump version files
+      - name: Tag and release (tag-only)
+        if: steps.guard.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python3 - "${{ steps.ver.outputs.version }}" <<'PY'
+          set -euo pipefail
+          v="${{ steps.ver.outputs.version }}"
+          python3 - "$v" <<'PY'
           import json, sys
           v = sys.argv[1]
           for p in ("manifest.json", ".claude-plugin/plugin.json"):
@@ -62,23 +79,19 @@ jobs:
                   json.dump(d, f, indent=2)
                   f.write("\n")
           PY
-
-      - name: Commit, tag and release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          v="${{ steps.ver.outputs.version }}"
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add manifest.json .claude-plugin/plugin.json
           git commit -m "chore(release): ${v}"
           git tag "$v"
-          git push origin HEAD:main
+          # Push ONLY the tag (main is protected). A tag push does not trigger
+          # this workflow, so there is no release loop and no need to guard
+          # against our own release commit.
           git push origin "$v"
           gh release create "$v" --title "$v" --generate-notes
 
       - name: Notify consumer to bump LIBRARY_VERSION
+        if: steps.guard.outputs.skip != 'true'
         env:
           # Cross-repo dispatch needs a token with access to the (private)
           # consumer repo — the default GITHUB_TOKEN is scoped to this repo only.
@@ -88,7 +101,7 @@ jobs:
           set -euo pipefail
           if [ -z "${GH_TOKEN:-}" ]; then
             echo "AGENT_HUB_DISPATCH_TOKEN not set — skipping cross-repo dispatch."
-            echo "Release ${{ steps.ver.outputs.version }} is tagged; bump LIBRARY_VERSION manually or set the secret."
+            echo "Tag ${{ steps.ver.outputs.version }} is published; run 'make bump-library' in agent-hub-labs or set the secret."
             exit 0
           fi
           printf '{"event_type":"agent-library-release","client_payload":{"version":"%s"}}' \
