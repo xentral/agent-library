@@ -128,85 +128,170 @@
             }
           },
           {
-            "id": "c3",
-            "type": "section",
+            "id": "bv_kpis",
+            "type": "grid",
             "props": {
-              "text": "Parameter"
-            }
+              "columns": "3"
+            },
+            "children": [
+              {
+                "id": "kpi1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Unter Mindestbestand",
+                  "value": "37",
+                  "delta": "+6 ggü. Vorwoche",
+                  "tone": "down"
+                }
+              },
+              {
+                "id": "kpi2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offene Bestellungen",
+                  "value": "12",
+                  "delta": "-3 ggü. Vorwoche",
+                  "tone": "up"
+                }
+              },
+              {
+                "id": "kpi3",
+                "type": "kpibox",
+                "props": {
+                  "label": "Betroffene Lieferanten",
+                  "value": "8",
+                  "delta": "unverändert",
+                  "tone": "neutral"
+                }
+              }
+            ]
           },
           {
-            "id": "c4",
-            "type": "number",
+            "id": "card_overview",
+            "type": "card",
             "props": {
-              "label": "Erwartetes Wachstum (%)",
-              "value": "8",
-              "dataSource": ""
-            }
+              "title": "Nachbestellbedarf nach Warengruppe",
+              "description": "Wo der größte Beschaffungsbedarf entsteht."
+            },
+            "children": [
+              {
+                "id": "chart_need",
+                "type": "chart",
+                "props": {
+                  "label": "Vorschläge je Warengruppe",
+                  "kind": "bar",
+                  "data": "24, 18, 12, 9, 6, 3"
+                }
+              }
+            ]
           },
           {
-            "id": "c5",
-            "type": "toggle",
+            "id": "card_params",
+            "type": "card",
             "props": {
-              "label": "Saisonalität berücksichtigen",
-              "value": "on"
-            }
+              "title": "Parameter",
+              "description": "Stellschrauben für die Berechnung der Vorschläge."
+            },
+            "children": [
+              {
+                "id": "param_grid",
+                "type": "grid",
+                "props": {
+                  "columns": "2"
+                },
+                "children": [
+                  {
+                    "id": "c4",
+                    "type": "formfield",
+                    "props": {
+                      "label": "Erwartetes Wachstum (%)",
+                      "fieldType": "number",
+                      "placeholder": "8"
+                    }
+                  },
+                  {
+                    "id": "c6",
+                    "type": "formfield",
+                    "props": {
+                      "label": "Sicherheitsbestand (Tage)",
+                      "fieldType": "number",
+                      "placeholder": "14"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "c5",
+                "type": "formfield",
+                "props": {
+                  "label": "Saisonalität berücksichtigen",
+                  "fieldType": "toggle"
+                }
+              },
+              {
+                "id": "c7",
+                "type": "radiocards",
+                "props": {
+                  "label": "Beschaffungsstrategie",
+                  "options": "Min/Max-Auffüllung, Bedarfsprognose, Feste Bestellmenge"
+                }
+              },
+              {
+                "id": "param_actions",
+                "type": "actionbar",
+                "props": {
+                  "align": "left"
+                },
+                "children": [
+                  {
+                    "id": "c8",
+                    "type": "button",
+                    "props": {
+                      "text": "Vorschläge neu berechnen",
+                      "variant": "primary",
+                      "action": "tool:recalc_proposals"
+                    }
+                  }
+                ]
+              }
+            ]
           },
           {
-            "id": "c6",
-            "type": "number",
+            "id": "card_proposals",
+            "type": "card",
             "props": {
-              "label": "Sicherheitsbestand (Tage)",
-              "value": "14",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c7",
-            "type": "select",
-            "props": {
-              "label": "Beschaffungsstrategie",
-              "options": "Min/Max, Bedarfsprognose, Feste Bestellmenge",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c8",
-            "type": "button",
-            "props": {
-              "text": "Vorschläge neu berechnen",
-              "variant": "primary",
-              "action": "tool:recalc_proposals"
-            }
-          },
-          {
-            "id": "c9",
-            "type": "divider",
-            "props": {}
-          },
-          {
-            "id": "c10",
-            "type": "section",
-            "props": {
-              "text": "Vorschläge"
-            }
-          },
-          {
-            "id": "c11",
-            "type": "table",
-            "props": {
-              "label": "Artikel",
-              "columns": "Artikel, Bestand, Mindestbestand, Vorschlag, Lieferant, Liefertermin",
-              "dataSource": "Product"
-            }
-          },
-          {
-            "id": "c12",
-            "type": "button",
-            "props": {
-              "text": "Bestellungen freigeben",
-              "variant": "primary",
-              "action": "dialog:bv_release"
-            }
+              "title": "Vorschläge",
+              "description": "Artikel unter Mindestbestand mit empfohlener Bestellmenge."
+            },
+            "children": [
+              {
+                "id": "c11",
+                "type": "table",
+                "props": {
+                  "label": "Artikel",
+                  "columns": "Artikel, Bestand, Mindestbestand, Vorschlag, Lieferant, Liefertermin",
+                  "dataSource": "Product"
+                }
+              },
+              {
+                "id": "proposals_actions",
+                "type": "actionbar",
+                "props": {
+                  "align": "right"
+                },
+                "children": [
+                  {
+                    "id": "c12",
+                    "type": "button",
+                    "props": {
+                      "text": "Bestellungen freigeben",
+                      "variant": "primary",
+                      "action": "dialog:bv_release"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -231,13 +316,42 @@
             }
           },
           {
-            "id": "c15",
-            "type": "table",
+            "id": "card_trend",
+            "type": "card",
             "props": {
-              "label": "Bestellungen",
-              "columns": "Datum, Lieferant, Positionen, Wert, Status",
-              "dataSource": "PurchaseOrder"
-            }
+              "title": "Bestellvolumen im Zeitverlauf",
+              "description": "Freigegebener Bestellwert je Woche."
+            },
+            "children": [
+              {
+                "id": "chart_trend",
+                "type": "chart",
+                "props": {
+                  "label": "Bestellwert je Woche",
+                  "kind": "line",
+                  "data": "12000, 14500, 13200, 16800, 15100, 18400"
+                }
+              }
+            ]
+          },
+          {
+            "id": "card_history",
+            "type": "card",
+            "props": {
+              "title": "Freigegebene Bestellungen",
+              "description": "Alle versendeten Bestellungen mit Status."
+            },
+            "children": [
+              {
+                "id": "c15",
+                "type": "table",
+                "props": {
+                  "label": "Bestellungen",
+                  "columns": "Datum, Lieferant, Positionen, Wert, Status",
+                  "dataSource": "PurchaseOrder"
+                }
+              }
+            ]
           }
         ]
       },
@@ -262,21 +376,37 @@
             }
           },
           {
-            "id": "c18",
-            "type": "toggle",
+            "id": "c20",
+            "type": "calendar",
             "props": {
-              "label": "Per E-Mail an Lieferanten senden",
-              "value": "on"
+              "label": "Gewünschter Liefertermin"
             }
           },
           {
-            "id": "c19",
-            "type": "button",
+            "id": "c18",
+            "type": "formfield",
             "props": {
-              "text": "Jetzt freigeben",
-              "variant": "primary",
-              "action": "tool:approve_proposals"
+              "label": "Per E-Mail an Lieferanten senden",
+              "fieldType": "toggle"
             }
+          },
+          {
+            "id": "release_actions",
+            "type": "actionbar",
+            "props": {
+              "align": "right"
+            },
+            "children": [
+              {
+                "id": "c19",
+                "type": "button",
+                "props": {
+                  "text": "Jetzt freigeben",
+                  "variant": "primary",
+                  "action": "tool:approve_proposals"
+                }
+              }
+            ]
           }
         ]
       }

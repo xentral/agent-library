@@ -83,12 +83,11 @@
           },
           {
             "id": "c56",
-            "type": "input",
+            "type": "formfield",
             "props": {
               "label": "Kunde suchen",
-              "placeholder": "Name oder Kundennummer",
-              "value": "",
-              "dataSource": "Customer"
+              "fieldType": "text",
+              "placeholder": "Name oder Kundennummer"
             }
           },
           {
@@ -132,36 +131,81 @@
             }
           },
           {
-            "id": "c61",
-            "type": "section",
+            "id": "c72",
+            "type": "card",
             "props": {
-              "text": "Kennzahlen"
-            }
+              "title": "Kennzahlen",
+              "description": "Auf einen Blick vor dem Kundenbesuch"
+            },
+            "children": [
+              {
+                "id": "c73",
+                "type": "grid",
+                "props": {
+                  "columns": "2"
+                },
+                "children": [
+                  {
+                    "id": "c74",
+                    "type": "kpibox",
+                    "props": {
+                      "label": "Umsatz Kunde (YTD)",
+                      "value": "84.200 €",
+                      "delta": "+12%",
+                      "tone": "up"
+                    }
+                  },
+                  {
+                    "id": "c75",
+                    "type": "kpibox",
+                    "props": {
+                      "label": "Offene Posten",
+                      "value": "3.480 €",
+                      "delta": "2 Rechnungen",
+                      "tone": "warning"
+                    }
+                  }
+                ]
+              }
+            ]
           },
           {
-            "id": "c62",
-            "type": "table",
+            "id": "c76",
+            "type": "card",
             "props": {
-              "label": "Übersicht",
-              "columns": "Kennzahl, Wert",
-              "dataSource": ""
-            }
+              "title": "Umsatzverlauf",
+              "description": "Letzte Monate"
+            },
+            "children": [
+              {
+                "id": "c77",
+                "type": "chart",
+                "props": {
+                  "label": "Umsatz pro Monat",
+                  "kind": "bar",
+                  "data": "12, 18, 9, 22, 16, 28"
+                }
+              }
+            ]
           },
           {
-            "id": "c63",
-            "type": "section",
+            "id": "c78",
+            "type": "card",
             "props": {
-              "text": "Letzte Aufträge"
-            }
-          },
-          {
-            "id": "c64",
-            "type": "table",
-            "props": {
-              "label": "Aufträge",
-              "columns": "Datum, Auftrag, Wert, Status",
-              "dataSource": "SalesOrder"
-            }
+              "title": "Letzte Aufträge",
+              "description": "Bisherige Bestellungen dieses Kunden"
+            },
+            "children": [
+              {
+                "id": "c64",
+                "type": "table",
+                "props": {
+                  "label": "Aufträge",
+                  "columns": "Datum, Auftrag, Wert, Status",
+                  "dataSource": "SalesOrder"
+                }
+              }
+            ]
           },
           {
             "id": "c65",
@@ -188,38 +232,65 @@
             }
           },
           {
-            "id": "c67",
-            "type": "select",
+            "id": "c79",
+            "type": "card",
             "props": {
-              "label": "Artikel",
-              "options": "V2A Schraube 4.8x16, Edelstahlblech 2mm, Winkel 90 Grad",
-              "dataSource": "Product"
-            }
+              "title": "Position",
+              "description": "Artikel und Menge wählen"
+            },
+            "children": [
+              {
+                "id": "c67",
+                "type": "formfield",
+                "props": {
+                  "label": "Artikel",
+                  "fieldType": "select",
+                  "options": "V2A Schraube 4.8x16, Edelstahlblech 2mm, Winkel 90 Grad"
+                }
+              },
+              {
+                "id": "c68",
+                "type": "formfield",
+                "props": {
+                  "label": "Menge",
+                  "fieldType": "number"
+                }
+              }
+            ]
           },
           {
-            "id": "c68",
-            "type": "number",
+            "id": "c80",
+            "type": "card",
             "props": {
-              "label": "Menge",
-              "value": "100",
-              "dataSource": ""
-            }
-          },
-          {
-            "id": "c69",
-            "type": "date",
-            "props": {
-              "label": "Wunschtermin",
-              "value": ""
-            }
-          },
-          {
-            "id": "c70",
-            "type": "textarea",
-            "props": {
-              "label": "Notiz",
-              "placeholder": "Optional…"
-            }
+              "title": "Lieferung",
+              "description": "Wann soll geliefert werden?"
+            },
+            "children": [
+              {
+                "id": "c81",
+                "type": "radiocards",
+                "props": {
+                  "label": "Priorität",
+                  "options": "Standard, Express, Wunschtermin"
+                }
+              },
+              {
+                "id": "c82",
+                "type": "calendar",
+                "props": {
+                  "label": "Wunschtermin"
+                }
+              },
+              {
+                "id": "c70",
+                "type": "formfield",
+                "props": {
+                  "label": "Notiz",
+                  "fieldType": "textarea",
+                  "placeholder": "Optional…"
+                }
+              }
+            ]
           },
           {
             "id": "c71",
