@@ -8,7 +8,7 @@
 
 **Allowed:** `if`/`elif`/`else`, `for`, `while`, `break`, `continue`, `pass`; `def` + `return` (use a named function where you'd reach for a lambda); assignments and augmented assignments; comprehensions (list/set/dict/generator); f-strings; slicing and subscripts (`x[1:3]`, `d["k"]`); attribute access and method calls (`row.get(...)`, `items.append(...)`); all arithmetic/boolean/comparison/bitwise operators and the ternary `a if c else b`.
 
-**Allowed builtins (these only):** `abs bool dict enumerate float int len list max min print range round set sorted str sum tuple zip` plus `True False None` and the exceptions `ValueError TypeError KeyError IndexError ZeroDivisionError Exception`. Anything else (`map`, `filter`, `any`, `all`, `reversed`, `sorted`'s `reverse=` aside, `re`, `json`, …) is **not** in scope at runtime. The workflow helpers `business_entity_op`, `xentral_op`, `xentral_request` and `log` are also in scope.
+**Allowed builtins (these only):** `abs bool dict enumerate float int len list max min print range round set sorted str sum tuple zip` plus `True False None` and the exceptions `ValueError TypeError KeyError IndexError ZeroDivisionError Exception`. Anything else (`map`, `filter`, `any`, `all`, `reversed`, `sorted`'s `reverse=` aside, `re`, `json`, …) is **not** in scope at runtime. The workflow helpers `business_entity_op`, `xentral_op`, `xentral_request`, `log`, and the JSON helpers `to_json` / `parse_json` (see below) are also in scope.
 
 **Not allowed (hard reject):**
 - `lambda` — use a named `def` instead (`sorted(rows, key=by_qty)` with `def by_qty(r): return r["min_qty"]`), or an explicit loop.
@@ -33,6 +33,25 @@ for t in tiers:
     if qty >= t["min_qty"] and (best is None or t["min_qty"] > best["min_qty"]):
         best = t
 result = best["price"] if best else None
+```
+
+## JSON — output and parsing
+
+You almost never need to build JSON by hand, and you should not: string-concatenating a serializer (`'{"id":' + esc(x) + …`) is brittle, trips the code-complexity check, and hides a real bug the day a value contains a quote or newline. Two in-scope helpers cover every case:
+
+- **`to_json(obj)` → JSON string.** Use it whenever a Code box must *produce* JSON text: an `http-request` body, a file payload, any field that has to be JSON. It escapes for you and — unlike the run's output preview — is **not** truncated, so a feed with thousands of items comes out complete. Values JSON can't represent directly (dates, `Decimal`) are coerced to strings rather than crashing.
+- **`parse_json(text)` → Python objects** (dict/list/scalars) from a JSON string; returns `None` for a non-string or invalid input, so a bad payload never crashes the box.
+
+**When you need neither:** to pass structured data to another **code / logic** node, just assign the dict or list to `result` — downstream boxes and `{{ }}` value refs receive the raw Python object, no serialization involved. Reach for `to_json` only at the boundary where the value must become a JSON *string* (a text field like an HTTP body renders a referenced dict as its Python `repr`, which is **not** valid JSON — so serialize it there).
+
+```python
+# BAD — hand-rolled serializer: brittle, trips the complexity check
+def esc(v): ...
+products_json = '[' + ','.join(item_to_json(i) for i in items) + ']'
+result = '{"products":' + products_json + '}'
+
+# GOOD — one call, full and correctly escaped; feed this to the HTTP body
+result = to_json({"meta": {"generatedAt": now(), "count": len(items)}, "products": items})
 ```
 
 ## Date helpers
