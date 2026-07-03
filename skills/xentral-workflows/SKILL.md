@@ -19,7 +19,7 @@ examples:
 
 ## Purpose
 
-The workflow store keeps **node-based automations** per tenant. A workflow is a directed graph: a **trigger** fires, then **action nodes** run in the order defined by the edges.
+The workflow store keeps **node-based automations** per instance. A workflow is a directed graph: a **trigger** fires, then **action nodes** run in the order defined by the edges.
 
 Workflows sit one layer below custom agents:
 
@@ -40,7 +40,7 @@ If the decision is **always the same** → workflow. If the step **depends on th
 
 ## Start from the library, not a blank canvas
 
-Before building from scratch, check the shipped templates: call **`list_library`** to see the ready ERP-classic workflows (prepayment cleanup, dunning escalation, low-stock reorder, return→credit-note, BOM cost rollup, …) and **`init_from_template`** to clone one into the tenant, then adapt it. Each template is already wired to the contract described below — correct `targetHandle` operation selection, stable `varName` references, binding objects for resource params — so cloning and tweaking is faster and less error-prone than hand-assembling a graph. The worked examples further down in this guide mirror those library templates. Hand-build only when no template is close.
+Before building from scratch, check the shipped templates: call **`list_library`** to see the ready ERP-classic workflows (prepayment cleanup, dunning escalation, low-stock reorder, return→credit-note, BOM cost rollup, …) and **`init_from_template`** to clone one into the instance, then adapt it. Each template is already wired to the contract described below — correct `targetHandle` operation selection, stable `varName` references, binding objects for resource params — so cloning and tweaking is faster and less error-prone than hand-assembling a graph. The worked examples further down in this guide mirror those library templates. Hand-build only when no template is close.
 
 ## Construction recipe
 
@@ -63,8 +63,8 @@ When you author a workflow through MCP, use this loop:
 2. **Build the smallest visible version.** Every fixed data access, fixed action and business decision belongs on the canvas. Agent and Code nodes are only for language work or short glue logic.
 3. **Always run `check` after `init`/`update`.** Treat `error` as not done. Review warnings deliberately; for reachable writes, recommend or run `xentral_workflow_debug.run_workflow(dry_run=true)` when that is part of the task.
 4. **Fix check failures directly.** Change handles, operations, nodes, prompts or data sources. Then run `check` again. Do not compensate by making code boxes bigger.
-5. **When stuck, separate local from generic.** Local/tenant-specific means e.g. "this tenant has no tag named X", "this instance has no data", "no mail account is configured" — that is not product feedback. Generic means e.g. "Business Entity X lacks a central business field", "an existing ERP action is not modeled as an entity action", "a standard transform/filter/aggregation node is missing", "the check cannot detect a whole class of bad workflows yet".
-6. **Report generic gaps.** If the gap would likely help many workflows/tenants and you cannot build the workflow cleanly without it, record it via `xentral_feedback` (category `feature_request` or `bug`, `request_report=true`). Keep it short: desired workflow, missing general building block, why visible nodes would become possible. Do not include customer data or full document/email contents.
+5. **When stuck, separate local from generic.** Local/instance-specific means e.g. "this instance has no tag named X", "this instance has no data", "no mail account is configured" — that is not product feedback. Generic means e.g. "Business Entity X lacks a central business field", "an existing ERP action is not modeled as an entity action", "a standard transform/filter/aggregation node is missing", "the check cannot detect a whole class of bad workflows yet".
+6. **Report generic gaps.** If the gap would likely help many workflows/instances and you cannot build the workflow cleanly without it, record it via `xentral_feedback` (category `feature_request` or `bug`, `request_report=true`). Keep it short: desired workflow, missing general building block, why visible nodes would become possible. Do not include customer data or full document/email contents.
 7. **Tell the user honestly where it stands.** If a generic gap prevents a clean workflow, do not ship a disguised script workflow. Say: "This could be built cleanly if X existed; I reported Y as feedback." If a provisional workaround exists, label it clearly as provisional.
 
 Feedback is not a substitute for fixing the graph: report only general platform gaps, not every check finding and not one-off issues that correct wiring would solve.

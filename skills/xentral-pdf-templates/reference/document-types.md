@@ -53,7 +53,7 @@ For ALL types: sender legal footer (`@page` footer, see above), correct
 
 These are not framework rules — they are the **domain knowledge** that
 makes a template look right to the operator's customers. Always read
-the tenant's `xentral_business_model` profile (business_model,
+the instance's `xentral_business_model` profile (business_model,
 sales_channels) before starting; that narrows down the rules below.
 
 ### Food, beverages, perishables

@@ -25,7 +25,7 @@ section legitimately means "not relevant yet".
   whom. Skip if generic.
 - **`target_market`** — whom they sell to: industries, segments, geographies,
   buying-center. Richer = better tone/content from agents.
-- **`value_proposition`** — why customers pick this tenant. Honest ("lowest
+- **`value_proposition`** — why customers pick this instance. Honest ("lowest
   price" is fine if true).
 - **`offering`** — high-level product/service categories, bundles,
   configurable-vs-catalog. Not the SKU list (that's the ERP).
@@ -50,7 +50,7 @@ section legitimately means "not relevant yet".
    of the same slug in the same turn.
 3. **`apply_template` is destructive only with `overwrite=true`** — default
    `false`; flip only after explicit user consent.
-4. **Per-tenant, never shared** — no cross-tenant copying, even between sister
+4. **Per-instance, never shared** — no cross-instance copying, even between sister
    companies.
 5. **The model is *living*** — after any strategic conversation, propose updates
    to the relevant sections.
@@ -64,7 +64,7 @@ short read prevents B2C-style copy for a B2B distributor.
 
 ### First-time setup
 1. `apply_template(template='ai_first', overwrite=false)` — seed all sections.
-2. `profile_set(business_model=…, sales_channels=[…], …)` — classify the tenant.
+2. `profile_set(business_model=…, sales_channels=[…], …)` — classify the instance.
 3. Walk each skeleton section with the user in one short confirm/correct pass.
 
 ### Strategic update ("we acquired a competitor in Austria")

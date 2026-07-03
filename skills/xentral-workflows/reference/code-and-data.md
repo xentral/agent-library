@@ -56,7 +56,7 @@ result = to_json({"meta": {"generatedAt": now(), "count": len(items)}, "products
 
 ## Date helpers
 
-ERP automations almost always filter by date: "older than 7 days", "last month", "overdue". The engine ships **date helpers** for this — ready functions resolved at **run time** in the **tenant timezone** (no hardcoded ISO strings, no freezing on scheduled runs). Point-in-time helpers return **ISO strings** (so a value drops straight into a filter), duration/comparison helpers return `int`/`bool`, and range helpers return a `{gte, lte}` dict.
+ERP automations almost always filter by date: "older than 7 days", "last month", "overdue". The engine ships **date helpers** for this — ready functions resolved at **run time** in the **instance timezone** (no hardcoded ISO strings, no freezing on scheduled runs). Point-in-time helpers return **ISO strings** (so a value drops straight into a filter), duration/comparison helpers return `int`/`bool`, and range helpers return a `{gte, lte}` dict.
 
 **Where you use them:**
 - **Filters / write values** (`business-entity` / `xentral-api` `params.<op>.{path,query,body}`): as a binding `{ "mode": "date", "expr": "<call>" }` (the 90% case).
@@ -82,7 +82,7 @@ ERP automations almost always filter by date: "older than 7 days", "last month",
 | `is_overdue(d)` | bool | `days_since(d) > 0` |
 | `is_before(a,b)` / `is_after(a,b)` / `between(d,lo,hi)` | bool | comparisons |
 | `age_bucket(d, edges=[30,60,90,120])` | str | AR aging: `"0-30"`/`"31-60"`/…/`"120+"` |
-| `business_days(n, anchor=None, region=None)` | date ISO | +n business days (skips weekends **and the tenant region's public holidays**) |
+| `business_days(n, anchor=None, region=None)` | date ISO | +n business days (skips weekends **and the instance region's public holidays**) |
 | `next_business_day(anchor=None)` / `is_business_day(d)` | date ISO / bool | next workday / is workday |
 
 **Range spread:** a `{gte,lte}` value in `query` is auto-expanded into bracketed keys — `"invoiceDate": last('month')` → `invoiceDate[gte]=…&invoiceDate[lte]=…`. For a one-sided bound, write a scalar with an explicit operator key instead: `"createdAt[lt]": { "mode": "date", "expr": "today(-7)" }`.
@@ -101,7 +101,7 @@ ERP automations almost always filter by date: "older than 7 days", "last month",
 - **Helper arguments inside `{{ }}` holes must be literals** (`today(-7)`, `start_of('month',-1)`). To compute off an upstream **node value** (e.g. `invoiceDate + 30 days`), use a `condition`/`code` box — variable names are directly available there (`shift(order['invoiceDate'], 30, 'days')`).
 - **`today()` returns a plain date, `start_of`/`end_of` return datetimes** — deliberate: "older than" wants a date, "last month" wants a clean upper bound 23:59:59.
 - **`mode:"date"` allows ONLY date-helper calls** (no arbitrary names/calls). An empty `expr` is treated as unset (→ `None`); an invalid `expr` fails **only the affected node at run time** with a clear error (no silently-sent `"today(-7)"` filter value) — the rest of the workflow still renders/runs.
-- **Holidays:** the business-day helpers skip weekends **and** the applicable region's public holidays. Region cascade: **workflow envelope field `holiday_region`** (e.g. `"holiday_region": "US"` for a US workflow) → empty = derived from the timezone → none (weekends only). So one tenant can run a DE workflow and a US workflow side by side. Values are `CC` or `CC-SUB` (`DE`, `DE-BY`, `US-CA`). The function's `region` param is unnecessary. Coverage is a window around "today" (last year .. +2y); date math far outside it falls back to weekends-only.
+- **Holidays:** the business-day helpers skip weekends **and** the applicable region's public holidays. Region cascade: **workflow envelope field `holiday_region`** (e.g. `"holiday_region": "US"` for a US workflow) → empty = derived from the timezone → none (weekends only). So one instance can run a DE workflow and a US workflow side by side. Values are `CC` or `CC-SUB` (`DE`, `DE-BY`, `US-CA`). The function's `region` param is unnecessary. Coverage is a window around "today" (last year .. +2y); date math far outside it falls back to weekends-only.
 - **NOT yet included:** **fiscal-year offset** (`year`/`quarter` are calendar periods). Coming later.
 
 ## Tool actions
@@ -109,7 +109,7 @@ ERP automations almost always filter by date: "older than 7 days", "last month",
 | Action | Required args | Notes |
 |---|---|---|
 | `help` | — | Returns this guide (pass `locale='en'` or `'de'`). |
-| `list` | — | All workflows for the tenant, newest first. |
+| `list` | — | All workflows for the instance, newest first. |
 | `get` | `id` | Full envelope for a single workflow. |
 | `init` | `id`, `name` | Create a new workflow. Optional `description`, `trigger_type`, `nodes`, `edges`, `enabled`. Duplicate id → error. |
 | `update` | `id` | Patch semantics — only passed fields are overwritten. `id` and `created_at` are protected. |

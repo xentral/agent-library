@@ -51,9 +51,9 @@ URL immediately.
 - **Opaque 404s**: unknown `share_id`, wrong token, deactivated share — all map
   to an identical `404` so a share's existence stays opaque.
 - **Synthetic AuthUser**: public submissions/turns run under
-  `user_id="form-public-share"` / `"chat-public-share"`, no real JWT. Tenant
+  `user_id="form-public-share"` / `"chat-public-share"`, no real JWT. Instance
   isolation comes from the share record — there is no path through a public link
-  into another tenant.
+  into another instance.
 
 ## Embedding a slot inside a dashboard
 

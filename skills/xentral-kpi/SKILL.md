@@ -1,7 +1,7 @@
 ---
 name: xentral-kpi
 description: >
-  Register, update, and read tenant business metrics with the xentral_kpi tool.
+  Register, update, and read instance business metrics with the xentral_kpi tool.
   Covers the central KPI store (counts, sums, ratios, durations with DE/EN
   labels, units, groupings, and full value history), starting from the KPI
   library, push vs derived (SQL/prompt) KPIs, recording values without
@@ -18,7 +18,7 @@ examples:
 
 ## Purpose
 
-The KPI store is the **central KPI store for a tenant**. It holds named
+The KPI store is the **central KPI store for an instance**. It holds named
 business metrics — counts, sums, ratios, durations — together with
 their human-readable labels (DE/EN), units, optional groupings, and a
 full history of every value ever written. KPI cards across the
@@ -52,7 +52,7 @@ product read from the KPI store so the same number never lives in two places.
 
 | Term | Meaning |
 |---|---|
-| KPI | A named, tenant-scoped business metric. Has a stable ``key``, multilingual labels, a unit, and a value type. |
+| KPI | A named, instance-scoped business metric. Has a stable ``key``, multilingual labels, a unit, and a value type. |
 | ``key`` | Stable snake_case identifier. Used in URLs and as the lookup id from KPI cards. Never rename — it would break consumers. |
 | ``labels`` | ``{"de": "…", "en": "…"}`` map. ``en`` is required. |
 | ``unit`` | Display unit string: ``count``, ``EUR``, ``%``, ``days``, etc. Free-form. |
@@ -127,14 +127,14 @@ product read from the KPI store so the same number never lives in two places.
 2. **Keys are immutable.** Don't rename — the cards reading the KPI
    pin it by key. If a metric changes meaning, ``init`` a new key
    and ``set_active(false)`` the old one.
-3. **Tenant-scoped.** No cross-tenant KPIs. Even sibling licenses
+3. **Instance-scoped.** No cross-instance KPIs. Even sibling licenses
    stay separate.
 4. **History is forever.** Every ``set_value`` adds a history row,
    even if the value is identical to the previous one. The KPI store is
    the audit log of KPI evolution.
 5. **Read paths are cheap.** The KV layer is cached. ``list`` walks
    the index, then reads one object per KPI.
-   For a tenant with hundreds of KPIs the right pattern is ``list``
+   For an instance with hundreds of KPIs the right pattern is ``list``
    once on the frontend, not ``get`` per card.
 6. **Derived KPI = no ``set_value``.** To overwrite the value
    manually you have to switch source (delete + re-init with

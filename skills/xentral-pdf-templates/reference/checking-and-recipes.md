@@ -41,7 +41,7 @@ What it inspects (a broad linter — non-exhaustive):
 ### Live pass — judge the REAL output
 
 Pass `live=true` (or a specific `sample_doc_id`) to additionally render a
-**real** Beleg from the tenant — via the template's `v3_endpoint`, most recent
+**real** Beleg from the instance — via the template's `v3_endpoint`, most recent
 document when no id is given — and inspect the actual page: dates normalised to
 the document locale, and identifiers that are present in the data but missing
 from the rendered page. This catches "renders fine, but the customer number
@@ -58,9 +58,9 @@ Typical loop: `create` / `set_block` → `check legal_form=gmbh` → fix finding
    subtle ways (sign of amounts, fixed phrases) and you will hit edge
    cases later. Make two.
 
-2. **Templates are scoped to one tenant.** Copying a template to
-   another tenant is an explicit operation (read + create with new
-   `instance_id`). There is no shared template pool. Each tenant
+2. **Templates are scoped to one instance.** Copying a template to
+   another instance is an explicit operation (read + create with new
+   `instance_id`). There is no shared template pool. Each instance
    owns its visual identity.
 
 3. **The example data is part of the contract.** If the template
@@ -84,7 +84,7 @@ Typical loop: `create` / `set_block` → `check legal_form=gmbh` → fix finding
 
 ## Public share link
 
-A template can expose a public, login-free render URL per tenant —
+A template can expose a public, login-free render URL per instance —
 the typical use case is "view your invoice" emails to end customers.
 Enable it in the editor under "Öffentlicher Link" → the backend
 mints a one-time `share_id` (12 URL-safe chars, 72 bits of entropy)
@@ -128,11 +128,11 @@ token are preserved.
 ### Auth context inside the render
 
 Public renders run under a synthetic `AuthUser`
-(`user_id="pdf-public-share"`), with no real JWT. Tenant isolation
+(`user_id="pdf-public-share"`), with no real JWT. Instance isolation
 happens via `share_id` resolution: token + share_id match exactly
-one tenant; the backend sets `license_id` from the share record, not
+one instance; the backend sets `license_id` from the share record, not
 from any caller-supplied header. There is therefore no path through
-a public link into another tenant.
+a public link into another instance.
 
 ## Capture the last payload (debug)
 
@@ -202,12 +202,12 @@ Always run these before any change to a live template:
 
 | Pitfall | Why it breaks |
 |---|---|
-| Hardcoding company address in HTML | Template stops working when the tenant moves. Put it in `example_data.company` or read from the ERP setup. |
+| Hardcoding company address in HTML | Template stops working when the instance moves. Put it in `example_data.company` or read from the ERP setup. |
 | Forgetting page-break rules | Long invoices split mid-row, addresses end up on the wrong page. Set `page-break-inside: avoid` on table rows and footer blocks. |
 | Using fixed pixel sizes | Looks fine on one printer, breaks on another. Stick to `mm`, `pt`, `%`. |
 | Inline `<script>` for "smart" things | Weasyprint doesn't run JS. Logic must happen *before* render (in the data) or in CSS. |
 | Same template used for invoice and credit note | The arithmetic differs (negative amounts shown how?), legal phrases differ. Split. |
-| Localized labels in HTML strings | Operators in DE need DE, in EN need EN. Use the template's locale switch or per-tenant overrides. |
+| Localized labels in HTML strings | Operators in DE need DE, in EN need EN. Use the template's locale switch or per-instance overrides. |
 | Compliance XML drifts from PDF | Operator changes the invoice amount in HTML but the embedded XML still has the old amount. Tax authority rejects. Always regenerate the XML from the same source data. |
 | `{{ data.items }}` (dotted) | Jinja resolves `.items` to the dict method, not your line-items key → 500. Use `data['items']` (subscript). |
 | `background-clip: text` (gradient text) | Not painted by the print pipeline → the text renders invisible. Use a solid `color:` instead. |

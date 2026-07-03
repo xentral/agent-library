@@ -44,7 +44,7 @@ truth mirrored from `frontend/src/components/Workspace/Studio/jsonrender/catalog
 | `kpibox` | `label`, `value`, `delta`, `tone` (`up` \| `down` \| `neutral`), `kpiKey` (binds a real KPI) |
 | `statusbadge` | `text`, `tone` (`neutral` \| `success` \| `warning` \| `danger`) |
 | `timeline` | `label`, `items` (comma-separated steps) |
-| `opstasks` | `label`, `categories` (comma-separated keys; empty = all) — surfaces the tenant's real action-items list |
+| `opstasks` | `label`, `categories` (comma-separated keys; empty = all) — surfaces the instance's real action-items list |
 
 ## Agents
 

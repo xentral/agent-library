@@ -2,7 +2,7 @@
 
 ## Public access (share link)
 
-A dashboard can expose a public, login-free URL per tenant — useful
+A dashboard can expose a public, login-free URL per instance — useful
 for a "daily numbers" board on a team-room display where you don't
 want to hand out accounts. Enable it in the editor under "Öffentlicher
 Link" → the backend mints a one-time `share_id` (12 URL-safe chars,
@@ -67,9 +67,9 @@ until reactivated.
    as paid" link in a widget routes to the relevant action page;
    it doesn't happen inline on the dashboard.
 
-3. **Tenant-scoped.** No cross-tenant dashboards. Even sister
-   companies see only their own data. Built-ins are tenant-instanced
-   so visibility flags are per tenant.
+3. **Instance-scoped.** No cross-instance dashboards. Even sister
+   companies see only their own data. Built-ins are instantiated per
+   instance so visibility flags are per instance.
 
 4. **`slug` is stable.** Once a dashboard exists and is bookmarked,
    renaming the slug breaks links. Rename only the title.
