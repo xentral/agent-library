@@ -7,7 +7,9 @@ Each widget declares:
 * **`type`** — exact class name from the catalogue below.
 * **`config`** — type-specific shape (see the catalogue).
 
-The dashboard `layout` references widget ids:
+The dashboard `layout` references widget ids. There are two dialects.
+
+### `split` — sidebar + main column (the simple form)
 
 ```yaml
 layout:
@@ -15,6 +17,35 @@ layout:
   main: [greeting, hero, kpi_grid]
   side: [tabs]
 ```
+
+`main` and `side` are each a vertical list of rows. A row is a widget
+id, or an array of ids for an equal-width side-by-side row.
+
+### `grid` — flexible column weights (the general form)
+
+```yaml
+layout:
+  type: grid
+  rows:
+    - cols: [5, 7]        # 5:7 two-column row
+      cells: [["cockpit"], ["setup_tree", "onboarding_tasks", "kpi_hero"]]
+    - cols: [12]          # full-width row
+      cells: [["big_table"]]
+```
+
+- **`cols`** — the column template: numbers are relative weights
+  (`[8,4]` = 2:1, `[4,4,4]` = thirds, `[12]` = full-width). `{px:n}` /
+  `{fr:n}` objects give fixed / flexible tracks.
+- **`cells[i]`** fills column `i`. **Always write each cell as an
+  array of widget ids** — `[["a"], ["b","c"]]`, never a bare `["a", …]`
+  mixed with strings. A single-widget column is `["id"]`; a stacked
+  column is `["id1", "id2", …]`. (The renderer also tolerates a bare
+  string, but the array form is the convention every built-in uses —
+  stay consistent so edits don't have to guess the shape.)
+
+Every widget id in `widgets[]` must be referenced exactly once in the
+layout, and every id the layout references must exist in `widgets[]` —
+an unreferenced widget never renders, a dangling reference is a no-op.
 
 ## Widget catalogue
 
@@ -109,8 +140,21 @@ slots in a row; chat and form are always single.
 ### Other
 | `type` | Purpose | Core config keys |
 |---|---|---|
-| `HtmlBox` | Free-form HTML / Markdown card (use sparingly) | `html` |
+| `HtmlBox` | Free-form HTML / Markdown card (use sparingly) | `htmlContent` |
 | `SetupSystemMap`, `SetupMilestoneRail`, `OnboardingCockpit`, `SetupSunburst`, `SetupProgress` | Onboarding-tab visuals (rarely useful on a normal dashboard) | varies |
+
+> **`HtmlBox` config key is `htmlContent`, not `html`.** A wrong key
+> renders a silently *empty* box (no error). The value is either a
+> plain HTML string or a `{de, en}` object that the loader localises:
+>
+> ```yaml
+> - id: intro
+>   type: HtmlBox
+>   config:
+>     htmlContent:
+>       de: "<h2>Willkommen</h2><p>…</p>"
+>       en: "<h2>Welcome</h2><p>…</p>"
+> ```
 
 A custom dashboard is just an ordered list of widget instances with
 their `config` and a `layout` block referencing them by id.
