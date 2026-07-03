@@ -164,26 +164,110 @@
     }
   ],
   "layout": {
-    "type": "split",
-    "main": [
-      "greeting",
-      "hero",
-      "attention"
-    ],
-    "side": [
-      "revenue_trend",
-      "revenue_vs_ly",
-      "revenue_by_channel",
-      [
-        "channel_mix",
-        "top_customers"
-      ],
-      [
-        "automation_gauge",
-        "sla_gauge",
-        "margin_gauge"
-      ],
-      "top_products"
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "greeting"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "hero"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "attention"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "revenue_trend"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "revenue_vs_ly"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "revenue_by_channel"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1,
+          1
+        ],
+        "cells": [
+          [
+            "channel_mix"
+          ],
+          [
+            "top_customers"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1,
+          1,
+          1
+        ],
+        "cells": [
+          [
+            "automation_gauge"
+          ],
+          [
+            "sla_gauge"
+          ],
+          [
+            "margin_gauge"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "top_products"
+          ]
+        ]
+      }
     ]
   },
   "linked_kpis": [

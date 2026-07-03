@@ -256,29 +256,166 @@
     }
   ],
   "layout": {
-    "type": "split",
-    "main": [
-      "greeting",
-      "hero",
-      "attention",
-      "kpi_grid_finance",
-      "kpi_grid_operations",
-      "kpi_grid_service",
-      "kpi_grid_purchasing",
-      "kpi_grid_ai"
-    ],
-    "side": [
-      "revenue_trend",
-      "revenue_vs_ly",
-      [
-        "margin_gauge",
-        "automation_gauge",
-        "sla_gauge"
-      ],
-      "revenue_by_channel",
-      "top_customers",
-      "ai_hours_saved",
-      "automation_by_process"
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "greeting"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "hero"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "attention"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "kpi_grid_finance"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "kpi_grid_operations"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "kpi_grid_service"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "kpi_grid_purchasing"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "kpi_grid_ai"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "revenue_trend"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "revenue_vs_ly"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1,
+          1,
+          1
+        ],
+        "cells": [
+          [
+            "margin_gauge"
+          ],
+          [
+            "automation_gauge"
+          ],
+          [
+            "sla_gauge"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "revenue_by_channel"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "top_customers"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "ai_hours_saved"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "automation_by_process"
+          ]
+        ]
+      }
     ]
   },
   "linked_kpis": [

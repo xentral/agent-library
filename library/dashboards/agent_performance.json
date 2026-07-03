@@ -66,14 +66,24 @@
     }
   ],
   "layout": {
-    "type": "split",
-    "main": [
-      "greeting",
-      "hero",
-      "kpi_grid"
-    ],
-    "side": [
-      "tabs"
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          4,
+          8
+        ],
+        "cells": [
+          [
+            "greeting",
+            "hero",
+            "kpi_grid"
+          ],
+          [
+            "tabs"
+          ]
+        ]
+      }
     ]
   },
   "linked_kpis": [

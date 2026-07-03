@@ -80,15 +80,25 @@
     }
   ],
   "layout": {
-    "type": "split",
-    "main": [
-      "greeting",
-      "hero",
-      "attention",
-      "kpi_grid"
-    ],
-    "side": [
-      "tabs"
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          4,
+          8
+        ],
+        "cells": [
+          [
+            "greeting",
+            "hero",
+            "attention",
+            "kpi_grid"
+          ],
+          [
+            "tabs"
+          ]
+        ]
+      }
     ]
   },
   "linked_kpis": [
