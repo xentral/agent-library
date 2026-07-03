@@ -55,15 +55,24 @@
     }
   ],
   "layout": {
-    "type": "split",
-    "sidebar_width": 560,
-    "main": [
-      "cockpit"
-    ],
-    "side": [
-      "setup_tree",
-      "onboarding_tasks",
-      "kpi_hero"
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          5,
+          7
+        ],
+        "cells": [
+          [
+            "cockpit"
+          ],
+          [
+            "setup_tree",
+            "onboarding_tasks",
+            "kpi_hero"
+          ]
+        ]
+      }
     ]
   },
   "linked_kpis": [

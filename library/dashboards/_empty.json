@@ -6,9 +6,8 @@
   "order": 1000,
   "widgets": [],
   "layout": {
-    "type": "split",
-    "main": [],
-    "side": []
+    "type": "grid",
+    "rows": []
   },
   "linked_kpis": [],
   "locales": {

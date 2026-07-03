@@ -90,16 +90,68 @@
     }
   ],
   "layout": {
-    "type": "split",
-    "main": [
-      "greeting",
-      "hero",
-      "kpi_grid"
-    ],
-    "side": [
-      "shipments_daily",
-      "carrier_mix",
-      "shipments_by_carrier"
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "greeting"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "hero"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "kpi_grid"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "shipments_daily"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "carrier_mix"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "shipments_by_carrier"
+          ]
+        ]
+      }
     ]
   },
   "linked_kpis": [
