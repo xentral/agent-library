@@ -562,7 +562,10 @@ words), **When they run** (daily 06:30 / live / weekly Monday).
 - **Library card names as basis**. Stay close to the real name,
   just let it sound a bit warmer. "Daily cockpit briefing" →
   "Cockpit briefing". "Customer Service Orchestrator" → "Service
-  crew".
+  crew". If the stored card name is in another language than the
+  conversation, translate it first ("Mahnlauf" → "Dunning run"),
+  then warm it up — crew labels follow the user's language, never the
+  library's.
 - **Use crew labels only in Phase 5 + 7** — at the plan reveal and
   in the walkthrough. Otherwise the card name stays in its pure
   form.
