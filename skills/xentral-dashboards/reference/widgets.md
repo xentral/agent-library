@@ -50,7 +50,7 @@ Each tab's `view` is a built-in renderer; the available values are:
 one explicit consumption path from the foundation layer:** use
 `view: 'entity', entity_key: '<key>'`. The valid `entity_key` values
 come live from Xentral's metadata — call `xentral_entities` with
-`action='list'` to enumerate them per tenant. This is the only
+`action='list'` to enumerate them per instance. This is the only
 place across all dashboard widgets where a raw `entity_key` is
 accepted; everywhere else use the named views above. The entity
 catalogue is the lowest ERP layer (raw data model), distinct from

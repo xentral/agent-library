@@ -31,7 +31,7 @@ biggest lever for building many different-looking documents reliably:
    fully-styled built-in's css to "adapt" it** — you end up fighting an existing
    look instead of building yours.
 
-> Editing a tenant's **existing** template is different: `get` that template and
+> Editing an instance's **existing** template is different: `get` that template and
 > tweak it in place — skip the classify/clone step.
 
 ### Scope first: one recipient vs a group vs all
@@ -50,7 +50,7 @@ customer documents (invoice, delivery note, offer) and supplier documents
 * **A customer/supplier group, or all of them (a default template)**: run
   `action='survey'` with `analyze=true`. It returns the inventory plus a `usage`
   block (languages, countries, currency, derived locale + translations the
-  tenant's real documents needed) and, for invoices, a `usage.compliance`
+  instance's real documents needed) and, for invoices, a `usage.compliance`
   e-invoice recommendation.
 
   **Then SHOW the user what you found before building** — especially the
@@ -223,7 +223,7 @@ empty (or don't extend the base) to drop the default header.
 | Body | The actual `index.html` (for HTML/CSS) or the binary `.docx` / `.pdf` (for the other engines). |
 | Example data | A JSON payload bundled with the template — used in the editor's preview and as a fallback when render data is missing. |
 | Render | One execution: combine template + data → PDF bytes. Not stored, just returned. |
-| Render storage | Separate concept: opt-in archive of a render in S3, keyed by tenant + template + entity id. |
+| Render storage | Separate concept: opt-in archive of a render in S3, keyed by instance + template + entity id. |
 | Share | A public, token-protected URL that renders the template with a chosen entity's data — used for "view your invoice" customer links. |
 | Compliance attachment | XML payload bundled into the PDF (Factur-X / ZUGFeRD / XRechnung) so the file is both human-readable and machine-readable. |
 | v3 endpoint | The Xentral REST endpoint the template's "real samples" picker queries (e.g. `/api/v2/sales_orders`). Defines which entity type the template renders. |

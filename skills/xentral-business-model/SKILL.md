@@ -1,26 +1,26 @@
 ---
 name: xentral-business-model
 description: >
-  Read and maintain a tenant's Business Model — the canonical description of how
+  Read and maintain an instance's Business Model — the canonical description of how
   the business actually runs (model, sales channels, fulfillment, automation,
   target market, pain points) — with the `xentral_business_model` tool. Covers
   the 6-dimension strict-enum profile that every other agent reads first, the
   markdown sections, starting from a library template, and the read/write/
-  apply_template/profile_set workflow. Use when onboarding a tenant, when the
+  apply_template/profile_set workflow. Use when onboarding an instance, when the
   user describes a strategic change ("we opened a B2C shop", "we moved to a
   3PL"), or when another agent needs business context before acting — not to log
   day-to-day operations (Jobs) or track metrics (Dashboards).
 examples:
-  - "Set up the business model for a new B2B wholesale tenant."
+  - "Set up the business model for a new B2B wholesale instance."
   - "We just launched a French webshop — update the business model."
-  - "Classify this tenant's profile so the other agents behave correctly."
+  - "Classify this instance's profile so the other agents behave correctly."
 ---
 
 # Xentral Business Model
 
 ## Purpose
 
-The Business Model is the **canonical description of how this tenant actually
+The Business Model is the **canonical description of how this instance actually
 runs**: business model, sales channels, fulfillment posture, automation level,
 target market, pain points. It is the source of truth every other AI feature
 reads first to behave appropriately for *this* operator. The
@@ -56,7 +56,7 @@ schema) before setting — invalid values are rejected.
 
 ## Start from a library template
 
-For a fresh tenant, seed the sections from a starter template instead of writing
+For a fresh instance, seed the sections from a starter template instead of writing
 each from scratch. The library ships business-model templates (b2b_wholesale,
 d2c, ecommerce_boutique, manufacturer, multi_channel, generic, …), each paired
 with a `_configuration`. Apply one with `apply_template`, then refine. The three

@@ -1,7 +1,7 @@
 ---
 name: xentral-agents
 description: >
-  Pick, configure, and schedule the AI workers that act inside a Xentral tenant
+  Pick, configure, and schedule the AI workers that act inside a Xentral instance
   with the `xentral_agents` tool. Covers when an agent beats a workflow, the
   cadence/trigger model (manual, form, chat, email, event, and the time-based
   schedules), starting from the agent library instead of a blank prompt, the
@@ -23,8 +23,8 @@ examples:
 An **agent** is a focused LLM worker bound to a **trigger**: it wakes on an
 event (incoming mail, a scheduled tick, a submitted form, a chat turn, an ERP
 change), uses MCP tools, writes outcomes back, and leaves a job record. The
-`xentral_agents` tool lists the agents available in a tenant and manages their
-**custom-agent calendar slots** — the per-tenant configuration of *which* agent
+`xentral_agents` tool lists the agents available in an instance and manages their
+**custom-agent calendar slots** — the per-instance configuration of *which* agent
 runs, *when*, and *how*.
 
 What it is **not**:

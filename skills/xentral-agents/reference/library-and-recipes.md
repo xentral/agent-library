@@ -18,7 +18,7 @@ finished slot. Its shape maps field-for-field onto `custom_agent_add`:
 | `locales.<lng>.prefill.form_meta` | `form_meta` |
 
 So the flow is: pick the closest library item → read its prefill in the user's
-language → adapt the instructions and fields to the tenant → call
+language → adapt the instructions and fields to the instance → call
 `custom_agent_add` with the mapped params. Hand-write a prompt from scratch only
 when no library item is close.
 
@@ -79,8 +79,8 @@ slug must match exactly.
 
 ## Constraints & invariants
 
-- **Settings are per-tenant.** No global override; the catalog default is the
-  only fallback. Agents never act across tenants.
+- **Settings are per-instance.** No global override; the catalog default is the
+  only fallback. Agents never act across instances.
 - **Confidence gates auto-action, not auto-creation.** Below threshold the agent
   still creates a `requires_intervention` job — never throw the work away.
 - **Retry preserves context** — the original request + previous timeline are

@@ -4,7 +4,7 @@
 
 ```
 {
-  "slug": "warehouse-scan",        // snake_case, unique per tenant
+  "slug": "warehouse-scan",        // snake_case, unique per instance
   "name": "Warehouse Scan",
   "summary": "Stock in/out by scan.",
   "category": "logistics",          // custom | logistics | production | finance | sales
@@ -93,7 +93,7 @@ Patterns that make an app read as professional rather than a form dump:
 
 ## Guardrails
 
-- `slug` is snake_case (`^[a-z][a-z0-9_-]{2,127}$`), unique per tenant, and must
+- `slug` is snake_case (`^[a-z][a-z0-9_-]{2,127}$`), unique per instance, and must
   not collide with a built-in template slug.
 - `linked_entities` reference only the **global entity catalogue**: Customer,
   Supplier, Product, User, SalesOrder, SalesInvoice, DeliveryNote, PurchaseOrder,

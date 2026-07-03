@@ -1,7 +1,7 @@
 ---
 name: xentral-studio
 description: >
-  Build per-tenant Studio apps — your own Mobile or Desktop screens, forms, and
+  Build per-instance Studio apps — your own Mobile or Desktop screens, forms, and
   tables on top of the global Business-Entity catalogue — with the
   `xentral_studio` tool. Covers the app/screen/component model, starting from a
   built-in template instead of a blank app, binding components to real entities
@@ -24,7 +24,7 @@ examples:
 Studio is the **app workbench**. A Studio **App** is a composed surface — your
 own screens and components (forms, tables, buttons, KPI tiles) laid *on top of*
 the global Business-Entity catalogue, running as a **Mobile** or **Desktop**
-app. Apps are persisted per tenant, exactly like Dashboards and Agents.
+app. Apps are persisted per instance, exactly like Dashboards and Agents.
 
 You build on top — no migration, no code deploy. The ERP core keeps carrying the
 load (bookkeeping, inventory, orders, compliance); an app **references** global
@@ -59,7 +59,7 @@ which global entities it binds to. That tree is what renders. Wire buttons with
   from the allowed catalogues. An unknown value is **dropped on save** (the
   element falls back to a mock) — it never errors at render, but it also won't
   be live. Bind only to values that exist.
-- `slug` is snake_case (`^[a-z][a-z0-9_-]{2,127}$`), unique per tenant, and must
+- `slug` is snake_case (`^[a-z][a-z0-9_-]{2,127}$`), unique per instance, and must
   not collide with a built-in template slug.
 - Validation is **advisory, not blocking** — writes are never rejected, same as
   the designer UI.
@@ -69,7 +69,7 @@ which global entities it binds to. That tree is what renders. Wire buttons with
 Cloning a built-in template is the fastest path and starts you with correct
 bindings and a sensible screen layout. Templates: `bestellvorschlag`, `lager`,
 `pick`, `aussendienst`, `provisionsabrechnung`. Clone via `create` with a
-`template_id`; you get a tenant-owned copy you can freely edit. Build a blank app
+`template_id`; you get an instance-owned copy you can freely edit. Build a blank app
 only when no template is close.
 
 ## The workflow (every task)
@@ -81,7 +81,7 @@ only when no template is close.
    pulls one template's full payload.
 3. `action: list_entities` — the global Business-Entity catalogue an app may
    reference via `linked_entities`.
-4. `action: list` / `get` (`slug`) — the tenant's existing apps.
+4. `action: list` / `get` (`slug`) — the instance's existing apps.
 5. **Create:** `create` — either clone a template (`template_id`) or build a
    custom app (`slug` + `name` + `form`, `platform`, `linked_entities`, …). New
    apps start as drafts (`enabled=false`).
