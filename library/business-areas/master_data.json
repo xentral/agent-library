@@ -13,8 +13,8 @@
     "skills": [],
     "agents": [
       {
-        "id": "product-desc",
-        "label": "Produkttexte"
+        "id": "customer_service_product_questions",
+        "label": "Produktfragen"
       }
     ],
     "also": {

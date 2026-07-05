@@ -26,16 +26,8 @@
     ],
     "agents": [
       {
-        "id": "daily-procurement-briefing",
-        "label": "Tägliches Einkaufs-Briefing"
-      },
-      {
-        "id": "quick-reorder-check",
-        "label": "Nachbestell-Check (schnell)"
-      },
-      {
-        "id": "daily-suppliers-briefing",
-        "label": "Tägliches Lieferanten-Briefing"
+        "id": "procurement_meta_agent",
+        "label": "Beschaffung"
       }
     ],
     "also": {

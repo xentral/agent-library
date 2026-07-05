@@ -13,12 +13,8 @@
     "skills": [],
     "agents": [
       {
-        "id": "rma-flow",
-        "label": "Retouren-Abwicklung"
-      },
-      {
-        "id": "complaint-triage",
-        "label": "Reklamations-Triage"
+        "id": "customer_service_refund_return",
+        "label": "Rückgabe & Reklamation"
       }
     ],
     "also": {

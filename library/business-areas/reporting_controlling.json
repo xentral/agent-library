@@ -11,20 +11,7 @@
   ],
   "recommended": {
     "skills": [],
-    "agents": [
-      {
-        "id": "cockpit-kpi-writer",
-        "label": "Cockpit-KPI-Autor"
-      },
-      {
-        "id": "daily-cockpit-briefing",
-        "label": "Tägliches Cockpit-Briefing"
-      },
-      {
-        "id": "quick-cockpit-now",
-        "label": "Cockpit jetzt (schnell)"
-      }
-    ],
+    "agents": [],
     "also": {
       "dashboard": [
         {

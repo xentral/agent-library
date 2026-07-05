@@ -24,7 +24,12 @@
         "label": "Cross-Selling"
       }
     ],
-    "agents": [],
+    "agents": [
+      {
+        "id": "customer_service_order_management",
+        "label": "Auftragsverwaltung"
+      }
+    ],
     "also": {}
   },
   "locales": {
