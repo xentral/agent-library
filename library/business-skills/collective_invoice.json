@@ -1,0 +1,201 @@
+{
+  "id": "collective_invoice",
+  "version": 1,
+  "type": "skill",
+  "category": "finance",
+  "process_group": "Order-to-Cash",
+  "icon": "invoice",
+  "order": 10,
+  "popular": true,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Sammelrechnung",
+      "description": "Bündelt mehrere Lieferungen oder Aufträge eines Kunden über einen Zeitraum zu einer einzigen Rechnung — statt jede Lieferung einzeln zu fakturieren. Typisch im B2B mit wiederkehrenden Lieferungen.",
+      "tags": [
+        "Finance",
+        "B2B",
+        "Rechnung"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet die Sammelrechnung ein: mehrere Lieferscheine oder Aufträge eines Kunden werden über einen Abrechnungszeitraum (z. B. monatlich) gesammelt und am Periodenende zu genau einer Rechnung zusammengefasst.\n\nDer Skill liefert dazu alles Nötige mit — von den Feldern auf Kunde und Beleg über den Agenten, der die fälligen Sammelrechnungen erzeugt, bis zu Dashboard und KPI für die Überwachung. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Lieferungen/Aufträge eines Kunden über einen Abrechnungszeitraum sammeln",
+          "Am Periodenende automatisch eine gebündelte Rechnung je Kunde erzeugen",
+          "Abrechnungsrhythmus je Kunde steuern (wöchentlich, monatlich, auf Abruf)",
+          "Übersicht über offene, noch nicht fakturierte Lieferungen behalten"
+        ],
+        "inputs": [
+          "Kunden, die per Sammelrechnung abgerechnet werden sollen",
+          "Abrechnungsrhythmus und Stichtag",
+          "Bestehende Lieferscheine/Aufträge als abzurechnende Positionen"
+        ],
+        "outputs": [
+          "Eine gebündelte Rechnung je Kunde und Periode",
+          "Nachvollziehbare Zuordnung, welche Lieferung in welcher Sammelrechnung steckt"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten) und ein aktiver Verkaufs-/Lieferprozess."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert die Sammelrechnung",
+              "text": "Statt jede Lieferung einzeln zu berechnen, werden alle Lieferungen eines Kunden innerhalb eines Abrechnungszeitraums als offene Positionen geführt. Zum Stichtag fasst der Skill sie automatisch zu einer Rechnung zusammen. Das reduziert Belegmenge und Buchungsaufwand und ist im B2B mit regelmäßigen Lieferungen Standard. Der Kunde erhält eine Rechnung pro Periode statt vieler Einzelrechnungen."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Erweitert den Kunden um ein Feld „Abrechnungsart“ (Einzel-/Sammelrechnung) und „Abrechnungsrhythmus“ (wöchentlich/monatlich/auf Abruf). Auf Lieferschein/Auftrag ein Kennzeichen „zur Sammelrechnung vorgemerkt“, damit offene Positionen eindeutig gefunden werden."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent „Sammelrechnungslauf“, der zum Stichtag je Kunde die offenen Lieferungen einsammelt, plausibilisiert (gleiche Währung, gleicher Abrechnungsempfänger) und die gebündelte Rechnung erzeugt bzw. zur Freigabe vorlegt."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein zeitgesteuerter Workflow, der periodisch (z. B. monatlich zum 1.) alle Kunden mit Abrechnungsart „Sammelrechnung“ durchläuft und den Sammelrechnungslauf anstößt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App „Offene Sammelrechnungs-Positionen“, in der man je Kunde sieht, welche Lieferungen noch nicht fakturiert sind, und einen Lauf manuell vorziehen oder Positionen ausschließen kann."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit offenem Sammelrechnungs-Volumen je Kunde, Anzahl noch nicht fakturierter Lieferungen und dem nächsten fälligen Abrechnungsstichtag."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine Rechnungs-PDF-Vorlage für Sammelrechnungen mit gruppierten Positionen je Lieferschein inkl. Lieferdatum und Lieferschein-Nummer als Zwischenüberschrift."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für noch nicht fakturiertes Liefervolumen (Betrag), durchschnittliche Belegreduktion (Lieferungen je Sammelrechnung) und Zeit zwischen Lieferung und Fakturierung."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Collective Invoice",
+      "description": "Bundles several deliveries or orders of one customer over a period into a single invoice — instead of invoicing each delivery separately. Common in B2B with recurring deliveries.",
+      "tags": [
+        "Finance",
+        "B2B",
+        "Invoice"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up collective invoicing: several delivery notes or orders of one customer are collected over a billing period (e.g. monthly) and combined into exactly one invoice at period end.\n\nThe skill ships everything needed for that — from fields on the customer and document, to the agent that generates the due collective invoices, to a dashboard and KPI for monitoring. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Collect a customer's deliveries/orders over a billing period",
+          "Automatically generate one bundled invoice per customer at period end",
+          "Control the billing cadence per customer (weekly, monthly, on demand)",
+          "Keep an overview of open, not-yet-invoiced deliveries"
+        ],
+        "inputs": [
+          "Customers to be billed via collective invoice",
+          "Billing cadence and cut-off date",
+          "Existing delivery notes/orders as line items to be invoiced"
+        ],
+        "outputs": [
+          "One bundled invoice per customer and period",
+          "Traceable mapping of which delivery belongs to which collective invoice"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data) and an active sales/delivery process."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How the collective invoice works",
+              "text": "Instead of invoicing each delivery separately, all of a customer's deliveries within a billing period are held as open items. At the cut-off date the skill automatically combines them into one invoice. This cuts document volume and posting effort and is standard in B2B with regular deliveries. The customer receives one invoice per period instead of many individual ones."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Extends the customer with a \"billing mode\" field (single/collective invoice) and \"billing cadence\" (weekly/monthly/on demand). Adds a \"flagged for collective invoice\" marker on delivery note/order so open items can be found unambiguously."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "A \"collective invoice run\" agent that, at the cut-off date, gathers each customer's open deliveries, sanity-checks them (same currency, same billing recipient) and generates the bundled invoice or submits it for approval."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A scheduled workflow that periodically (e.g. monthly on the 1st) iterates all customers with billing mode \"collective invoice\" and triggers the collective invoice run."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "An \"open collective-invoice items\" app showing, per customer, which deliveries are not yet invoiced, with the option to bring a run forward manually or exclude items."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with open collective-invoice volume per customer, count of not-yet-invoiced deliveries and the next due billing cut-off date."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "An invoice PDF template for collective invoices with line items grouped per delivery note, including delivery date and delivery-note number as a sub-heading."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for not-yet-invoiced delivery volume (amount), average document reduction (deliveries per collective invoice) and time between delivery and invoicing."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

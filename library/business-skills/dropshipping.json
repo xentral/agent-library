@@ -1,0 +1,201 @@
+{
+  "id": "dropshipping",
+  "version": 1,
+  "type": "skill",
+  "category": "logistics",
+  "process_group": "Fulfillment",
+  "icon": "truck",
+  "order": 50,
+  "popular": false,
+  "required_plan": "pro",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Dropshipping",
+      "description": "Der Lieferant versendet direkt an den Endkunden (Streckengeschäft) — der Auftrag läuft zum Lieferanten statt ins eigene Lager. Typisch, wenn Ware nicht selbst bevorratet wird.",
+      "tags": [
+        "Logistik",
+        "Streckengeschäft",
+        "Lieferant"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet das Dropshipping (Streckengeschäft) ein: Statt aus dem eigenen Lager zu versenden, wird die Bestellung an den Lieferanten weitergegeben, der direkt an den Endkunden liefert.\n\nDer Skill liefert dazu alles Nötige mit — von den Kennzeichen an Artikel und Lieferant über den Agenten, der die Bestellung an den Lieferanten weiterleitet, bis zu App, Dashboard, PDF-Vorlage und KPIs. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Dropshipping-Positionen im Auftrag erkennen und aussteuern",
+          "Bestellung mit der Lieferadresse des Endkunden an den Lieferanten senden",
+          "Versand und Sendungsverfolgung zum Kundenauftrag zurückführen",
+          "Übersicht über offene und versandte Lieferantenbestellungen behalten"
+        ],
+        "inputs": [
+          "Artikel/Lieferanten mit Dropshipping-Kennzeichen",
+          "Lieferbedingungen des Lieferanten",
+          "Kundenaufträge mit Dropshipping-Positionen und Lieferadresse"
+        ],
+        "outputs": [
+          "Lieferantenbestellung mit Endkunden-Lieferadresse (Streckenbestellung)",
+          "Sendungsverfolgung, die zum ursprünglichen Kundenauftrag zurückgeführt wird"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: gepflegte Lieferanten und ein aktiver Verkaufs-/Beschaffungsprozess."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert das Dropshipping",
+              "text": "Beim Dropshipping versendet der Lieferant die Ware direkt an den Endkunden, ohne dass sie durch das eigene Lager läuft. Der Skill erkennt im Kundenauftrag die Dropshipping-Positionen und legt dafür automatisch eine Streckenbestellung beim zuständigen Lieferanten an — mit der Lieferadresse des Endkunden, aber ohne die eigenen Verkaufspreise. Versand und Sendungsverfolgung werden anschließend zum Kundenauftrag zurückgeführt, sodass der Status jederzeit nachvollziehbar bleibt. So lassen sich Artikel verkaufen, die nicht selbst bevorratet werden."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Erweitert Artikel und Lieferant um ein Dropshipping-Kennzeichen sowie die Lieferbedingungen des Lieferanten, damit Streckengeschäft-Positionen eindeutig erkannt werden."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der die betreffenden Auftragspositionen als Streckenbestellung an den Lieferanten weitergibt — inklusive der Lieferadresse des Endkunden — und Versand bzw. Sendungsverfolgung zum Kundenauftrag zurückführt."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow, der bei einem Auftrag mit Dropshipping-Positionen automatisch eine Lieferantenbestellung mit der Endkunden-Adresse erstellt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App als Dropshipping-Monitor, in der sichtbar ist, welche Lieferantenbestellungen offen bzw. bereits versandt sind."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit dem Dropshipping-Anteil und den offenen Lieferanten-Erfüllungen."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine PDF-Vorlage für die Streckenbestellung bzw. Lieferanweisung an den Lieferanten — mit der Lieferadresse des Endkunden, jedoch ohne die eigenen Verkaufspreise."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für den Dropshipping-Anteil an den Aufträgen, die Lieferzeit des Lieferanten und die pünktliche Streckenlieferquote."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Dropshipping",
+      "description": "The supplier ships directly to the end customer (drop shipment) — the order routes to the supplier instead of your own warehouse. Common when goods are not stocked in-house.",
+      "tags": [
+        "Logistics",
+        "Drop shipment",
+        "Supplier"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up dropshipping (drop shipment): instead of shipping from your own warehouse, the order is forwarded to the supplier, who delivers directly to the end customer.\n\nThe skill ships everything needed for that — from markers on the product and supplier, to the agent that forwards the order to the supplier, to an app, dashboard, PDF template and KPIs. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Detect and route dropship line items within an order",
+          "Send a supplier order with the end customer's ship-to address",
+          "Track fulfillment and tracking back to the customer order",
+          "Keep an overview of open and shipped supplier orders"
+        ],
+        "inputs": [
+          "Products/suppliers with a dropship flag",
+          "Supplier delivery terms",
+          "Customer orders with dropship items and ship-to address"
+        ],
+        "outputs": [
+          "Supplier order with the end-customer ship-to address (dropship order)",
+          "Tracking that is mapped back to the originating customer order"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: maintained suppliers and an active sales/procurement process."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How dropshipping works",
+              "text": "In dropshipping the supplier ships the goods directly to the end customer without them passing through your own warehouse. The skill detects the dropship line items in the customer order and automatically creates a dropship purchase order for the relevant supplier — with the end customer's ship-to address, but without your own sales prices. Fulfillment and tracking are then mapped back to the customer order so the status stays traceable at all times. This lets you sell items you do not stock yourself."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Extends the product and supplier with a dropship flag and the supplier's delivery terms, so drop-shipment line items can be identified unambiguously."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that forwards the relevant order lines to the supplier as a dropship purchase order — including the end customer's ship-to address — and tracks fulfillment and tracking back to the customer order."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow that, on an order with dropship items, automatically creates a supplier purchase order with the end-customer address."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "An app as a dropship order monitor, showing which supplier orders are open or already shipped."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with the dropship share and the open supplier fulfillments."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A PDF template for the dropship order or delivery instruction to the supplier — with the end customer's ship-to address, but without your own sales prices."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for the dropship order share, supplier lead time and the on-time dropship rate."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

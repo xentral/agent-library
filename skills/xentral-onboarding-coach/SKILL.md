@@ -58,7 +58,7 @@ to confirm, not in actions already taken.
 ## What good onboarding produces
 
 1. A filled-in **Business Model** draft that reflects the real business.
-2. A **draft onboarding plan**: the right building blocks for this business —
+2. A **draft onboarding plan**: the right Business Skills for this business —
    connections, business blocks, agents, dashboards, KPIs, PDF templates — plus
    any capability gaps to close and a test run for anything newly set up.
 

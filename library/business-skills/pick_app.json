@@ -1,0 +1,201 @@
+{
+  "id": "pick_app",
+  "version": 1,
+  "type": "skill",
+  "category": "warehouse",
+  "process_group": "Warehouse",
+  "icon": "scan",
+  "order": 80,
+  "popular": true,
+  "required_plan": "pro",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Pick App",
+      "description": "Mobile, scan-geprüfte Kommissionierung auf Handscanner oder Smartphone — der Kommissionierer wird Position für Position je Lieferung geführt und bestätigt jeden Griff per Scan.",
+      "tags": [
+        "Lager",
+        "Kommissionierung",
+        "Mobile"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet die mobile Kommissionierung ein: Zu jeder Lieferung entsteht ein Pick-Auftrag, den der Kommissionierer auf Handscanner oder Smartphone Position für Position abarbeitet und per Scan gegen die Lieferung verifiziert.\n\nDer Skill liefert dazu alles Nötige mit — vom Pick-Auftrag je Lieferung mit Pick-Status je Position über den Agenten, der Pick-Aufträge zuteilt und Scans prüft, bis zur mobilen Pick App selbst, Dashboard und KPIs. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Je Lieferung einen Pick-Auftrag mit Positionen erzeugen",
+          "Den Kommissionierer geführt Position für Position durch die Lieferung leiten",
+          "Jeden Griff per Scan gegen Artikel, Menge und Lagerplatz verifizieren",
+          "Den Pick-Status je Position und Auftrag in Echtzeit nachhalten"
+        ],
+        "inputs": [
+          "Lieferungen, die kommissioniert werden sollen",
+          "Zuteilung der Pick-Aufträge an Kommissionierer",
+          "Gescannte Bestätigungen je Position (Artikel, Menge, Lagerplatz)"
+        ],
+        "outputs": [
+          "Ein Pick-Auftrag je Lieferung mit abgeschlossenem Pick-Status je Position",
+          "Scan-geprüft kommissionierte Lieferungen mit dokumentierter Abweichung"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten), ein Lagerbestand mit Lagerplätzen und ein aktiver Lieferprozess."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert die Pick App",
+              "text": "Statt eine Papier-Pickliste abzuarbeiten, führt die App den Kommissionierer auf Handscanner oder Smartphone Position für Position durch eine Lieferung: zum richtigen Lagerplatz laufen, Artikel scannen, Menge bestätigen. Der Scan wird direkt gegen die Lieferposition geprüft, sodass falscher Artikel, falscher Platz oder falsche Menge sofort auffallen. Erst wenn alle Positionen bestätigt sind, gilt der Pick-Auftrag als abgeschlossen — das senkt Kommissionierfehler und macht jeden Griff nachvollziehbar."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Ein Pick-Auftrag als Entity: je Lieferung ein Auftrag mit zugeteiltem Kommissionierer, Status und je Position dem Pick-Status (offen, gescannt, bestätigt, abweichend). Damit ist jederzeit klar, was noch zu kommissionieren ist und wer daran arbeitet."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der Pick-Aufträge aus den offenen Lieferungen erzeugt, sie an Kommissionierer zuteilt und die eingehenden Scans gegen die Lieferung validiert (richtiger Artikel, richtige Menge, richtiger Lagerplatz)."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow, der bei einer kommissionierbereiten Lieferung („ready to pick“) automatisch einen Pick-Auftrag anlegt und ihn an die zuständige Kommissionierer-Warteschlange ausgibt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Die mobile Pick App selbst: eine geführte Scan-und-Bestätigen-Oberfläche für Handscanner und Smartphone, die den Kommissionierer Position für Position durch die Lieferung leitet und jeden Griff per Scan quittiert."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit laufenden Pick-Aufträgen (in Arbeit / abgeschlossen), dem Durchsatz je Kommissionierer und den Positionen, die auf Kommissionierung warten."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine optionale Pick-Bestätigung als PDF, die je Lieferung die kommissionierten Positionen, den Kommissionierer und etwaige Abweichungen dokumentiert — für Beleg oder Übergabe."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für die durchschnittliche Pick-Zeit je Position, die Kommissionier-Fehlerquote (abweichende Scans je Positionen) und die Kommissionierleistung (Picks pro Stunde je Kommissionierer)."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Pick App",
+      "description": "Mobile, scan-verified picking on a handheld scanner or phone — the picker is guided item by item per delivery and confirms each grab by scanning.",
+      "tags": [
+        "Warehouse",
+        "Picking",
+        "Mobile"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up mobile picking: for every delivery a pick task is created, which the picker works through item by item on a handheld scanner or phone, verifying each grab against the delivery by scanning.\n\nThe skill ships everything needed for that — from the pick task per delivery with a per-line pick status, to the agent that assigns pick tasks and validates scans, to the mobile Pick App itself, a dashboard and KPIs. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Create a pick task with line items per delivery",
+          "Guide the picker item by item through the delivery",
+          "Verify each grab by scanning against item, quantity and storage bin",
+          "Track the pick status per line and task in real time"
+        ],
+        "inputs": [
+          "Deliveries to be picked",
+          "Assignment of pick tasks to pickers",
+          "Scanned confirmations per line (item, quantity, storage bin)"
+        ],
+        "outputs": [
+          "A pick task per delivery with a completed pick status per line",
+          "Scan-verified picked deliveries with documented deviations"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data), a stock level with storage bins and an active delivery process."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How the Pick App works",
+              "text": "Instead of working off a paper pick list, the app guides the picker item by item through a delivery on a handheld scanner or phone: walk to the right storage bin, scan the item, confirm the quantity. The scan is checked directly against the delivery line, so a wrong item, wrong bin or wrong quantity is caught immediately. Only once all lines are confirmed does the pick task count as complete — this cuts picking errors and makes every grab traceable."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "A pick task as an entity: one task per delivery with an assigned picker, status and, per line, the pick status (open, scanned, confirmed, deviating). This makes it clear at any time what is still to be picked and who is working on it."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that creates pick tasks from the open deliveries, assigns them to pickers and validates the incoming scans against the delivery (right item, right quantity, right storage bin)."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow that, when a delivery becomes ready to pick, automatically creates a pick task and dispatches it to the responsible picker queue."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "The mobile Pick App itself: a guided scan-and-confirm interface for handheld scanners and phones that leads the picker item by item through the delivery and acknowledges each grab by scan."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with pick tasks in progress (in progress / completed), throughput per picker and the lines waiting to be picked."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "An optional pick confirmation as a PDF that documents, per delivery, the picked lines, the picker and any deviations — for records or handover."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for the average pick time per line, the pick error rate (deviating scans per lines) and picking throughput (picks per hour per picker)."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

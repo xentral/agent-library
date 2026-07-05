@@ -1,0 +1,201 @@
+{
+  "id": "stocktaking",
+  "version": 1,
+  "type": "skill",
+  "category": "warehouse",
+  "process_group": "Warehouse",
+  "icon": "clipboard",
+  "order": 70,
+  "popular": true,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Inventur",
+      "description": "Periodische oder permanente Inventur — Zähllisten erzeugen, zählen und die Differenzen gegen den Systembestand buchen. Sorgt für einen belastbaren, geprüften Lagerbestand.",
+      "tags": [
+        "Lager",
+        "Inventur",
+        "Bestand"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet die Inventur ein: Für ausgewählte Lagerplätze werden Zähllisten erzeugt, die gezählten Mengen erfasst und die Differenzen zwischen Zählung und Systembestand berechnet und gebucht.\n\nDer Skill liefert dazu alles Nötige mit — von der Inventur-Session mit gezählten Mengen und Differenzen je Lagerplatz über den Agenten, der Zähllisten erzeugt und Differenzen bucht, bis zu Erfassungs-App, Dashboard, PDF und KPIs. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Zähllisten je Lager, Lagerbereich oder Lagerplatz erzeugen",
+          "Gezählte Mengen erfassen (Stichtags- oder permanente Inventur)",
+          "Differenzen zwischen Zählung und Systembestand berechnen",
+          "Bestandsdifferenzen kontrolliert einbuchen und dokumentieren"
+        ],
+        "inputs": [
+          "Zu zählende Lager, Lagerbereiche oder Lagerplätze",
+          "Inventurart und Stichtag (periodisch oder permanent)",
+          "Erfasste Zählmengen je Lagerplatz und Artikel"
+        ],
+        "outputs": [
+          "Eine Inventur-Session mit gezählten Mengen und berechneten Differenzen je Lagerplatz",
+          "Gebuchte Bestandskorrekturen mit nachvollziehbarer Differenzhistorie"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten) und ein geführter Lagerbestand mit Lagerplätzen."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert die Inventur",
+              "text": "Zu einem Stichtag (periodische Inventur) oder laufend je Lagerplatz (permanente Inventur) wird der Ist-Bestand physisch gezählt. Der Skill erzeugt dafür Zähllisten, nimmt die gezählten Mengen entgegen und stellt sie dem Systembestand gegenüber. Aus der Abweichung je Lagerplatz und Artikel entsteht eine Differenz, die kontrolliert eingebucht wird — so bleibt der Lagerbestand belastbar und die Inventur ist lückenlos dokumentiert."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Eine Inventur-Session als Entity: Kopfdaten (Inventurart, Stichtag, Status) und je Lagerplatz und Artikel die gezählte Menge, der Systembestand und die berechnete Differenz. Damit ist jeder Zählvorgang eindeutig zuordenbar und die Differenzhistorie bleibt erhalten."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent „Inventurlauf“, der Zähllisten für die ausgewählten Lagerplätze erzeugt, die erfassten Zählmengen mit dem Systembestand vergleicht und die Bestandsdifferenzen buchungsreif aufbereitet bzw. bucht."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein zeitgesteuerter Workflow, der die jährliche oder periodische Inventur ansetzt, die betroffenen Lagerplätze für die Zählung sperrt (einfriert) und den Inventurlauf anstößt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine mobil- und desktoptaugliche Erfassungs-App: Lagerplatz scannen, gezählte Menge eingeben. Sie führt den Zähler Platz für Platz durch die Zählliste und zeigt den Fortschritt der Session."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit Zählfortschritt der laufenden Inventur, dem Wert der Bestandsdifferenzen und den größten Abweichungen je Lagerplatz und Artikel."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine PDF-Vorlage für die Zählliste (zum Abhaken bei der Zählung) und einen Inventurdifferenz-Bericht, der Zählmenge, Systembestand und Differenz je Lagerplatz und Artikel gegenüberstellt."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für die Zählgenauigkeit (Anteil differenzfreier Positionen), den Wert des Lagerschwunds (Inventurdifferenz in Betrag) und die Abschlussquote der Zählung (gezählte je geplante Lagerplätze)."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Stocktaking",
+      "description": "Periodic or permanent inventory counting — generate count lists, count, and book variances against system stock. Delivers a reliable, verified stock level.",
+      "tags": [
+        "Warehouse",
+        "Stocktaking",
+        "Stock"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up stocktaking: for selected storage bins, count lists are generated, the counted quantities are captured, and the variances between count and system stock are computed and booked.\n\nThe skill ships everything needed for that — from the inventory session with counted quantities and variances per storage bin, to the agent that generates count lists and books variances, to a counting app, dashboard, PDF and KPIs. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Generate count lists per warehouse, storage area or storage bin",
+          "Capture counted quantities (period-end or permanent inventory)",
+          "Compute variances between counted and system stock",
+          "Book stock variances in a controlled, documented way"
+        ],
+        "inputs": [
+          "Warehouses, storage areas or storage bins to be counted",
+          "Inventory type and cut-off date (periodic or permanent)",
+          "Captured count quantities per storage bin and item"
+        ],
+        "outputs": [
+          "An inventory session with counted quantities and computed variances per storage bin",
+          "Booked stock corrections with a traceable variance history"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data) and a managed stock level with storage bins."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How stocktaking works",
+              "text": "At a cut-off date (periodic inventory) or continuously per storage bin (permanent inventory), the actual stock is physically counted. The skill generates count lists for this, receives the counted quantities and compares them against system stock. The deviation per storage bin and item becomes a variance that is booked in a controlled way — so the stock level stays reliable and the count is fully documented."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "An inventory session as an entity: header data (inventory type, cut-off date, status) and, per storage bin and item, the counted quantity, the system stock and the computed variance. This makes every count uniquely traceable and preserves the variance history."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "A \"stocktaking run\" agent that generates count lists for the selected storage bins, compares the captured count quantities against system stock and prepares the stock variances for booking or books them."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A scheduled workflow that schedules the annual or periodic count, freezes the affected storage bins for counting and triggers the stocktaking run."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "A mobile- and desktop-capable counting app: scan a storage bin, enter the counted quantity. It guides the counter bin by bin through the count list and shows the progress of the session."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with the count progress of the running inventory, the value of the stock variances and the top deviations per storage bin and item."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A PDF template for the count list (to tick off while counting) and an inventory difference report that contrasts counted quantity, system stock and variance per storage bin and item."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for count accuracy (share of variance-free items), the value of inventory shrinkage (variance as an amount) and the count completion rate (counted vs planned storage bins)."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

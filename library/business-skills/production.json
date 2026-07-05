@@ -1,0 +1,201 @@
+{
+  "id": "production",
+  "version": 1,
+  "type": "skill",
+  "category": "production",
+  "process_group": "Manufacturing",
+  "icon": "factory",
+  "order": 130,
+  "popular": true,
+  "required_plan": "pro",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Produktion",
+      "description": "Fertigt aus Stücklisten: Fertigungsaufträge verbrauchen Komponentenbestand und buchen fertige Erzeugnisse ins Lager. Verbindet Bedarf (Aufträge, Mindestbestand) mit Materialverfügbarkeit und Bestandsführung.",
+      "tags": [
+        "Produktion",
+        "Fertigung",
+        "Stückliste"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet die Produktion ein: Aus der Stückliste eines Produkts entstehen Fertigungsaufträge, die den Komponentenbestand verbrauchen und die fertige Ware bei Fertigstellung ins Lager buchen.\n\nDer Skill liefert dazu alles Nötige mit — vom Fertigungsauftrag mit geplanten und verbrauchten Komponenten über den Agenten, der Aufträge aus dem Bedarf erzeugt und Verbrauch wie Zugang bucht, bis zu Werkstatt-App, Dashboard und KPIs. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Fertigungsaufträge aus Bedarf (Aufträge, Mindestbestand) erzeugen",
+          "Materialverfügbarkeit vor der Freigabe prüfen",
+          "Komponentenverbrauch und Fertigwaren-Zugang bei Fertigstellung buchen",
+          "Offene Fertigungsaufträge, Status und Materialengpässe im Blick behalten"
+        ],
+        "inputs": [
+          "Produkte mit hinterlegter Stückliste",
+          "Bedarf aus Verkaufsaufträgen oder Mindestbestand",
+          "Komponentenbestand als verfügbares Material"
+        ],
+        "outputs": [
+          "Fertigungsaufträge mit geplanten und verbrauchten Komponenten",
+          "Bestandsbuchungen: Komponentenverbrauch und Fertigwaren-Zugang"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Produkte müssen eine Stückliste hinterlegt haben."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert die Produktion",
+              "text": "Ein Fertigungsauftrag verknüpft ein zu produzierendes Produkt mit seiner Stückliste. Vor der Freigabe wird geprüft, ob alle Komponenten in ausreichender Menge verfügbar sind. Bei der Fertigstellung bucht der Skill den Komponentenverbrauch aus dem Lager und den Zugang der fertigen Erzeugnisse in den Bestand. So bleibt der Lagerbestand über den gesamten Fertigungsprozess korrekt — vom Rohmaterial bis zum verkaufsfähigen Produkt."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Ein Fertigungsauftrag, verknüpft mit der Stückliste (BOM) eines Produkts, mit geplanten und tatsächlich verbrauchten Komponenten sowie der produzierten Menge. Status (geplant, freigegeben, in Fertigung, fertig) macht den Fortschritt nachvollziehbar."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der Fertigungsaufträge aus dem Bedarf (Verkaufsaufträge, Unterschreitung des Mindestbestands) erzeugt, die Materialverfügbarkeit prüft und bei Fertigstellung den Komponentenverbrauch sowie den Fertigwaren-Zugang bucht."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow zur Materialverfügbarkeitsprüfung vor der Freigabe und ein zeitgesteuerter Workflow, der für Lagerartikel unter Mindestbestand automatisch Fertigungsaufträge anlegt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine Werkstatt-Übersicht mit offenen Fertigungsaufträgen, ihrem Status und den Materialengpässen — als zentrale Sicht für die Fertigung."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit Produktionsauslastung, offenen Aufträgen und aktuellen Materialengpässen."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine PDF-Vorlage für den Fertigungs- bzw. Werkstattauftrag mit Stückliste und Arbeitsgängen (Routing)."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für Termintreue (rechtzeitig fertiggestellte Aufträge), Ausschuss-/Ausbeute-Quote und Produktionsdurchsatz."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Production",
+      "description": "Manufactures from bills of materials: production orders consume component stock and book finished goods into inventory. Connects demand (orders, minimum stock) with material availability and stock keeping.",
+      "tags": [
+        "Production",
+        "Manufacturing",
+        "Bill of Materials"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up production: from a product's bill of materials, production orders are created that consume component stock and book the finished goods into inventory on completion.\n\nThe skill ships everything needed for that — from the production order with planned and consumed components, to the agent that creates orders from demand and books consumption and receipt, to a shop-floor app, dashboard and KPIs. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Create production orders from demand (sales orders, minimum stock)",
+          "Check material availability before release",
+          "Book component consumption and finished-goods receipt on completion",
+          "Keep an overview of open production orders, status and material shortfalls"
+        ],
+        "inputs": [
+          "Products with a defined bill of materials",
+          "Demand from sales orders or minimum stock",
+          "Component stock as available material"
+        ],
+        "outputs": [
+          "Production orders with planned and consumed components",
+          "Stock movements: component consumption and finished-goods receipt"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: products must have a bill of materials defined."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How production works",
+              "text": "A production order links a product to be manufactured with its bill of materials. Before release, the skill checks whether all components are available in sufficient quantity. On completion it books the component consumption out of the warehouse and the receipt of the finished goods into stock. This keeps inventory accurate across the whole manufacturing process — from raw material to sellable product."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "A production order linked to a product's bill of materials (BOM), with planned and actually consumed components as well as the produced quantity. A status (planned, released, in production, done) makes progress traceable."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that creates production orders from demand (sales orders, minimum-stock breaches), checks material availability and, on completion, books the component consumption and the finished-goods receipt."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow for the material availability check before release, and a scheduled workflow that automatically creates production orders for make-to-stock items below their minimum stock."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "A shop-floor overview showing open production orders, their status and material shortfalls — as the central view for manufacturing."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with production load, open orders and current material shortages."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A PDF template for the production / work order document with the bill of materials and routing (work steps)."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for on-time completion rate, scrap/yield rate and production throughput."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}
