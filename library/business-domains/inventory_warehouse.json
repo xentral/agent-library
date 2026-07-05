@@ -28,21 +28,40 @@
         "label": "Filiallieferung"
       }
     ],
+    "agents": [
+      {
+        "id": "daily-logistics-briefing",
+        "label": "Tägliches Logistik-Briefing"
+      }
+    ],
     "also": {
-      "agent": [
-        "Lager-Agent",
-        "Bestands-Agent"
-      ],
-      "workflow": [
-        "Umlagerung",
-        "Inventur-Lauf"
-      ],
       "pdf_template": [
-        "Zählliste",
-        "Umlagerungsbeleg"
+        {
+          "ref": "pick_list",
+          "label": "Pickliste"
+        },
+        {
+          "ref": "picking_slip",
+          "label": "Kommissionierschein"
+        },
+        {
+          "ref": "pallet_label",
+          "label": "Palettenetikett"
+        },
+        {
+          "ref": "item_labels",
+          "label": "Artikeletiketten"
+        }
       ],
       "dashboard": [
-        "Bestände & Lagerbewegungen"
+        {
+          "ref": "warehouse_shipping",
+          "label": "Lager & Versand"
+        },
+        {
+          "ref": "logistics",
+          "label": "Logistik"
+        }
       ]
     }
   },

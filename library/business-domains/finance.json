@@ -20,22 +20,64 @@
         "label": "Abschlagsrechnung"
       }
     ],
+    "agents": [
+      {
+        "id": "opos-list",
+        "label": "OPOS-Liste"
+      },
+      {
+        "id": "daily-finance-briefing",
+        "label": "Tägliches Finanz-Briefing"
+      },
+      {
+        "id": "quick-mahnlauf",
+        "label": "Mahnlauf (schnell)"
+      },
+      {
+        "id": "quick-opos-snapshot",
+        "label": "OPOS-Snapshot (schnell)"
+      }
+    ],
     "also": {
-      "agent": [
-        "Mahnwesen-Agent (OPOS)",
-        "Zahlungsabgleich-Agent"
-      ],
       "workflow": [
-        "Mahnlauf",
-        "OPOS-Eskalation"
+        {
+          "ref": "daily_opos_digest",
+          "label": "Täglicher OPOS-Digest"
+        },
+        {
+          "ref": "opos_dunning_escalation",
+          "label": "Mahn-Eskalation"
+        }
       ],
       "pdf_template": [
-        "Mahnung",
-        "Rechnung",
-        "Gutschrift"
+        {
+          "ref": "rechnung_xentral_original",
+          "label": "Rechnung"
+        },
+        {
+          "ref": "gutschrift_xentral_original",
+          "label": "Gutschrift"
+        }
       ],
       "dashboard": [
-        "OPOS & Liquidität"
+        {
+          "ref": "finance",
+          "label": "Finanzen"
+        }
+      ],
+      "connection": [
+        {
+          "ref": "datev",
+          "label": "DATEV"
+        },
+        {
+          "ref": "lexoffice",
+          "label": "lexoffice"
+        },
+        {
+          "ref": "sevdesk",
+          "label": "sevdesk"
+        }
       ]
     }
   },

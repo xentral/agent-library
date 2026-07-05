@@ -20,17 +20,30 @@
         "label": "Gutscheine"
       }
     ],
+    "agents": [
+      {
+        "id": "product-desc",
+        "label": "Produkttexte"
+      }
+    ],
     "also": {
-      "agent": [
-        "CRM-Agent",
-        "Kampagnen-Agent"
-      ],
-      "workflow": [
-        "Lead-Nurturing",
-        "Newsletter-Versand"
-      ],
-      "dashboard": [
-        "Kampagnen & Leads"
+      "connection": [
+        {
+          "ref": "mailchimp",
+          "label": "Mailchimp"
+        },
+        {
+          "ref": "klaviyo",
+          "label": "Klaviyo"
+        },
+        {
+          "ref": "hubspot",
+          "label": "HubSpot"
+        },
+        {
+          "ref": "activecampaign",
+          "label": "ActiveCampaign"
+        }
       ]
     }
   },

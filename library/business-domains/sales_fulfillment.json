@@ -36,24 +36,58 @@
         "label": "Rahmenverträge"
       }
     ],
+    "agents": [
+      {
+        "id": "b2b-quote",
+        "label": "B2B-Angebot"
+      },
+      {
+        "id": "address-change",
+        "label": "Adressänderung"
+      }
+    ],
     "also": {
-      "agent": [
-        "Auftrags-Agent",
-        "Angebots-Agent",
-        "Versand-Agent"
-      ],
       "workflow": [
-        "Rechnung nach Versand",
-        "Auftragsbestätigung senden"
+        {
+          "ref": "invoice_after_shipment",
+          "label": "Rechnung nach Versand"
+        },
+        {
+          "ref": "auto_release_paid_orders",
+          "label": "Bezahlte Aufträge freigeben"
+        },
+        {
+          "ref": "prepayment_order_cleanup",
+          "label": "Vorkasse-Aufräumen"
+        }
       ],
       "pdf_template": [
-        "Angebot",
-        "Auftragsbestätigung",
-        "Rechnung",
-        "Lieferschein"
+        {
+          "ref": "angebot_xentral_original",
+          "label": "Angebot"
+        },
+        {
+          "ref": "auftrag_xentral_original",
+          "label": "Auftragsbestätigung"
+        },
+        {
+          "ref": "rechnung_xentral_original",
+          "label": "Rechnung"
+        },
+        {
+          "ref": "lieferschein_xentral_original",
+          "label": "Lieferschein"
+        }
       ],
       "dashboard": [
-        "Umsatz & Auftragslage"
+        {
+          "ref": "daily_operations",
+          "label": "Tagesbetrieb"
+        },
+        {
+          "ref": "ceo_overview",
+          "label": "CEO-Überblick"
+        }
       ]
     }
   },

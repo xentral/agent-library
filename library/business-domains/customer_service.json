@@ -11,16 +11,30 @@
   ],
   "recommended": {
     "skills": [],
+    "agents": [
+      {
+        "id": "complaint-triage",
+        "label": "Reklamations-Triage"
+      },
+      {
+        "id": "daily-customer-service-briefing",
+        "label": "Tägliches CS-Briefing"
+      },
+      {
+        "id": "quick-cs-pulse",
+        "label": "CS-Puls (schnell)"
+      }
+    ],
     "also": {
-      "agent": [
-        "Kundenservice-Agent",
-        "Reklamations-Triage"
-      ],
-      "workflow": [
-        "SLA-Eskalation"
-      ],
       "dashboard": [
-        "Serviceanfragen & SLA"
+        {
+          "ref": "customer_service",
+          "label": "Kundenservice"
+        },
+        {
+          "ref": "inbox_triage",
+          "label": "Inbox-Triage"
+        }
       ]
     }
   },

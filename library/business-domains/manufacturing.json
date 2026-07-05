@@ -16,20 +16,13 @@
         "label": "Produktion"
       }
     ],
+    "agents": [],
     "also": {
-      "agent": [
-        "Fertigungs-Agent",
-        "Materialbedarfs-Agent"
-      ],
       "workflow": [
-        "Materialverfügbarkeit prüfen",
-        "Fertigungsauftrag aus Bedarf"
-      ],
-      "pdf_template": [
-        "Fertigungsauftrag"
-      ],
-      "dashboard": [
-        "Produktionsauslastung"
+        {
+          "ref": "bom_cost_rollup",
+          "label": "Stücklisten-Kostenrollup"
+        }
       ]
     }
   },

@@ -24,20 +24,38 @@
         "label": "Dropshipping"
       }
     ],
+    "agents": [
+      {
+        "id": "daily-procurement-briefing",
+        "label": "Tägliches Einkaufs-Briefing"
+      },
+      {
+        "id": "quick-reorder-check",
+        "label": "Nachbestell-Check (schnell)"
+      },
+      {
+        "id": "daily-suppliers-briefing",
+        "label": "Tägliches Lieferanten-Briefing"
+      }
+    ],
     "also": {
-      "agent": [
-        "Einkaufs-Agent",
-        "Lieferanten-Agent"
-      ],
       "workflow": [
-        "Niedrigbestand → Bestellvorschlag",
-        "Bestellung nach Freigabe"
+        {
+          "ref": "low_stock_reorder_proposal",
+          "label": "Niedrigbestand → Bestellvorschlag"
+        }
       ],
       "pdf_template": [
-        "Bestellung"
+        {
+          "ref": "bestellung_xentral_original",
+          "label": "Bestellung"
+        }
       ],
       "dashboard": [
-        "Einkauf & Lieferanten"
+        {
+          "ref": "purchasing",
+          "label": "Einkauf"
+        }
       ]
     }
   },

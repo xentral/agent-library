@@ -11,24 +11,44 @@
   ],
   "recommended": {
     "skills": [],
+    "agents": [
+      {
+        "id": "daily-logistics-briefing",
+        "label": "Tägliches Logistik-Briefing"
+      }
+    ],
     "also": {
-      "agent": [
-        "Versand-Agent",
-        "Tracking-Agent"
-      ],
       "connection": [
-        "DHL",
-        "DPD"
-      ],
-      "workflow": [
-        "Versandlabel erzeugen",
-        "Sendungsverfolgung"
-      ],
-      "pdf_template": [
-        "Versandetikett"
+        {
+          "ref": "dhl",
+          "label": "DHL"
+        },
+        {
+          "ref": "dpd",
+          "label": "DPD"
+        },
+        {
+          "ref": "gls",
+          "label": "GLS"
+        },
+        {
+          "ref": "ups",
+          "label": "UPS"
+        },
+        {
+          "ref": "sendcloud",
+          "label": "Sendcloud"
+        }
       ],
       "dashboard": [
-        "Versand & Laufzeiten"
+        {
+          "ref": "warehouse_shipping",
+          "label": "Lager & Versand"
+        },
+        {
+          "ref": "logistics",
+          "label": "Logistik"
+        }
       ]
     }
   },

@@ -11,21 +11,38 @@
   ],
   "recommended": {
     "skills": [],
+    "agents": [
+      {
+        "id": "rma-flow",
+        "label": "Retouren-Abwicklung"
+      },
+      {
+        "id": "complaint-triage",
+        "label": "Reklamations-Triage"
+      }
+    ],
     "also": {
-      "agent": [
-        "Retouren-Agent",
-        "Reklamations-Triage"
-      ],
       "workflow": [
-        "Retoure → Gutschrift",
-        "Wiedereinlagerung"
+        {
+          "ref": "return_to_credit_note",
+          "label": "Retoure → Gutschrift"
+        }
       ],
       "pdf_template": [
-        "Retourenschein",
-        "Gutschrift"
+        {
+          "ref": "return_slip",
+          "label": "Retourenschein"
+        },
+        {
+          "ref": "gutschrift_xentral_original",
+          "label": "Gutschrift"
+        }
       ],
       "dashboard": [
-        "Retourenquote"
+        {
+          "ref": "customer_service",
+          "label": "Kundenservice"
+        }
       ]
     }
   },

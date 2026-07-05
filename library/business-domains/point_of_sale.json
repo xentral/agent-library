@@ -24,20 +24,8 @@
         "label": "Cross-Selling"
       }
     ],
-    "also": {
-      "agent": [
-        "Kassen-Agent"
-      ],
-      "workflow": [
-        "Tagesabschluss & Sync"
-      ],
-      "pdf_template": [
-        "Kassenbon"
-      ],
-      "dashboard": [
-        "Filialumsatz"
-      ]
-    }
+    "agents": [],
+    "also": {}
   },
   "locales": {
     "de": {

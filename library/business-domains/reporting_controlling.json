@@ -11,14 +11,34 @@
   ],
   "recommended": {
     "skills": [],
+    "agents": [
+      {
+        "id": "cockpit-kpi-writer",
+        "label": "Cockpit-KPI-Autor"
+      },
+      {
+        "id": "daily-cockpit-briefing",
+        "label": "Tägliches Cockpit-Briefing"
+      },
+      {
+        "id": "quick-cockpit-now",
+        "label": "Cockpit jetzt (schnell)"
+      }
+    ],
     "also": {
-      "agent": [
-        "Reporting-Agent",
-        "Tägliches Cockpit-Briefing"
-      ],
       "dashboard": [
-        "Management-Cockpit",
-        "KPI-Übersicht"
+        {
+          "ref": "ceo_overview",
+          "label": "CEO-Überblick"
+        },
+        {
+          "ref": "performance_controlling",
+          "label": "Performance-Controlling"
+        },
+        {
+          "ref": "agent_performance",
+          "label": "Agenten-Performance"
+        }
       ]
     }
   },

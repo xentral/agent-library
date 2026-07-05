@@ -11,17 +11,34 @@
   ],
   "recommended": {
     "skills": [],
+    "agents": [
+      {
+        "id": "product-desc",
+        "label": "Produkttexte"
+      }
+    ],
     "also": {
-      "agent": [
-        "Produktdaten-Agent",
-        "Stammdaten-Pflege"
-      ],
       "workflow": [
-        "Artikel-Anreicherung",
-        "Preis-Update"
+        {
+          "ref": "catalog_data_quality_sweep",
+          "label": "Datenqualitäts-Sweep"
+        }
       ],
       "dashboard": [
-        "Datenqualität"
+        {
+          "ref": "master_data",
+          "label": "Stammdaten"
+        }
+      ],
+      "connection": [
+        {
+          "ref": "akeneo",
+          "label": "Akeneo"
+        },
+        {
+          "ref": "plytix",
+          "label": "Plytix"
+        }
       ]
     }
   },
