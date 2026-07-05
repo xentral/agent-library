@@ -13,16 +13,16 @@
     "skills": [],
     "agents": [
       {
-        "id": "customer_service_order_management",
-        "label": "Auftragsverwaltung"
+        "id": "complaint-triage",
+        "label": "Reklamations-Triage"
       },
       {
-        "id": "customer_service_product_questions",
-        "label": "Produktfragen"
+        "id": "daily-customer-service-briefing",
+        "label": "Tägliches CS-Briefing"
       },
       {
-        "id": "customer_service_address_validation",
-        "label": "Adressvalidierung"
+        "id": "quick-cs-pulse",
+        "label": "CS-Puls (schnell)"
       }
     ],
     "workflows": [],
