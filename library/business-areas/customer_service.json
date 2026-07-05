@@ -25,18 +25,20 @@
         "label": "Adressvalidierung"
       }
     ],
-    "also": {
-      "dashboard": [
-        {
-          "ref": "customer_service",
-          "label": "Kundenservice"
-        },
-        {
-          "ref": "inbox_triage",
-          "label": "Inbox-Triage"
-        }
-      ]
-    }
+    "workflows": [],
+    "dashboards": [
+      {
+        "id": "customer_service",
+        "label": "Kundenservice"
+      },
+      {
+        "id": "inbox_triage",
+        "label": "Inbox-Triage"
+      }
+    ],
+    "pdf_templates": [],
+    "apps": [],
+    "also": {}
   },
   "locales": {
     "de": {

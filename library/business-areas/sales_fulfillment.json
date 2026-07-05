@@ -46,50 +46,59 @@
         "label": "Lieferauskunft"
       }
     ],
-    "also": {
-      "workflow": [
-        {
-          "ref": "invoice_after_shipment",
-          "label": "Rechnung nach Versand"
-        },
-        {
-          "ref": "auto_release_paid_orders",
-          "label": "Bezahlte Aufträge freigeben"
-        },
-        {
-          "ref": "prepayment_order_cleanup",
-          "label": "Vorkasse-Aufräumen"
-        }
-      ],
-      "pdf_template": [
-        {
-          "ref": "angebot_xentral_original",
-          "label": "Angebot"
-        },
-        {
-          "ref": "auftrag_xentral_original",
-          "label": "Auftragsbestätigung"
-        },
-        {
-          "ref": "rechnung_xentral_original",
-          "label": "Rechnung"
-        },
-        {
-          "ref": "lieferschein_xentral_original",
-          "label": "Lieferschein"
-        }
-      ],
-      "dashboard": [
-        {
-          "ref": "daily_operations",
-          "label": "Tagesbetrieb"
-        },
-        {
-          "ref": "ceo_overview",
-          "label": "CEO-Überblick"
-        }
-      ]
-    }
+    "workflows": [
+      {
+        "id": "invoice_after_shipment",
+        "label": "Rechnung nach Versand"
+      },
+      {
+        "id": "auto_release_paid_orders",
+        "label": "Bezahlte Aufträge freigeben"
+      },
+      {
+        "id": "prepayment_order_cleanup",
+        "label": "Vorkasse-Aufräumen"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "daily_operations",
+        "label": "Tagesbetrieb"
+      },
+      {
+        "id": "ceo_overview",
+        "label": "CEO-Überblick"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "angebot_xentral_original",
+        "label": "Angebot"
+      },
+      {
+        "id": "auftrag_xentral_original",
+        "label": "Auftragsbestätigung"
+      },
+      {
+        "id": "rechnung_xentral_original",
+        "label": "Rechnung"
+      },
+      {
+        "id": "lieferschein_xentral_original",
+        "label": "Lieferschein"
+      }
+    ],
+    "apps": [
+      {
+        "id": "aussendienst",
+        "label": "Außendienst"
+      },
+      {
+        "id": "provisionsabrechnung",
+        "label": "Provisionsabrechnung"
+      }
+    ],
+    "also": {}
   },
   "locales": {
     "de": {

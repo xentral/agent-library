@@ -34,36 +34,46 @@
         "label": "Lieferauskunft"
       }
     ],
-    "also": {
-      "pdf_template": [
-        {
-          "ref": "pick_list",
-          "label": "Pickliste"
-        },
-        {
-          "ref": "picking_slip",
-          "label": "Kommissionierschein"
-        },
-        {
-          "ref": "pallet_label",
-          "label": "Palettenetikett"
-        },
-        {
-          "ref": "item_labels",
-          "label": "Artikeletiketten"
-        }
-      ],
-      "dashboard": [
-        {
-          "ref": "warehouse_shipping",
-          "label": "Lager & Versand"
-        },
-        {
-          "ref": "logistics",
-          "label": "Logistik"
-        }
-      ]
-    }
+    "workflows": [],
+    "dashboards": [
+      {
+        "id": "warehouse_shipping",
+        "label": "Lager & Versand"
+      },
+      {
+        "id": "logistics",
+        "label": "Logistik"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "pick_list",
+        "label": "Pickliste"
+      },
+      {
+        "id": "picking_slip",
+        "label": "Kommissionierschein"
+      },
+      {
+        "id": "pallet_label",
+        "label": "Palettenetikett"
+      },
+      {
+        "id": "item_labels",
+        "label": "Artikeletiketten"
+      }
+    ],
+    "apps": [
+      {
+        "id": "lager",
+        "label": "Lager"
+      },
+      {
+        "id": "pick",
+        "label": "Pick"
+      }
+    ],
+    "also": {}
   },
   "locales": {
     "de": {

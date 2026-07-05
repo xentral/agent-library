@@ -17,30 +17,30 @@
         "label": "Rückgabe & Reklamation"
       }
     ],
-    "also": {
-      "workflow": [
-        {
-          "ref": "return_to_credit_note",
-          "label": "Retoure → Gutschrift"
-        }
-      ],
-      "pdf_template": [
-        {
-          "ref": "return_slip",
-          "label": "Retourenschein"
-        },
-        {
-          "ref": "gutschrift_xentral_original",
-          "label": "Gutschrift"
-        }
-      ],
-      "dashboard": [
-        {
-          "ref": "customer_service",
-          "label": "Kundenservice"
-        }
-      ]
-    }
+    "workflows": [
+      {
+        "id": "return_to_credit_note",
+        "label": "Retoure → Gutschrift"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "customer_service",
+        "label": "Kundenservice"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "return_slip",
+        "label": "Retourenschein"
+      },
+      {
+        "id": "gutschrift_xentral_original",
+        "label": "Gutschrift"
+      }
+    ],
+    "apps": [],
+    "also": {}
   },
   "locales": {
     "de": {

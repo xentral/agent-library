@@ -30,6 +30,10 @@
         "label": "Auftragsverwaltung"
       }
     ],
+    "workflows": [],
+    "dashboards": [],
+    "pdf_templates": [],
+    "apps": [],
     "also": {}
   },
   "locales": {

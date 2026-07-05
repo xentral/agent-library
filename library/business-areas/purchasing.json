@@ -30,26 +30,31 @@
         "label": "Beschaffung"
       }
     ],
-    "also": {
-      "workflow": [
-        {
-          "ref": "low_stock_reorder_proposal",
-          "label": "Niedrigbestand → Bestellvorschlag"
-        }
-      ],
-      "pdf_template": [
-        {
-          "ref": "bestellung_xentral_original",
-          "label": "Bestellung"
-        }
-      ],
-      "dashboard": [
-        {
-          "ref": "purchasing",
-          "label": "Einkauf"
-        }
-      ]
-    }
+    "workflows": [
+      {
+        "id": "low_stock_reorder_proposal",
+        "label": "Niedrigbestand → Bestellvorschlag"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "purchasing",
+        "label": "Einkauf"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "bestellung_xentral_original",
+        "label": "Bestellung"
+      }
+    ],
+    "apps": [
+      {
+        "id": "bestellvorschlag",
+        "label": "Bestellvorschlag"
+      }
+    ],
+    "also": {}
   },
   "locales": {
     "de": {

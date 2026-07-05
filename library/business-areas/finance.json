@@ -30,33 +30,34 @@
         "label": "Zahlungsausgleich"
       }
     ],
+    "workflows": [
+      {
+        "id": "daily_opos_digest",
+        "label": "Täglicher OPOS-Digest"
+      },
+      {
+        "id": "opos_dunning_escalation",
+        "label": "Mahn-Eskalation"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "finance",
+        "label": "Finanzen"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "rechnung_xentral_original",
+        "label": "Rechnung"
+      },
+      {
+        "id": "gutschrift_xentral_original",
+        "label": "Gutschrift"
+      }
+    ],
+    "apps": [],
     "also": {
-      "workflow": [
-        {
-          "ref": "daily_opos_digest",
-          "label": "Täglicher OPOS-Digest"
-        },
-        {
-          "ref": "opos_dunning_escalation",
-          "label": "Mahn-Eskalation"
-        }
-      ],
-      "pdf_template": [
-        {
-          "ref": "rechnung_xentral_original",
-          "label": "Rechnung"
-        },
-        {
-          "ref": "gutschrift_xentral_original",
-          "label": "Gutschrift"
-        }
-      ],
-      "dashboard": [
-        {
-          "ref": "finance",
-          "label": "Finanzen"
-        }
-      ],
       "connection": [
         {
           "ref": "datev",

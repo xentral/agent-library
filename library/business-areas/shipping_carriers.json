@@ -17,6 +17,19 @@
         "label": "Lieferauskunft"
       }
     ],
+    "workflows": [],
+    "dashboards": [
+      {
+        "id": "warehouse_shipping",
+        "label": "Lager & Versand"
+      },
+      {
+        "id": "logistics",
+        "label": "Logistik"
+      }
+    ],
+    "pdf_templates": [],
+    "apps": [],
     "also": {
       "connection": [
         {
@@ -38,16 +51,6 @@
         {
           "ref": "sendcloud",
           "label": "Sendcloud"
-        }
-      ],
-      "dashboard": [
-        {
-          "ref": "warehouse_shipping",
-          "label": "Lager & Versand"
-        },
-        {
-          "ref": "logistics",
-          "label": "Logistik"
         }
       ]
     }

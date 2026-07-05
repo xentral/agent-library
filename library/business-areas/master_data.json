@@ -17,19 +17,21 @@
         "label": "Produktfragen"
       }
     ],
+    "workflows": [
+      {
+        "id": "catalog_data_quality_sweep",
+        "label": "Datenqualitäts-Sweep"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "master_data",
+        "label": "Stammdaten"
+      }
+    ],
+    "pdf_templates": [],
+    "apps": [],
     "also": {
-      "workflow": [
-        {
-          "ref": "catalog_data_quality_sweep",
-          "label": "Datenqualitäts-Sweep"
-        }
-      ],
-      "dashboard": [
-        {
-          "ref": "master_data",
-          "label": "Stammdaten"
-        }
-      ],
       "connection": [
         {
           "ref": "akeneo",

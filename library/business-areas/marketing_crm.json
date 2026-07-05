@@ -21,6 +21,10 @@
       }
     ],
     "agents": [],
+    "workflows": [],
+    "dashboards": [],
+    "pdf_templates": [],
+    "apps": [],
     "also": {
       "connection": [
         {

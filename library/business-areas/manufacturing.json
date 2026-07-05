@@ -17,14 +17,16 @@
       }
     ],
     "agents": [],
-    "also": {
-      "workflow": [
-        {
-          "ref": "bom_cost_rollup",
-          "label": "Stücklisten-Kostenrollup"
-        }
-      ]
-    }
+    "workflows": [
+      {
+        "id": "bom_cost_rollup",
+        "label": "Stücklisten-Kostenrollup"
+      }
+    ],
+    "dashboards": [],
+    "pdf_templates": [],
+    "apps": [],
+    "also": {}
   },
   "locales": {
     "de": {

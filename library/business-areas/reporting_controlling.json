@@ -12,22 +12,24 @@
   "recommended": {
     "skills": [],
     "agents": [],
-    "also": {
-      "dashboard": [
-        {
-          "ref": "ceo_overview",
-          "label": "CEO-Überblick"
-        },
-        {
-          "ref": "performance_controlling",
-          "label": "Performance-Controlling"
-        },
-        {
-          "ref": "agent_performance",
-          "label": "Agenten-Performance"
-        }
-      ]
-    }
+    "workflows": [],
+    "dashboards": [
+      {
+        "id": "ceo_overview",
+        "label": "CEO-Überblick"
+      },
+      {
+        "id": "performance_controlling",
+        "label": "Performance-Controlling"
+      },
+      {
+        "id": "agent_performance",
+        "label": "Agenten-Performance"
+      }
+    ],
+    "pdf_templates": [],
+    "apps": [],
+    "also": {}
   },
   "locales": {
     "de": {
