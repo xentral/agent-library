@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "b2b",
-  "process_group": "Sales",
+  "business_domain": "Sales",
   "icon": "contract",
   "order": 100,
   "popular": false,

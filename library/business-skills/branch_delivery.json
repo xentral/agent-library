@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "logistics",
-  "process_group": "Fulfillment",
+  "business_domain": "Fulfillment",
   "icon": "store",
   "order": 60,
   "popular": false,

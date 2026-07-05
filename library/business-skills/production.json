@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "production",
-  "process_group": "Manufacturing",
+  "business_domain": "Manufacturing",
   "icon": "factory",
   "order": 130,
   "popular": true,

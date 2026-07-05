@@ -44,7 +44,7 @@
     "popular": {
       "type": "boolean"
     },
-    "process_group": {
+    "business_domain": {
       "type": "string"
     },
     "required_plan": {

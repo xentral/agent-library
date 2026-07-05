@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "warehouse",
-  "process_group": "Warehouse",
+  "business_domain": "Warehouse",
   "icon": "route",
   "order": 90,
   "popular": false,

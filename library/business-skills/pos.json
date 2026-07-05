@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "pos",
-  "process_group": "Retail",
+  "business_domain": "Retail",
   "icon": "register",
   "order": 140,
   "popular": true,
