@@ -1,0 +1,53 @@
+{
+  "id": "finance",
+  "version": 1,
+  "type": "domain",
+  "category": "steer",
+  "icon": "invoice",
+  "order": 100,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "collective_invoice",
+        "label": "Sammelrechnung"
+      },
+      {
+        "id": "progress_invoice",
+        "label": "Abschlagsrechnung"
+      }
+    ],
+    "also": {
+      "agent": [
+        "Mahnwesen-Agent (OPOS)",
+        "Zahlungsabgleich-Agent"
+      ],
+      "workflow": [
+        "Mahnlauf",
+        "OPOS-Eskalation"
+      ],
+      "pdf_template": [
+        "Mahnung",
+        "Rechnung",
+        "Gutschrift"
+      ],
+      "dashboard": [
+        "OPOS & Liquidität"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Finance",
+      "description": "Debitoren, Kreditoren, offene Posten, Mahnwesen und Zahlungsabgleich."
+    },
+    "en": {
+      "name": "Finance",
+      "description": "Receivables, payables, open items, dunning and payment matching."
+    }
+  },
+  "verified": false
+}

@@ -1,0 +1,36 @@
+{
+  "id": "reporting_controlling",
+  "version": 1,
+  "type": "domain",
+  "category": "steer",
+  "icon": "chart",
+  "order": 110,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "also": {
+      "agent": [
+        "Reporting-Agent",
+        "Tägliches Cockpit-Briefing"
+      ],
+      "dashboard": [
+        "Management-Cockpit",
+        "KPI-Übersicht"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Reporting & Controlling",
+      "description": "KPIs, Dashboards und Auswertungen für den Überblick über den ganzen Betrieb."
+    },
+    "en": {
+      "name": "Reporting & Controlling",
+      "description": "KPIs, dashboards and analyses for an overview of the whole operation."
+    }
+  },
+  "verified": false
+}

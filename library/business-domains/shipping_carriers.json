@@ -1,0 +1,46 @@
+{
+  "id": "shipping_carriers",
+  "version": 1,
+  "type": "domain",
+  "category": "store_ship",
+  "icon": "truck",
+  "order": 90,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "also": {
+      "agent": [
+        "Versand-Agent",
+        "Tracking-Agent"
+      ],
+      "connection": [
+        "DHL",
+        "DPD"
+      ],
+      "workflow": [
+        "Versandlabel erzeugen",
+        "Sendungsverfolgung"
+      ],
+      "pdf_template": [
+        "Versandetikett"
+      ],
+      "dashboard": [
+        "Versand & Laufzeiten"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Shipping & Carriers",
+      "description": "Versandarten, Carrier, Tracking und Versand-/Zoll-Dokumente."
+    },
+    "en": {
+      "name": "Shipping & Carriers",
+      "description": "Shipping methods, carriers, tracking and shipping/customs documents."
+    }
+  },
+  "verified": false
+}

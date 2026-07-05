@@ -1,0 +1,71 @@
+{
+  "id": "sales_fulfillment",
+  "version": 1,
+  "type": "domain",
+  "category": "sell_serve",
+  "icon": "cart",
+  "order": 10,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "collective_invoice",
+        "label": "Sammelrechnung"
+      },
+      {
+        "id": "progress_invoice",
+        "label": "Abschlagsrechnung"
+      },
+      {
+        "id": "proforma_invoice",
+        "label": "Proformarechnung"
+      },
+      {
+        "id": "cross_selling",
+        "label": "Cross-Selling"
+      },
+      {
+        "id": "vouchers",
+        "label": "Gutscheine"
+      },
+      {
+        "id": "framework_contracts",
+        "label": "Rahmenverträge"
+      }
+    ],
+    "also": {
+      "agent": [
+        "Auftrags-Agent",
+        "Angebots-Agent",
+        "Versand-Agent"
+      ],
+      "workflow": [
+        "Rechnung nach Versand",
+        "Auftragsbestätigung senden"
+      ],
+      "pdf_template": [
+        "Angebot",
+        "Auftragsbestätigung",
+        "Rechnung",
+        "Lieferschein"
+      ],
+      "dashboard": [
+        "Umsatz & Auftragslage"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Sales & Fulfillment",
+      "description": "Angebot → Auftrag → Lieferung → Rechnung. Die Klammer über allem rund um Order-to-Cash."
+    },
+    "en": {
+      "name": "Sales & Fulfillment",
+      "description": "Quote → order → delivery → invoice. The bracket over everything Order-to-Cash."
+    }
+  },
+  "verified": false
+}

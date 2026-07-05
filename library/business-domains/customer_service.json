@@ -1,0 +1,38 @@
+{
+  "id": "customer_service",
+  "version": 1,
+  "type": "domain",
+  "category": "sell_serve",
+  "icon": "team",
+  "order": 30,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "also": {
+      "agent": [
+        "Kundenservice-Agent",
+        "Reklamations-Triage"
+      ],
+      "workflow": [
+        "SLA-Eskalation"
+      ],
+      "dashboard": [
+        "Serviceanfragen & SLA"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Customer Service",
+      "description": "Anfragen, Reklamationen und SLA-Kommunikation an einem Ort gebündelt."
+    },
+    "en": {
+      "name": "Customer Service",
+      "description": "Inquiries, complaints and SLA communication bundled in one place."
+    }
+  },
+  "verified": false
+}

@@ -1,0 +1,39 @@
+{
+  "id": "master_data",
+  "version": 1,
+  "type": "domain",
+  "category": "steer",
+  "icon": "tag",
+  "order": 120,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "also": {
+      "agent": [
+        "Produktdaten-Agent",
+        "Stammdaten-Pflege"
+      ],
+      "workflow": [
+        "Artikel-Anreicherung",
+        "Preis-Update"
+      ],
+      "dashboard": [
+        "Datenqualität"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Product & Master Data",
+      "description": "Artikel, Preise, Kategorien und Kundenstammdaten sauber gepflegt."
+    },
+    "en": {
+      "name": "Product & Master Data",
+      "description": "Articles, prices, categories and customer master data kept clean."
+    }
+  },
+  "verified": false
+}

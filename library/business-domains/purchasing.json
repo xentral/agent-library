@@ -1,0 +1,55 @@
+{
+  "id": "purchasing",
+  "version": 1,
+  "type": "domain",
+  "category": "buy_make",
+  "icon": "case",
+  "order": 60,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "reorder_proposal",
+        "label": "Bestellvorschlag"
+      },
+      {
+        "id": "framework_contracts",
+        "label": "Rahmenverträge"
+      },
+      {
+        "id": "dropshipping",
+        "label": "Dropshipping"
+      }
+    ],
+    "also": {
+      "agent": [
+        "Einkaufs-Agent",
+        "Lieferanten-Agent"
+      ],
+      "workflow": [
+        "Niedrigbestand → Bestellvorschlag",
+        "Bestellung nach Freigabe"
+      ],
+      "pdf_template": [
+        "Bestellung"
+      ],
+      "dashboard": [
+        "Einkauf & Lieferanten"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Purchasing",
+      "description": "Bedarf → Bestellung → Wareneingang → Eingangsrechnung. Alles rund um Procure-to-Pay."
+    },
+    "en": {
+      "name": "Purchasing",
+      "description": "Demand → order → goods receipt → supplier invoice. Everything Procure-to-Pay."
+    }
+  },
+  "verified": false
+}

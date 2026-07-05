@@ -1,0 +1,60 @@
+{
+  "id": "inventory_warehouse",
+  "version": 1,
+  "type": "domain",
+  "category": "store_ship",
+  "icon": "box",
+  "order": 80,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "stocktaking",
+        "label": "Inventur"
+      },
+      {
+        "id": "pick_app",
+        "label": "Pick App"
+      },
+      {
+        "id": "pick_runs",
+        "label": "Pickläufe"
+      },
+      {
+        "id": "branch_delivery",
+        "label": "Filiallieferung"
+      }
+    ],
+    "also": {
+      "agent": [
+        "Lager-Agent",
+        "Bestands-Agent"
+      ],
+      "workflow": [
+        "Umlagerung",
+        "Inventur-Lauf"
+      ],
+      "pdf_template": [
+        "Zählliste",
+        "Umlagerungsbeleg"
+      ],
+      "dashboard": [
+        "Bestände & Lagerbewegungen"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Inventory & Warehouse",
+      "description": "Bestände, Kommissionierung, Inventur und Umlagerungen im Lager."
+    },
+    "en": {
+      "name": "Inventory & Warehouse",
+      "description": "Stock, picking, stocktaking and transfers in the warehouse."
+    }
+  },
+  "verified": false
+}

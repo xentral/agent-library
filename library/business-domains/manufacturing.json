@@ -1,0 +1,47 @@
+{
+  "id": "manufacturing",
+  "version": 1,
+  "type": "domain",
+  "category": "buy_make",
+  "icon": "factory",
+  "order": 70,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "production",
+        "label": "Produktion"
+      }
+    ],
+    "also": {
+      "agent": [
+        "Fertigungs-Agent",
+        "Materialbedarfs-Agent"
+      ],
+      "workflow": [
+        "Materialverfügbarkeit prüfen",
+        "Fertigungsauftrag aus Bedarf"
+      ],
+      "pdf_template": [
+        "Fertigungsauftrag"
+      ],
+      "dashboard": [
+        "Produktionsauslastung"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Manufacturing",
+      "description": "Fertigungsaufträge, Stücklisten und Materialbedarf für die Eigenproduktion."
+    },
+    "en": {
+      "name": "Manufacturing",
+      "description": "Production orders, bills of materials and material demand for in-house production."
+    }
+  },
+  "verified": false
+}

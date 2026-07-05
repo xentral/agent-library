@@ -1,0 +1,43 @@
+{
+  "id": "returns",
+  "version": 1,
+  "type": "domain",
+  "category": "sell_serve",
+  "icon": "rotate",
+  "order": 20,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "also": {
+      "agent": [
+        "Retouren-Agent",
+        "Reklamations-Triage"
+      ],
+      "workflow": [
+        "Retoure → Gutschrift",
+        "Wiedereinlagerung"
+      ],
+      "pdf_template": [
+        "Retourenschein",
+        "Gutschrift"
+      ],
+      "dashboard": [
+        "Retourenquote"
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Returns",
+      "description": "Rücksendung → Prüfung → Gutschrift oder Wiedereinlagerung. Der komplette Retourenprozess."
+    },
+    "en": {
+      "name": "Returns",
+      "description": "Return → inspection → credit note or restock. The full returns process."
+    }
+  },
+  "verified": false
+}
