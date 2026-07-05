@@ -1,0 +1,203 @@
+{
+  "id": "proforma_invoice",
+  "version": 1,
+  "type": "skill",
+  "category": "finance",
+  "business_area": "Order-to-Cash",
+  "icon": "invoice",
+  "order": 30,
+  "popular": false,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Proformarechnung",
+      "description": "Ein vorläufiger Beleg ohne Buchung — für Vorkasse-Anforderung, Zoll-/Exportpapiere oder Angebote. Keine Forderung, kein Buchungssatz in der Buchhaltung.",
+      "tags": [
+        "Finance",
+        "Rechnung",
+        "Export"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet die Proformarechnung ein: einen vorläufigen Beleg, der wie eine Rechnung aussieht, aber keine Forderung darstellt und nicht in die Buchhaltung gebucht wird. Sie dient der Vorkasse-Anforderung, als Zoll-/Exportdokument oder als angebotsähnlicher Beleg. Sobald die Zahlung oder Bestätigung eingeht, wird die Proforma in eine echte Rechnung überführt.\n\nDer Skill liefert dazu alles Nötige mit — vom Proforma-Kennzeichen auf dem Auftrag über den Agenten, der den Beleg erstellt und später umwandelt, bis zu Dashboard und KPI für die Überwachung. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Einen Auftrag als Proforma kennzeichnen (Grund: Vorkasse oder Zoll)",
+          "Ein Proforma-Dokument ohne Forderung und ohne Buchung erzeugen",
+          "Nach Zahlungseingang bzw. Bestätigung in eine echte Rechnung umwandeln",
+          "Offene Proforma-Belege und deren Umwandlungsstand überblicken"
+        ],
+        "inputs": [
+          "Aufträge, die als Proforma behandelt werden sollen",
+          "Grund der Proforma (Vorkasse oder Zoll/Export)",
+          "Positionen und Beträge des Auftrags als Belegbasis"
+        ],
+        "outputs": [
+          "Ein klar als „Proforma“ gekennzeichnetes Dokument (keine Forderung)",
+          "Eine echte Rechnung nach Zahlungseingang/Bestätigung",
+          "Nachvollziehbarer Umwandlungsstand je Proforma-Beleg"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten) und ein aktiver Verkaufsprozess mit Aufträgen."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert die Proformarechnung",
+              "text": "Eine Proformarechnung ist ein vorläufiger Beleg, der wie eine Rechnung aufgebaut ist, aber keine Forderung begründet und keinen Buchungssatz auslöst. Sie wird genutzt, um Vorkasse anzufordern, Zoll- und Exportpapiere zu liefern oder ein verbindlich wirkendes Angebot zu erstellen. Der Auftrag wird dazu als Proforma gekennzeichnet und der Grund hinterlegt. Erst wenn die Zahlung eingeht oder die Bestätigung vorliegt, wird der Beleg in eine echte, buchende Rechnung umgewandelt. So bleiben Buchhaltung und offene Posten sauber, bis der Vorgang tatsächlich fakturiert wird."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Erweitert den Auftrag um ein Kennzeichen „Proforma“ und ein Feld für den Grund (Vorkasse oder Zoll/Export). So werden Proforma-Vorgänge eindeutig erkannt und von echten Rechnungen getrennt gehalten."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der für als Proforma gekennzeichnete Aufträge das Proforma-Dokument erzeugt und es nach Zahlungseingang oder Bestätigung in eine echte Rechnung umwandelt."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow, der bei einem als Proforma gekennzeichneten Auftrag die Proforma ausstellt und beim Zahlungseingang die Umwandlung in die echte Rechnung anstößt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App „Offene Proforma-Belege“, die zeigt, welche Proforma-Dokumente offen sind und in welchem Umwandlungsstand sie sich befinden."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit dem offenen Proforma-Volumen und der Umwandlungsquote (Proforma zu echter Rechnung)."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine klar als „Proforma“ beschriftete Belegvorlage ohne Formulierungen zu Zahlung oder Forderung, mit Feldern für Zoll- und Exportangaben."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für die Umwandlungsquote von Proforma zu echter Rechnung und die durchschnittliche Zeit von Proforma bis Zahlungseingang."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Proforma Invoice",
+      "description": "A preliminary, non-booking document — for prepayment requests, customs/export papers or quotes. Not a receivable and it does not post to accounting.",
+      "tags": [
+        "Finance",
+        "Invoice",
+        "Export"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up proforma invoicing: a preliminary document that looks like an invoice but is not a receivable and does not post to accounting. It is used for prepayment requests, as a customs/export document, or as a quote-like document. Once payment or confirmation arrives, the proforma is converted into a real invoice.\n\nThe skill ships everything needed for that — from the proforma flag on the order, to the agent that produces the document and later converts it, to a dashboard and KPI for monitoring. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Flag an order as proforma (reason: prepayment or customs)",
+          "Generate a proforma document with no receivable and no posting",
+          "Convert it into a real invoice once payment/confirmation arrives",
+          "Keep an overview of open proforma documents and their conversion state"
+        ],
+        "inputs": [
+          "Orders to be treated as proforma",
+          "Reason for the proforma (prepayment or customs/export)",
+          "Order line items and amounts as the document basis"
+        ],
+        "outputs": [
+          "A clearly labelled \"proforma\" document (not a receivable)",
+          "A real invoice once payment/confirmation arrives",
+          "Traceable conversion state per proforma document"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data) and an active sales process with orders."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How the proforma invoice works",
+              "text": "A proforma invoice is a preliminary document laid out like an invoice, but it does not create a receivable and does not trigger a posting. It is used to request prepayment, to provide customs and export papers, or to issue a binding-looking quote. The order is flagged as proforma and the reason is stored. Only once payment arrives or confirmation is given is the document converted into a real, posting invoice. This keeps accounting and open items clean until the transaction is actually invoiced."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Extends the order with a \"proforma\" flag and a reason field (prepayment or customs/export). This unambiguously identifies proforma transactions and keeps them separate from real invoices."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that, for orders flagged as proforma, generates the proforma document and converts it into a real invoice once payment or confirmation arrives."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow that issues the proforma when an order is flagged as proforma and, on payment, triggers the conversion into the real invoice."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "An \"open proforma documents\" app showing which proforma documents are open and what conversion state they are in."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with the open proforma volume and the conversion rate (proforma to real invoice)."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A document template clearly labelled \"proforma\" with no payment or receivable wording, including fields for customs and export details."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for the proforma-to-invoice conversion rate and the average time from proforma to payment received."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

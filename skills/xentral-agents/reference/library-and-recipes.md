@@ -85,7 +85,7 @@ slug must match exactly.
   still creates a `requires_intervention` job — never throw the work away.
 - **Retry preserves context** — the original request + previous timeline are
   passed back; don't restart from scratch.
-- **Agents must not silently mutate config** (Business Model, Bausteine). They
+- **Agents must not silently mutate config** (Business Model, Business Skills). They
   write a task/job for the operator instead.
 - Slot data lives in its own namespace (`custom_agents/<license>/agents.*`),
   decoupled from the business model.

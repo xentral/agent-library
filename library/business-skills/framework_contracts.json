@@ -1,0 +1,201 @@
+{
+  "id": "framework_contracts",
+  "version": 1,
+  "type": "skill",
+  "category": "b2b",
+  "business_area": "Sales",
+  "icon": "contract",
+  "order": 100,
+  "popular": false,
+  "required_plan": "pro",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Rahmenverträge",
+      "description": "Bildet Rahmenverträge mit einem Kunden ab: vereinbarte Preise und Mengen über eine Laufzeit, gegen die der Kunde nach und nach abruft (Abrufe/Call-offs). Typisch im B2B mit wiederkehrendem Bedarf.",
+      "tags": [
+        "B2B",
+        "Vertrag",
+        "Abruf"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet Rahmenverträge ein: Du vereinbarst mit einem Kunden feste Preise und eine Gesamtmenge über eine Laufzeit, gegen die der Kunde im Zeitverlauf abruft. Jeder Abruf verbraucht einen Teil der vereinbarten Restmenge zum vereinbarten Preis.\n\nDer Skill liefert dazu alles Nötige mit — von den Feldern für Vertrag und Abrufaufträge über den Agenten, der Abrufe zum Vertragspreis erzeugt und die Restmenge fortschreibt, bis zu Dashboard und KPI für die Überwachung. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Rahmenverträge mit Laufzeit, vereinbarten Positionen, Preisen und Gesamtmenge abbilden",
+          "Abrufaufträge zum Vertragspreis erzeugen und die Restmenge automatisch fortschreiben",
+          "Warnen, wenn Menge oder Laufzeit eines Vertrags zur Neige geht",
+          "Überblick über Abrufhistorie und verbleibendes Kontingent je Vertrag behalten"
+        ],
+        "inputs": [
+          "Kunde und Vertragslaufzeit (Start, Ende)",
+          "Vereinbarte Positionen mit Preis und Gesamt-/Abrufmenge",
+          "Einzelne Abrufe des Kunden gegen den Vertrag"
+        ],
+        "outputs": [
+          "Abrufaufträge zum vereinbarten Vertragspreis mit fortgeschriebener Restmenge",
+          "Nachvollziehbarer Vertragsstatus (verbleibende Menge, verbleibender Wert, Laufzeit)"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten), ein aktiver Verkaufsprozess und gepflegte Kundenstammdaten."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktionieren Rahmenverträge",
+              "text": "Ein Rahmenvertrag legt für eine Laufzeit fest, welche Positionen ein Kunde zu welchen Preisen und in welcher Gesamtmenge beziehen darf. Statt jeden Bedarf neu zu verhandeln, ruft der Kunde nach und nach Teilmengen ab. Jeder Abruf wird zum vereinbarten Preis fakturiert und verringert die verbleibende Restmenge. Der Skill hält Restmenge, Restwert und Laufzeit stets aktuell und meldet, wenn ein Vertrag ausgeschöpft ist oder ausläuft. So bleiben Konditionen verbindlich und die Nutzung des Vertrags jederzeit nachvollziehbar."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Ein Rahmenvertrag mit Laufzeit (Start/Ende), vereinbarten Positionen, Vertragspreisen sowie Gesamt- bzw. Kontingentmenge. Dazu Abrufaufträge, die auf den Vertrag verweisen und die Restmenge verbrauchen — mit Feldern für abgerufene Menge, verbleibende Menge und verbleibenden Wert."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der Abrufaufträge zum hinterlegten Vertragspreis erzeugt, die Restmenge fortschreibt und meldet, wenn Menge oder Laufzeit eines Vertrags zur Neige gehen."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow, der bei nahender Ausschöpfung der Kontingentmenge oder bei ablaufender Laufzeit warnt und die zuständige Person benachrichtigt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App „Vertragsübersicht“, die je Rahmenvertrag die verbleibende Menge, den verbleibenden Wert und die vollständige Abrufhistorie zeigt."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit Vertragsauslastung, verbleibender Menge und verbleibendem Wert je Vertrag sowie einer Liste demnächst auslaufender Verträge."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine PDF-Vorlage für das Rahmenvertragsdokument mit Laufzeit, vereinbarten Positionen, Vertragspreisen und Gesamtmenge."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für die Vertragsauslastung (in Prozent), die verbleibende vereinbarte Menge und die Abruffrequenz je Vertrag."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Framework Contracts",
+      "description": "Models blanket agreements with a customer: agreed prices and quantities over a term, against which the customer draws down over time (call-offs). Common in B2B with recurring demand.",
+      "tags": [
+        "B2B",
+        "Contract",
+        "Call-off"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up framework contracts: you agree fixed prices and a total quantity with a customer over a term, against which the customer draws down over time. Each call-off consumes part of the agreed remaining quantity at the agreed price.\n\nThe skill ships everything needed for that — from fields for the contract and call-off orders, to the agent that creates call-offs at the contracted price and decrements the remaining quantity, to a dashboard and KPI for monitoring. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Model framework contracts with a term, agreed items, prices and total quantity",
+          "Create call-off orders at the contracted price and decrement the remaining quantity automatically",
+          "Flag when a contract's quantity or term is nearing exhaustion",
+          "Keep an overview of the call-off history and remaining allowance per contract"
+        ],
+        "inputs": [
+          "Customer and contract term (start, end)",
+          "Agreed items with price and total/call-off quantity",
+          "Individual call-offs of the customer against the contract"
+        ],
+        "outputs": [
+          "Call-off orders at the agreed contract price with an updated remaining quantity",
+          "Traceable contract status (remaining quantity, remaining value, term)"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data), an active sales process and maintained customer master data."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How framework contracts work",
+              "text": "A framework contract fixes, for a term, which items a customer may buy at which prices and in which total quantity. Instead of renegotiating each demand, the customer draws down partial quantities over time. Each call-off is invoiced at the agreed price and reduces the remaining quantity. The skill keeps remaining quantity, remaining value and term always up to date and alerts when a contract is exhausted or expiring. This keeps conditions binding and contract usage fully traceable at any time."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "A framework contract with a term (start/end), agreed items, contract prices and a total or committed quantity. Plus call-off orders that reference the contract and consume the remaining quantity — with fields for quantity drawn, quantity remaining and value remaining."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that creates call-off orders at the stored contract price, decrements the remaining quantity and flags when a contract's quantity or term is nearing exhaustion."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow that alerts on contract expiry or when the committed quantity crosses a threshold, and notifies the responsible person."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "A \"contract overview\" app showing, per framework contract, the remaining quantity, the remaining value and the full call-off history."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with contract utilization, remaining quantity and remaining value per contract, plus a list of contracts expiring soon."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A PDF template for the framework contract document with term, agreed items, contract prices and total quantity."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for contract utilization (in percent), remaining committed quantity and call-off frequency per contract."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

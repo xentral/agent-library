@@ -1,0 +1,45 @@
+{
+  "id": "reporting_controlling",
+  "version": 1,
+  "type": "domain",
+  "category": "steer",
+  "icon": "chart",
+  "order": 110,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "agents": [],
+    "workflows": [],
+    "dashboards": [
+      {
+        "id": "ceo_overview",
+        "label": "CEO-Überblick"
+      },
+      {
+        "id": "performance_controlling",
+        "label": "Performance-Controlling"
+      },
+      {
+        "id": "agent_performance",
+        "label": "Agenten-Performance"
+      }
+    ],
+    "pdf_templates": [],
+    "apps": [],
+    "also": {}
+  },
+  "locales": {
+    "de": {
+      "name": "Reporting & Controlling",
+      "description": "KPIs, Dashboards und Auswertungen für den Überblick über den ganzen Betrieb."
+    },
+    "en": {
+      "name": "Reporting & Controlling",
+      "description": "KPIs, dashboards and analyses for an overview of the whole operation."
+    }
+  },
+  "verified": false
+}

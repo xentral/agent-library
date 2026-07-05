@@ -1,0 +1,201 @@
+{
+  "id": "vouchers",
+  "version": 1,
+  "type": "skill",
+  "category": "general",
+  "business_area": "Sales",
+  "icon": "ticket",
+  "order": 120,
+  "popular": false,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Gutscheine",
+      "description": "Gibt Geschenk- und Rabattgutscheine aus und löst sie ein — Codegenerierung, Guthabenverwaltung, Einlösung gegen Aufträge und Gültigkeit/Ablauf. Typisch für Handel und D2C.",
+      "tags": [
+        "Vertrieb",
+        "Gutschein",
+        "Zahlung"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet Gutscheine ein: Geschenk- und Rabattgutscheine werden mit eindeutigem Code ausgegeben, das Guthaben wird verwaltet und gegen Aufträge eingelöst, inklusive Gültigkeitszeitraum und Ablauf.\n\nDer Skill liefert dazu alles Nötige mit — von der Gutschein-Entity über den Agenten, der Gutscheine ausgibt, Codes prüft und Guthaben verrechnet, bis zu Dashboard und KPI für die Überwachung. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Geschenk- und Rabattgutscheine mit eindeutigem Code ausgeben",
+          "Guthaben verwalten und beim Einlösen gegen einen Auftrag verrechnen",
+          "Codes bei der Einlösung prüfen (Gültigkeit, Restguthaben, Ablauf)",
+          "Offene Gutschein-Verbindlichkeit und Einlösequote überwachen"
+        ],
+        "inputs": [
+          "Ausgabegründe (Verkauf, Kompensation, Kampagne)",
+          "Gutscheinart (Betrag oder Prozentsatz) und Gültigkeitszeitraum",
+          "Ein Gutscheincode und der Auftrag bei der Einlösung"
+        ],
+        "outputs": [
+          "Ausgegebene Gutscheine mit Code, Wert und Gültigkeit",
+          "Fortgeschriebenes Restguthaben je Gutschein und Einlösehistorie"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten) und ein aktiver Verkaufsprozess."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktionieren Gutscheine",
+              "text": "Ein Gutschein wird mit eindeutigem Code, einem Wert (fester Betrag oder Prozentsatz) und einem Gültigkeitszeitraum ausgegeben. Bei der Einlösung prüft der Skill den Code auf Gültigkeit und Restguthaben und verrechnet den Betrag gegen den Auftrag; das Restguthaben wird fortgeschrieben. Teileinlösungen bleiben so nutzbar, abgelaufene Gutscheine werden nicht mehr akzeptiert. Der Skill hält die offene Gutschein-Verbindlichkeit stets aktuell — der Wert ausgegebener, noch nicht eingelöster Gutscheine ist damit jederzeit nachvollziehbar."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Ein Gutschein mit Code, Art (Betrag oder Prozentsatz), Restguthaben, Gültigkeitszeitraum und Einlösehistorie."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der Gutscheine ausgibt, einen Code bei der Einlösung prüft und das Guthaben auf einem Auftrag anwendet bzw. fortschreibt."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow für Ablauf-Erinnerung und automatisches Verfallen sowie zum Ausgeben eines Gutscheins bei einem Auslöser (z. B. als Kompensation)."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App zur Gutscheinverwaltung: ausgeben, suchen, sperren und Guthaben prüfen."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit offener Gutschein-Verbindlichkeit, Einlösequote und ausgegebenen gegenüber eingelösten Gutscheinen."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine druck- und versandfertige PDF-Vorlage für einen Geschenkgutschein."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für die offene Gutschein-Verbindlichkeit (Betrag), die Einlösequote und den Verfall (nicht eingelöste, abgelaufene Gutscheine)."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Vouchers",
+      "description": "Issues and redeems gift cards and discount vouchers — code generation, balance tracking, redemption against orders, and validity/expiry. Common in retail and D2C.",
+      "tags": [
+        "Sales",
+        "Voucher",
+        "Payment"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up vouchers: gift cards and discount vouchers are issued with a unique code, their balance is tracked and redeemed against orders, including a validity period and expiry.\n\nThe skill ships everything needed for that — from the voucher entity, to the agent that issues vouchers, validates codes and applies the balance, to a dashboard and KPI for monitoring. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Issue gift cards and discount vouchers with a unique code",
+          "Track the balance and apply it against an order at redemption",
+          "Validate a code at redemption (validity, remaining balance, expiry)",
+          "Monitor outstanding voucher liability and redemption rate"
+        ],
+        "inputs": [
+          "Reasons for issuing (sale, compensation, campaign)",
+          "Voucher type (amount or percentage) and validity period",
+          "A voucher code and the order at redemption"
+        ],
+        "outputs": [
+          "Issued vouchers with code, value and validity",
+          "Updated remaining balance per voucher and redemption history"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data) and an active sales process."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How vouchers work",
+              "text": "A voucher is issued with a unique code, a value (fixed amount or percentage) and a validity period. At redemption the skill validates the code for validity and remaining balance and applies the amount against the order; the remaining balance is updated. Partial redemptions stay usable, expired vouchers are no longer accepted. The skill keeps the outstanding voucher liability always up to date — the value of issued, not-yet-redeemed vouchers is thus traceable at any time."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "A voucher with code, type (amount or percentage), remaining balance, validity period and redemption history."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that issues vouchers, validates a code at redemption and applies the balance on an order, decrementing it accordingly."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow for expiry reminders and auto-expiry, and for issuing a voucher on a trigger (e.g. as compensation)."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "A voucher management app: issue, search, block and check balance."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with outstanding voucher liability, redemption rate and issued versus redeemed vouchers."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A printable and emailable PDF template for a gift voucher."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for outstanding voucher liability (amount), redemption rate and breakage (unredeemed, expired vouchers)."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

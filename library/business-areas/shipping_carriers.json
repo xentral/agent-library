@@ -1,0 +1,69 @@
+{
+  "id": "shipping_carriers",
+  "version": 1,
+  "type": "domain",
+  "category": "store_ship",
+  "icon": "truck",
+  "order": 90,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "agents": [
+      {
+        "id": "customer_service_delivery_agent",
+        "label": "Lieferauskunft"
+      }
+    ],
+    "workflows": [],
+    "dashboards": [
+      {
+        "id": "warehouse_shipping",
+        "label": "Lager & Versand"
+      },
+      {
+        "id": "logistics",
+        "label": "Logistik"
+      }
+    ],
+    "pdf_templates": [],
+    "apps": [],
+    "also": {
+      "connection": [
+        {
+          "ref": "dhl",
+          "label": "DHL"
+        },
+        {
+          "ref": "dpd",
+          "label": "DPD"
+        },
+        {
+          "ref": "gls",
+          "label": "GLS"
+        },
+        {
+          "ref": "ups",
+          "label": "UPS"
+        },
+        {
+          "ref": "sendcloud",
+          "label": "Sendcloud"
+        }
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Shipping & Carriers",
+      "description": "Versandarten, Carrier, Tracking und Versand-/Zoll-Dokumente."
+    },
+    "en": {
+      "name": "Shipping & Carriers",
+      "description": "Shipping methods, carriers, tracking and shipping/customs documents."
+    }
+  },
+  "verified": false
+}

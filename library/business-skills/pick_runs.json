@@ -1,0 +1,201 @@
+{
+  "id": "pick_runs",
+  "version": 1,
+  "type": "skill",
+  "category": "warehouse",
+  "business_area": "Warehouse",
+  "icon": "route",
+  "order": 90,
+  "popular": false,
+  "required_plan": "pro",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Pickläufe",
+      "description": "Batch- bzw. Wellen-Kommissionierung — viele offene Lieferungen zu einem optimierten Picklauf (Welle) bündeln, in einem Gang sammeln und anschließend auf die Aufträge sortieren.",
+      "tags": [
+        "Lager",
+        "Kommissionierung",
+        "Wellen"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet die Wellen-Kommissionierung ein: Viele offene Lieferungen werden zu einem optimierten Picklauf (Welle) gebündelt, sodass ein Kommissionierer die Artikel für mehrere Aufträge in einem Gang sammelt und anschließend auf die einzelnen Aufträge sortiert.\n\nDer Skill liefert dazu alles Nötige mit — vom Picklauf als Bündelung mehrerer Lieferungen mit optimierter Lagerplatz-Reihenfolge über den Agenten, der Wellen bildet und freigibt, bis zu App, Dashboard, PDF und KPIs. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Offene Lieferungen nach Zone, Route und Priorität zu Wellen bündeln",
+          "Je Picklauf eine wegoptimierte Lagerplatz-Reihenfolge berechnen",
+          "Wellen zeit- oder schwellenwertgesteuert freigeben",
+          "Nach dem Sammelgang die Mengen auf die einzelnen Aufträge sortieren"
+        ],
+        "inputs": [
+          "Offene Lieferungen als Kandidaten für die Wellenbildung",
+          "Regeln zur Gruppierung (Zone, Route, Priorität, Auftragsmenge)",
+          "Freigabe-Zeitpunkte oder -Schwellenwerte je Welle"
+        ],
+        "outputs": [
+          "Ein Picklauf (Welle), der mehrere Lieferungen mit optimierter Lagerplatz-Reihenfolge bündelt",
+          "Freigegebene Wellen, deren Sammelmengen auf die einzelnen Aufträge zugeordnet sind"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten), ein Lagerbestand mit Lagerplätzen und ein aktiver Lieferprozess. Ergänzt die Pick App."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktionieren Pickläufe",
+              "text": "Statt jede Lieferung einzeln durchs Lager zu laufen, gruppiert der Skill viele offene Lieferungen zu einer Welle. Für die Welle wird eine wegoptimierte Lagerplatz-Reihenfolge berechnet, sodass der Kommissionierer die Artikel für mehrere Aufträge in einem einzigen Gang einsammelt und sie danach auf die einzelnen Aufträge sortiert. Das verkürzt die Wegstrecke je Position deutlich.\n\nDieser Skill ist komplementär zur Pick App: Der Picklauf legt fest, WAS gemeinsam gesammelt wird (die Welle), die Pick App bestimmt, WIE ein einzelner Griff scan-geprüft ausgeführt wird. Beide greifen ineinander — Pickläufe planen den Gang, die Pick App führt ihn aus."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Ein Picklauf (Welle) als Entity: die Bündelung mehrerer Lieferungen mit optimierter Lagerplatz-Reihenfolge, Status und der Zuordnung, welche Sammelmenge auf welchen Auftrag entfällt. Damit ist eine Welle als Ganzes planbar und nachvollziehbar."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der aus den offenen Lieferungen Wellen bildet — gruppiert nach Zone, Route und Priorität —, die wegoptimierte Reihenfolge berechnet und die fertigen Wellen zur Kommissionierung freigibt."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow, der Wellen zeitgesteuert (z. B. zu festen Uhrzeiten) oder schwellenwertgesteuert (ab einer Anzahl offener Lieferungen) plant und freigibt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App zur Picklauf-Übersicht und Freigabesteuerung: laufende und geplante Wellen einsehen, Lieferungen einer Welle zuordnen oder herausnehmen und die Welle zur Kommissionierung freigeben."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit der Welleneffizienz, den Positionen je Picklauf und den offenen (noch nicht freigegebenen) Wellen."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine PDF-Vorlage für die konsolidierte Picklauf-Liste mit wegoptimierter Lagerplatz-Reihenfolge — die Sammelmengen über alle Lieferungen der Welle in der Reihenfolge des Gangs."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für die Positionen je Picklauf, die Wegstrecke bzw. Zeit je Position und die durchschnittliche Anzahl Aufträge je Welle."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Pick Runs",
+      "description": "Batch or wave picking — group many open deliveries into one optimized pick run (wave), collect in a single walk, then sort to orders.",
+      "tags": [
+        "Warehouse",
+        "Picking",
+        "Waves"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up wave picking: many open deliveries are grouped into one optimized pick run (wave) so a picker collects the items for several orders in a single walk and then sorts them to the individual orders.\n\nThe skill ships everything needed for that — from the pick run that groups several deliveries with an optimized bin sequence, to the agent that builds and releases waves, to an app, dashboard, PDF and KPIs. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Group open deliveries by zone, route and priority into waves",
+          "Compute a distance-optimized bin sequence per pick run",
+          "Release waves at set times or thresholds",
+          "Sort the collected quantities to the individual orders after the walk"
+        ],
+        "inputs": [
+          "Open deliveries as candidates for wave building",
+          "Grouping rules (zone, route, priority, order volume)",
+          "Release times or thresholds per wave"
+        ],
+        "outputs": [
+          "A pick run (wave) that groups several deliveries with an optimized bin sequence",
+          "Released waves whose collected quantities are mapped to the individual orders"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data), a stock level with storage bins and an active delivery process. Complements the Pick App."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How pick runs work",
+              "text": "Instead of walking the warehouse for each delivery separately, the skill groups many open deliveries into one wave. A distance-optimized bin sequence is computed for the wave, so the picker collects the items for several orders in a single walk and then sorts them to the individual orders. This markedly shortens the walk distance per line.\n\nThis skill is complementary to the Pick App: the pick run defines WHAT is collected together (the wave), the Pick App defines HOW an individual grab is executed with scan verification. The two interlock — pick runs plan the walk, the Pick App carries it out."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "A pick run (wave) as an entity: the grouping of several deliveries with an optimized bin sequence, status and the mapping of which collected quantity belongs to which order. This makes a wave plannable and traceable as a whole."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that builds waves from the open deliveries — grouped by zone, route and priority —, computes the distance-optimized sequence and releases the finished waves for picking."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow that schedules and releases waves on a schedule (e.g. at fixed times) or by threshold (from a number of open deliveries)."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "An app for pick-run overview and release control: view running and planned waves, add or remove deliveries from a wave and release the wave for picking."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with wave efficiency, the lines per pick run and the open (not-yet-released) waves."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A PDF template for the consolidated pick-run list with a distance-optimized bin sequence — the collected quantities across all deliveries of the wave in the order of the walk."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for the lines per run, the walk distance or time per line and the average number of orders per wave."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

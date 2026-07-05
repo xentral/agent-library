@@ -1,0 +1,88 @@
+{
+  "id": "finance",
+  "version": 1,
+  "type": "domain",
+  "category": "steer",
+  "icon": "invoice",
+  "order": 100,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "collective_invoice",
+        "label": "Sammelrechnung"
+      },
+      {
+        "id": "progress_invoice",
+        "label": "Abschlagsrechnung"
+      }
+    ],
+    "agents": [
+      {
+        "id": "finance_incoming_invoice",
+        "label": "Eingangsrechnung"
+      },
+      {
+        "id": "finance_incoming_payment_advice",
+        "label": "Zahlungsausgleich"
+      }
+    ],
+    "workflows": [
+      {
+        "id": "daily_opos_digest",
+        "label": "Täglicher OPOS-Digest"
+      },
+      {
+        "id": "opos_dunning_escalation",
+        "label": "Mahn-Eskalation"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "finance",
+        "label": "Finanzen"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "rechnung_xentral_original",
+        "label": "Rechnung"
+      },
+      {
+        "id": "gutschrift_xentral_original",
+        "label": "Gutschrift"
+      }
+    ],
+    "apps": [],
+    "also": {
+      "connection": [
+        {
+          "ref": "datev",
+          "label": "DATEV"
+        },
+        {
+          "ref": "lexoffice",
+          "label": "lexoffice"
+        },
+        {
+          "ref": "sevdesk",
+          "label": "sevdesk"
+        }
+      ]
+    }
+  },
+  "locales": {
+    "de": {
+      "name": "Finance",
+      "description": "Debitoren, Kreditoren, offene Posten, Mahnwesen und Zahlungsabgleich."
+    },
+    "en": {
+      "name": "Finance",
+      "description": "Receivables, payables, open items, dunning and payment matching."
+    }
+  },
+  "verified": false
+}

@@ -1,0 +1,201 @@
+{
+  "id": "pos",
+  "version": 1,
+  "type": "skill",
+  "category": "pos",
+  "business_area": "Retail",
+  "icon": "register",
+  "order": 140,
+  "popular": true,
+  "required_plan": "pro",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "POS",
+      "description": "Kasse im Ladengeschäft: Bar- und Kartenzahlung, Kassenbons, Kassenverwaltung, sofortiger Bestandsabgang und Rücksync der Verkäufe ins ERP. Verbindet den Verkauf am Point of Sale mit der Warenwirtschaft.",
+      "tags": [
+        "POS",
+        "Kasse",
+        "Einzelhandel"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet den Point of Sale ein: Verkäufe im Ladengeschäft werden per Bar- oder Kartenzahlung abgewickelt, als Kassenbon quittiert, mindern sofort den Bestand und werden zurück ins ERP synchronisiert.\n\nDer Skill liefert dazu alles Nötige mit — von der POS-Transaktion und der Kasse je Filiale über den Agenten, der die Kasse abstimmt und Verkäufe ins ERP überträgt, bis zu Checkout-App, Dashboard und KPIs. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Verkäufe im Ladengeschäft per Bar- oder Kartenzahlung abwickeln",
+          "Kassenbons ausstellen und den Bestand sofort mindern",
+          "Kasse je Filiale mit Anfangs- und Abschlussbestand verwalten",
+          "POS-Verkäufe zurück ins ERP als Aufträge/Rechnungen synchronisieren"
+        ],
+        "inputs": [
+          "Filialen mit je einer Kasse (Anfangsbestand)",
+          "Verkaufsartikel mit Preisen und Bestand",
+          "Zahlungsart je Transaktion (bar/Karte)"
+        ],
+        "outputs": [
+          "POS-Transaktionen mit Kassenbon",
+          "Bestandsbewegungen und ins ERP synchronisierte Aufträge/Rechnungen"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Hinweis: Fiskalisierungs-/GoBD-Anforderungen je Land beachten."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert der Point of Sale",
+              "text": "Am Point of Sale werden Artikel gescannt, kassiert (bar oder Karte) und als Kassenbon quittiert. Jeder Verkauf mindert sofort den Bestand. Die Kasse je Filiale wird mit einem Anfangsbestand geöffnet und am Tagesende mit einem Abschlussbestand geschlossen. Die Verkäufe werden zurück ins ERP synchronisiert und dort als Aufträge/Rechnungen samt Bestandsbewegungen verbucht — so bleibt die Warenwirtschaft mit dem Ladengeschäft im Einklang."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Eine POS-Transaktion (verkaufte Positionen, Zahlungsart, Bon-Nummer) und eine Kasse je Filiale mit Anfangs- und Abschlussbestand für die tägliche Abstimmung."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der beim Tagesabschluss die Kasse abstimmt, die POS-Verkäufe als Aufträge/Rechnungen ins ERP überträgt und die zugehörigen Bestandsbewegungen bucht."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow für den Tagesabschluss der Kasse und den Verkaufs-Sync ins ERP."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Die POS-Checkout-Oberfläche: Artikel scannen, Zahlung entgegennehmen und Kassenbon drucken."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit Tagesumsatz je Filiale/Kasse und der Aufteilung nach Bar- und Kartenzahlung."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine PDF-Vorlage für den Kassenbon (POS-Beleg)."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für Umsatz je Filiale, durchschnittliche Warenkorbgröße und Transaktionen pro Tag."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Point of Sale",
+      "description": "In-store checkout: cash and card payment, receipts, till management, immediate stock decrement and sync of sales back to the ERP. Connects point-of-sale selling with inventory management.",
+      "tags": [
+        "POS",
+        "Till",
+        "Retail"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up the point of sale: in-store sales are settled via cash or card, receipted as a receipt, immediately decrement stock and are synced back into the ERP.\n\nThe skill ships everything needed for that — from the POS transaction and the till per store, to the agent that reconciles the till and syncs sales into the ERP, to a checkout app, dashboard and KPIs. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Settle in-store sales via cash or card payment",
+          "Issue receipts and decrement stock immediately",
+          "Manage a till per store with opening and closing balance",
+          "Sync POS sales back into the ERP as orders/invoices"
+        ],
+        "inputs": [
+          "Stores with one till each (opening balance)",
+          "Sales items with prices and stock",
+          "Payment method per transaction (cash/card)"
+        ],
+        "outputs": [
+          "POS transactions with a receipt",
+          "Stock movements and orders/invoices synced into the ERP"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Note: consider fiscalization/GoBD requirements per country."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How the point of sale works",
+              "text": "At the point of sale, items are scanned, checked out (cash or card) and receipted. Every sale immediately decrements stock. The till per store is opened with an opening balance and closed at the end of the day with a closing balance. Sales are synced back into the ERP and posted there as orders/invoices along with stock movements — keeping inventory management in step with the store."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "A POS transaction (sold line items, payment method, receipt number) and a till/register per store with opening and closing balance for the daily reconciliation."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that reconciles the till at close, syncs the POS sales into the ERP as orders/invoices and posts the associated stock movements."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow for end-of-day till closing and the sales sync into the ERP."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "The POS checkout UI: scan items, take payment and print the receipt."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with daily sales by store/register and the split between cash and card payment."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A PDF template for the POS receipt."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for revenue per store, average basket size and transactions per day."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

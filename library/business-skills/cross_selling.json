@@ -1,0 +1,201 @@
+{
+  "id": "cross_selling",
+  "version": 1,
+  "type": "skill",
+  "category": "general",
+  "business_area": "Sales",
+  "icon": "layers",
+  "order": 110,
+  "popular": false,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Cross-Selling",
+      "description": "Empfiehlt beim Angebot oder Auftrag passende Zusatzprodukte (Zubehör, Bundles, „Kunden kauften auch“), um den Warenkorbwert zu erhöhen. Die Empfehlungen basieren auf gepflegten Produktbeziehungen und vergangenen Verkäufen.",
+      "tags": [
+        "Vertrieb",
+        "Empfehlung",
+        "Umsatz"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet Cross-Selling ein: Zu einem Produkt werden ergänzende Artikel hinterlegt (Zubehör, Bundles, „passt dazu“), die beim Angebot oder Auftrag als Empfehlung angeboten werden — um den Warenkorbwert gezielt zu erhöhen.\n\nDer Skill liefert dazu alles Nötige mit — von den Cross-Sell-Beziehungen am Produkt über den Agenten, der passende Zusatzprodukte vorschlägt, bis zu Dashboard und KPI für die Überwachung. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Ergänzende Produkte am Artikel pflegen (Zubehör, Bundle, „passt dazu“)",
+          "Beim Angebot/Auftrag passende Zusatzprodukte vorschlagen",
+          "Empfehlungen aus Produktbeziehungen und vergangenen Verkäufen ableiten",
+          "Den Anteil erfolgreicher Zusatzverkäufe (Attach Rate) messen"
+        ],
+        "inputs": [
+          "Produkte mit gepflegten Cross-Sell-Beziehungen",
+          "Aktuelle Angebote/Aufträge als Anlass für Empfehlungen",
+          "Vergangene Verkäufe als Grundlage für Vorschläge"
+        ],
+        "outputs": [
+          "Vorgeschlagene Zusatzprodukte je Angebot/Auftrag",
+          "Nachvollziehbare Kennzahlen zu Attach Rate und Cross-Sell-Umsatz"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten), gepflegte Produktstammdaten und ein aktiver Verkaufsprozess."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert Cross-Selling",
+              "text": "Zu jedem Produkt werden ergänzende Artikel hinterlegt — Zubehör, das dazugehört, Bundles oder Produkte, die andere Kunden zusätzlich gekauft haben. Steht ein Angebot oder Auftrag an, schlägt der Skill die passenden Zusatzprodukte vor, sodass Vertrieb oder Verkäufer sie aktiv anbieten können. Grundlage sind die gepflegten Produktbeziehungen und das Kaufverhalten aus vergangenen Verkäufen. So steigt der durchschnittliche Warenkorbwert, ohne dass Chancen für Zusatzverkäufe übersehen werden."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Erweitert das Produkt um Cross-Sell-Beziehungen: Verknüpfungen zu ergänzenden Artikeln, unterschieden nach Typ (Zubehör, „passt dazu“, Bundle)."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der zu einem Auftrag oder Angebot passende Zusatzprodukte vorschlägt — auf Basis der gepflegten Produktbeziehungen und vergangener Verkäufe."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow, der bei einem neuen Angebot oder Auftrag die empfohlenen Zusatzprodukte ermittelt und sie dem Agenten bzw. Verkäufer zum Anbieten bereitstellt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App zur Verwaltung der Cross-Sell-Beziehungen, in der festgelegt wird, welche Produkte welche Zusatzartikel vorschlagen."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit Attach Rate, Cross-Sell-Umsatz und den häufigsten Produktkombinationen (Top Pairings)."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Optional eine Angebots-PDF-Vorlage, die die empfohlenen Zusatzprodukte hervorhebt."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für die Attach Rate, den Cross-Sell-Umsatzanteil und die durchschnittliche Warenkorbsteigerung."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Cross-Selling",
+      "description": "Recommends complementary products (accessories, bundles, \"customers also bought\") at quote or order time to raise basket value. Recommendations are based on maintained product relations and past sales.",
+      "tags": [
+        "Sales",
+        "Recommendation",
+        "Revenue"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up cross-selling: complementary items are stored on a product (accessories, bundles, \"goes well with\") and offered as recommendations at quote or order time — to raise basket value in a targeted way.\n\nThe skill ships everything needed for that — from the cross-sell relations on the product, to the agent that suggests matching add-on products, to a dashboard and KPI for monitoring. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Maintain complementary products on an item (accessory, bundle, \"goes well with\")",
+          "Suggest matching add-on products at quote/order time",
+          "Derive recommendations from product relations and past sales",
+          "Measure the share of successful add-on sales (attach rate)"
+        ],
+        "inputs": [
+          "Products with maintained cross-sell relations",
+          "Current quotes/orders as the trigger for recommendations",
+          "Past sales as the basis for suggestions"
+        ],
+        "outputs": [
+          "Suggested add-on products per quote/order",
+          "Traceable metrics on attach rate and cross-sell revenue"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data), maintained product master data and an active sales process."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How cross-selling works",
+              "text": "For each product, complementary items are stored — matching accessories, bundles, or products that other customers additionally bought. When a quote or order comes up, the skill suggests the matching add-on products so sales or the salesperson can actively offer them. The basis is the maintained product relations and buying behaviour from past sales. This raises the average basket value without missing add-on sales opportunities."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Extends the product with cross-sell relations: links to complementary items, distinguished by type (accessory, \"goes well with\", bundle)."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that suggests matching add-on products for an order or quote — based on the maintained product relations and past sales."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow that, on a new quote or order, determines the recommended add-on products and provides them to the agent or salesperson to offer."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "An app to manage cross-sell relations, defining which products suggest which add-on items."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with attach rate, cross-sell revenue and the most frequent product combinations (top pairings)."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "Optionally a quote PDF template that highlights the recommended add-on products."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for attach rate, cross-sell revenue share and average basket uplift."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

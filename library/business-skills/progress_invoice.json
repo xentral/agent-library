@@ -1,0 +1,203 @@
+{
+  "id": "progress_invoice",
+  "version": 1,
+  "type": "skill",
+  "category": "finance",
+  "business_area": "Order-to-Cash",
+  "icon": "invoice",
+  "order": 20,
+  "popular": false,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Abschlagsrechnung",
+      "description": "Rechnet einen Auftrag in mehreren Teilbeträgen gegen den Gesamtwert ab — Abschläge nach Zahlungsplan vor der Schlussrechnung. Typisch bei Projekten und großen Aufträgen.",
+      "tags": [
+        "Finance",
+        "Rechnung",
+        "Projekt"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet die Abschlagsrechnung ein: Ein Auftrag mit hohem Gesamtwert wird nicht in einem Betrag berechnet, sondern in mehreren Teilbeträgen (Abschlägen) gegen die Auftragssumme fakturiert — nach einem Zahlungsplan aus Prozentsätzen oder Beträgen und Fälligkeiten bzw. Meilensteinen. Am Ende folgt die Schlussrechnung, die die bereits gezahlten Abschläge verrechnet.\n\nDer Skill liefert dazu alles Nötige mit — vom Zahlungsplan auf dem Auftrag über den Agenten, der die Abschläge und die Schlussrechnung erzeugt, bis zu Dashboard und KPI für die Überwachung. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Einen Auftrag mit Zahlungsplan aus Abschlägen (Prozent oder Betrag) hinterlegen",
+          "Fällige Abschlagsrechnungen zu Termin oder Meilenstein automatisch erzeugen",
+          "Die Schlussrechnung erstellen und bereits gezahlte Abschläge verrechnen",
+          "Überblick behalten, was je Auftrag bereits fakturiert und bezahlt ist"
+        ],
+        "inputs": [
+          "Aufträge, die in Abschlägen abgerechnet werden sollen",
+          "Zahlungsplan: Abschläge als Prozentsatz oder Betrag mit Fälligkeit/Meilenstein",
+          "Auftragsgesamtwert als Bezugsgröße für die Abschläge"
+        ],
+        "outputs": [
+          "Eine Abschlagsrechnung je fälligem Teilbetrag",
+          "Eine Schlussrechnung, die alle vorherigen Abschläge verrechnet",
+          "Nachvollziehbare Zuordnung von Abschlägen zum Auftrag"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: Grundeinstellungen (Firmendaten) und ein aktiver Verkaufsprozess mit Aufträgen."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert die Abschlagsrechnung",
+              "text": "Statt den vollen Auftragswert erst am Ende zu berechnen, wird der Auftrag mit einem Zahlungsplan versehen: mehrere Abschläge als Prozentsatz oder fester Betrag, jeweils mit Fälligkeit oder Meilenstein. Zu jedem fälligen Termin erzeugt der Skill eine Abschlagsrechnung gegen die Auftragssumme. Am Projektende folgt die Schlussrechnung, die den vollen Wert ausweist und die bereits gezahlten Abschläge abzieht, sodass nur der Restbetrag offen bleibt. Das sichert den Cashflow bei langen Projekten und großen Aufträgen."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Erweitert den Auftrag um einen Zahlungsplan aus Abschlagspositionen — je Position ein Prozentsatz oder Betrag mit Fälligkeitsdatum bzw. Meilenstein und einem Status (offen/fakturiert/bezahlt). So ist jederzeit erkennbar, welcher Abschlag als nächstes ansteht."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent „Abschlagslauf“, der die fälligen Abschlagsrechnungen gegen die Auftragssumme erzeugt und am Ende die Schlussrechnung erstellt, in der bereits gezahlte Abschläge verrechnet werden."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein Workflow, der die nächste Abschlagsposition zum hinterlegten Fälligkeitsdatum oder beim Erreichen eines Meilensteins auslöst und daraus die Abschlagsrechnung anstößt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App „Zahlungspläne“, die je Auftrag den Zahlungsplan zeigt: welche Abschläge bereits fakturiert und bezahlt sind und welcher Betrag noch offen ist."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit dem offenen Abschlagsvolumen und den als nächstes fälligen Abschlägen je Auftrag."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine Abschlagsrechnungs-Vorlage mit Abschlagsnummer und Rest-Zahlungsplan sowie eine Schlussrechnungs-Vorlage, die den Gesamtwert ausweist und die zuvor berechneten Abschläge abzieht."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für den offenen Abschlagsbetrag, den Anteil in Abschlägen abgerechneter Aufträge und die Zeit bis zur Schlussrechnung."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Progress Invoice",
+      "description": "Bills an order in several partial amounts against its total value — installments per payment schedule before the final invoice. Common for projects and large orders.",
+      "tags": [
+        "Finance",
+        "Invoice",
+        "Project"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up progress invoicing: an order with a high total value is not billed in one amount but in several partial amounts (installments) against the order total — following a payment schedule of percentages or amounts with due dates or milestones. At the end comes the final invoice, which deducts the installments already paid.\n\nThe skill ships everything needed for that — from the payment schedule on the order, to the agent that generates the installments and the final invoice, to a dashboard and KPI for monitoring. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Attach a payment schedule of installments (percent or amount) to an order",
+          "Automatically generate due progress invoices at a date or milestone",
+          "Create the final invoice and deduct installments already paid",
+          "Keep an overview of what has been billed and paid per order"
+        ],
+        "inputs": [
+          "Orders to be billed in installments",
+          "Payment schedule: installments as percentage or amount with due date/milestone",
+          "Order total value as the reference for the installments"
+        ],
+        "outputs": [
+          "One progress invoice per due installment",
+          "A final invoice that deducts all prior installments",
+          "Traceable mapping of installments to the order"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: base settings (company data) and an active sales process with orders."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How the progress invoice works",
+              "text": "Instead of billing the full order value only at the end, the order carries a payment schedule: several installments as a percentage or fixed amount, each with a due date or milestone. At every due date the skill generates a progress invoice against the order total. At project end the final invoice follows, stating the full value and deducting the installments already paid so that only the remaining balance stays open. This secures cash flow on long projects and large orders."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Extends the order with a payment schedule of installment items — each with a percentage or amount, a due date or milestone, and a status (open/invoiced/paid). This makes it clear at any time which installment is next."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "A \"progress-invoice run\" agent that generates the due progress invoices against the order total and, at the end, creates the final invoice in which the installments already paid are deducted."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A workflow that triggers the next installment item at its stored due date or when a milestone is reached, and starts the corresponding progress invoice."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "A \"payment schedules\" app showing, per order, the payment schedule: which installments are already invoiced and paid, and what amount is still open."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with the open installment volume and the next due installments per order."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A progress-invoice template showing the installment number and the remaining payment schedule, plus a final-invoice template that states the total value and deducts the previously billed installments."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for the open installment amount, the share of orders billed in installments and the time to final invoice."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

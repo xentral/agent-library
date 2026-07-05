@@ -1,0 +1,56 @@
+{
+  "id": "returns",
+  "version": 1,
+  "type": "domain",
+  "category": "sell_serve",
+  "icon": "rotate",
+  "order": 20,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [],
+    "agents": [
+      {
+        "id": "customer_service_refund_return",
+        "label": "Rückgabe & Reklamation"
+      }
+    ],
+    "workflows": [
+      {
+        "id": "return_to_credit_note",
+        "label": "Retoure → Gutschrift"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "customer_service",
+        "label": "Kundenservice"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "return_slip",
+        "label": "Retourenschein"
+      },
+      {
+        "id": "gutschrift_xentral_original",
+        "label": "Gutschrift"
+      }
+    ],
+    "apps": [],
+    "also": {}
+  },
+  "locales": {
+    "de": {
+      "name": "Returns",
+      "description": "Rücksendung → Prüfung → Gutschrift oder Wiedereinlagerung. Der komplette Retourenprozess."
+    },
+    "en": {
+      "name": "Returns",
+      "description": "Return → inspection → credit note or restock. The full returns process."
+    }
+  },
+  "verified": false
+}

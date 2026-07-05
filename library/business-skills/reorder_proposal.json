@@ -1,0 +1,201 @@
+{
+  "id": "reorder_proposal",
+  "version": 1,
+  "type": "skill",
+  "category": "purchasing",
+  "business_area": "Procure-to-Pay",
+  "icon": "cart",
+  "order": 40,
+  "popular": true,
+  "required_plan": "starter",
+  "integrations": [
+    "Xentral"
+  ],
+  "locales": {
+    "de": {
+      "name": "Bestellvorschlag",
+      "description": "Erzeugt automatisch Bestellvorschläge auf Basis von Beständen, Meldebeständen, Verkaufsgeschwindigkeit und Lieferzeiten — statt manuell zu prüfen, was nachbestellt werden muss. Vermeidet Fehlbestände und Überbevorratung.",
+      "tags": [
+        "Einkauf",
+        "Bestand",
+        "Automatisierung"
+      ],
+      "documentation": {
+        "overview": "Ein Business Skill ist ein zusammenhängendes Paket, das einen kompletten Geschäftsprozess auf deinen ERP-Daten ergänzt. Dieser Skill richtet den Bestellvorschlag ein: Auf Basis von aktuellem Bestand, Meldebestand, Verkaufsgeschwindigkeit und Lieferzeiten wird automatisch ermittelt, welche Artikel in welcher Menge bei welchem Lieferanten nachbestellt werden sollten.\n\nDer Skill liefert dazu alles Nötige mit — von den Feldern am Artikel über den Agenten, der die Vorschläge berechnet, bis zu App, Dashboard und KPIs für die Überwachung. Nichts davon wird hier automatisch gebaut: Dieses Template beschreibt das Konzept. Beim Aktivieren entstehen die einzelnen Bestandteile daraus.",
+        "capabilities": [
+          "Artikel unter Meldebestand automatisch erkennen",
+          "Bestellmengen aus Zielbestand, Verkaufsgeschwindigkeit und Lieferzeit berechnen",
+          "Vorschläge je bevorzugtem Lieferanten bündeln",
+          "Freigegebene Vorschläge in Bestellungen überführen"
+        ],
+        "inputs": [
+          "Artikel mit Mindestbestand, Meldebestand und Zielbestand",
+          "Bevorzugter Lieferant und Lieferzeit je Artikel",
+          "Aktueller Lagerbestand und Verkaufsverlauf"
+        ],
+        "outputs": [
+          "Bestellvorschläge (Artikel, Menge, Lieferant) zur Freigabe",
+          "Aus freigegebenen Vorschlägen erzeugte Bestellungen"
+        ],
+        "notes": "Konzept-Skill. Der Lieferumfang unten beschreibt, welche Entities, Agenten, Workflows, Apps, Dashboards, PDF-Vorlagen und KPIs dieser Skill beisteuert. Voraussetzung: gepflegte Artikelstammdaten, Lieferanten und ein aktiver Lagerprozess."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Konzept",
+          "hint": "Was dieser Skill fachlich macht und wie er in Xentral greift.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "So funktioniert der Bestellvorschlag",
+              "text": "Statt manuell zu prüfen, welche Artikel knapp werden, vergleicht der Skill laufend den aktuellen Bestand mit dem hinterlegten Meldebestand. Fällt ein Artikel darunter, berechnet er aus Zielbestand, Verkaufsgeschwindigkeit und Lieferzeit eine sinnvolle Bestellmenge und ordnet sie dem bevorzugten Lieferanten zu. Das Ergebnis ist eine Liste konkreter Bestellvorschläge, die geprüft, angepasst und mit einem Klick in Bestellungen überführt werden können. So werden Fehlbestände vermieden, ohne unnötig Kapital im Lager zu binden."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "Lieferumfang des Skills",
+          "hint": "Diese Bestandteile bringt der Skill mit. Jeder Punkt ist ein Konzept — beim Aktivieren wird er als eigener Bestandteil angelegt.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Erweitert den Artikel um Felder für Mindestbestand, Meldebestand, Zielbestand, bevorzugten Lieferanten und Lieferzeit, damit der Bedarf je Artikel eindeutig berechnet werden kann."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agenten",
+              "text": "Ein Agent, der Bestellvorschläge berechnet: welche Artikel, in welcher Menge und bei welchem Lieferanten nachbestellt werden sollten — anhand von Bestand, Meldebestand, Verkaufsgeschwindigkeit und Lieferzeit."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "Ein zeitgesteuerter Workflow, der täglich alle Artikel auf Unterschreitung des Meldebestands prüft und daraus Bestellvorschläge erzeugt."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio-Apps",
+              "text": "Eine App, in der Bestellvorschläge geprüft und angepasst und freigegebene Vorschläge in Bestellungen überführt werden können."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "Ein Dashboard-Bereich mit Artikeln unter Meldebestand, offenen Bestellvorschlägen und der voraussichtlichen Reichweite in Tagen."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF-Vorlagen",
+              "text": "Eine PDF-Vorlage für die Bestellung beim Lieferanten (optional), mit Positionen, Mengen und vereinbarten Konditionen."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs für Fehlbestandsrisiko, Reichweite in Tagen und die Quote von Vorschlag zu tatsächlich erzeugter Bestellung."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "name": "Reorder Proposal",
+      "description": "Automatically suggests purchase orders based on stock levels, reorder points, sales velocity and supplier lead times — instead of manually checking what needs reordering. Avoids stockouts and overstocking.",
+      "tags": [
+        "Purchasing",
+        "Stock",
+        "Automation"
+      ],
+      "documentation": {
+        "overview": "A Business Skill is a coherent package that adds a complete business process on top of your ERP data. This skill sets up reorder proposals: based on current stock, reorder points, sales velocity and lead times it automatically determines which items should be reordered, in what quantity, and from which supplier.\n\nThe skill ships everything needed for that — from fields on the product, to the agent that computes the proposals, to an app, dashboard and KPIs for monitoring. None of it is built automatically here: this template describes the concept. Activating it materialises the individual components.",
+        "capabilities": [
+          "Automatically detect items below their reorder point",
+          "Compute order quantities from target stock, sales velocity and lead time",
+          "Group proposals by preferred supplier",
+          "Turn approved proposals into purchase orders"
+        ],
+        "inputs": [
+          "Products with minimum stock, reorder point and target stock",
+          "Preferred supplier and lead time per product",
+          "Current stock level and sales history"
+        ],
+        "outputs": [
+          "Reorder proposals (item, quantity, supplier) for approval",
+          "Purchase orders created from approved proposals"
+        ],
+        "notes": "Concept skill. The scope below describes which entities, agents, workflows, apps, dashboards, PDF templates and KPIs this skill contributes. Prerequisite: maintained product master data, suppliers and an active stock process."
+      },
+      "sections": [
+        {
+          "id": "konzept",
+          "title": "Concept",
+          "hint": "What this skill does functionally and how it hooks into Xentral.",
+          "fields": [
+            {
+              "id": "konzept_info",
+              "type": "info",
+              "label": "How the reorder proposal works",
+              "text": "Instead of manually checking which items are running low, the skill continuously compares current stock against the stored reorder point. When an item drops below it, it computes a sensible order quantity from target stock, sales velocity and lead time and assigns it to the preferred supplier. The result is a list of concrete reorder proposals that can be reviewed, adjusted and turned into purchase orders with one click. This avoids stockouts without tying up unnecessary capital in inventory."
+            }
+          ]
+        },
+        {
+          "id": "lieferumfang",
+          "title": "What the skill delivers",
+          "hint": "These components come with the skill. Each item is a concept — activating it creates it as its own component.",
+          "fields": [
+            {
+              "id": "delivers_entities",
+              "type": "info",
+              "label": "Business Entities",
+              "text": "Extends the product with fields for minimum stock, reorder point, target stock, preferred supplier and lead time, so the need per item can be computed unambiguously."
+            },
+            {
+              "id": "delivers_agents",
+              "type": "info",
+              "label": "Agents",
+              "text": "An agent that computes reorder proposals: which items should be reordered, in what quantity and from which supplier — based on stock, reorder point, sales velocity and lead time."
+            },
+            {
+              "id": "delivers_workflows",
+              "type": "info",
+              "label": "Workflows",
+              "text": "A scheduled workflow that checks all items daily for dropping below their reorder point and produces reorder proposals from them."
+            },
+            {
+              "id": "delivers_apps",
+              "type": "info",
+              "label": "Studio apps",
+              "text": "An app in which reorder proposals can be reviewed and edited and approved proposals turned into purchase orders."
+            },
+            {
+              "id": "delivers_dashboards",
+              "type": "info",
+              "label": "Dashboards",
+              "text": "A dashboard area with items below their reorder point, open proposals and the expected days of coverage."
+            },
+            {
+              "id": "delivers_pdf",
+              "type": "info",
+              "label": "PDF templates",
+              "text": "A purchase-order PDF template for the supplier (optional), with line items, quantities and agreed conditions."
+            },
+            {
+              "id": "delivers_kpis",
+              "type": "info",
+              "label": "KPIs",
+              "text": "KPIs for stockout risk, days of coverage and the proposal-to-PO conversion rate."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verified": false
+}

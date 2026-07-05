@@ -1,0 +1,114 @@
+{
+  "id": "sales_fulfillment",
+  "version": 1,
+  "type": "domain",
+  "category": "sell_serve",
+  "icon": "cart",
+  "order": 10,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "collective_invoice",
+        "label": "Sammelrechnung"
+      },
+      {
+        "id": "progress_invoice",
+        "label": "Abschlagsrechnung"
+      },
+      {
+        "id": "proforma_invoice",
+        "label": "Proformarechnung"
+      },
+      {
+        "id": "cross_selling",
+        "label": "Cross-Selling"
+      },
+      {
+        "id": "vouchers",
+        "label": "Gutscheine"
+      },
+      {
+        "id": "framework_contracts",
+        "label": "Rahmenverträge"
+      }
+    ],
+    "agents": [
+      {
+        "id": "customer_service_order_management",
+        "label": "Auftragsverwaltung"
+      },
+      {
+        "id": "customer_service_delivery_agent",
+        "label": "Lieferauskunft"
+      }
+    ],
+    "workflows": [
+      {
+        "id": "invoice_after_shipment",
+        "label": "Rechnung nach Versand"
+      },
+      {
+        "id": "auto_release_paid_orders",
+        "label": "Bezahlte Aufträge freigeben"
+      },
+      {
+        "id": "prepayment_order_cleanup",
+        "label": "Vorkasse-Aufräumen"
+      }
+    ],
+    "dashboards": [
+      {
+        "id": "daily_operations",
+        "label": "Tagesbetrieb"
+      },
+      {
+        "id": "ceo_overview",
+        "label": "CEO-Überblick"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "angebot_xentral_original",
+        "label": "Angebot"
+      },
+      {
+        "id": "auftrag_xentral_original",
+        "label": "Auftragsbestätigung"
+      },
+      {
+        "id": "rechnung_xentral_original",
+        "label": "Rechnung"
+      },
+      {
+        "id": "lieferschein_xentral_original",
+        "label": "Lieferschein"
+      }
+    ],
+    "apps": [
+      {
+        "id": "aussendienst",
+        "label": "Außendienst"
+      },
+      {
+        "id": "provisionsabrechnung",
+        "label": "Provisionsabrechnung"
+      }
+    ],
+    "also": {}
+  },
+  "locales": {
+    "de": {
+      "name": "Sales & Fulfillment",
+      "description": "Angebot → Auftrag → Lieferung → Rechnung. Die Klammer über allem rund um Order-to-Cash."
+    },
+    "en": {
+      "name": "Sales & Fulfillment",
+      "description": "Quote → order → delivery → invoice. The bracket over everything Order-to-Cash."
+    }
+  },
+  "verified": false
+}

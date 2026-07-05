@@ -51,8 +51,8 @@ intent.
 
 `xentral_copilot` (ERP read & write) · `xentral_email` · `xentral_crm` ·
 `xentral_agent_jobs` · `xentral_operations_tasks` · `xentral_agents` ·
-`xentral_schedules` · `xentral_business_model` · `xentral_business_blocks` ·
-`xentral_process_groups` · `xentral_dashboards` · `xentral_kpi` ·
+`xentral_schedules` · `xentral_business_model` · `xentral_business_skills` ·
+`xentral_business_areas` · `xentral_dashboards` · `xentral_kpi` ·
 `xentral_reports` · `xentral_pdf_templates` · `xentral_connections` ·
 `xentral_erp_settings` · `xentral_entities` (customizing only) ·
 `xentral_fileshare` · `xentral_knowledge_base`

@@ -1,0 +1,50 @@
+{
+  "id": "point_of_sale",
+  "version": 1,
+  "type": "domain",
+  "category": "sell_serve",
+  "icon": "store",
+  "order": 40,
+  "popular": false,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "pos",
+        "label": "POS"
+      },
+      {
+        "id": "vouchers",
+        "label": "Gutscheine"
+      },
+      {
+        "id": "cross_selling",
+        "label": "Cross-Selling"
+      }
+    ],
+    "agents": [
+      {
+        "id": "customer_service_order_management",
+        "label": "Auftragsverwaltung"
+      }
+    ],
+    "workflows": [],
+    "dashboards": [],
+    "pdf_templates": [],
+    "apps": [],
+    "also": {}
+  },
+  "locales": {
+    "de": {
+      "name": "Point of Sale",
+      "description": "Kasse, Bon und Tagesabschluss im Ladengeschäft — mit Sync ins ERP."
+    },
+    "en": {
+      "name": "Point of Sale",
+      "description": "Checkout, receipt and end-of-day in the store — synced to the ERP."
+    }
+  },
+  "verified": false
+}

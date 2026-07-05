@@ -1,0 +1,89 @@
+{
+  "id": "inventory_warehouse",
+  "version": 1,
+  "type": "domain",
+  "category": "store_ship",
+  "icon": "box",
+  "order": 80,
+  "popular": true,
+  "integrations": [
+    "Xentral"
+  ],
+  "recommended": {
+    "skills": [
+      {
+        "id": "stocktaking",
+        "label": "Inventur"
+      },
+      {
+        "id": "pick_app",
+        "label": "Pick App"
+      },
+      {
+        "id": "pick_runs",
+        "label": "Pickläufe"
+      },
+      {
+        "id": "branch_delivery",
+        "label": "Filiallieferung"
+      }
+    ],
+    "agents": [
+      {
+        "id": "customer_service_delivery_agent",
+        "label": "Lieferauskunft"
+      }
+    ],
+    "workflows": [],
+    "dashboards": [
+      {
+        "id": "warehouse_shipping",
+        "label": "Lager & Versand"
+      },
+      {
+        "id": "logistics",
+        "label": "Logistik"
+      }
+    ],
+    "pdf_templates": [
+      {
+        "id": "pick_list",
+        "label": "Pickliste"
+      },
+      {
+        "id": "picking_slip",
+        "label": "Kommissionierschein"
+      },
+      {
+        "id": "pallet_label",
+        "label": "Palettenetikett"
+      },
+      {
+        "id": "item_labels",
+        "label": "Artikeletiketten"
+      }
+    ],
+    "apps": [
+      {
+        "id": "lager",
+        "label": "Lager"
+      },
+      {
+        "id": "pick",
+        "label": "Pick"
+      }
+    ],
+    "also": {}
+  },
+  "locales": {
+    "de": {
+      "name": "Inventory & Warehouse",
+      "description": "Bestände, Kommissionierung, Inventur und Umlagerungen im Lager."
+    },
+    "en": {
+      "name": "Inventory & Warehouse",
+      "description": "Stock, picking, stocktaking and transfers in the warehouse."
+    }
+  },
+  "verified": false
+}

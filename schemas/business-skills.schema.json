@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "business-blocks library item",
+  "title": "business-skills library item",
   "type": "object",
   "required": [
     "category",
@@ -44,7 +44,7 @@
     "popular": {
       "type": "boolean"
     },
-    "process_group": {
+    "business_area": {
       "type": "string"
     },
     "required_plan": {
