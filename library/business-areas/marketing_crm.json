@@ -20,7 +20,12 @@
         "label": "Gutscheine"
       }
     ],
-    "agents": [],
+    "agents": [
+      {
+        "id": "product-desc",
+        "label": "Produkttexte"
+      }
+    ],
     "workflows": [],
     "dashboards": [],
     "pdf_templates": [],

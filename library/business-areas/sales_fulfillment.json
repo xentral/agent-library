@@ -38,12 +38,12 @@
     ],
     "agents": [
       {
-        "id": "customer_service_order_management",
-        "label": "Auftragsverwaltung"
+        "id": "b2b-quote",
+        "label": "B2B-Angebot"
       },
       {
-        "id": "customer_service_delivery_agent",
-        "label": "Lieferauskunft"
+        "id": "address-change",
+        "label": "Adressänderung"
       }
     ],
     "workflows": [

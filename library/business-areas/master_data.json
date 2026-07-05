@@ -13,8 +13,12 @@
     "skills": [],
     "agents": [
       {
-        "id": "customer_service_product_questions",
-        "label": "Produktfragen"
+        "id": "product-desc",
+        "label": "Produkttexte"
+      },
+      {
+        "id": "daily-products-briefing",
+        "label": "Tägliches Produkt-Briefing"
       }
     ],
     "workflows": [

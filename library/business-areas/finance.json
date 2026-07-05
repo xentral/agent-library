@@ -22,12 +22,20 @@
     ],
     "agents": [
       {
-        "id": "finance_incoming_invoice",
-        "label": "Eingangsrechnung"
+        "id": "opos-list",
+        "label": "OPOS-Liste"
       },
       {
-        "id": "finance_incoming_payment_advice",
-        "label": "Zahlungsausgleich"
+        "id": "daily-finance-briefing",
+        "label": "Tägliches Finanz-Briefing"
+      },
+      {
+        "id": "quick-mahnlauf",
+        "label": "Mahnlauf (schnell)"
+      },
+      {
+        "id": "quick-opos-snapshot",
+        "label": "OPOS-Snapshot (schnell)"
       }
     ],
     "workflows": [

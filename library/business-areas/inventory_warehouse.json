@@ -30,8 +30,8 @@
     ],
     "agents": [
       {
-        "id": "customer_service_delivery_agent",
-        "label": "Lieferauskunft"
+        "id": "daily-logistics-briefing",
+        "label": "Tägliches Logistik-Briefing"
       }
     ],
     "workflows": [],
