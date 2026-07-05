@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "general",
-  "business_domain": "Sales",
+  "business_area": "Sales",
   "icon": "ticket",
   "order": 120,
   "popular": false,

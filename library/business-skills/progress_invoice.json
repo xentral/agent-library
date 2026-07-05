@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "finance",
-  "business_domain": "Order-to-Cash",
+  "business_area": "Order-to-Cash",
   "icon": "invoice",
   "order": 20,
   "popular": false,

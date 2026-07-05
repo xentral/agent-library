@@ -44,7 +44,7 @@
     "popular": {
       "type": "boolean"
     },
-    "business_domain": {
+    "business_area": {
       "type": "string"
     },
     "required_plan": {

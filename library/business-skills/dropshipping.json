@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "logistics",
-  "business_domain": "Fulfillment",
+  "business_area": "Fulfillment",
   "icon": "truck",
   "order": 50,
   "popular": false,

@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "general",
-  "business_domain": "Sales",
+  "business_area": "Sales",
   "icon": "layers",
   "order": 110,
   "popular": false,

@@ -3,7 +3,7 @@
   "version": 1,
   "type": "skill",
   "category": "purchasing",
-  "business_domain": "Procure-to-Pay",
+  "business_area": "Procure-to-Pay",
   "icon": "cart",
   "order": 40,
   "popular": true,
