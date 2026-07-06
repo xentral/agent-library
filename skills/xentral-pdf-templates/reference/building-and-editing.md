@@ -214,6 +214,17 @@ formatted uniformly:
 To change the format everywhere, change the template locale once — not each
 number.
 
+This also applies inside `rows` tuples and `{% with %}`/`{% set %}` blocks
+(e.g. `(L.invoice_date, data.documentDate | date)`) — the shared partials
+print values verbatim, they do **not** format for you.
+
+**Do not hand-roll a date macro.** A `format_date` macro that does
+`date_str.split('.')` only reformats dot-separated `dd.mm.yyyy` input — but
+real ERP data arrives as ISO `YYYY-MM-DD`, so the split yields one part and the
+macro silently prints the raw ISO string. It looks correct in the preview only
+because the hand-written `example_data` happens to use dot-formatted dates.
+`{{ x | date }}` (Babel) parses ISO and localizes correctly — always use it.
+
 ### Free-form by design
 
 Templates do **not** require document fields. The only gate is "it renders".

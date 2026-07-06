@@ -328,6 +328,35 @@ so screen readers skip them:
 <div class="decorative bg-stripe" aria-hidden="true"></div>
 ```
 
+### Visually hiding text (captions, labels) — NOT the web `.sr-only` trick
+
+To keep a `<caption>` or label in the tag tree (so the tagged PDF has an
+accessible name) but off the visible page, do **not** copy the web
+"visually-hidden" recipe:
+
+```css
+/* WRONG in the print pipeline — breaks table structure */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; ... }
+```
+
+`position: absolute` on a `<caption>` (default `display: table-caption`)
+takes it out of flow, and WeasyPrint materialises a chain of anonymous
+table-wrapper boxes to host it — each tagged as an empty `/Table`
+structure node. Result: a PDF/UA "structure tree" warning of empty
+`/Table` nodes (one deep chain per real table), impossible to spot by
+looking at the HTML because the empty tables exist only in the PDF tags.
+
+Hide such text without leaving the flow — keep it a normal in-flow box and
+just make it take no visible space:
+
+```css
+.visually-hidden { font-size: 0; line-height: 0; color: transparent; }
+```
+
+Rule of thumb: never put `position: absolute` (or `display: none`, which
+drops the node entirely) on `<caption>`, `<th>`, `<td>` or any table part
+when the goal is only to hide it visually.
+
 ### What the HTML engines CAN'T do
 
 * No JavaScript. Inline `<script>` is ignored. Logic must live in the

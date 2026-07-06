@@ -282,4 +282,5 @@ pre-flight check §4.
 | Factur-X XML as `attachment` without a matching `pdf_variant` (e.g. plain PDF) | File is human-readable but not a valid archival container — no GoBD archivability. |
 | Profile URN MINIMUM or BASIC WL for the DE B2B mandate | Flagged as warning by the sanity check — recipient AP system rejects. |
 | Multiple attachments with the same `filename` | XMP index breaks — most readers only open the first one. |
+| `position: absolute` (web `.sr-only`) on a `<caption>` / table part | WeasyPrint emits empty `/Table` structure nodes (one deep chain per real table) → PDF/UA structure-tree warning. Hide in flow instead — see authoring-and-styling.md "Visually hiding text". |
 
