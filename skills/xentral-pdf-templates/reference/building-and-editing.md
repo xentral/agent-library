@@ -86,6 +86,14 @@ a display hint.
   margin-boxes. It imposes **no** page number and **no** visible header. Fill
   `{% block content %}`; override `{% block footer %}` only for a custom in-body
   footer.
+* **Document language (`<html lang>` → PDF `/Lang`):** the base template owns
+  this. `data.language` arrives **raw from the ERP** (country codes, words:
+  `us`, `at`, `englisch`, …) and is **not** a valid BCP-47 tag — the base runs
+  it through the `bcp47` filter to a real tag (`de-DE`/`en-GB`/`fr-FR`/`nl-NL`/
+  `it-IT`, fallback `de-DE`) so PDF/UA validators accept `/Lang`. **Never write
+  `data.language` into a `lang=` attribute yourself**, and don't hand-roll a
+  `<head>`; if you truly must, use `{{ data.language | bcp47 }}`, never the raw
+  value.
 * **Header (letterhead):** the starter carries a **visible** `{% block letterhead %}`
   (logo via `assets.logo` + company block). It is THE header — edit it in place;
   **never draw a second header inside `{% block content %}`** (that's the classic

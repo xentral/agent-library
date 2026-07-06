@@ -27,8 +27,16 @@ What it inspects (a broad linter — non-exhaustive):
 * **Data binding & known gotchas** — `data.*` fields used but absent from
   `example_data`; the `data.items` → `dict.items()` collision (use
   `data['items']`); `background-clip:text` gradient text (invisible in print).
-* **Hygiene / PDF-UA** — `<html lang>`, image `alt`, table `scope`, exactly one
-  `<h1>`, tabular-aligned amounts.
+* **Hygiene / PDF-UA** — image `alt`, table `scope`, exactly one `<h1>`,
+  tabular-aligned amounts, plus **language-code validity**: every explicit
+  language value (the `languages` field, translation keys, a literal
+  `<html lang="…">` or `{% set _LANG %}`) must be a valid BCP-47/ISO-639 code.
+  A country code used as a language — the classic `us` / `at` / `ch` — is
+  flagged (`language_country_code`): it yields an invalid PDF `/Lang` (PDF/UA
+  error) and never matches at runtime, so translations silently fall back. Word
+  forms / POSIX underscores (`englisch`, `de_DE`) trip `language_malformed`.
+  Runtime `data.language` is *not* your concern — the base template normalizes
+  it (see [building-and-editing](building-and-editing.md)).
 * **Mandatory content & legal disclosures.** Pass `legal_form`
   (`gmbh` | `ag` | `ohg_kg` | `ek`) to check the Geschäftsbrief requirements
   (company name + legal form, registered office, register court + number,
