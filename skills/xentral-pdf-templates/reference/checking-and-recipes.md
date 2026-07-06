@@ -37,6 +37,14 @@ What it inspects (a broad linter — non-exhaustive):
   forms / POSIX underscores (`englisch`, `de_DE`) trip `language_malformed`.
   Runtime `data.language` is *not* your concern — the base template normalizes
   it (see [building-and-editing](building-and-editing.md)).
+* **Table structure (PDF/UA structure tree)** — a table cell that mixes inline
+  content (bare text, `<strong>`, `<span>`) with a block-level child makes
+  WeasyPrint wrap the inline run in an anonymous block and mis-tag it as a
+  **nested cell** (a `<TD>` inside a `<TD>`) — invalid structure, one error per
+  affected row. Flagged statically as `table_cell_inline_block_mix`. Fix: keep
+  every child of a cell block-level (e.g. the bold name `display:block`) *or* all
+  inline — don't mix. The shared positions partial is already built this way, so
+  starter-based templates are safe; this targets hand-authored tables.
 * **Mandatory content & legal disclosures.** Pass `legal_form`
   (`gmbh` | `ag` | `ohg_kg` | `ek`) to check the Geschäftsbrief requirements
   (company name + legal form, registered office, register court + number,
@@ -55,6 +63,12 @@ the document locale, and identifiers that are present in the data but missing
 from the rendered page. This catches "renders fine, but the customer number
 never shows" — things a static check can't see. Automatically skipped for
 templates without a `v3_endpoint`.
+
+For a PDF/UA template the live pass also walks the **tagged structure tree** of
+the rendered PDF (engine-truth, not a heuristic): `nested_table_cell_live`
+(**error** — a cell nested in a cell, however the table was authored) plus the
+document-level requirements `missing_lang_live` / `not_tagged_live` /
+`display_doc_title_off_live` / `missing_output_intent_live`.
 
 Typical loop: `create` / `set_block` → `check legal_form=gmbh` → fix findings →
 `check live=true` → `render output=image` to eyeball the layout → done.
