@@ -59,6 +59,39 @@ templates without a `v3_endpoint`.
 Typical loop: `create` / `set_block` → `check legal_form=gmbh` → fix findings →
 `check live=true` → `render output=image` to eyeball the layout → done.
 
+### Debugging a struct-tree warning — dump the tree, don't just count
+
+When an external PDF/UA checker reports structure-tree problems (empty
+`/Table` nodes, orphaned tags, unexpected nesting), inspect the *actual*
+tagged tree with pikepdf — and print **what each suspect node contains**,
+not just how many there are. Counting nodes tells you a symptom; only the
+full tree tells you the cause. A checker that prints "TABLE rows=0" 12
+times sends you guessing; a checker that prints the parent→child chain
+shows you immediately that the empty `/Table` wraps a `/Caption` — i.e.
+the `<caption>` element is the culprit, not some layout wrapper.
+
+```python
+import pikepdf
+pdf = pikepdf.open("out.pdf")
+def dump(node, depth=0):
+    if not isinstance(node, pikepdf.Dictionary):
+        return
+    s = node.get("/S")
+    print("  " * depth + (str(s) if s is not None else "?"))
+    k = node.get("/K")
+    if isinstance(k, pikepdf.Array):
+        for x in k: dump(x, depth + 1)
+    elif isinstance(k, pikepdf.Dictionary):
+        dump(k, depth + 1)
+dump(pdf.Root.StructTreeRoot)
+```
+
+Then map the offending tag back to the HTML element / CSS rule that
+produced it before proposing a fix. The tag tree is pure WeasyPrint output
+from the HTML+CSS — the render pipeline (pikepdf) only touches attachments
+and XMP, never the structure tree, so a struct-tree defect is always in the
+template's markup or styling, never in post-processing.
+
 ## Constraints & invariants
 
 1. **One document type per template.** Don't try to make one template
