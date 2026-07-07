@@ -27,74 +27,8 @@
   "mcp_tools": [],
   "files": [],
   "form": {
-    "home": "login",
+    "home": "uebersicht",
     "screens": [
-      {
-        "id": "login",
-        "name": "Login",
-        "type": "screen",
-        "inMenu": false,
-        "components": [
-          {
-            "id": "lg_h",
-            "type": "heading",
-            "props": {
-              "text": "Willkommen im Kundenportal"
-            }
-          },
-          {
-            "id": "lg_t",
-            "type": "text",
-            "props": {
-              "text": "Bitte melden Sie sich an, um Ihre Bestellungen, Lieferungen und Rechnungen einzusehen."
-            }
-          },
-          {
-            "id": "lg_card",
-            "type": "card",
-            "props": {
-              "title": "Anmeldung",
-              "description": "Zugang für Geschäftskunden"
-            },
-            "children": [
-              {
-                "id": "lg_email",
-                "type": "formfield",
-                "props": {
-                  "label": "E-Mail",
-                  "fieldType": "text",
-                  "placeholder": "name@firma.de"
-                }
-              },
-              {
-                "id": "lg_pw",
-                "type": "formfield",
-                "props": {
-                  "label": "Passwort",
-                  "fieldType": "text",
-                  "placeholder": "••••••••"
-                }
-              },
-              {
-                "id": "lg_btn",
-                "type": "button",
-                "props": {
-                  "text": "Anmelden",
-                  "action": "screen:uebersicht",
-                  "variant": "default"
-                }
-              }
-            ]
-          },
-          {
-            "id": "lg_hint",
-            "type": "text",
-            "props": {
-              "text": "Noch kein Zugang? Wenden Sie sich an Ihren Ansprechpartner im Vertrieb."
-            }
-          }
-        ]
-      },
       {
         "id": "uebersicht",
         "name": "Übersicht",
