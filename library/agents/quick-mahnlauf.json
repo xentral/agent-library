@@ -9,7 +9,7 @@
     "agent_type": "workflow",
     "tools": [
       "xentral_copilot",
-      "xentral_operations_tasks"
+      "xentral_decisions"
     ],
     "model": "sonnet-4-6",
     "temperature": 0.3

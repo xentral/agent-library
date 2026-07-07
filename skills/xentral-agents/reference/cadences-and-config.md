@@ -50,7 +50,7 @@ intent.
 ### Pickable tool slugs (`annotations.agent_pickable=true`)
 
 `xentral_copilot` (ERP read & write) · `xentral_email` · `xentral_crm` ·
-`xentral_agent_jobs` · `xentral_operations_tasks` · `xentral_agents` ·
+`xentral_agent_jobs` · `xentral_decisions` · `xentral_agents` ·
 `xentral_schedules` · `xentral_business_model` · `xentral_business_skills` ·
 `xentral_business_areas` · `xentral_dashboards` · `xentral_kpi` ·
 `xentral_reports` · `xentral_pdf_templates` · `xentral_connections` ·
@@ -64,7 +64,7 @@ Common tool recipes:
 - **Chat agent for customer-service questions** →
   `['xentral_copilot', 'xentral_crm', 'xentral_knowledge_base']`.
 - **Briefing agent for dashboard values** →
-  `['xentral_copilot', 'xentral_kpi', 'xentral_operations_tasks']`.
+  `['xentral_copilot', 'xentral_kpi', 'xentral_decisions']`.
 
 ## Cadence-specific meta
 

@@ -12,7 +12,7 @@
     "tools": [
       "xentral_copilot",
       "xentral_agent_jobs",
-      "xentral_operations_tasks"
+      "xentral_decisions"
     ],
     "model": "sonnet-4-6",
     "temperature": 1.0,
