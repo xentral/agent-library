@@ -1,0 +1,342 @@
+{
+  "order": 5,
+  "slug": "b2b-portal",
+  "source": "builtin",
+  "name": "B2B-Kundenportal",
+  "category": "sales",
+  "category_label": "Vertrieb",
+  "summary": "Öffentliches Self-Service-Portal für Geschäftskunden — mit Login, Bestellungen, Rechnungen und Preisen.",
+  "locales": {
+    "de": {
+      "name": "B2B-Kundenportal",
+      "summary": "Öffentliches Self-Service-Portal für Geschäftskunden — mit Login, Bestellungen, Rechnungen und Preisen."
+    },
+    "en": {
+      "name": "B2B customer portal",
+      "summary": "Public self-service portal for business customers — with login, orders, invoices and prices."
+    }
+  },
+  "accent": "#0EA5E9",
+  "platform": "portal",
+  "entities": [],
+  "linked_entities": [
+    "SalesOrder",
+    "SalesInvoice",
+    "Product"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "login",
+    "screens": [
+      {
+        "id": "login",
+        "name": "Login",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "lg_h",
+            "type": "heading",
+            "props": {
+              "text": "Willkommen im Kundenportal"
+            }
+          },
+          {
+            "id": "lg_t",
+            "type": "text",
+            "props": {
+              "text": "Bitte melden Sie sich an, um Ihre Bestellungen, Lieferungen und Rechnungen einzusehen."
+            }
+          },
+          {
+            "id": "lg_card",
+            "type": "card",
+            "props": {
+              "title": "Anmeldung",
+              "description": "Zugang für Geschäftskunden"
+            },
+            "children": [
+              {
+                "id": "lg_email",
+                "type": "formfield",
+                "props": {
+                  "label": "E-Mail",
+                  "fieldType": "text",
+                  "placeholder": "name@firma.de"
+                }
+              },
+              {
+                "id": "lg_pw",
+                "type": "formfield",
+                "props": {
+                  "label": "Passwort",
+                  "fieldType": "text",
+                  "placeholder": "••••••••"
+                }
+              },
+              {
+                "id": "lg_btn",
+                "type": "button",
+                "props": {
+                  "text": "Anmelden",
+                  "action": "screen:uebersicht",
+                  "variant": "default"
+                }
+              }
+            ]
+          },
+          {
+            "id": "lg_hint",
+            "type": "text",
+            "props": {
+              "text": "Noch kein Zugang? Wenden Sie sich an Ihren Ansprechpartner im Vertrieb."
+            }
+          }
+        ]
+      },
+      {
+        "id": "uebersicht",
+        "name": "Übersicht",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "ov_h",
+            "type": "heading",
+            "props": {
+              "text": "Ihr Partner-Dashboard"
+            }
+          },
+          {
+            "id": "ov_t",
+            "type": "text",
+            "props": {
+              "text": "Alle Ihre Bestellungen, Lieferungen und Rechnungen an einem Ort."
+            }
+          },
+          {
+            "id": "ov_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "3"
+            },
+            "children": [
+              {
+                "id": "ov_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offene Bestellungen",
+                  "value": "12",
+                  "delta": "+3",
+                  "tone": "up"
+                }
+              },
+              {
+                "id": "ov_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "In Lieferung",
+                  "value": "4",
+                  "tone": "flat"
+                }
+              },
+              {
+                "id": "ov_k3",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offene Rechnungen",
+                  "value": "3",
+                  "delta": "-1",
+                  "tone": "down"
+                }
+              }
+            ]
+          },
+          {
+            "id": "ov_orders_card",
+            "type": "card",
+            "props": {
+              "title": "Aktuelle Bestellungen",
+              "description": "Ihre letzten Aufträge mit Status."
+            },
+            "children": [
+              {
+                "id": "ov_orders_tbl",
+                "type": "table",
+                "props": {
+                  "label": "",
+                  "dataSource": "SalesOrder"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bestellungen",
+        "name": "Bestellungen",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "or_h",
+            "type": "heading",
+            "props": {
+              "text": "Ihre Bestellungen"
+            }
+          },
+          {
+            "id": "or_card",
+            "type": "card",
+            "props": {
+              "title": "Alle Bestellungen",
+              "description": "Status, Liefertermin und Betrag im Überblick."
+            },
+            "children": [
+              {
+                "id": "or_tbl",
+                "type": "table",
+                "props": {
+                  "label": "",
+                  "dataSource": "SalesOrder"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "rechnungen",
+        "name": "Rechnungen",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "in_h",
+            "type": "heading",
+            "props": {
+              "text": "Ihre Rechnungen"
+            }
+          },
+          {
+            "id": "in_card",
+            "type": "card",
+            "props": {
+              "title": "Rechnungen & Zahlungsstatus",
+              "description": "Offene und bezahlte Rechnungen."
+            },
+            "children": [
+              {
+                "id": "in_tbl",
+                "type": "table",
+                "props": {
+                  "label": "",
+                  "dataSource": "SalesInvoice"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "produkte",
+        "name": "Produkte & Preise",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "pr_h",
+            "type": "heading",
+            "props": {
+              "text": "Produkte & Ihre Konditionen"
+            }
+          },
+          {
+            "id": "pr_t",
+            "type": "text",
+            "props": {
+              "text": "Aktuelles Sortiment mit Verfügbarkeit und Ihren Preisen."
+            }
+          },
+          {
+            "id": "pr_card",
+            "type": "card",
+            "props": {
+              "title": "Sortiment",
+              "description": "Artikel, Verfügbarkeit und Preis."
+            },
+            "children": [
+              {
+                "id": "pr_tbl",
+                "type": "table",
+                "props": {
+                  "label": "",
+                  "dataSource": "Product"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "portal": {
+    "published": false,
+    "access": "public",
+    "readable_entities": [
+      "SalesOrder",
+      "SalesInvoice",
+      "Product"
+    ],
+    "field_visibility": {
+      "SalesOrder": [
+        "documentNumber",
+        "documentDate",
+        "date",
+        "documentStatus",
+        "status",
+        "customerName",
+        "customerNumber",
+        "customerOrderNumber",
+        "totalNetAmount",
+        "totalGrossAmount",
+        "currency",
+        "deliveryDate",
+        "paymentStatus"
+      ],
+      "SalesInvoice": [
+        "documentNumber",
+        "documentDate",
+        "date",
+        "documentStatus",
+        "status",
+        "customerName",
+        "customerNumber",
+        "customerOrderNumber",
+        "totalNetAmount",
+        "totalGrossAmount",
+        "currency",
+        "deliveryDate",
+        "paymentStatus"
+      ],
+      "Product": [
+        "name",
+        "number",
+        "ean",
+        "sku",
+        "price",
+        "netPrice",
+        "grossPrice",
+        "cachedStockQuantity",
+        "active",
+        "description"
+      ]
+    },
+    "branding": {
+      "theme": "ocean",
+      "logo_url": "",
+      "headline": "Willkommen in Ihrem Partnerportal"
+    }
+  }
+}

@@ -300,9 +300,10 @@
       ]
     },
     "studio": {
-      "count": 5,
+      "count": 6,
       "files": [
         "library/studio/aussendienst.json",
+        "library/studio/b2b-portal.json",
         "library/studio/bestellvorschlag.json",
         "library/studio/lager.json",
         "library/studio/pick.json",
