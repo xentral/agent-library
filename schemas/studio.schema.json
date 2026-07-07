@@ -100,7 +100,8 @@
       "type": "string",
       "enum": [
         "mobile",
-        "web"
+        "web",
+        "portal"
       ]
     },
     "slug": {
@@ -112,6 +113,45 @@
     },
     "summary": {
       "type": "string"
+    },
+    "portal": {
+      "type": "object",
+      "description": "Portal exposure config (portal-type apps). Public allowlist + branding; the share itself lives in public_sharing.",
+      "additionalProperties": true,
+      "properties": {
+        "published": {
+          "type": "boolean"
+        },
+        "access": {
+          "type": "string",
+          "enum": [
+            "public"
+          ]
+        },
+        "readable_entities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "field_visibility": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "branding": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "theme": {
+      "type": "string",
+      "description": "App theme preset key (e.g. ocean, forest). Drives accent colour; also themes any portal built from this app."
     }
   },
   "additionalProperties": true
