@@ -334,9 +334,10 @@
       ]
     },
     "branding": {
-      "theme": "ocean",
+      "theme": "",
       "logo_url": "",
       "headline": "Willkommen in Ihrem Partnerportal"
     }
-  }
+  },
+  "theme": "ocean"
 }
