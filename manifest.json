@@ -27,23 +27,6 @@
         "library/agents/rma-flow.json"
       ]
     },
-    "business-areas": {
-      "count": 12,
-      "files": [
-        "library/business-areas/customer_service.json",
-        "library/business-areas/finance.json",
-        "library/business-areas/inventory_warehouse.json",
-        "library/business-areas/manufacturing.json",
-        "library/business-areas/marketing_crm.json",
-        "library/business-areas/master_data.json",
-        "library/business-areas/point_of_sale.json",
-        "library/business-areas/purchasing.json",
-        "library/business-areas/reporting_controlling.json",
-        "library/business-areas/returns.json",
-        "library/business-areas/sales_fulfillment.json",
-        "library/business-areas/shipping_carriers.json"
-      ]
-    },
     "business-model": {
       "count": 14,
       "files": [
@@ -375,18 +358,6 @@
     "library/agents/quick-opos-snapshot.json": "sha256-34f7f88b8830f24c008131c4be4982f7a751e4c43990827576569c5de6d26bf5",
     "library/agents/quick-reorder-check.json": "sha256-8335587991d7ff32cbc43febb6079a90be7c32899541d51c42efd22cc1a9a114",
     "library/agents/rma-flow.json": "sha256-a1e6a09b52ad97052067f35c57d6b8cd2e95692c0746cb6e09a84b0ca55a4a8c",
-    "library/business-areas/customer_service.json": "sha256-d8b8962218bcfdef94c56edcc345759333f5b48bfc059e6389db3bba12a82faf",
-    "library/business-areas/finance.json": "sha256-4ed3bd1741c845f1eeca7d960f2758b325841fd1294a175025ee879ca30a0c1d",
-    "library/business-areas/inventory_warehouse.json": "sha256-52fc93497d89f1a61b1ef39c63014f2ab219cfafbb3f5ede525aa9187088e53a",
-    "library/business-areas/manufacturing.json": "sha256-d003f37802d477be11dbe86cc812286c3ff06c084222230072b7c278631ec06b",
-    "library/business-areas/marketing_crm.json": "sha256-c982bdae52434f45bd061bf1fde93e05f8d277e2c4b0171ec144035dbbe99d33",
-    "library/business-areas/master_data.json": "sha256-633f7ebf6e5ed3cb53e0c7f7ab32d249f37a11107a641d67d588e69c8389e029",
-    "library/business-areas/point_of_sale.json": "sha256-7a703ed4b4ef9b536a60ee60b50009f519c6a19f33b2df48e832d51c00db82ce",
-    "library/business-areas/purchasing.json": "sha256-e9839f850911294c02602c460d97ca7bd5c06a06a81a022fda263c1ab4b983fb",
-    "library/business-areas/reporting_controlling.json": "sha256-80f0556a91befc6940c1790ed64c59daa57c405c928af85fac7ba2261a44848f",
-    "library/business-areas/returns.json": "sha256-55a6a9089ccbfcda5726b66b89855a0347c88572eccb7989af9b428f7fb48ba2",
-    "library/business-areas/sales_fulfillment.json": "sha256-2e680cf5ac8c3443d9562c911ba0a333d4d4496251d5130b914ebaf7df1023a7",
-    "library/business-areas/shipping_carriers.json": "sha256-6522ea14c0bd7fedfebf6426efb0814a3f162b5b0f792a1bc7c62907abeaa0f6",
     "library/business-model/b2b_wholesale.json": "sha256-b8888474c79d4990b927f353c3cc371539d0a44d4ecc3519a8f92e1256658ac4",
     "library/business-model/b2b_wholesale_configuration.json": "sha256-0e8d63d9eccaa6f02ca538958e98d459c3da5aadd04a5432f49959f6d4c1d3c2",
     "library/business-model/d2c.json": "sha256-8a04db3077ea6342bf07a25f47bb03f2dd220edade284a5cbc1b8ffea2943e95",
