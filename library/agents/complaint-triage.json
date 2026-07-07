@@ -10,7 +10,7 @@
     "tools": [
       "xentral_copilot",
       "xentral_crm",
-      "xentral_operations_tasks",
+      "xentral_decisions",
       "xentral_knowledge_base"
     ],
     "model": "sonnet-4-6",

@@ -93,5 +93,5 @@ short read prevents B2C-style copy for a B2B distributor.
 
 ## Out of scope
 
-Task/project progress → `xentral_operations_tasks`. Day-to-day decisions → Jobs.
+Task/project progress → `xentral_decisions`. Day-to-day decisions → Jobs.
 Financials / budgets / P&L → out of system. Per-customer notes → CRM.
