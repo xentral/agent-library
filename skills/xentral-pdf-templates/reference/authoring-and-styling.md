@@ -25,6 +25,16 @@
 The engine is fixed at create time — switching later means rebuilding
 the template.
 
+> **Silent engine fallback — a bad engine name does NOT error.** If `engine`
+> is misspelled, unknown, or names a renderer this deployment can't serve, the
+> render service does **not** reject the request — it silently renders with the
+> **default engine** (`html_css` → Gotenberg/Chromium, switching to WeasyPrint
+> only for the tagged variants and custom-font templates noted above). This is
+> intentional: it keeps rendering resilient and minimises support load. The
+> practical consequence for you: a typo like `engine: "gotenburg"` still
+> produces a PDF (rendered by the default), not a validation error — so
+> double-check the engine name yourself; you won't be told it was wrong.
+
 ## Authoring the HTML/CSS body
 
 The HTML body is **HTML + CSS + Jinja2**. At render time the ERP
