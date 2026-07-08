@@ -31,8 +31,7 @@ What it is **not**:
 - **Not a financial plan / P&L.** It describes the business, not its forecast —
   no per-quarter numbers.
 - **Not a marketing brochure.** Concrete facts an agent can act on, no fluff.
-- **Not an operations log.** Day-to-day decisions go to Jobs / System Events;
-  step-by-step process definitions go to Business Skills.
+- **Not an operations log.** Day-to-day decisions go to Jobs / System Events.
 
 ## The profile is the contract
 

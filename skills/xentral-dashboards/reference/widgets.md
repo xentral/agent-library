@@ -85,7 +85,7 @@ come live from Xentral's metadata — call `xentral_entities` with
 place across all dashboard widgets where a raw `entity_key` is
 accepted; everywhere else use the named views above. The entity
 catalogue is the lowest ERP layer (raw data model), distinct from
-the workflow-recipe layer (`xentral_business_skills list_library`)
+the higher-level automation layer (`xentral_workflows`)
 — drop down to entities only when the customer's process needs
 customising beyond the standard.
 
