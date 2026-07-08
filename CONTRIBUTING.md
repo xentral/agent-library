@@ -16,7 +16,7 @@ One source of truth, one release cadence.
 manifest.json            version + per-type file index + checksums
 library/                 catalogue content (one folder per type, one JSON per item)
   agents/  workflows/  dashboards/  kpi/  pdf-templates/
-  business-skills/  business-model/  connections/  charts/
+  business-model/  connections/  charts/
 skills/                  Claude Code skills (one folder per tool family)
   <xentral-...>/SKILL.md         # lean entrypoint
   <xentral-...>/reference/*.md   # detail, loaded on demand

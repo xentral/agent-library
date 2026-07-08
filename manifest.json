@@ -46,25 +46,6 @@
         "library/business-model/multi_channel_configuration.json"
       ]
     },
-    "business-skills": {
-      "count": 14,
-      "files": [
-        "library/business-skills/branch_delivery.json",
-        "library/business-skills/collective_invoice.json",
-        "library/business-skills/cross_selling.json",
-        "library/business-skills/dropshipping.json",
-        "library/business-skills/framework_contracts.json",
-        "library/business-skills/pick_app.json",
-        "library/business-skills/pick_runs.json",
-        "library/business-skills/pos.json",
-        "library/business-skills/production.json",
-        "library/business-skills/proforma_invoice.json",
-        "library/business-skills/progress_invoice.json",
-        "library/business-skills/reorder_proposal.json",
-        "library/business-skills/stocktaking.json",
-        "library/business-skills/vouchers.json"
-      ]
-    },
     "charts": {
       "count": 16,
       "files": [
@@ -373,20 +354,6 @@
     "library/business-model/manufacturer_configuration.json": "sha256-3dd414307bfc9eed2e9d5f5d23a8cc4542687246e94ad578d9d0d573d26ff601",
     "library/business-model/multi_channel.json": "sha256-84a5a177e0eee11ef707acef2661b0a6ef261972a8ce39eda30bb5b192c441e8",
     "library/business-model/multi_channel_configuration.json": "sha256-023fed6ec7e5400af0fc8cd8e46e36af93309e674fc1c5465c6132cfbcda705b",
-    "library/business-skills/branch_delivery.json": "sha256-e1fd625c635d92f042262c0b11d5b2e7b183d6823ea82a7c860a559ac6d1944d",
-    "library/business-skills/collective_invoice.json": "sha256-9d34027dd2f5f12eb70991abf39ccd3cb6b3b52f558d33600e93f563be672ac2",
-    "library/business-skills/cross_selling.json": "sha256-4f5aaff5bfc41be3aaeaa74d1ee6da30e02b9d2bdb1056784a619e54d8e06d89",
-    "library/business-skills/dropshipping.json": "sha256-df3e327da978290df067553fb6f808a528b806750330c3b0ab79430b695cb376",
-    "library/business-skills/framework_contracts.json": "sha256-6fb9b5fb50d0a60082cae2344c3fb075fcb5aec24bd79cf2238a9db730c2106e",
-    "library/business-skills/pick_app.json": "sha256-5c61f4fb5a83bcf3e250df7b3f9d29447010a2e0c87fa87b1af1775b4b9362e9",
-    "library/business-skills/pick_runs.json": "sha256-fcc15dffa6358cdf8e4147ee91e92d432ad1ac161386305afa313fccf9d20a27",
-    "library/business-skills/pos.json": "sha256-50b3b3962b3c4ae5d39243b92dc5ea6f58d02d5d06329a1f9bc02cbc8f1ab94d",
-    "library/business-skills/production.json": "sha256-d509afe0b9f7b96100c417d623df35524eae5b08e0862c55f5effe1fa0384b46",
-    "library/business-skills/proforma_invoice.json": "sha256-1d37e6c5fe9e620fbd40d4b77adcb2abab50aef91500df19b922f552da8fa1bc",
-    "library/business-skills/progress_invoice.json": "sha256-5ee8e429249436c3b15530fc7d130bdadbb0d947e65de00e3a343cd733f543e0",
-    "library/business-skills/reorder_proposal.json": "sha256-c8d2e1d6f78a6cbd997de6b9a25a3ac1fb4cab1e0da0b298dd13af1f5c292d84",
-    "library/business-skills/stocktaking.json": "sha256-718c395d3fe4e66f67ab04de30111b76d75fee487c104143f188ffe5bbd16736",
-    "library/business-skills/vouchers.json": "sha256-ca4ad6a5fc636b69cb0c2ea31f15f66c001e65beeb87f3ecbdcf9268028f9240",
     "library/charts/average_order_value_trend.json": "sha256-8b43d606d32c52b9d9174f0552ffcb01268758f5c4669a8bf1299beb7ee215a1",
     "library/charts/carrier_mix.json": "sha256-30ab4408be0ecb245141bbf87eb484f1a0424c157456f1d82add491a4e3379b5",
     "library/charts/channel_mix_current_month.json": "sha256-d083cc1604dd8d4c02e57aa244b0813038830a269676766cd68b446ca9ccb746",
