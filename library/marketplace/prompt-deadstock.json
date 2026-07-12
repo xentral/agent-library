@@ -1,0 +1,20 @@
+{
+  "id": "prompt-deadstock",
+  "kind": "prompt",
+  "lane": "community",
+  "iconName": "tag",
+  "order": 270,
+  "locales": {
+    "de": {
+      "title": "Ladenhüter aufspüren",
+      "oneLiner": "Findet Slow-Mover mit gebundenem Kapital und schlägt Abverkaufs- oder Bündel-Aktionen vor."
+    },
+    "en": {
+      "title": "Ladenhüter aufspüren",
+      "oneLiner": "Findet Slow-Mover mit gebundenem Kapital und schlägt Abverkaufs- oder Bündel-Aktionen vor."
+    }
+  },
+  "author": "Nord Supply",
+  "category": "Sortiment",
+  "body": "Finde meine Ladenhüter und schlag mir vor, wie ich sie loswerde.\n\nBitte:\n- Identifiziere Slow-Mover: Artikel mit hohem Bestand und geringem/keinem Abverkauf über die letzten Monate,\n- zeig mir das darin gebundene Kapital und die Lagerdauer,\n- schlage konkrete Maßnahmen vor (Rabattaktion, Bündel mit Bestsellern, Marktplatz-Abverkauf),\n- priorisiere nach gebundenem Kapital.\nNutze meine echten Bestands- und Umsatzdaten. Frag nur nach dem Nötigsten und lege dann los."
+}

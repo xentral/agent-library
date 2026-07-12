@@ -1,0 +1,19 @@
+{
+  "id": "community-returns-agent",
+  "kind": "copy",
+  "lane": "community",
+  "iconName": "consultant",
+  "order": 320,
+  "locales": {
+    "de": {
+      "title": "Retouren-Assistent",
+      "oneLiner": "Agent, der Retouren aus E-Mails erkennt, prüft und Gutschriften vorbereitet."
+    },
+    "en": {
+      "title": "Retouren-Assistent",
+      "oneLiner": "Agent, der Retouren aus E-Mails erkennt, prüft und Gutschriften vorbereitet."
+    }
+  },
+  "author": "Studio Wolke",
+  "target": "Agent"
+}

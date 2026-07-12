@@ -1,0 +1,19 @@
+{
+  "id": "community-reorder-pilot",
+  "kind": "copy",
+  "lane": "community",
+  "iconName": "consultant",
+  "order": 360,
+  "locales": {
+    "de": {
+      "title": "Bestell-Autopilot",
+      "oneLiner": "Meldet Mindestbestände, schlägt Nachbestellungen vor und legt Bestellungen an."
+    },
+    "en": {
+      "title": "Bestell-Autopilot",
+      "oneLiner": "Meldet Mindestbestände, schlägt Nachbestellungen vor und legt Bestellungen an."
+    }
+  },
+  "author": "Nord Supply",
+  "target": "Agent + Workflow"
+}

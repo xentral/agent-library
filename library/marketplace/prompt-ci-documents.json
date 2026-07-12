@@ -1,0 +1,20 @@
+{
+  "id": "prompt-ci-documents",
+  "kind": "prompt",
+  "lane": "community",
+  "iconName": "file",
+  "order": 280,
+  "locales": {
+    "de": {
+      "title": "Belege in dein CI bringen",
+      "oneLiner": "Bringt Rechnung, Lieferschein und Angebot in ein einheitliches Corporate Design — Logo, Farben, Typo, e-rechnungskonform."
+    },
+    "en": {
+      "title": "Belege in dein CI bringen",
+      "oneLiner": "Bringt Rechnung, Lieferschein und Angebot in ein einheitliches Corporate Design — Logo, Farben, Typo, e-rechnungskonform."
+    }
+  },
+  "author": "Möbel Wagner",
+  "category": "Dokumente",
+  "body": "Bring meine Geschäftsdokumente in ein einheitliches Corporate Design.\n\nBitte:\n- gestalte Rechnung, Lieferschein und Angebot in einem konsistenten Look (Logo oben, meine Hausfarben, saubere Typografie),\n- achte auf korrekte Pflichtangaben und e-rechnungskonforme Rechnungen,\n- halte die Vorlagen so, dass sie mit meinen echten Belegdaten sauber rendern (Datum lokalisiert, Positionen, Summen).\nZeig mir eine Vorschau mit echten Beispieldaten. Frag mich nach Logo/Hausfarben und lege dann los."
+}

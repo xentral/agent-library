@@ -1,0 +1,19 @@
+{
+  "id": "community-dunning",
+  "kind": "copy",
+  "lane": "community",
+  "iconName": "connectFlow",
+  "order": 300,
+  "locales": {
+    "de": {
+      "title": "Mahnwesen-Eskalation",
+      "oneLiner": "Workflow-Paket: OP-Liste prüfen, gestufte Mahnungen, Eskalation ans Team — inkl. Zeitplan."
+    },
+    "en": {
+      "title": "Mahnwesen-Eskalation",
+      "oneLiner": "Workflow-Paket: OP-Liste prüfen, gestufte Mahnungen, Eskalation ans Team — inkl. Zeitplan."
+    }
+  },
+  "author": "Elbe Handel GmbH",
+  "target": "Workflows · 3"
+}

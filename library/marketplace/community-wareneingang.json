@@ -1,0 +1,19 @@
+{
+  "id": "community-wareneingang",
+  "kind": "copy",
+  "lane": "community",
+  "iconName": "layout",
+  "order": 340,
+  "locales": {
+    "de": {
+      "title": "Wareneingang-Scan",
+      "oneLiner": "Studio-App fürs Handy: Lieferung scannen, Menge erfassen, Abweichungen melden."
+    },
+    "en": {
+      "title": "Wareneingang-Scan",
+      "oneLiner": "Studio-App fürs Handy: Lieferung scannen, Menge erfassen, Abweichungen melden."
+    }
+  },
+  "author": "Lagerhelden",
+  "target": "Studio-App"
+}

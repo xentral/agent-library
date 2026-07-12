@@ -1,0 +1,20 @@
+{
+  "id": "prompt-purchasing-earlywarning",
+  "kind": "prompt",
+  "lane": "community",
+  "iconName": "package",
+  "order": 230,
+  "locales": {
+    "de": {
+      "title": "Einkaufs-Frühwarnsystem",
+      "oneLiner": "„Was geht mir aus, bevor eingegangene Aufträge nicht mehr bedient werden können?\" — Reichweiten, Fehlbestände, Nachbestell-Vorschläge."
+    },
+    "en": {
+      "title": "Einkaufs-Frühwarnsystem",
+      "oneLiner": "„Was geht mir aus, bevor eingegangene Aufträge nicht mehr bedient werden können?\" — Reichweiten, Fehlbestände, Nachbestell-Vorschläge."
+    }
+  },
+  "author": "Xentral",
+  "category": "Einkauf",
+  "body": "Richte mir ein starkes Einkaufs-Frühwarnsystem ein und beantworte die Kernfrage: „Was geht mir aus, bevor bereits eingegangene Aufträge nicht mehr bedient werden können?\"\n\nBitte:\n- Schau zuerst in meine echten Daten: offene Aufträge, aktuelle Bestände, Meldebestände, offene Lieferantenbestellungen und Wiederbeschaffungszeiten.\n- Baue ein Einkaufs-Dashboard mit: Artikeln unter Meldebestand, Reichweite in Tagen, drohenden Fehlbeständen vor bereits eingegangenen Aufträgen, überfälligen Lieferantenbestellungen und konkreten Nachbestell-Vorschlägen (Menge + Lieferant).\n- Hinterlege die passenden KPIs (Fehlbestände, Reichweite, überfällige Bestellungen).\n- Richte einen Workflow ein, der bei Unterschreitung des Meldebestands automatisch einen Nachbestell-Vorschlag erzeugt.\nFrag nur nach dem Nötigsten und lege dann los."
+}

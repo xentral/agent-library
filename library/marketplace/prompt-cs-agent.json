@@ -1,0 +1,20 @@
+{
+  "id": "prompt-cs-agent",
+  "kind": "prompt",
+  "lane": "community",
+  "iconName": "chat",
+  "order": 260,
+  "locales": {
+    "de": {
+      "title": "Kundenservice-Agent bauen",
+      "oneLiner": "Erstellt einen Agenten, der Support-Mails klassifiziert, Bestell- & Retourenfragen beantwortet und Kniffliges sauber eskaliert."
+    },
+    "en": {
+      "title": "Kundenservice-Agent bauen",
+      "oneLiner": "Erstellt einen Agenten, der Support-Mails klassifiziert, Bestell- & Retourenfragen beantwortet und Kniffliges sauber eskaliert."
+    }
+  },
+  "author": "Studio Wolke",
+  "category": "Service",
+  "body": "Baue mir einen Kundenservice-Agenten, der mein Support-Postfach entlastet.\n\nEr soll:\n- eingehende Anfragen klassifizieren (Bestellstatus, Retoure, Produktfrage, Reklamation, Sonstiges),\n- Standardfälle (Bestellstatus, Lieferzeit, einfache Retoure) selbst beantworten — höflich, in meiner Markenstimme,\n- bei Bestell-/Retourenfragen die passenden Daten aus dem ERP ziehen,\n- Kniffliges (Reklamation, Sonderfall) mit einer Zusammenfassung ans Team eskalieren statt zu raten.\nLege die nötigen Bausteine an und zeig mir ein paar Beispiel-Entscheidungen im Decision-Log. Frag nur nach dem Nötigsten und lege dann los."
+}

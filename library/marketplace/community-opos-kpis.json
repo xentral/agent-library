@@ -1,0 +1,19 @@
+{
+  "id": "community-opos-kpis",
+  "kind": "copy",
+  "lane": "community",
+  "iconName": "presales",
+  "order": 330,
+  "locales": {
+    "de": {
+      "title": "OPOS & DSO Pack",
+      "oneLiner": "KPI-Sammlung rund um Liquidität: DSO, offene Posten, Zahlungsverzug — dashboard-fertig."
+    },
+    "en": {
+      "title": "OPOS & DSO Pack",
+      "oneLiner": "KPI-Sammlung rund um Liquidität: DSO, offene Posten, Zahlungsverzug — dashboard-fertig."
+    }
+  },
+  "author": "Kämpf Consulting",
+  "target": "KPIs · 4"
+}

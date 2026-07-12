@@ -1,0 +1,90 @@
+{
+  "id": "frontic",
+  "kind": "connect",
+  "lane": "partner",
+  "iconName": "layout",
+  "order": 110,
+  "locales": {
+    "de": {
+      "title": "Frontic",
+      "oneLiner": "Kurzlebige Aktions-Shops zum Wegwerfen: hochziehen, Aktion fahren, wieder verschwinden lassen — ohne an deinem Setup zu schrauben."
+    },
+    "en": {
+      "title": "Frontic",
+      "oneLiner": "Kurzlebige Aktions-Shops zum Wegwerfen: hochziehen, Aktion fahren, wieder verschwinden lassen — ohne an deinem Setup zu schrauben."
+    }
+  },
+  "author": {
+    "name": "frontic.com",
+    "url": "https://www.frontic.com/",
+    "verified": true
+  },
+  "category": "Shop-Entwicklung",
+  "logoText": "F",
+  "logoGradient": "linear-gradient(150deg, #4C5BE8, #6A3DE0)",
+  "promise": {
+    "big": "Alles in deinem Shop — in unter 10 Minuten online.",
+    "sub": "Aufmachen. Verkaufen. Spurlos wieder zumachen."
+  },
+  "outcome": {
+    "kind": "proof",
+    "text": "Von der Idee zum fertigen Aktions-Shop in Minuten statt Wochen — mit echten Produktdaten statt Mockups, und danach ohne Alt-Lasten wieder abgeschaltet.",
+    "source": "Belegt bei Tamaris (spürbar bessere Usability nach Monaten Frontend-Kampf) und XSPO (Wert „in Rekordzeit\", zukunftssicher)."
+  },
+  "useCases": [
+    {
+      "t": "Pop-up-Store",
+      "d": "Digitaler Bestell-Shop zum Event oder Markt — nach der Aktion wieder abgeschaltet."
+    },
+    {
+      "t": "Lager- & Restpostenverkauf",
+      "d": "Überbestand schnell raushauen, ohne den Hauptshop mit Ramsch zu verwässern."
+    },
+    {
+      "t": "Kundenspezifischer B2B-Shop",
+      "d": "Ein Großkunde, sein Katalog, seine Preise — zeitlich befristet für ein Projekt."
+    },
+    {
+      "t": "Messe & Event",
+      "d": "QR am Stand, Besucher bestellen direkt vor Ort — nach der Messe ist Schluss."
+    },
+    {
+      "t": "Sample-Sale / Aktionsfläche",
+      "d": "Eigene Black-Friday- oder Saison-Seite, danach spurlos weg."
+    },
+    {
+      "t": "Produkt-Drop / Vorbestellung",
+      "d": "Limitierter Launch oder Nachfrage-Test, bevor überhaupt produziert wird."
+    },
+    {
+      "t": "Mitarbeiter- & Friends-Shop",
+      "d": "Interner Shop mit Sonderpreisen, zeitlich befristet — danach wieder dicht."
+    }
+  ],
+  "fit": "Kein Endkunden-Agent, sondern ein Bau-Werkzeug für befristete Shops. Der Reiz: keine Alt-Lasten — was du aufmachst, machst du danach wieder zu. Abgrenzung zu Xentral Studio: Frontic baut Shop-Frontends, Studio deine internen Business-Apps.",
+  "capabilities": [
+    "Shop im Dialog aufsetzen, in Minuten live („Studio\")",
+    "Echte Produktdaten aus deinen Systemen ab Tag 1",
+    "Aktion beenden = Shop wieder abschalten, ohne Rückstände",
+    "API- & Datenbank-Schema automatisch generiert",
+    "Multi-Source-Daten aus mehreren Systemen",
+    "Produktionsreifer Code exportierbar, kein Lock-in"
+  ],
+  "connect": {
+    "flow": [
+      "Deine Datenquellen",
+      "Frontic (gehostet)",
+      "Shop-Frontend"
+    ],
+    "text": "Die Plattform läuft bei Frontic. Sie verbindet sich per REST mit deinen Systemen und liest Produkte, Varianten, Preise & Kataloge, um daraus echte Oberflächen zu bauen. Ergebnis ist exportierbarer, produktionsreifer Code — kein Lock-in.",
+    "integrations": [
+      "Shopify",
+      "Commercetools",
+      "Shopware",
+      "Akeneo",
+      "Storyblok",
+      "N8N"
+    ]
+  },
+  "pricing": "Free-Plan · Pay-as-you-go · Plus · Enterprise"
+}
