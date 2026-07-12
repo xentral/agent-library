@@ -87,6 +87,23 @@
       "city": "{{ sender.city }}",
       "zip_code": "{{ sender.postal_code }}",
       "country": "{{ sender.country }}"
+    },
+    "customs_declaration": {
+      "$if": "{{ is_international and customs }}",
+      "contents_type": "commercial_goods",
+      "currency": "{{ customs.items[0].currency if customs.items else 'EUR' }}",
+      "invoice_number": "{{ customs.invoice_number or '' }}",
+      "items": {
+        "$for": "ci in customs.items",
+        "$body": {
+          "description": "{{ ci.description }}",
+          "hs_tariff_number": "{{ ci.hs_code or '' }}",
+          "origin_country": "{{ ci.country_of_origin or '' }}",
+          "quantity": "{{ ci.quantity }}",
+          "net_weight": "{{ (ci.net_weight_kg or 0) | float }}",
+          "value_amount": "{{ ci.value | float }}"
+        }
+      }
     }
   },
   "response": {
