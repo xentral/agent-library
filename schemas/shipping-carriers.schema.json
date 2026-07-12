@@ -1,0 +1,368 @@
+{
+  "$defs": {
+    "AuthSpec": {
+      "properties": {
+        "scheme": {
+          "enum": [
+            "none",
+            "bearer",
+            "basic",
+            "api_key_header",
+            "oauth2_password",
+            "oauth2_client_credentials"
+          ],
+          "title": "Scheme",
+          "type": "string"
+        },
+        "token_url": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Token Url"
+        },
+        "keys": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Keys",
+          "type": "object"
+        },
+        "header": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Header"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope"
+        },
+        "use_basic_header": {
+          "default": false,
+          "title": "Use Basic Header",
+          "type": "boolean"
+        },
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Headers",
+          "type": "object"
+        }
+      },
+      "required": [
+        "scheme"
+      ],
+      "title": "AuthSpec",
+      "type": "object"
+    },
+    "ConfigKey": {
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key"
+      ],
+      "title": "ConfigKey",
+      "type": "object"
+    },
+    "ErrorSpec": {
+      "properties": {
+        "when_status_ge": {
+          "default": 400,
+          "title": "When Status Ge",
+          "type": "integer"
+        },
+        "when_path_nonempty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "When Path Nonempty"
+        },
+        "detail_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail Path"
+        },
+        "list_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Path"
+        },
+        "message_fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Message Fields",
+          "type": "array"
+        }
+      },
+      "title": "ErrorSpec",
+      "type": "object"
+    },
+    "ResponseSpec": {
+      "properties": {
+        "items_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Items Path"
+        },
+        "tracking": {
+          "title": "Tracking",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "label_shared_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label Shared Path"
+        },
+        "label_format": {
+          "default": "pdf",
+          "title": "Label Format",
+          "type": "string"
+        },
+        "label_format_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label Format Path"
+        },
+        "label_format_from_request": {
+          "default": false,
+          "title": "Label Format From Request",
+          "type": "boolean"
+        },
+        "label_is_url": {
+          "default": false,
+          "title": "Label Is Url",
+          "type": "boolean"
+        },
+        "tracking_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tracking Url"
+        }
+      },
+      "required": [
+        "tracking"
+      ],
+      "title": "ResponseSpec",
+      "type": "object"
+    },
+    "TransportSpec": {
+      "properties": {
+        "base_url": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Base Url"
+        },
+        "endpoint": {
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "method": {
+          "default": "POST",
+          "title": "Method",
+          "type": "string"
+        },
+        "query": {
+          "additionalProperties": true,
+          "title": "Query",
+          "type": "object"
+        },
+        "sandbox_key": {
+          "default": "sandbox",
+          "title": "Sandbox Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "base_url",
+        "endpoint"
+      ],
+      "title": "TransportSpec",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "code": {
+      "title": "Code",
+      "type": "string"
+    },
+    "label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Label"
+    },
+    "transport": {
+      "$ref": "#/$defs/TransportSpec"
+    },
+    "auth": {
+      "$ref": "#/$defs/AuthSpec"
+    },
+    "capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "label_formats": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Label Formats",
+      "type": "array"
+    },
+    "config_keys": {
+      "items": {
+        "$ref": "#/$defs/ConfigKey"
+      },
+      "title": "Config Keys",
+      "type": "array"
+    },
+    "value_maps": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "title": "Value Maps",
+      "type": "object"
+    },
+    "request": {
+      "title": "Request"
+    },
+    "response": {
+      "$ref": "#/$defs/ResponseSpec"
+    },
+    "error": {
+      "$ref": "#/$defs/ErrorSpec"
+    }
+  },
+  "required": [
+    "code",
+    "transport",
+    "auth",
+    "request",
+    "response"
+  ],
+  "title": "shipping-carriers library item",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
