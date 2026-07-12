@@ -55,17 +55,20 @@ When the operator asks for a workflow:
 
 Node positions: always lay them out **horizontally, left → right** — keep `y` constant (e.g. `y = 80`) and step `x` by ~400 per node (cards are ~320px wide); a branch offsets its two lines by `y` ±200 for the Yes/No paths. Set `"orientation": "horizontal"` to match. **Never build vertical** — it is only a manual toggle the user can flip in the editor, not something an agent emits. The user can still rearrange, but the saved plan must render without overlaps, so over-space rather than risk cards overlapping the next node.
 
-## Integration sync (external connectors — Shopify, Amazon, and any other)
+## Integrations in workflows (external connectors)
 
-Workflows are **not** only for internal ERP data — they can pull from and push to **any** connected external integration via the `integration-action` node. This is generic: it is not a Shopify feature. **Discover what's there first** — read the live catalog (`GET /instances/{lid}/integration-actions`, grouped by `tool_id`) to see which integrations and actions exist; if the task names a specific connector (Shopify, Amazon, …), build the sync for it. Building the sync as a workflow is a first-class, expected task: when the operator (or the prompt) asks to import orders, sync stock, or report shipment status back to a shop/marketplace, **build the workflows** — do not reflexively defer it to "the native connector does that." (Defer only if the out-of-the-box connector already does exactly what's asked and no custom mapping/steps are needed.)
+Workflows are **not** only for internal ERP data. The instance connects to external integrations (CRMs, shops, marketplaces, mail, messaging — e.g. HubSpot, Google, a shop system, Slack, …), and **any** of their actions can run inside a workflow via the `integration-action` node. Treat this as a first-class capability: when the operator or the prompt asks to sync with an external tool, build the workflow — don't defer it to "the native connector does that" (defer only if an out-of-the-box connector already does exactly what's asked).
 
-The three flows to build for a shop/marketplace connector, one workflow each (Shopify action slugs shown as the concrete example; other connectors expose the equivalent actions in the same catalog):
+**Discover what's available** at build time — the live catalog `GET /instances/{lid}/integration-actions` (grouped by `tool_id`) lists the connected integrations and their actions. Pick the `tool_id` + action the task names.
 
-- **Order import** — trigger `trigger-integration-event` ("order created") or `trigger-schedule` (poll); `integration-action` `SHOPIFY_GET_ORDERS_WITH_FILTERS` (list) → `loop` → create the ERP `SalesOrder` (business-entity `create`), mapping the shop-order fields. (`SHOPIFY_GET_ORDER` for a single order by id.)
-- **Stock export back to the shop** — trigger on a stock change or a schedule; per SKU, `integration-action` `SHOPIFY_ADJUST_INVENTORY_LEVEL` (use `SHOPIFY_GET_INVENTORY_LEVELS` to reconcile first).
-- **Fulfillment / tracking feedback** — trigger after shipment (ERP event "delivery note shipped"); `integration-action` `SHOPIFY_CREATE_FULFILLMENT` with the tracking number, so the shop marks the order shipped.
+Sync shapes (vendor-neutral — the same for any connector):
 
-**Discovery & provisional nodes.** The `integration-action` catalog (`GET /instances/{lid}/integration-actions`) lists only *connected* integrations, so on an instance without Shopify connected it comes back empty. That is **not** a reason to skip the workflow: author the `integration-action` nodes anyway with the action slugs above, leave `connection_id` empty (unpinned), and mark them **provisional** — tell the user the integration must be connected and a connection pinned in the inspector before the workflow runs. Never block building the workflow shape on connection state (same rule as the rest of the write path — build what the designer UI would let a human build).
+- **Inbound (import / react to the external tool):** trigger `trigger-integration-event` (the tool fires an event) or `trigger-schedule` + an `integration-action` *list* action; then `loop` → create/update the matching ERP entity.
+- **Outbound (push to the external tool):** an `integration-action` write action (update a record, adjust stock, create a fulfillment, send a message) after the ERP step that produced the change.
+
+**Not connected yet?** The catalog lists only *connected* integrations, so it can come back empty. That is **not** a reason to skip: author the `integration-action` node anyway with your best-guess `tool_id`/`action` slug, leave `connection_id` empty (unpinned), mark it **provisional**, and tell the user the integration must be connected and a connection pinned before the run. Never block building the shape on connection state.
+
+**Which** integration and **which** records to sync is a per-task decision — it comes from the operator's request or the prompt, not from this guide.
 
 ## MCP agent loop: build, check, learn
 
