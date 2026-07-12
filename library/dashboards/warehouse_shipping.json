@@ -1,13 +1,17 @@
 {
   "id": "warehouse_shipping",
-  "version": 2,
+  "version": 3,
   "icon": "truck",
   "category": "logistics",
   "order": 115,
   "recommended_kpis": [
-    "return_rate",
+    "ready_to_ship_today",
+    "shipped_today",
+    "blocked_orders",
     "inventory_turnover",
-    "dead_stock_value"
+    "dead_stock_value",
+    "return_rate",
+    "returns_to_review"
   ],
   "widgets": [
     {
@@ -15,8 +19,8 @@
       "type": "GreetingCard",
       "config": {
         "subtitle": {
-          "de": "**Lager- & Versand-Cockpit** — Tagesversand, OTIF, Carrier-Mix und Bestände.",
-          "en": "**Warehouse & shipping cockpit** — daily outbound, OTIF, carrier mix and inventory."
+          "de": "**Lager- & Versand-Cockpit** — was heute rausmuss, auf einen Blick: offene Aufträge, Durchsatz, Carrier-Mix und kritische Bestände. Ausgelegt fürs Tagesgeschäft bis ~500 Aufträge/Tag.",
+          "en": "**Warehouse & shipping cockpit** — what has to ship today at a glance: open orders, throughput, carrier mix and critical stock. Built for daily operations up to ~500 orders/day."
         }
       }
     },
@@ -26,21 +30,40 @@
       "config": {
         "title_key": "dashboards.mockup.hero.title",
         "kpis": [
-          "return_rate",
-          "inventory_turnover",
-          "dead_stock_value"
+          "ready_to_ship_today",
+          "shipped_today",
+          "blocked_orders"
         ]
       }
     },
     {
-      "id": "kpi_grid",
-      "type": "KpiGrid",
+      "id": "backlog",
+      "type": "TableTabs",
       "config": {
-        "title_key": "dashboards.mockup.kpi.title",
-        "kpis": [
-          "inventory_turnover",
-          "dead_stock_value"
+        "tabs": [
+          {
+            "id": "toship",
+            "label_key": "workspace.salesOrders",
+            "view": "sales_orders",
+            "default_status_filter": "released,sent"
+          },
+          {
+            "id": "returns",
+            "label_key": "workspace.returnOrders",
+            "view": "return_orders"
+          }
         ]
+      }
+    },
+    {
+      "id": "pick_qr",
+      "type": "QrCode",
+      "config": {
+        "appSlug": "pick",
+        "caption": {
+          "de": "Pick-App am Handy öffnen",
+          "en": "Open the Pick-App on your phone"
+        }
       }
     },
     {
@@ -87,86 +110,67 @@
         "cacheMode": "cached",
         "cacheTtlSeconds": -1
       }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_key": "dashboards.mockup.kpi.title",
+        "kpis": [
+          "inventory_turnover",
+          "dead_stock_value",
+          "return_rate",
+          "returns_to_review"
+        ]
+      }
     }
   ],
   "layout": {
     "type": "grid",
     "rows": [
       {
-        "cols": [
-          1
-        ],
-        "cells": [
-          [
-            "greeting"
-          ]
-        ]
+        "cols": [1],
+        "cells": [["greeting"]]
       },
       {
-        "cols": [
-          1
-        ],
-        "cells": [
-          [
-            "hero"
-          ]
-        ]
+        "cols": [1],
+        "cells": [["hero"]]
       },
       {
-        "cols": [
-          1
-        ],
-        "cells": [
-          [
-            "kpi_grid"
-          ]
-        ]
+        "cols": [8, 4],
+        "cells": [["backlog"], ["pick_qr"]]
       },
       {
-        "cols": [
-          1
-        ],
-        "cells": [
-          [
-            "shipments_daily"
-          ]
-        ]
+        "cols": [1, 1],
+        "cells": [["shipments_daily"], ["carrier_mix"]]
       },
       {
-        "cols": [
-          1
-        ],
-        "cells": [
-          [
-            "carrier_mix"
-          ]
-        ]
+        "cols": [1],
+        "cells": [["shipments_by_carrier"]]
       },
       {
-        "cols": [
-          1
-        ],
-        "cells": [
-          [
-            "shipments_by_carrier"
-          ]
-        ]
+        "cols": [1],
+        "cells": [["kpi_grid"]]
       }
     ]
   },
   "linked_kpis": [
-    "return_rate",
+    "ready_to_ship_today",
+    "shipped_today",
+    "blocked_orders",
     "inventory_turnover",
-    "dead_stock_value"
+    "dead_stock_value",
+    "return_rate",
+    "returns_to_review"
   ],
   "locales": {
     "en": {
       "title": "Warehouse & Shipping",
-      "description": "Operations cockpit with daily shipments, OTIF, carrier mix and stock breakdown — populated with demo data, ready to switch to live KPIs."
+      "description": "Daily operations cockpit for the warehouse — open orders to ship, throughput, carrier mix and critical stock, plus a QR entry to the mobile Pick-App. Built for up to ~500 orders/day; wired to live KPIs and reports."
     },
     "de": {
       "title": "Lager & Versand",
-      "description": "Operations-Cockpit mit Tagesversand, OTIF, Carrier-Mix und Bestandsverteilung — gefüllt mit Beispieldaten, jederzeit auf Live-KPIs umschaltbar."
+      "description": "Tagesgeschäft-Cockpit fürs Lager — offene Aufträge zum Versand, Durchsatz, Carrier-Mix und kritische Bestände, plus QR-Einstieg zur mobilen Pick-App. Ausgelegt für bis zu ~500 Aufträge/Tag; an Live-KPIs und Reports gebunden."
     }
   }
 }
