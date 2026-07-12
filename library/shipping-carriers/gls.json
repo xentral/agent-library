@@ -104,5 +104,7 @@
     "message_fields": [
       "description"
     ]
-  }
+  },
+  "customs_via": "document",
+  "customs_note": "GLS ShipIT: customs data belongs on the CN23 / commercial invoice, not in the label request."
 }

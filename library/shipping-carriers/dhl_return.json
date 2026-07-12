@@ -99,5 +99,6 @@
     "message_fields": [
       "validationMessage"
     ]
-  }
+  },
+  "customs_via": "none"
 }

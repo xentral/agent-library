@@ -94,5 +94,7 @@
       "ErrorMsgLong",
       "ErrorMsgShort"
     ]
-  }
+  },
+  "customs_via": "document",
+  "customs_note": "DPD Cloud: the HS code goes onto the CN23 / commercial invoice, not into the setOrder label call."
 }

@@ -321,6 +321,21 @@
       "title": "Capabilities",
       "type": "array"
     },
+    "customs_via": {
+      "default": "label_api",
+      "enum": [
+        "label_api",
+        "document",
+        "none"
+      ],
+      "title": "Customs Via",
+      "type": "string"
+    },
+    "customs_note": {
+      "default": "",
+      "title": "Customs Note",
+      "type": "string"
+    },
     "label_formats": {
       "items": {
         "type": "string"
