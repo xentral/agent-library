@@ -141,7 +141,14 @@ slots in a row; chat and form are always single.
 | `type` | Purpose | Core config keys |
 |---|---|---|
 | `HtmlBox` | Free-form HTML / Markdown card (use sparingly) | `htmlContent` |
+| `QrCode` | A scannable QR code, rendered **internally** (client-side) — no external QR service. `value` is any URL/text; if it is an `http(s)` URL the code links to it. | `value` (+ optional `caption` / `caption_key`) |
 | `SetupSystemMap`, `SetupMilestoneRail`, `OnboardingCockpit`, `SetupSunburst`, `SetupProgress` | Onboarding-tab visuals (rarely useful on a normal dashboard) | varies |
+
+> **`QrCode` — put a Studio app on a dashboard.** To show a QR that opens a
+> Studio (mobile) app on a phone, set `value` to the app's public preview URL:
+> call `xentral_studio(action='link', slug=<app slug>)` and use the returned
+> `url` (the same absolute link Studio's Live-Preview QR uses). The widget draws
+> the QR itself — never fetch a QR image from an external generator.
 
 > **`HtmlBox` config key is `htmlContent`, not `html`.** A wrong key
 > renders a silently *empty* box (no error). The value is either a

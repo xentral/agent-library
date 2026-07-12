@@ -47,13 +47,28 @@ Before building from scratch, check the shipped templates: call **`list_library`
 When the operator asks for a workflow:
 
 1. **Clarify the trigger.** Cron? Event? Manual? → set `trigger_type`.
-2. **Clarify the source.** Which Xentral entity supplies the input list? → business-entity node with operation `list` and `params.list.query` filters.
+2. **Clarify the source.** Which Xentral entity supplies the input list? → business-entity node with operation `list` and `params.list.query` filters. The source can also be an **external integration** (a shop/marketplace like Shopify) — an `integration-action` list action or an integration event; see "Integration sync" below.
 3. **Clarify processing.** Per-item decide vs treat all the same? Loop + condition or direct action node?
 4. **Run the action.** Update / Delete / Send Mail / CRM entry?
 5. **Wire the edges.** Trigger → source → optionally loop → condition → action(s).
 6. **Save.** `init` with the assembled `{nodes, edges}` graph.
 
 Node positions: always lay them out **horizontally, left → right** — keep `y` constant (e.g. `y = 80`) and step `x` by ~400 per node (cards are ~320px wide); a branch offsets its two lines by `y` ±200 for the Yes/No paths. Set `"orientation": "horizontal"` to match. **Never build vertical** — it is only a manual toggle the user can flip in the editor, not something an agent emits. The user can still rearrange, but the saved plan must render without overlaps, so over-space rather than risk cards overlapping the next node.
+
+## Integrations in workflows (external connectors)
+
+Workflows are **not** only for internal ERP data. The instance connects to external integrations (CRMs, shops, marketplaces, mail, messaging — e.g. HubSpot, Google, a shop system, Slack, …), and **any** of their actions can run inside a workflow via the `integration-action` node. Treat this as a first-class capability: when the operator or the prompt asks to sync with an external tool, build the workflow — don't defer it to "the native connector does that" (defer only if an out-of-the-box connector already does exactly what's asked).
+
+**Discover what's available** at build time — the live catalog `GET /instances/{lid}/integration-actions` (grouped by `tool_id`) lists the connected integrations and their actions. Pick the `tool_id` + action the task names.
+
+Sync shapes (vendor-neutral — the same for any connector):
+
+- **Inbound (import / react to the external tool):** trigger `trigger-integration-event` (the tool fires an event) or `trigger-schedule` + an `integration-action` *list* action; then `loop` → create/update the matching ERP entity.
+- **Outbound (push to the external tool):** an `integration-action` write action (update a record, adjust stock, create a fulfillment, send a message) after the ERP step that produced the change.
+
+**Not connected yet?** The catalog lists only *connected* integrations, so it can come back empty. That is **not** a reason to skip: author the `integration-action` node anyway with your best-guess `tool_id`/`action` slug, leave `connection_id` empty (unpinned), mark it **provisional**, and tell the user the integration must be connected and a connection pinned before the run. Never block building the shape on connection state.
+
+**Which** integration and **which** records to sync is a per-task decision — it comes from the operator's request or the prompt, not from this guide.
 
 ## MCP agent loop: build, check, learn
 
