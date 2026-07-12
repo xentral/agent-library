@@ -92,8 +92,8 @@ the same house style as the built-in dashboards (`Tagesgeschäft`, `Einkauf`,
 `Lager & Versand`, `Finanzen`, `CEO-Cockpit`).
 
 - **Do not** append the company/customer name, and do not add an em-dash
-  prefix or suffix. Good: `Lager & Dispo`. Bad: `Lager & Dispo — UrbanGoods`,
-  `CEO-Cockpit — UrbanGoods`, `Einkauf & Frühwarnung — Was geht mir aus?`.
+  prefix or suffix. Good: `Lager & Dispo`. Bad: `Lager & Dispo — {company}`,
+  `CEO-Cockpit — {company}`, `Einkauf & Frühwarnung — Was geht mir aus?`.
 - When you create from a built-in template, pass its **canonical title
   verbatim** — don't decorate it. "Speaking name" means a clear role word,
   not a personalized sentence.
@@ -105,7 +105,7 @@ the same house style as the built-in dashboards (`Tagesgeschäft`, `Einkauf`,
 | Pitfall | Why it breaks |
 |---|---|
 | Recreating a built-in as a custom | Maintenance burden doubles; updates to the built-in don't carry over. Re-enable instead. |
-| Decorating the title with the company name or an em-dash prefix/suffix | `CEO-Cockpit — UrbanGoods` is noise — the instance already implies the company. Use the bare canonical title (see Naming a dashboard). |
+| Decorating the title with the company name or an em-dash prefix/suffix | `CEO-Cockpit — {company}` is noise — the instance already implies the company. Use the bare canonical title (see Naming a dashboard). |
 | Cramming 15 widgets on one page | Auto-refresh becomes a load problem; the user loses focus. 5–8 widgets per dashboard. |
 | Naming dashboards generically ("Dashboard 1") | Six months later nobody knows what it is. Each dashboard answers one named question. |
 | Putting heavy chart widgets in the first row | They render last; the user sees the page jump. Lead with KPI tiles, charts below. |
