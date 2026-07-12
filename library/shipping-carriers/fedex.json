@@ -123,6 +123,34 @@
             "units": "CM"
           }
         }
+      },
+      "customsClearanceDetail": {
+        "$if": "{{ is_international and customs }}",
+        "dutiesPayment": {
+          "paymentType": "SENDER"
+        },
+        "commodities": {
+          "$for": "ci in customs.items",
+          "$body": {
+            "description": "{{ ci.description }}",
+            "countryOfManufacture": "{{ ci.country_of_origin or sender.country }}",
+            "harmonizedCode": "{{ ci.hs_code or '' }}",
+            "quantity": "{{ ci.quantity }}",
+            "quantityUnits": "PCS",
+            "unitPrice": {
+              "amount": "{{ ci.value | float }}",
+              "currency": "{{ ci.currency }}"
+            },
+            "customsValue": {
+              "amount": "{{ (ci.value | float) * (ci.quantity | int) }}",
+              "currency": "{{ ci.currency }}"
+            },
+            "weight": {
+              "units": "KG",
+              "value": "{{ (ci.net_weight_kg or 0) | float }}"
+            }
+          }
+        }
       }
     }
   },

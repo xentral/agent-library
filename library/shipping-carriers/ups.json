@@ -57,6 +57,14 @@
       "gif": "GIF",
       "zpl": "ZPL",
       "png": "PNG"
+    },
+    "ups_reason": {
+      "COMMERCIAL_SAMPLE": "SAMPLE",
+      "SALE": "SALE",
+      "PRESENT": "GIFT",
+      "RETURN_OF_GOODS": "RETURN",
+      "DOCUMENT": "SAMPLE",
+      "OTHER": "SALE"
     }
   },
   "request": {
@@ -136,6 +144,30 @@
             "$if": "{{ label.format == 'zpl' }}",
             "Height": "6",
             "Width": "4"
+          }
+        },
+        "ShipmentServiceOptions": {
+          "$if": "{{ is_international and customs }}",
+          "InternationalForms": {
+            "FormType": "01",
+            "InvoiceNumber": "{{ customs.invoice_number or '' }}",
+            "ReasonForExport": "{{ vmap('ups_reason', customs.export_type) }}",
+            "CurrencyCode": "{{ customs.items[0].currency if customs.items else 'EUR' }}",
+            "Product": {
+              "$for": "ci in customs.items",
+              "$body": {
+                "Description": "{{ ci.description }}",
+                "CommodityCode": "{{ ci.hs_code or '' }}",
+                "OriginCountryCode": "{{ ci.country_of_origin or sender.country }}",
+                "Unit": {
+                  "Number": "{{ ci.quantity }}",
+                  "Value": "{{ ci.value | float | string }}",
+                  "UnitOfMeasurement": {
+                    "Code": "PCS"
+                  }
+                }
+              }
+            }
           }
         }
       }
