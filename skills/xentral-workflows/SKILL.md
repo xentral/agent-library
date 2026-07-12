@@ -55,11 +55,11 @@ When the operator asks for a workflow:
 
 Node positions: always lay them out **horizontally, left → right** — keep `y` constant (e.g. `y = 80`) and step `x` by ~400 per node (cards are ~320px wide); a branch offsets its two lines by `y` ±200 for the Yes/No paths. Set `"orientation": "horizontal"` to match. **Never build vertical** — it is only a manual toggle the user can flip in the editor, not something an agent emits. The user can still rearrange, but the saved plan must render without overlaps, so over-space rather than risk cards overlapping the next node.
 
-## Integration sync (shop / marketplace connectors like Shopify)
+## Integration sync (external connectors — Shopify, Amazon, and any other)
 
-Workflows are **not** only for internal ERP data — they can pull from and push to a connected integration (Shopify, Amazon, …) via the `integration-action` node. Building the sync as a workflow is a first-class, expected task: when the operator asks to import orders, sync stock, or report shipment status back to the shop, **build the workflow** — do not reflexively defer it to "the native connector does that." (Defer only if the out-of-the-box connector already does exactly what's asked and no custom mapping/steps are needed.)
+Workflows are **not** only for internal ERP data — they can pull from and push to **any** connected external integration via the `integration-action` node. This is generic: it is not a Shopify feature. **Discover what's there first** — read the live catalog (`GET /instances/{lid}/integration-actions`, grouped by `tool_id`) to see which integrations and actions exist; if the task names a specific connector (Shopify, Amazon, …), build the sync for it. Building the sync as a workflow is a first-class, expected task: when the operator (or the prompt) asks to import orders, sync stock, or report shipment status back to a shop/marketplace, **build the workflows** — do not reflexively defer it to "the native connector does that." (Defer only if the out-of-the-box connector already does exactly what's asked and no custom mapping/steps are needed.)
 
-The three flows to build for a shop connector (Shopify action slugs shown; other connectors mirror the shape):
+The three flows to build for a shop/marketplace connector, one workflow each (Shopify action slugs shown as the concrete example; other connectors expose the equivalent actions in the same catalog):
 
 - **Order import** — trigger `trigger-integration-event` ("order created") or `trigger-schedule` (poll); `integration-action` `SHOPIFY_GET_ORDERS_WITH_FILTERS` (list) → `loop` → create the ERP `SalesOrder` (business-entity `create`), mapping the shop-order fields. (`SHOPIFY_GET_ORDER` for a single order by id.)
 - **Stock export back to the shop** — trigger on a stock change or a schedule; per SKU, `integration-action` `SHOPIFY_ADJUST_INVENTORY_LEVEL` (use `SHOPIFY_GET_INVENTORY_LEVELS` to reconcile first).
