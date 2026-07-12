@@ -122,7 +122,8 @@ Decide deliberately where each data access lives. Don't cram everything into one
 **Source preference (in this order):**
 1. Is there a `business-entity` for it? → use the **business-entity** node. Friendliest, catalog-backed, real labels.
 2. No matching business entity? → use a **`xentral-api`** node against the raw Xentral endpoint.
-3. Not a Xentral call at all? → **`http-request`**.
+3. Not a Xentral call — is it a third-party service (shop, CRM, mail, messaging — e.g. Shopify, HubSpot, Slack)? → use an **`integration-action`** node (provider-neutral registry; see "Integrations in workflows" in `SKILL.md`). This holds even when the integration is not connected yet — author the node provisionally, do **not** fall back to raw HTTP.
+4. A plain REST endpoint with no integration behind it → **`http-request`** (raw escape hatch only).
 
 **Where the access lives:**
 - **Default — one node per access.** Each fetch/write is its own `business-entity`/`xentral-api` node. It streams started/finished, shows as a box in the run timeline, and is rewireable and reusable.
