@@ -89,7 +89,9 @@ Before creating or modifying a dashboard:
 
 The title is a short **noun phrase, 1–3 words**, in the instance locale —
 the same house style as the built-in dashboards (`Tagesgeschäft`, `Einkauf`,
-`Lager & Versand`, `Finanzen`, `CEO-Cockpit`).
+`Lager & Versand`, `Finanzen`, `CEO-Cockpit`). Keep it **≤ 20 characters** —
+it must fit on one line in the sidebar; anything longer is truncated with an
+ellipsis and stops being scannable.
 
 - **Do not** append the company/customer name, and do not add an em-dash
   prefix or suffix. Good: `Lager & Dispo`. Bad: `Lager & Dispo — {company}`,
