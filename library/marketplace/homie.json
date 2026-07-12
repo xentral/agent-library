@@ -1,0 +1,72 @@
+{
+  "id": "homie",
+  "kind": "connect",
+  "lane": "partner",
+  "iconName": "chat",
+  "order": 100,
+  "locales": {
+    "de": {
+      "title": "homie AI",
+      "oneLiner": "Ein KI-Berater, der in deinem Onlineshop und am POS mit Kunden spricht, Produktfragen beantwortet und verkauft."
+    },
+    "en": {
+      "title": "homie AI",
+      "oneLiner": "Ein KI-Berater, der in deinem Onlineshop und am POS mit Kunden spricht, Produktfragen beantwortet und verkauft."
+    }
+  },
+  "author": {
+    "name": "yourhomie.ai",
+    "url": "https://yourhomie.ai/",
+    "verified": true
+  },
+  "category": "Vertrieb & Beratung",
+  "logoText": "h",
+  "logoGradient": "linear-gradient(150deg, #FF7A59, #F0435F)",
+  "outcome": {
+    "kind": "metrics",
+    "metrics": [
+      {
+        "v": "+30%",
+        "k": "Conversion durch Echtzeit-Beratung"
+      },
+      {
+        "v": "−25%",
+        "k": "weniger Support-Tickets"
+      },
+      {
+        "v": "+80%",
+        "k": "mehr Beratungen im Shop"
+      },
+      {
+        "v": "<10 Min",
+        "k": "bis live, ohne Code"
+      }
+    ]
+  },
+  "fit": "Für Online- und Filialhändler, bei denen Beratung den Umsatz macht — DIY/Baumarkt, Möbel, Sport, Fachhandel. Nicht das Richtige, wenn du reine interne Prozesse automatisieren willst — das ist ein endkundenseitiger Agent.",
+  "capabilities": [
+    "Produktberatung in Echtzeit auf der Produktseite",
+    "Leads qualifizieren & Support-Tickets vorfiltern",
+    "Omnichannel: Web-Widget, POS-Terminal, QR-Code",
+    "Chat-Analytics mit automatischem Sentiment-Tagging",
+    "Anpassbare Markenstimme & Reaktionsregeln",
+    "Live-Sync von Bestand & Preisen"
+  ],
+  "connect": {
+    "flow": [
+      "Dein Shop / Xentral",
+      "homie (gehostet)",
+      "Kunde im Chat"
+    ],
+    "text": "Der Agent läuft bei homie, nicht in deinem System. Beim Aktivieren fließen Katalog, Bestand und Preise zum Assistenten, damit er korrekt beraten kann; Chat-Verläufe & Sentiment kommen als Auswertung zurück. Anbindung per One-Click an gängige Shopsysteme.",
+    "integrations": [
+      "Shopify",
+      "Shopware",
+      "WooCommerce",
+      "Magento",
+      "Google Shopping",
+      "Idealo"
+    ]
+  },
+  "pricing": "14 Tage kostenlos · danach Abo · 50.000+ Nutzer/Tag in 12 Ländern"
+}

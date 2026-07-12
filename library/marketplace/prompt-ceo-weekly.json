@@ -1,0 +1,20 @@
+{
+  "id": "prompt-ceo-weekly",
+  "kind": "prompt",
+  "lane": "community",
+  "iconName": "presales",
+  "order": 240,
+  "locales": {
+    "de": {
+      "title": "CEO-Wochenreport per Mail",
+      "oneLiner": "Richtet einen geplanten Agenten ein, der montags früh die wichtigsten Zahlen der Vorwoche als kurzes Mail-Briefing schickt."
+    },
+    "en": {
+      "title": "CEO-Wochenreport per Mail",
+      "oneLiner": "Richtet einen geplanten Agenten ein, der montags früh die wichtigsten Zahlen der Vorwoche als kurzes Mail-Briefing schickt."
+    }
+  },
+  "author": "north&co",
+  "category": "Reporting",
+  "body": "Richte mir einen geplanten Agenten ein, der jeden Montag um 7:00 Uhr ein kurzes Geschäfts-Briefing der Vorwoche per E-Mail schickt.\n\nInhalt des Briefings:\n- Umsatz der Vorwoche vs. Woche davor,\n- Anzahl Aufträge, versendet vs. offen,\n- offene Posten / Zahlungseingänge,\n- Retourenquote,\n- die drei auffälligsten Punkte (z. B. Fehlbestände, verspätete Sendungen).\nHalte es knapp und für Entscheider lesbar. Nutze wo möglich meine echten Zahlen; leg die nötigen KPIs an, falls sie fehlen. Frag nur nach dem Nötigsten (Empfänger-Adresse) und lege dann los."
+}

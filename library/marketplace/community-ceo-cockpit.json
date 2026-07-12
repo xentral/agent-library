@@ -1,0 +1,19 @@
+{
+  "id": "community-ceo-cockpit",
+  "kind": "copy",
+  "lane": "community",
+  "iconName": "dashboard",
+  "order": 310,
+  "locales": {
+    "de": {
+      "title": "CEO-Cockpit",
+      "oneLiner": "Ein Dashboard für den Morgenblick: Umsatz, offene Posten, Lagerreichweite, Retourenquote."
+    },
+    "en": {
+      "title": "CEO-Cockpit",
+      "oneLiner": "Ein Dashboard für den Morgenblick: Umsatz, offene Posten, Lagerreichweite, Retourenquote."
+    }
+  },
+  "author": "north&co",
+  "target": "Dashboard"
+}

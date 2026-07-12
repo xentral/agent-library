@@ -1,0 +1,19 @@
+{
+  "id": "community-angebot-ab",
+  "kind": "copy",
+  "lane": "community",
+  "iconName": "file",
+  "order": 350,
+  "locales": {
+    "de": {
+      "title": "Angebot & AB — B2B",
+      "oneLiner": "PDF-Vorlagen-Set für Angebot und Auftragsbestätigung, klar und rechtssicher."
+    },
+    "en": {
+      "title": "Angebot & AB — B2B",
+      "oneLiner": "PDF-Vorlagen-Set für Angebot und Auftragsbestätigung, klar und rechtssicher."
+    }
+  },
+  "author": "Möbel Wagner",
+  "target": "PDF · 2"
+}

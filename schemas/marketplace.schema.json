@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "marketplace library item",
+  "description": "A Builder Marketplace listing: a partner connect entry, a community copy bundle, or a shared prompt. Display text lives in locales.{de,en} (title, oneLiner); kind-specific payload is locale-neutral at the top level.",
+  "type": "object",
+  "required": ["id", "kind", "order", "locales"],
+  "properties": {
+    "id": {"type": "string"},
+    "kind": {"type": "string", "enum": ["connect", "copy", "prompt"]},
+    "lane": {"type": "string", "enum": ["partner", "community"]},
+    "iconName": {"type": "string"},
+    "order": {"type": "integer"},
+    "category": {"type": "string"},
+    "popular": {"type": "boolean"},
+    "flagship": {"type": "boolean"},
+    "badge": {"type": "string"},
+    "locales": {
+      "type": "object",
+      "properties": {
+        "de": {"$ref": "#/$defs/localeBlock"},
+        "en": {"$ref": "#/$defs/localeBlock"}
+      }
+    },
+    "author": {
+      "description": "Object {name,url,verified} for partners; plain string for community/prompt.",
+      "type": ["object", "string"]
+    },
+    "body": {"type": "string", "description": "Prompt text (kind=prompt), locale-neutral."},
+    "does": {"type": "array", "items": {"type": "string"}},
+    "target": {"type": "string", "description": "Community bundle target, e.g. 'Workflows · 3'."},
+    "logoText": {"type": "string"},
+    "logoGradient": {"type": "string"},
+    "outcome": {"type": "object"},
+    "promise": {"type": "object"},
+    "useCases": {"type": "array"},
+    "fit": {"type": "string"},
+    "capabilities": {"type": "array", "items": {"type": "string"}},
+    "connect": {"type": "object"},
+    "pricing": {"type": "string"}
+  },
+  "$defs": {
+    "localeBlock": {
+      "type": "object",
+      "properties": {
+        "title": {"type": "string"},
+        "oneLiner": {"type": "string"},
+        "description": {"type": "string"}
+      }
+    }
+  },
+  "additionalProperties": true
+}

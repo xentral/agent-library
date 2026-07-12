@@ -1,0 +1,20 @@
+{
+  "id": "prompt-dunning",
+  "kind": "prompt",
+  "lane": "community",
+  "iconName": "invoice",
+  "order": 250,
+  "locales": {
+    "de": {
+      "title": "Mahnwesen scharf stellen",
+      "oneLiner": "Analysiert offene Posten, findet die Risiko-Fälle und baut ein gestuftes Mahnwesen als aktiven Workflow."
+    },
+    "en": {
+      "title": "Mahnwesen scharf stellen",
+      "oneLiner": "Analysiert offene Posten, findet die Risiko-Fälle und baut ein gestuftes Mahnwesen als aktiven Workflow."
+    }
+  },
+  "author": "Kämpf Consulting",
+  "category": "Finance",
+  "body": "Hilf mir, mein Mahnwesen scharf zu stellen.\n\nBitte:\n- Analysiere meine offenen Posten (OPOS): Wer ist wie lange überfällig, welche Beträge, welche Kunden häufen sich?\n- Zeig mir die Risiko-Fälle zuerst (hoher Betrag + lange überfällig).\n- Baue ein gestuftes Mahnwesen als aktiven Workflow: Zahlungserinnerung → 1. Mahnung → 2. Mahnung → Eskalation ans Team, mit sinnvollen Fristen.\n- Hinterlege KPIs für DSO, offene Posten und Zahlungsverzug und ein kleines OPOS-Dashboard.\nFrag nur nach dem Nötigsten und lege dann los."
+}
