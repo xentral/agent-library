@@ -32,6 +32,13 @@ entities (Customer, Product, SalesOrder, …) and lays its own screens over them
 You describe *what* the screen shows; Studio handles rendering, the live preview
 (QR to a phone) and persistence.
 
+**Get a scannable link / QR for an app.** `action='link'` (needs `slug`) returns
+the app's public preview URL — the *same* absolute link Studio's Live-Preview QR
+uses (`<frontend host>/public/studio/app/{token}`). Use it to open the app on a
+phone or to put it on a dashboard: set a `QrCode` dashboard widget's `value` to
+that URL. The QR is drawn internally (client-side) — never generate it with an
+external QR service.
+
 ## When to use Studio — vs. workflows and agents
 
 - **Studio** — the user needs a **custom screen / surface** the standard ERP UI
