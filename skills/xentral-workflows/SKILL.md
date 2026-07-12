@@ -47,13 +47,25 @@ Before building from scratch, check the shipped templates: call **`list_library`
 When the operator asks for a workflow:
 
 1. **Clarify the trigger.** Cron? Event? Manual? → set `trigger_type`.
-2. **Clarify the source.** Which Xentral entity supplies the input list? → business-entity node with operation `list` and `params.list.query` filters.
+2. **Clarify the source.** Which Xentral entity supplies the input list? → business-entity node with operation `list` and `params.list.query` filters. The source can also be an **external integration** (a shop/marketplace like Shopify) — an `integration-action` list action or an integration event; see "Integration sync" below.
 3. **Clarify processing.** Per-item decide vs treat all the same? Loop + condition or direct action node?
 4. **Run the action.** Update / Delete / Send Mail / CRM entry?
 5. **Wire the edges.** Trigger → source → optionally loop → condition → action(s).
 6. **Save.** `init` with the assembled `{nodes, edges}` graph.
 
 Node positions: always lay them out **horizontally, left → right** — keep `y` constant (e.g. `y = 80`) and step `x` by ~400 per node (cards are ~320px wide); a branch offsets its two lines by `y` ±200 for the Yes/No paths. Set `"orientation": "horizontal"` to match. **Never build vertical** — it is only a manual toggle the user can flip in the editor, not something an agent emits. The user can still rearrange, but the saved plan must render without overlaps, so over-space rather than risk cards overlapping the next node.
+
+## Integration sync (shop / marketplace connectors like Shopify)
+
+Workflows are **not** only for internal ERP data — they can pull from and push to a connected integration (Shopify, Amazon, …) via the `integration-action` node. Building the sync as a workflow is a first-class, expected task: when the operator asks to import orders, sync stock, or report shipment status back to the shop, **build the workflow** — do not reflexively defer it to "the native connector does that." (Defer only if the out-of-the-box connector already does exactly what's asked and no custom mapping/steps are needed.)
+
+The three flows to build for a shop connector (Shopify action slugs shown; other connectors mirror the shape):
+
+- **Order import** — trigger `trigger-integration-event` ("order created") or `trigger-schedule` (poll); `integration-action` `SHOPIFY_GET_ORDERS_WITH_FILTERS` (list) → `loop` → create the ERP `SalesOrder` (business-entity `create`), mapping the shop-order fields. (`SHOPIFY_GET_ORDER` for a single order by id.)
+- **Stock export back to the shop** — trigger on a stock change or a schedule; per SKU, `integration-action` `SHOPIFY_ADJUST_INVENTORY_LEVEL` (use `SHOPIFY_GET_INVENTORY_LEVELS` to reconcile first).
+- **Fulfillment / tracking feedback** — trigger after shipment (ERP event "delivery note shipped"); `integration-action` `SHOPIFY_CREATE_FULFILLMENT` with the tracking number, so the shop marks the order shipped.
+
+**Discovery & provisional nodes.** The `integration-action` catalog (`GET /instances/{lid}/integration-actions`) lists only *connected* integrations, so on an instance without Shopify connected it comes back empty. That is **not** a reason to skip the workflow: author the `integration-action` nodes anyway with the action slugs above, leave `connection_id` empty (unpinned), and mark them **provisional** — tell the user the integration must be connected and a connection pinned in the inspector before the workflow runs. Never block building the workflow shape on connection state (same rule as the rest of the write path — build what the designer UI would let a human build).
 
 ## MCP agent loop: build, check, learn
 
