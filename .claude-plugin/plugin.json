@@ -1,8 +1,10 @@
 {
   "name": "xentral-connector",
-  "version": "2026.06.6",
-  "description": "Xentral Agent OS — connector and skills.",
-  "author": { "name": "Xentral" },
+  "version": "2026.07.23",
+  "description": "Xentral Agent OS \u2014 connector and skills.",
+  "author": {
+    "name": "Xentral"
+  },
   "homepage": "https://github.com/xentral/agent-library",
   "mcpServers": {
     "xentral": {
