@@ -105,6 +105,19 @@ view as initial filter), `count_kpi` (KPI id whose current value is
 shown as a badge on the tab strip), `label_text` (overrides
 `label_key` with a literal string).
 
+> **Table height — only let a table span the full row when nothing sits
+> above or below it.** `TableTabs` grows to fit its rows and has no
+> built-in row cap, so a list with many records expands to its full
+> length. That is fine **only when the table is the sole widget in its
+> layout column** — give it its own full-width row (`cols: [12]`,
+> `cells: [["tabs"]]`) so it can grow downward without displacing
+> anything. If any other widget is stacked in the same column (a KPI
+> strip, a chart, another table above or below it), a long table shoves
+> everything else off the page. In that case keep it short instead:
+> move it into its own row, or narrow the list with a
+> `default_status_filter`, so a table stacked next to other widgets can
+> never blow the layout open.
+
 ### Charts
 All chart widgets share the same data-source machinery (see next
 section). Types: `LineChart`, `BarChart`, `AreaChart`, `DonutChart`,
