@@ -40,6 +40,7 @@
       "id": "backlog",
       "type": "TableTabs",
       "config": {
+        "height": "420px",
         "tabs": [
           {
             "id": "toship",
