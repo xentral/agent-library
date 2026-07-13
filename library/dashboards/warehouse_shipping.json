@@ -59,10 +59,10 @@
       "id": "pick_qr",
       "type": "QrCode",
       "config": {
-        "appSlug": "pick",
+        "appSlug": "warehouse-all-in-one",
         "caption": {
-          "de": "Pick-App am Handy öffnen",
-          "en": "Open the Pick-App on your phone"
+          "de": "Lager-App am Handy öffnen",
+          "en": "Open the Warehouse app on your phone"
         }
       }
     },
@@ -166,11 +166,11 @@
   "locales": {
     "en": {
       "title": "Warehouse & Shipping",
-      "description": "Daily operations cockpit for the warehouse — open orders to ship, throughput, carrier mix and critical stock, plus a QR entry to the mobile Pick-App. Built for up to ~500 orders/day; wired to live KPIs and reports."
+      "description": "Daily operations cockpit for the warehouse — open orders to ship, throughput, carrier mix and critical stock, plus a QR entry to the mobile Warehouse app. Built for up to ~500 orders/day; wired to live KPIs and reports."
     },
     "de": {
       "title": "Lager & Versand",
-      "description": "Tagesgeschäft-Cockpit fürs Lager — offene Aufträge zum Versand, Durchsatz, Carrier-Mix und kritische Bestände, plus QR-Einstieg zur mobilen Pick-App. Ausgelegt für bis zu ~500 Aufträge/Tag; an Live-KPIs und Reports gebunden."
+      "description": "Tagesgeschäft-Cockpit fürs Lager — offene Aufträge zum Versand, Durchsatz, Carrier-Mix und kritische Bestände, plus QR-Einstieg zur mobilen Lager-App. Ausgelegt für bis zu ~500 Aufträge/Tag; an Live-KPIs und Reports gebunden."
     }
   }
 }

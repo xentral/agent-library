@@ -1,0 +1,501 @@
+{
+  "order": 315,
+  "slug": "pick-combined",
+  "source": "builtin",
+  "name": "Kommissionierung – Alle Pickarten",
+  "category": "logistics",
+  "category_label": "Logistik",
+  "summary": "Klick-Dummy: eine Pick-App für Einzelaufträge, Multi-Pick-Wellen und Sammelläufe aus einer Liste. Demodaten.",
+  "locales": {
+    "de": {
+      "name": "Kommissionierung – Alle Pickarten",
+      "summary": "Klick-Dummy: eine Pick-App für Einzelaufträge, Multi-Pick-Wellen und Sammelläufe aus einer Liste. Demodaten."
+    },
+    "en": {
+      "name": "Picking – All pick types",
+      "summary": "Click-dummy: one picking app for single orders, waves and collection runs. Demo data."
+    }
+  },
+  "accent": "#2563EB",
+  "platform": "mobile",
+  "entities": [],
+  "linked_entities": [],
+  "mcp_tools": [],
+  "form": {
+    "home": "ck_q",
+    "screens": [
+      {
+        "id": "ck_q",
+        "name": "Kommissionierung",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "ck_h",
+            "type": "heading",
+            "props": {
+              "text": "Kommissionierung"
+            }
+          },
+          {
+            "id": "ck_t",
+            "type": "text",
+            "props": {
+              "text": "Lauf antippen — Einzel, Welle oder Sammellauf."
+            }
+          },
+          {
+            "id": "ck_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "ck_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "6",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "ck_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Versandfertig",
+                  "value": "87",
+                  "delta": "+12",
+                  "tone": "up",
+                  "spark": false
+                }
+              }
+            ]
+          },
+          {
+            "id": "ck_list",
+            "type": "worklist",
+            "props": {
+              "label": "Antippen zum Starten",
+              "items": "SO-10450 · Bergpfad GmbH | 2 Pos · Cut-off 14:00 | Einzel | id | screen:ck_e1\nSO-10461 · Bergfreunde | 3 Pos · 16:00 | Einzel | id | screen:ck_e1\nWelle 14 | 18 Aufträge · 73 Stk · Zone A | Welle | pick | screen:ck_m1\nSammellauf 7 | 3 Aufträge · 9 Pos | Sammellauf | ship | screen:ck_m1",
+              "action": "screen:ck_e1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_e1",
+        "name": "Platz A-04-2",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_e1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz A-04-2",
+              "subtitle": "Zu Platz A-04-2 gehen und scannen.",
+              "icon": "pin",
+              "record": "SO-10450 · Bergpfad",
+              "step": "1",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Artikel",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:ck_e2",
+              "backAction": "screen:ck_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_e2",
+        "name": "Isomatte Ultralight",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_e2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Isomatte Ultralight",
+              "subtitle": "SKU ISO-UL · Platz A-04-2",
+              "icon": "cube",
+              "record": "SO-10450 · Bergpfad",
+              "step": "2",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:ck_e3",
+              "backAction": "screen:ck_e1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_e3",
+        "name": "3 Stück",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_e3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "3 Stück",
+              "subtitle": "Isomatte UL entnehmen und Menge bestätigen.",
+              "icon": "hash",
+              "record": "SO-10450 · Bergpfad",
+              "step": "3",
+              "of": "7",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Nächster Platz",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:ck_e4",
+              "backAction": "screen:ck_e2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_e4",
+        "name": "Platz C-11-8",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_e4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz C-11-8",
+              "subtitle": "Zu Platz C-11-8 gehen und scannen.",
+              "icon": "pin",
+              "record": "SO-10450 · Bergpfad",
+              "step": "4",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Artikel",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:ck_e5",
+              "backAction": "screen:ck_e3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_e5",
+        "name": "Stirnlampe H7",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_e5_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Stirnlampe H7",
+              "subtitle": "SKU LMP-H7 · Platz C-11-8",
+              "icon": "cube",
+              "record": "SO-10450 · Bergpfad",
+              "step": "5",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:ck_e6",
+              "backAction": "screen:ck_e4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_e6",
+        "name": "2 Stück",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_e6_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "2 Stück",
+              "subtitle": "Stirnlampe H7 entnehmen und Menge bestätigen.",
+              "icon": "hash",
+              "record": "SO-10450 · Bergpfad",
+              "step": "6",
+              "of": "7",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Paketmarke",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:ck_e7",
+              "backAction": "screen:ck_e5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_e7",
+        "name": "Versand",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_e7_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Paketmarke",
+              "title": "Versand",
+              "subtitle": "Dienstleister wählen und Marke drucken.",
+              "icon": "tag",
+              "record": "SO-10450 · Bergpfad",
+              "step": "7",
+              "of": "7",
+              "input": "choice",
+              "inputLabel": "Versanddienstleister",
+              "inputOptions": "DHL, DPD, UPS, GLS",
+              "next": "Abschluss",
+              "primaryText": "Marke drucken",
+              "primaryAction": "screen:ck_edone",
+              "backAction": "screen:ck_e6"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_edone",
+        "name": "Auftrag abgeschlossen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_edone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Auftrag abgeschlossen",
+              "subtitle": "2 Positionen gepickt · Tracking gemeldet.",
+              "icon": "check",
+              "record": "SO-10450 · Bergpfad",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:ck_q",
+              "backAction": "screen:ck_e7"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_m1",
+        "name": "Platz H-2 · Hochregal",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_m1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz H-2 · Hochregal",
+              "subtitle": "Sammelplatz scannen.",
+              "icon": "pin",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "1",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Sammel-Pick",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:ck_m2",
+              "backAction": "screen:ck_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_m2",
+        "name": "53× TRX-42",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_m2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Sammel-Pick",
+              "title": "53× TRX-42",
+              "subtitle": "Laufschuh Trail 42 · für 18 Aufträge",
+              "icon": "layers",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "2",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Nächster Platz",
+              "primaryText": "Menge greifen",
+              "primaryAction": "screen:ck_m3",
+              "backAction": "screen:ck_m1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_m3",
+        "name": "Platz H-5 · Hochregal",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_m3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz H-5 · Hochregal",
+              "subtitle": "Sammelplatz scannen.",
+              "icon": "pin",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "3",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Sammel-Pick",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:ck_m4",
+              "backAction": "screen:ck_m2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_m4",
+        "name": "20× ISO-UL",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_m4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Sammel-Pick",
+              "title": "20× ISO-UL",
+              "subtitle": "Isomatte UL · für 12 Aufträge",
+              "icon": "layers",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "4",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Verteilen",
+              "primaryText": "Menge greifen",
+              "primaryAction": "screen:ck_m5",
+              "backAction": "screen:ck_m3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_m5",
+        "name": "Fach 1 · SO-10432",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_m5_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Verteilen",
+              "title": "Fach 1 · SO-10432",
+              "subtitle": "3× TRX-42 in das Auftragsfach ablegen.",
+              "icon": "box",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "5",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Fach scannen",
+              "inputOptions": "",
+              "next": "Nächstes Fach",
+              "primaryText": "Ablage bestätigen",
+              "primaryAction": "screen:ck_m6",
+              "backAction": "screen:ck_m4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_m6",
+        "name": "Fach 2 · SO-10450",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_m6_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Verteilen",
+              "title": "Fach 2 · SO-10450",
+              "subtitle": "1× TRX-42 in das Auftragsfach ablegen.",
+              "icon": "box",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "6",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Fach scannen",
+              "inputOptions": "",
+              "next": "Abschluss",
+              "primaryText": "Ablage bestätigen",
+              "primaryAction": "screen:ck_mdone",
+              "backAction": "screen:ck_m5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ck_mdone",
+        "name": "Welle abgeschlossen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "ck_mdone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Welle abgeschlossen",
+              "subtitle": "18 Pakete verteilt · bereit zum Packen.",
+              "icon": "check",
+              "record": "Welle 14 · 18 Aufträge",
+              "input": "none",
+              "primaryText": "Zur Übersicht",
+              "primaryAction": "screen:ck_q",
+              "backAction": "screen:ck_m6"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": []
+}
