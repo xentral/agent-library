@@ -1,0 +1,1331 @@
+{
+  "order": 300,
+  "slug": "warehouse-all-in-one",
+  "source": "builtin",
+  "name": "Lager – Komplett",
+  "category": "logistics",
+  "category_label": "Logistik",
+  "summary": "Klick-Dummy: alle Lagerprozesse in einer App mit Start-Menü — Kommissionierung, Wareneingang, Retoure, Buchen, Nachschub. Große Modul-Kacheln statt gequetschter Tab-Leiste; jedes Modul führt über eine Zurück-Kopfzeile ins Menü zurück.",
+  "locales": {
+    "de": {
+      "name": "Lager – Komplett",
+      "summary": "Klick-Dummy: alle Lagerprozesse in einer App mit Start-Menü — Kommissionierung, Wareneingang, Retoure, Buchen, Nachschub. Große Modul-Kacheln statt gequetschter Tab-Leiste; jedes Modul führt über eine Zurück-Kopfzeile ins Menü zurück. Demodaten."
+    },
+    "en": {
+      "name": "Warehouse – All-in-one",
+      "summary": "Click-dummy: every warehouse process in one app with a home menu — picking, receiving, returns, bookings, replenishment. Large module tiles instead of a cramped tab bar; each module returns to the menu via a back header. Demo data."
+    }
+  },
+  "accent": "#2563EB",
+  "platform": "mobile",
+  "entities": [],
+  "linked_entities": [],
+  "mcp_tools": [],
+  "form": {
+    "home": "wh_home",
+    "screens": [
+      {
+        "id": "wh_home",
+        "name": "Start",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_home_h",
+            "type": "heading",
+            "props": {
+              "text": "Lager"
+            }
+          },
+          {
+            "id": "wh_home_t",
+            "type": "text",
+            "props": {
+              "text": "Funktion wählen."
+            }
+          },
+          {
+            "id": "wh_home_menu",
+            "type": "launcher",
+            "props": {
+              "items": "cube | Kommissionierung | 6 offen | screen:wh_pick_q\nbox | Wareneingang | 5 offen | screen:wh_we_q\ntag | Retoure | 3 offen | screen:wh_ret_q\nhash | Buchen | manuell | screen:wh_buch_q\nlayers | Nachschub | 4 Vorschläge | screen:wh_nach_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pick_q",
+        "name": "Kommissionierung",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "whp_list",
+            "type": "worklist",
+            "props": {
+              "label": "Lauf antippen — Einzel oder Welle.",
+              "items": "SO-10450 · Bergpfad GmbH | 2 Pos · 14:00 | Einzel | id | screen:wh_pe1\nWelle 14 | 18 Aufträge · 73 Stk | Welle | pick | screen:wh_pm1",
+              "action": "screen:wh_pe1",
+              "title": "Kommissionierung",
+              "back": "screen:wh_home"
+            }
+          },
+          {
+            "id": "whp_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "whp_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "6",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "whp_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Versandfertig",
+                  "value": "87",
+                  "delta": "+12",
+                  "tone": "up",
+                  "spark": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wh_we_q",
+        "name": "Wareneingang",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "whw_list",
+            "type": "worklist",
+            "props": {
+              "label": "Bestellung antippen — direkt zur Annahme.",
+              "items": "PO-8842 · Meier GmbH | 6 Pos · heute | Bestellung | check | screen:wh_we1\nPO-8850 · Nord AG | 3 Pos · heute | Bestellung | check | screen:wh_we1",
+              "action": "screen:wh_we1",
+              "title": "Wareneingang",
+              "back": "screen:wh_home"
+            }
+          },
+          {
+            "id": "whw_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "whw_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "5",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "whw_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Heute gebucht",
+                  "value": "23",
+                  "delta": "+6",
+                  "tone": "up",
+                  "spark": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wh_ret_q",
+        "name": "Retoure",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "whr_list",
+            "type": "worklist",
+            "props": {
+              "label": "Retoure antippen — direkt zur Erfassung.",
+              "items": "RMA-3391 · B. Sauter | 2 Pos · defekt | Retoure | ship | screen:wh_ret1\nRMA-3402 · Nordlicht KG | 1 Pos · Fehlkauf | Retoure | ship | screen:wh_ret1",
+              "action": "screen:wh_ret1",
+              "title": "Retoure",
+              "back": "screen:wh_home"
+            }
+          },
+          {
+            "id": "whr_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "whr_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "3",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "whr_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Heute erfasst",
+                  "value": "11",
+                  "delta": "+4",
+                  "tone": "up",
+                  "spark": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wh_buch_q",
+        "name": "Buchen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "whb_list",
+            "type": "worklist",
+            "props": {
+              "label": "Ein- oder Ausbuchen wählen.",
+              "items": "Einbuchen (+) | Bestand manuell erhöhen | Zugang | id | screen:wh_be1\nAusbuchen (−) | Bestand manuell verringern | Abgang | check | screen:wh_ba1",
+              "action": "screen:wh_be1",
+              "title": "Buchen",
+              "back": "screen:wh_home"
+            }
+          },
+          {
+            "id": "whb_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "whb_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Heute gebucht",
+                  "value": "34",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "whb_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Korrekturen",
+                  "value": "2",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wh_nach_q",
+        "name": "Nachschub",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "whn_list",
+            "type": "worklist",
+            "props": {
+              "label": "Artikel unter Meldebestand — auffüllen.",
+              "items": "TRX-42 · Laufschuh Trail 42 | 3 / 20 · unter Meldebestand | Nachschub | pick | screen:wh_na1\nISO-UL · Isomatte Ultralight | 0 / 15 · leer | Nachschub | pick | screen:wh_na1",
+              "action": "screen:wh_na1",
+              "title": "Nachschub",
+              "back": "screen:wh_home"
+            }
+          },
+          {
+            "id": "whn_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "whn_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Vorschläge",
+                  "value": "4",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "whn_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Kritisch",
+                  "value": "2",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wh_pe1",
+        "name": "Platz A-04-2",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pe1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz A-04-2",
+              "subtitle": "Zu Platz A-04-2 gehen und scannen.",
+              "icon": "pin",
+              "record": "SO-10450 · Bergpfad",
+              "step": "1",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Artikel",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:wh_pe2",
+              "backAction": "screen:wh_pick_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pe2",
+        "name": "Isomatte Ultralight",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pe2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Isomatte Ultralight",
+              "subtitle": "SKU ISO-UL · Platz A-04-2",
+              "icon": "cube",
+              "record": "SO-10450 · Bergpfad",
+              "step": "2",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:wh_pe3",
+              "backAction": "screen:wh_pe1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pe3",
+        "name": "3 Stück",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pe3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "3 Stück",
+              "subtitle": "Isomatte UL entnehmen und Menge bestätigen.",
+              "icon": "hash",
+              "record": "SO-10450 · Bergpfad",
+              "step": "3",
+              "of": "7",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Nächster Platz",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:wh_pe4",
+              "backAction": "screen:wh_pe2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pe4",
+        "name": "Platz C-11-8",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pe4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz C-11-8",
+              "subtitle": "Zu Platz C-11-8 gehen und scannen.",
+              "icon": "pin",
+              "record": "SO-10450 · Bergpfad",
+              "step": "4",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Artikel",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:wh_pe5",
+              "backAction": "screen:wh_pe3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pe5",
+        "name": "Stirnlampe H7",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pe5_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Stirnlampe H7",
+              "subtitle": "SKU LMP-H7 · Platz C-11-8",
+              "icon": "cube",
+              "record": "SO-10450 · Bergpfad",
+              "step": "5",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:wh_pe6",
+              "backAction": "screen:wh_pe4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pe6",
+        "name": "2 Stück",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pe6_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "2 Stück",
+              "subtitle": "Stirnlampe H7 entnehmen und Menge bestätigen.",
+              "icon": "hash",
+              "record": "SO-10450 · Bergpfad",
+              "step": "6",
+              "of": "7",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Paketmarke",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:wh_pe7",
+              "backAction": "screen:wh_pe5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pe7",
+        "name": "Versand",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pe7_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Paketmarke",
+              "title": "Versand",
+              "subtitle": "Dienstleister wählen und Marke drucken.",
+              "icon": "tag",
+              "record": "SO-10450 · Bergpfad",
+              "step": "7",
+              "of": "7",
+              "input": "choice",
+              "inputLabel": "Versanddienstleister",
+              "inputOptions": "DHL, DPD, UPS, GLS",
+              "next": "Abschluss",
+              "primaryText": "Marke drucken",
+              "primaryAction": "screen:wh_pedone",
+              "backAction": "screen:wh_pe6"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pedone",
+        "name": "Auftrag abgeschlossen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pedone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Auftrag abgeschlossen",
+              "subtitle": "2 Positionen gepickt · Tracking gemeldet.",
+              "icon": "check",
+              "record": "SO-10450 · Bergpfad",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:wh_pick_q",
+              "backAction": "screen:wh_pe7"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pm1",
+        "name": "Platz H-2 · Hochregal",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pm1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz H-2 · Hochregal",
+              "subtitle": "Sammelplatz scannen.",
+              "icon": "pin",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "1",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Sammel-Pick",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:wh_pm2",
+              "backAction": "screen:wh_pick_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pm2",
+        "name": "53× TRX-42",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pm2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Sammel-Pick",
+              "title": "53× TRX-42",
+              "subtitle": "Laufschuh Trail 42 · für 18 Aufträge",
+              "icon": "layers",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "2",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Nächster Platz",
+              "primaryText": "Menge greifen",
+              "primaryAction": "screen:wh_pm3",
+              "backAction": "screen:wh_pm1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pm3",
+        "name": "Platz H-5 · Hochregal",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pm3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz H-5 · Hochregal",
+              "subtitle": "Sammelplatz scannen.",
+              "icon": "pin",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "3",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Sammel-Pick",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:wh_pm4",
+              "backAction": "screen:wh_pm2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pm4",
+        "name": "20× ISO-UL",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pm4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Sammel-Pick",
+              "title": "20× ISO-UL",
+              "subtitle": "Isomatte UL · für 12 Aufträge",
+              "icon": "layers",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "4",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Verteilen",
+              "primaryText": "Menge greifen",
+              "primaryAction": "screen:wh_pm5",
+              "backAction": "screen:wh_pm3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pm5",
+        "name": "Fach 1 · SO-10432",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pm5_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Verteilen",
+              "title": "Fach 1 · SO-10432",
+              "subtitle": "3× TRX-42 in das Auftragsfach ablegen.",
+              "icon": "box",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "5",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Fach scannen",
+              "inputOptions": "",
+              "next": "Nächstes Fach",
+              "primaryText": "Ablage bestätigen",
+              "primaryAction": "screen:wh_pm6",
+              "backAction": "screen:wh_pm4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pm6",
+        "name": "Fach 2 · SO-10450",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pm6_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Verteilen",
+              "title": "Fach 2 · SO-10450",
+              "subtitle": "1× TRX-42 in das Auftragsfach ablegen.",
+              "icon": "box",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "6",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Fach scannen",
+              "inputOptions": "",
+              "next": "Abschluss",
+              "primaryText": "Ablage bestätigen",
+              "primaryAction": "screen:wh_pmdone",
+              "backAction": "screen:wh_pm5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_pmdone",
+        "name": "Welle abgeschlossen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_pmdone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Welle abgeschlossen",
+              "subtitle": "18 Pakete verteilt · bereit zum Packen.",
+              "icon": "check",
+              "record": "Welle 14 · 18 Aufträge",
+              "input": "none",
+              "primaryText": "Zur Übersicht",
+              "primaryAction": "screen:wh_pick_q",
+              "backAction": "screen:wh_pm6"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_we1",
+        "name": "Position erfassen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_we1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Position erfassen",
+              "subtitle": "Artikel der Lieferung scannen.",
+              "icon": "cube",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "1",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:wh_we2",
+              "backAction": "screen:wh_we_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_we2",
+        "name": "48 von 50",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_we2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "48 von 50",
+              "subtitle": "Gelieferte Menge gegen die Bestellung prüfen.",
+              "icon": "hash",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "2",
+              "of": "4",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Qualität",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:wh_we3",
+              "backAction": "screen:wh_we1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_we3",
+        "name": "Sichtprüfung",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_we3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Qualität",
+              "title": "Sichtprüfung",
+              "subtitle": "Zustand der Ware bewerten.",
+              "icon": "check",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "3",
+              "of": "4",
+              "input": "choice",
+              "inputLabel": "Ergebnis",
+              "inputOptions": "i.O., Mangel, Sperren",
+              "next": "Einlagern",
+              "primaryText": "Weiter",
+              "primaryAction": "screen:wh_we4",
+              "backAction": "screen:wh_we2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_we4",
+        "name": "Platz A-04-2",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_we4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz A-04-2",
+              "subtitle": "48 Stück auf den Lagerplatz ablegen.",
+              "icon": "pin",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "4",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Zielplatz scannen",
+              "inputOptions": "",
+              "next": "Buchen",
+              "primaryText": "Menge ablegen",
+              "primaryAction": "screen:wh_wedone",
+              "backAction": "screen:wh_we3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_wedone",
+        "name": "Wareneingang gebucht",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_wedone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Wareneingang gebucht",
+              "subtitle": "Bestand +48 · Beleg aktualisiert.",
+              "icon": "check",
+              "record": "PO-8842 · Meier GmbH",
+              "input": "none",
+              "primaryText": "Zur Übersicht",
+              "primaryAction": "screen:wh_we_q",
+              "backAction": "screen:wh_we4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_ret1",
+        "name": "Retoure-Artikel",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_ret1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Retoure-Artikel",
+              "subtitle": "Zurückgesandten Artikel scannen.",
+              "icon": "cube",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "1",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Grund",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:wh_ret2",
+              "backAction": "screen:wh_ret_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_ret2",
+        "name": "Rücksendegrund",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_ret2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Grund",
+              "title": "Rücksendegrund",
+              "subtitle": "Warum kommt die Ware zurück?",
+              "icon": "tag",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "2",
+              "of": "4",
+              "input": "choice",
+              "inputLabel": "Grund",
+              "inputOptions": "Defekt, Fehlkauf, Falschlieferung, Zu spät",
+              "next": "Zustand",
+              "primaryText": "Weiter",
+              "primaryAction": "screen:wh_ret3",
+              "backAction": "screen:wh_ret1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_ret3",
+        "name": "Warenzustand",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_ret3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Zustand",
+              "title": "Warenzustand",
+              "subtitle": "Zustand der Ware bewerten.",
+              "icon": "check",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "3",
+              "of": "4",
+              "input": "choice",
+              "inputLabel": "Zustand",
+              "inputOptions": "A-Ware, B-Ware, Defekt",
+              "next": "Einlagern",
+              "primaryText": "Weiter",
+              "primaryAction": "screen:wh_ret4",
+              "backAction": "screen:wh_ret2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_ret4",
+        "name": "Einlagern / Sperrlager",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_ret4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Einlagern / Sperrlager",
+              "subtitle": "A-Ware zurück ins Lager, Defekt ins Sperrlager.",
+              "icon": "pin",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "4",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Zielplatz scannen",
+              "inputOptions": "",
+              "next": "Abschluss",
+              "primaryText": "Menge einlagern",
+              "primaryAction": "screen:wh_retdone",
+              "backAction": "screen:wh_ret3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_retdone",
+        "name": "Retoure erfasst",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_retdone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Retoure erfasst",
+              "subtitle": "Gutschrift angestoßen · Kunde wird informiert.",
+              "icon": "check",
+              "record": "RMA-3391 · B. Sauter",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:wh_ret_q",
+              "backAction": "screen:wh_ret4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_be1",
+        "name": "Artikel wählen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_be1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Artikel wählen",
+              "subtitle": "Artikel zum Einbuchen scannen.",
+              "icon": "cube",
+              "record": "Manuelle Einbuchung",
+              "step": "1",
+              "of": "3",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:wh_be2",
+              "backAction": "screen:wh_buch_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_be2",
+        "name": "Menge erfassen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_be2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "Menge erfassen",
+              "subtitle": "Zu buchende Menge einbuchen und bestätigen.",
+              "icon": "hash",
+              "record": "Manuelle Einbuchung",
+              "step": "2",
+              "of": "3",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Lagerplatz",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:wh_be3",
+              "backAction": "screen:wh_be1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_be3",
+        "name": "Lagerplatz",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_be3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Lagerplatz",
+              "subtitle": "Betroffenen Lagerplatz scannen.",
+              "icon": "pin",
+              "record": "Manuelle Einbuchung",
+              "step": "3",
+              "of": "3",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Buchen",
+              "primaryText": "Einbuchen",
+              "primaryAction": "screen:wh_bedone",
+              "backAction": "screen:wh_be2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_bedone",
+        "name": "Eingebucht",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_bedone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Eingebucht",
+              "subtitle": "Bestand erhöht · Beleg erstellt.",
+              "icon": "check",
+              "record": "Manuelle Einbuchung",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:wh_buch_q",
+              "backAction": "screen:wh_be3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_ba1",
+        "name": "Artikel wählen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_ba1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Artikel wählen",
+              "subtitle": "Artikel zum Ausbuchen scannen.",
+              "icon": "cube",
+              "record": "Manuelle Ausbuchung",
+              "step": "1",
+              "of": "3",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:wh_ba2",
+              "backAction": "screen:wh_buch_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_ba2",
+        "name": "Menge erfassen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_ba2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "Menge erfassen",
+              "subtitle": "Zu buchende Menge ausbuchen und bestätigen.",
+              "icon": "hash",
+              "record": "Manuelle Ausbuchung",
+              "step": "2",
+              "of": "3",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Lagerplatz",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:wh_ba3",
+              "backAction": "screen:wh_ba1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_ba3",
+        "name": "Lagerplatz",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_ba3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Lagerplatz",
+              "subtitle": "Betroffenen Lagerplatz scannen.",
+              "icon": "pin",
+              "record": "Manuelle Ausbuchung",
+              "step": "3",
+              "of": "3",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Buchen",
+              "primaryText": "Ausbuchen",
+              "primaryAction": "screen:wh_badone",
+              "backAction": "screen:wh_ba2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_badone",
+        "name": "Ausgebucht",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_badone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Ausgebucht",
+              "subtitle": "Bestand verringert · Beleg erstellt.",
+              "icon": "check",
+              "record": "Manuelle Ausbuchung",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:wh_buch_q",
+              "backAction": "screen:wh_ba3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_na1",
+        "name": "Reserveplatz H-8",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_na1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Reserveplatz H-8",
+              "subtitle": "Reserveplatz scannen.",
+              "icon": "pin",
+              "record": "Nachschub · TRX-42",
+              "step": "1",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Reserveplatz scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:wh_na2",
+              "backAction": "screen:wh_nach_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_na2",
+        "name": "24 Stück entnehmen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_na2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "24 Stück entnehmen",
+              "subtitle": "Menge aus dem Reserveplatz nehmen.",
+              "icon": "hash",
+              "record": "Nachschub · TRX-42",
+              "step": "2",
+              "of": "4",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Pick-Platz",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:wh_na3",
+              "backAction": "screen:wh_na1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_na3",
+        "name": "Pick-Platz A-04-2",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_na3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Pick-Platz A-04-2",
+              "subtitle": "Kommissionierplatz scannen.",
+              "icon": "pin",
+              "record": "Nachschub · TRX-42",
+              "step": "3",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Pick-Platz scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:wh_na4",
+              "backAction": "screen:wh_na2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_na4",
+        "name": "24 Stück auffüllen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_na4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "24 Stück auffüllen",
+              "subtitle": "Menge am Pick-Platz einräumen.",
+              "icon": "hash",
+              "record": "Nachschub · TRX-42",
+              "step": "4",
+              "of": "4",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Abschluss",
+              "primaryText": "Auffüllen bestätigen",
+              "primaryAction": "screen:wh_nadone",
+              "backAction": "screen:wh_na3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wh_nadone",
+        "name": "Nachschub gebucht",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wh_nadone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Nachschub gebucht",
+              "subtitle": "24× TRX-42 auf Pick-Platz A-04-2 umgelagert.",
+              "icon": "check",
+              "record": "Nachschub · TRX-42",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:wh_nach_q",
+              "backAction": "screen:wh_na4"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": []
+}

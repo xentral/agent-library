@@ -1,0 +1,226 @@
+{
+  "order": 335,
+  "slug": "returns",
+  "source": "builtin",
+  "name": "Retourenerfassung",
+  "category": "logistics",
+  "category_label": "Logistik",
+  "summary": "Klick-Dummy: Rücksendung annehmen — Artikel, Grund, Zustand, einlagern; Gutschrift wird angestoßen. Demodaten.",
+  "locales": {
+    "de": {
+      "name": "Retourenerfassung",
+      "summary": "Klick-Dummy: Rücksendung annehmen — Artikel, Grund, Zustand, einlagern; Gutschrift wird angestoßen. Demodaten."
+    },
+    "en": {
+      "name": "Returns capture",
+      "summary": "Click-dummy: accept a return — article, reason, condition, put away; credit note triggered. Demo data."
+    }
+  },
+  "accent": "#7C6BF0",
+  "platform": "mobile",
+  "entities": [],
+  "linked_entities": [],
+  "mcp_tools": [],
+  "form": {
+    "home": "re_q",
+    "screens": [
+      {
+        "id": "re_q",
+        "name": "Retoure",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "re_h",
+            "type": "heading",
+            "props": {
+              "text": "Offene Retouren"
+            }
+          },
+          {
+            "id": "re_t",
+            "type": "text",
+            "props": {
+              "text": "Retoure antippen — direkt zur Erfassung."
+            }
+          },
+          {
+            "id": "re_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "re_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "3",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "re_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Heute erfasst",
+                  "value": "11",
+                  "delta": "+4",
+                  "tone": "up",
+                  "spark": false
+                }
+              }
+            ]
+          },
+          {
+            "id": "re_list",
+            "type": "worklist",
+            "props": {
+              "label": "Antippen zum Starten",
+              "items": "RMA-3391 · B. Sauter | 2 Pos · defekt | Retoure | ship\nRMA-3402 · Nordlicht KG | 1 Pos · Fehlkauf | Retoure | ship",
+              "action": "screen:re1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "re1",
+        "name": "Retoure-Artikel",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "re1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Retoure-Artikel",
+              "subtitle": "Zurückgesandten Artikel scannen.",
+              "icon": "cube",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "1",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Grund",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:re2",
+              "backAction": "screen:re_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "re2",
+        "name": "Rücksendegrund",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "re2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Grund",
+              "title": "Rücksendegrund",
+              "subtitle": "Warum kommt die Ware zurück?",
+              "icon": "tag",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "2",
+              "of": "4",
+              "input": "choice",
+              "inputLabel": "Grund",
+              "inputOptions": "Defekt, Fehlkauf, Falschlieferung, Zu spät",
+              "next": "Zustand",
+              "primaryText": "Weiter",
+              "primaryAction": "screen:re3",
+              "backAction": "screen:re1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "re3",
+        "name": "Warenzustand",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "re3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Zustand",
+              "title": "Warenzustand",
+              "subtitle": "Zustand der Ware bewerten.",
+              "icon": "check",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "3",
+              "of": "4",
+              "input": "choice",
+              "inputLabel": "Zustand",
+              "inputOptions": "A-Ware, B-Ware, Defekt",
+              "next": "Einlagern",
+              "primaryText": "Weiter",
+              "primaryAction": "screen:re4",
+              "backAction": "screen:re2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "re4",
+        "name": "Einlagern / Sperrlager",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "re4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Einlagern / Sperrlager",
+              "subtitle": "A-Ware zurück ins Lager, Defekt ins Sperrlager.",
+              "icon": "pin",
+              "record": "RMA-3391 · B. Sauter",
+              "step": "4",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Zielplatz scannen",
+              "inputOptions": "",
+              "next": "Abschluss",
+              "primaryText": "Menge einlagern",
+              "primaryAction": "screen:redone",
+              "backAction": "screen:re3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "redone",
+        "name": "Retoure erfasst",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "redone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Retoure erfasst",
+              "subtitle": "Gutschrift angestoßen · Kunde wird informiert.",
+              "icon": "check",
+              "record": "RMA-3391 · B. Sauter",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:re_q",
+              "backAction": "screen:re4"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": []
+}

@@ -1,0 +1,310 @@
+{
+  "order": 310,
+  "slug": "pick-single",
+  "source": "builtin",
+  "name": "Kommissionierung – Einzelauftrag",
+  "category": "logistics",
+  "category_label": "Logistik",
+  "summary": "Klick-Dummy: ein Auftrag Position für Position — je Position Lagerplatz, Artikel, Menge. Demodaten.",
+  "locales": {
+    "de": {
+      "name": "Kommissionierung – Einzelauftrag",
+      "summary": "Klick-Dummy: ein Auftrag Position für Position — je Position Lagerplatz, Artikel, Menge. Demodaten."
+    },
+    "en": {
+      "name": "Picking – Single order",
+      "summary": "Click-dummy: one order position by position — bin, article, quantity each. Demo data."
+    }
+  },
+  "accent": "#2563EB",
+  "platform": "mobile",
+  "entities": [],
+  "linked_entities": [],
+  "mcp_tools": [],
+  "form": {
+    "home": "pe_q",
+    "screens": [
+      {
+        "id": "pe_q",
+        "name": "Kommissionierung",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "pe_h",
+            "type": "heading",
+            "props": {
+              "text": "Offene Pickläufe"
+            }
+          },
+          {
+            "id": "pe_t",
+            "type": "text",
+            "props": {
+              "text": "Auftrag antippen — direkt in die Kommissionierung."
+            }
+          },
+          {
+            "id": "pe_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "pe_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "4",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "pe_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Versandfertig",
+                  "value": "87",
+                  "delta": "+12",
+                  "tone": "up",
+                  "spark": false
+                }
+              }
+            ]
+          },
+          {
+            "id": "pe_list",
+            "type": "worklist",
+            "props": {
+              "label": "Antippen zum Starten",
+              "items": "SO-10450 · Bergpfad GmbH | 2 Pos · Cut-off 14:00 | Einzel | id\nSO-10461 · Bergfreunde | 3 Pos · 16:00 | Einzel | id\nSO-10475 · Hela Handel | 5 Pos · 16:00 | Einzel | id",
+              "action": "screen:pe1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pe1",
+        "name": "Platz A-04-2",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pe1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz A-04-2",
+              "subtitle": "Zu Platz A-04-2 gehen und scannen.",
+              "icon": "pin",
+              "record": "SO-10450 · Bergpfad",
+              "step": "1",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Artikel",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:pe2",
+              "backAction": "screen:pe_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pe2",
+        "name": "Isomatte Ultralight",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pe2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Isomatte Ultralight",
+              "subtitle": "SKU ISO-UL · Platz A-04-2",
+              "icon": "cube",
+              "record": "SO-10450 · Bergpfad",
+              "step": "2",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:pe3",
+              "backAction": "screen:pe1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pe3",
+        "name": "3 Stück",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pe3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "3 Stück",
+              "subtitle": "Isomatte UL entnehmen und Menge bestätigen.",
+              "icon": "hash",
+              "record": "SO-10450 · Bergpfad",
+              "step": "3",
+              "of": "7",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Nächster Platz",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:pe4",
+              "backAction": "screen:pe2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pe4",
+        "name": "Platz C-11-8",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pe4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz C-11-8",
+              "subtitle": "Zu Platz C-11-8 gehen und scannen.",
+              "icon": "pin",
+              "record": "SO-10450 · Bergpfad",
+              "step": "4",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Artikel",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:pe5",
+              "backAction": "screen:pe3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pe5",
+        "name": "Stirnlampe H7",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pe5_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Stirnlampe H7",
+              "subtitle": "SKU LMP-H7 · Platz C-11-8",
+              "icon": "cube",
+              "record": "SO-10450 · Bergpfad",
+              "step": "5",
+              "of": "7",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:pe6",
+              "backAction": "screen:pe4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pe6",
+        "name": "2 Stück",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pe6_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "2 Stück",
+              "subtitle": "Stirnlampe H7 entnehmen und Menge bestätigen.",
+              "icon": "hash",
+              "record": "SO-10450 · Bergpfad",
+              "step": "6",
+              "of": "7",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Paketmarke",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:pe7",
+              "backAction": "screen:pe5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pe7",
+        "name": "Versand",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pe7_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Paketmarke",
+              "title": "Versand",
+              "subtitle": "Dienstleister wählen und Marke drucken.",
+              "icon": "tag",
+              "record": "SO-10450 · Bergpfad",
+              "step": "7",
+              "of": "7",
+              "input": "choice",
+              "inputLabel": "Versanddienstleister",
+              "inputOptions": "DHL, DPD, UPS, GLS",
+              "next": "Abschluss",
+              "primaryText": "Marke drucken",
+              "primaryAction": "screen:pedone",
+              "backAction": "screen:pe6"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pedone",
+        "name": "Auftrag abgeschlossen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pedone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Auftrag abgeschlossen",
+              "subtitle": "2 Positionen gepickt · Tracking gemeldet.",
+              "icon": "check",
+              "record": "SO-10450 · Bergpfad",
+              "input": "none",
+              "primaryText": "Zur Liste",
+              "primaryAction": "screen:pe_q",
+              "backAction": "screen:pe7"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": []
+}

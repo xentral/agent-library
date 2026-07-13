@@ -1,0 +1,281 @@
+{
+  "order": 320,
+  "slug": "pick-multi",
+  "source": "builtin",
+  "name": "Kommissionierung – Sammelpick (Welle)",
+  "category": "logistics",
+  "category_label": "Logistik",
+  "summary": "Klick-Dummy: pro Sammel-Artikel erst den Platz scannen, dann auf Aufträge verteilen. Demodaten.",
+  "locales": {
+    "de": {
+      "name": "Kommissionierung – Sammelpick (Welle)",
+      "summary": "Klick-Dummy: pro Sammel-Artikel erst den Platz scannen, dann auf Aufträge verteilen. Demodaten."
+    },
+    "en": {
+      "name": "Picking – Batch pick (wave)",
+      "summary": "Click-dummy: scan the bin before each bulk article, then put-to-order. Demo data."
+    }
+  },
+  "accent": "#0E8F8C",
+  "platform": "mobile",
+  "entities": [],
+  "linked_entities": [],
+  "mcp_tools": [],
+  "form": {
+    "home": "pm_q",
+    "screens": [
+      {
+        "id": "pm_q",
+        "name": "Sammelpick",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "pm_h",
+            "type": "heading",
+            "props": {
+              "text": "Sammel-Pickläufe"
+            }
+          },
+          {
+            "id": "pm_t",
+            "type": "text",
+            "props": {
+              "text": "Welle antippen — erst sammeln, dann verteilen."
+            }
+          },
+          {
+            "id": "pm_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "pm_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Wellen offen",
+                  "value": "3",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "pm_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Artikel zu greifen",
+                  "value": "73",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              }
+            ]
+          },
+          {
+            "id": "pm_list",
+            "type": "worklist",
+            "props": {
+              "label": "Antippen zum Starten",
+              "items": "Welle 14 | 18 Aufträge · 73 Stk · Zone A | Multi-Pick | pick\nWelle 15 | 12 Aufträge · 40 Stk | Multi-Pick | pick",
+              "action": "screen:pm1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pm1",
+        "name": "Platz H-2 · Hochregal",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pm1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz H-2 · Hochregal",
+              "subtitle": "Sammelplatz scannen.",
+              "icon": "pin",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "1",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Sammel-Pick",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:pm2",
+              "backAction": "screen:pm_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pm2",
+        "name": "53× TRX-42",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pm2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Sammel-Pick",
+              "title": "53× TRX-42",
+              "subtitle": "Laufschuh Trail 42 · für 18 Aufträge",
+              "icon": "layers",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "2",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Nächster Platz",
+              "primaryText": "Menge greifen",
+              "primaryAction": "screen:pm3",
+              "backAction": "screen:pm1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pm3",
+        "name": "Platz H-5 · Hochregal",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pm3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz H-5 · Hochregal",
+              "subtitle": "Sammelplatz scannen.",
+              "icon": "pin",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "3",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Lagerplatz scannen",
+              "inputOptions": "",
+              "next": "Sammel-Pick",
+              "primaryText": "Platz bestätigen",
+              "primaryAction": "screen:pm4",
+              "backAction": "screen:pm2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pm4",
+        "name": "20× ISO-UL",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pm4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Sammel-Pick",
+              "title": "20× ISO-UL",
+              "subtitle": "Isomatte UL · für 12 Aufträge",
+              "icon": "layers",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "4",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Verteilen",
+              "primaryText": "Menge greifen",
+              "primaryAction": "screen:pm5",
+              "backAction": "screen:pm3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pm5",
+        "name": "Fach 1 · SO-10432",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pm5_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Verteilen",
+              "title": "Fach 1 · SO-10432",
+              "subtitle": "3× TRX-42 in das Auftragsfach ablegen.",
+              "icon": "box",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "5",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Fach scannen",
+              "inputOptions": "",
+              "next": "Nächstes Fach",
+              "primaryText": "Ablage bestätigen",
+              "primaryAction": "screen:pm6",
+              "backAction": "screen:pm4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pm6",
+        "name": "Fach 2 · SO-10450",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pm6_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Verteilen",
+              "title": "Fach 2 · SO-10450",
+              "subtitle": "1× TRX-42 in das Auftragsfach ablegen.",
+              "icon": "box",
+              "record": "Welle 14 · 18 Aufträge",
+              "step": "6",
+              "of": "6",
+              "input": "scan",
+              "inputLabel": "Fach scannen",
+              "inputOptions": "",
+              "next": "Abschluss",
+              "primaryText": "Ablage bestätigen",
+              "primaryAction": "screen:pmdone",
+              "backAction": "screen:pm5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pmdone",
+        "name": "Welle abgeschlossen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "pmdone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Welle abgeschlossen",
+              "subtitle": "18 Pakete verteilt · bereit zum Packen.",
+              "icon": "check",
+              "record": "Welle 14 · 18 Aufträge",
+              "input": "none",
+              "primaryText": "Zur Übersicht",
+              "primaryAction": "screen:pm_q",
+              "backAction": "screen:pm6"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": []
+}

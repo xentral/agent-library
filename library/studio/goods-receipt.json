@@ -1,0 +1,226 @@
+{
+  "order": 330,
+  "slug": "goods-receipt",
+  "source": "builtin",
+  "name": "Wareneingang",
+  "category": "logistics",
+  "category_label": "Logistik",
+  "summary": "Klick-Dummy: Anlieferung gegen die Bestellung annehmen — Artikel, Menge (Soll/Ist), Qualität, einlagern. Demodaten.",
+  "locales": {
+    "de": {
+      "name": "Wareneingang",
+      "summary": "Klick-Dummy: Anlieferung gegen die Bestellung annehmen — Artikel, Menge (Soll/Ist), Qualität, einlagern. Demodaten."
+    },
+    "en": {
+      "name": "Goods receipt",
+      "summary": "Click-dummy: receive against the PO — article, quantity, quality, put away. Demo data."
+    }
+  },
+  "accent": "#B26A00",
+  "platform": "mobile",
+  "entities": [],
+  "linked_entities": [],
+  "mcp_tools": [],
+  "form": {
+    "home": "we_q",
+    "screens": [
+      {
+        "id": "we_q",
+        "name": "Wareneingang",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "we_h",
+            "type": "heading",
+            "props": {
+              "text": "Erwartete Anlieferungen"
+            }
+          },
+          {
+            "id": "we_t",
+            "type": "text",
+            "props": {
+              "text": "Bestellung antippen — direkt zur Annahme."
+            }
+          },
+          {
+            "id": "we_kpis",
+            "type": "grid",
+            "props": {
+              "columns": "2"
+            },
+            "children": [
+              {
+                "id": "we_k1",
+                "type": "kpibox",
+                "props": {
+                  "label": "Offen",
+                  "value": "5",
+                  "tone": "neutral",
+                  "spark": false
+                }
+              },
+              {
+                "id": "we_k2",
+                "type": "kpibox",
+                "props": {
+                  "label": "Heute gebucht",
+                  "value": "23",
+                  "delta": "+6",
+                  "tone": "up",
+                  "spark": false
+                }
+              }
+            ]
+          },
+          {
+            "id": "we_list",
+            "type": "worklist",
+            "props": {
+              "label": "Antippen zum Starten",
+              "items": "PO-8842 · Meier GmbH | 6 Pos · heute | Bestellung | check\nPO-8850 · Nord AG | 3 Pos · heute | Bestellung | check",
+              "action": "screen:we1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "we1",
+        "name": "Position erfassen",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "we1_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Artikel",
+              "title": "Position erfassen",
+              "subtitle": "Artikel der Lieferung scannen.",
+              "icon": "cube",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "1",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Artikel scannen",
+              "inputOptions": "",
+              "next": "Menge",
+              "primaryText": "Artikel bestätigen",
+              "primaryAction": "screen:we2",
+              "backAction": "screen:we_q"
+            }
+          }
+        ]
+      },
+      {
+        "id": "we2",
+        "name": "48 von 50",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "we2_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Menge",
+              "title": "48 von 50",
+              "subtitle": "Gelieferte Menge gegen die Bestellung prüfen.",
+              "icon": "hash",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "2",
+              "of": "4",
+              "input": "none",
+              "inputLabel": "",
+              "inputOptions": "",
+              "next": "Qualität",
+              "primaryText": "Menge bestätigen",
+              "primaryAction": "screen:we3",
+              "backAction": "screen:we1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "we3",
+        "name": "Sichtprüfung",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "we3_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Qualität",
+              "title": "Sichtprüfung",
+              "subtitle": "Zustand der Ware bewerten.",
+              "icon": "check",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "3",
+              "of": "4",
+              "input": "choice",
+              "inputLabel": "Ergebnis",
+              "inputOptions": "i.O., Mangel, Sperren",
+              "next": "Einlagern",
+              "primaryText": "Weiter",
+              "primaryAction": "screen:we4",
+              "backAction": "screen:we2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "we4",
+        "name": "Platz A-04-2",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "we4_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Lagerplatz",
+              "title": "Platz A-04-2",
+              "subtitle": "48 Stück auf den Lagerplatz ablegen.",
+              "icon": "pin",
+              "record": "PO-8842 · Meier GmbH",
+              "step": "4",
+              "of": "4",
+              "input": "scan",
+              "inputLabel": "Zielplatz scannen",
+              "inputOptions": "",
+              "next": "Buchen",
+              "primaryText": "Menge ablegen",
+              "primaryAction": "screen:wedone",
+              "backAction": "screen:we3"
+            }
+          }
+        ]
+      },
+      {
+        "id": "wedone",
+        "name": "Wareneingang gebucht",
+        "type": "screen",
+        "inMenu": false,
+        "components": [
+          {
+            "id": "wedone_ws",
+            "type": "workstep",
+            "props": {
+              "kind": "Fertig",
+              "title": "Wareneingang gebucht",
+              "subtitle": "Bestand +48 · Beleg aktualisiert.",
+              "icon": "check",
+              "record": "PO-8842 · Meier GmbH",
+              "input": "none",
+              "primaryText": "Zur Übersicht",
+              "primaryAction": "screen:we_q",
+              "backAction": "screen:we4"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "files": []
+}
