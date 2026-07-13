@@ -70,6 +70,12 @@ Sync shapes (vendor-neutral — the same for any connector):
 
 **Which** integration and **which** records to sync is a per-task decision — it comes from the operator's request or the prompt, not from this guide.
 
+**Always leave a go-live activation task.** A provisional `integration-action` node, and *every* `shiplabel` node, will not run until the user supplies credentials — and **where** they do that differs by node type. So whenever a build includes an `integration-action` or a `shiplabel` node, ALWAYS finish by leaving the user a short, plain-language task (create a **Decision** via `xentral_decisions`, and repeat it in your closing summary) that names the go-live step **per node**:
+- **`integration-action`** → "To go live, connect **<tool>** under **Integrationen / Integrations** (`/app/integrations`): open the card, click **Verbinden / Connect** and enter the credentials." That hub is the only place external integrations are connected.
+- **`shiplabel`** → "To go live, open the workflow **<workflow name>**, click the **<carrier>** Paketmarke/Shipping-label node, and enter the carrier access data in its form." Carrier credentials live on the node itself (a deployment may instead set `SHIPLABEL_*` env).
+
+Adapt the wording to the actual tool / carrier, and list one step per unconnected node. **Never connect anything yourself** — the user does it; your job is to tell them exactly where. This is not optional: a workflow that silently needs credentials it never asked for reads as broken.
+
 ## MCP agent loop: build, check, learn
 
 When you author a workflow through MCP, use this loop:
