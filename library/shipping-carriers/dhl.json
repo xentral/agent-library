@@ -40,14 +40,6 @@
   ],
   "config_keys": [
     {
-      "key": "dhl_api_key",
-      "note": "DHL developer app key"
-    },
-    {
-      "key": "dhl_api_secret",
-      "note": "DHL developer app secret"
-    },
-    {
       "key": "dhl_username",
       "note": "GKP business-customer user"
     },
@@ -63,6 +55,24 @@
       "key": "dhl_sandbox",
       "required": false,
       "note": "true = use the sandbox environment"
+    },
+    {
+      "key": "dhl_api_key",
+      "source": "env",
+      "env": {
+        "prod": "DHL_XENTRAL_PRODUCTION_API_KEY",
+        "sandbox": "DHL_XENTRAL_DEVELOPMENT_API_KEY"
+      },
+      "note": "DHL developer-app key — provided by the platform via env, not entered by the customer"
+    },
+    {
+      "key": "dhl_api_secret",
+      "source": "env",
+      "env": {
+        "prod": "DHL_XENTRAL_PRODUCTION_API_SECRET",
+        "sandbox": "DHL_XENTRAL_DEVELOPMENT_API_SECRET"
+      },
+      "note": "DHL developer-app secret — provided by the platform via env, not entered by the customer"
     }
   ],
   "value_maps": {

@@ -97,6 +97,33 @@
           "default": "",
           "title": "Note",
           "type": "string"
+        },
+        "source": {
+          "default": "customer",
+          "enum": [
+            "customer",
+            "env"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "env": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Env"
         }
       },
       "required": [
