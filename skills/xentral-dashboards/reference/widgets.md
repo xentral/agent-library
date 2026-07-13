@@ -105,18 +105,21 @@ view as initial filter), `count_kpi` (KPI id whose current value is
 shown as a badge on the tab strip), `label_text` (overrides
 `label_key` with a literal string).
 
-> **Table height — only let a table span the full row when nothing sits
-> above or below it.** `TableTabs` grows to fit its rows and has no
-> built-in row cap, so a list with many records expands to its full
-> length. That is fine **only when the table is the sole widget in its
-> layout column** — give it its own full-width row (`cols: [12]`,
-> `cells: [["tabs"]]`) so it can grow downward without displacing
-> anything. If any other widget is stacked in the same column (a KPI
-> strip, a chart, another table above or below it), a long table shoves
-> everything else off the page. In that case keep it short instead:
-> move it into its own row, or narrow the list with a
-> `default_status_filter`, so a table stacked next to other widgets can
-> never blow the layout open.
+> **Table height — bound it with `config.height` unless it truly stands
+> alone and is short.** A `TableTabs` defaults to growing with its rows
+> (`config.height` unset = `"auto"`), so an unbounded list (hundreds of
+> orders) expands to its full length and shoves the rest of the dashboard
+> off the page — even a table alone in its column starts ~25 rows tall.
+> Set **`config.height: "420px"`** (the "compact" preset — ~8 rows, then
+> the table scrolls internally) on any embedded dashboard table so it
+> stays bounded. `"fill"` makes it fill the remaining column height
+> (also bounded, internal scroll). Only leave it on `"auto"` when the
+> table is the sole widget in its column **and** the record count is
+> genuinely small. A tight `default_status_filter` reduces the row count
+> but does NOT cap the height on its own — always pair a big list with a
+> `height`. When a table is bounded this way it no longer needs its own
+> full-width row, but keeping large lists out of a column shared with
+> other stacked widgets still reads best.
 
 ### Charts
 All chart widgets share the same data-source machinery (see next

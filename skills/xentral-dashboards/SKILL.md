@@ -111,7 +111,7 @@ ellipsis and stops being scannable.
 | Cramming 15 widgets on one page | Auto-refresh becomes a load problem; the user loses focus. 5–8 widgets per dashboard. |
 | Naming dashboards generically ("Dashboard 1") | Six months later nobody knows what it is. Each dashboard answers one named question. |
 | Putting heavy chart widgets in the first row | They render last; the user sees the page jump. Lead with KPI tiles, charts below. |
-| Stacking a full-height table between other widgets | A `TableTabs` has no row cap and grows to fit its records — stacked above/below another widget, a long list pushes everything off the page. Only give a table a full-height slot when it's alone in its column (its own full-width row); otherwise narrow it with a `default_status_filter`. See [reference/widgets.md](reference/widgets.md). |
+| Unbounded dashboard table growing off the page | A `TableTabs` defaults to grow-with-rows, so a big list expands endlessly (even alone in its column it starts ~25 rows tall). Set `config.height: "420px"` (compact preset — ~8 rows, then internal scroll) on any embedded table; a `default_status_filter` alone does NOT bound the height. See [reference/widgets.md](reference/widgets.md). |
 | Different time periods on widgets that compare to each other | "Revenue today" next to "AOV last 30 days" doesn't compute. Synchronize period across a board. |
 | Inventing currencies | Stick to the instance's ERP currency; don't auto-convert. |
 | Treating dashboard as the source of truth | It's a view. If a number looks wrong, the data source is wrong, not the dashboard. |
