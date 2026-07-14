@@ -1,0 +1,24 @@
+{
+  "id": "pick_lines_per_hour",
+  "version": 1,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 333,
+  "kpi": {
+    "key": "pick_lines_per_hour",
+    "unit": "/h",
+    "value_type": "number",
+    "group": "logistics",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Lines per hour",
+      "description": "Picking throughput per hour."
+    },
+    "de": {
+      "title": "Zeilen/Stunde",
+      "description": "Kommissionier-Durchsatz pro Stunde."
+    }
+  }
+}

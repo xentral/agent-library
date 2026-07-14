@@ -1,0 +1,24 @@
+{
+  "id": "invoice_revenue_mtd",
+  "version": 1,
+  "icon": "coin",
+  "category": "finance",
+  "order": 322,
+  "kpi": {
+    "key": "invoice_revenue_mtd",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Revenue (month)",
+      "description": "Invoiced revenue in the current month."
+    },
+    "de": {
+      "title": "Umsatz (Monat)",
+      "description": "Fakturierter Umsatz im laufenden Monat."
+    }
+  }
+}

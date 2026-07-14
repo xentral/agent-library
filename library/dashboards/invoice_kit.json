@@ -1,0 +1,116 @@
+{
+  "id": "invoice_kit",
+  "version": 1,
+  "icon": "invoice",
+  "category": "finance",
+  "order": 200,
+  "recommended_kpis": [
+    "invoice_open_receivables",
+    "invoice_overdue_amount",
+    "invoice_revenue_mtd",
+    "invoice_dso_days",
+    "invoice_count_open"
+  ],
+  "widgets": [
+    {
+      "id": "explainer",
+      "type": "HtmlBox",
+      "config": {
+        "htmlContent": {
+          "de": "<div style=\"max-width: 660px; padding: 6px 8px 12px;\"><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 16px;\">Rechnungskit · Finanzen</div><h1 style=\"font-size: 28px; font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; color: var(--text); margin: 0 0 12px;\">Rechnungen, offene Posten und Mahnwesen — im Blick.</h1><p style=\"font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 20px; max-width: 520px;\">Frag deinen KI-Client über die Adresse unten nach deinen Rechnungen, offenen Posten und überfälligen Zahlungen — und lass Mahnungen und Belege in deinem Corporate Design erstellen.</p><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">Deine MCP-Adresse</div><div style=\"background: var(--surface-hover); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 4px 0 22px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;\"><code style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--text); word-break: break-all; line-height: 1.45;\">{{mcp_url}}</code><button data-copy=\"{{mcp_url}}\" aria-label=\"Kopieren\" style=\"background: transparent; color: var(--brand); border: 1px solid var(--brand-border); border-radius: 6px; padding: 5px 7px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; line-height: 0;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg></button></div><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">So nutzt du es</div><ol style=\"margin: 0 0 22px; padding-left: 20px;\"><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Trag die Adresse oben in Claude, Codex &amp; Co. als Connector ein.</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Frag z. B.: „Zeig mir alle überfälligen Rechnungen über 500 €\".</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Oder: „Erzeuge die Rechnung für Auftrag SO-2024-0501 in meinem CI\".</li></ol></div>",
+          "en": "<div style=\"max-width: 660px; padding: 6px 8px 12px;\"><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 16px;\">Invoice Kit · Finance</div><h1 style=\"font-size: 28px; font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; color: var(--text); margin: 0 0 12px;\">Invoices, open items and dunning — at a glance.</h1><p style=\"font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 20px; max-width: 520px;\">Ask your AI client via the address below about your invoices, open items and overdue payments — and have dunning letters and documents created in your own corporate design.</p><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">Your MCP address</div><div style=\"background: var(--surface-hover); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 4px 0 22px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;\"><code style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--text); word-break: break-all; line-height: 1.45;\">{{mcp_url}}</code><button data-copy=\"{{mcp_url}}\" aria-label=\"Copy\" style=\"background: transparent; color: var(--brand); border: 1px solid var(--brand-border); border-radius: 6px; padding: 5px 7px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; line-height: 0;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg></button></div><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">How to use it</div><ol style=\"margin: 0 0 22px; padding-left: 20px;\"><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Add the address above as a connector in Claude, Codex &amp; co.</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Ask e.g.: \"Show me all overdue invoices above €500\".</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Or: \"Create the invoice for order SO-2024-0501 in my corporate design\".</li></ol></div>"
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "kpis": [
+          "invoice_open_receivables",
+          "invoice_overdue_amount",
+          "invoice_revenue_mtd"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Rechnungen",
+          "en": "Invoices"
+        },
+        "kpis": [
+          "invoice_dso_days",
+          "invoice_count_open"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "TableTabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "collect",
+            "label_key": "workspace.financeCollect",
+            "view": "sales_invoices"
+          },
+          {
+            "id": "pay",
+            "label_key": "workspace.financePay",
+            "view": "supplier_invoices"
+          }
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          5,
+          7
+        ],
+        "cells": [
+          [
+            "explainer"
+          ],
+          [
+            "hero",
+            "kpi_grid"
+          ]
+        ]
+      },
+      {
+        "cols": [
+          1
+        ],
+        "cells": [
+          [
+            "tabs"
+          ]
+        ]
+      }
+    ]
+  },
+  "linked_kpis": [
+    "invoice_open_receivables",
+    "invoice_overdue_amount",
+    "invoice_revenue_mtd",
+    "invoice_dso_days",
+    "invoice_count_open"
+  ],
+  "locales": {
+    "en": {
+      "title": "Invoice Kit",
+      "description": "Invoices, open items and dunning, plus your MCP address to work them."
+    },
+    "de": {
+      "title": "Rechnungskit",
+      "description": "Rechnungen, offene Posten und Mahnwesen — samt deiner MCP-Adresse."
+    }
+  }
+}

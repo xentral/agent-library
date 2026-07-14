@@ -1,0 +1,24 @@
+{
+  "id": "invoice_count_open",
+  "version": 1,
+  "icon": "invoice",
+  "category": "finance",
+  "order": 324,
+  "kpi": {
+    "key": "invoice_count_open",
+    "unit": "count",
+    "value_type": "number",
+    "group": "finance",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Open invoices",
+      "description": "Number of not-yet-fully-paid invoices."
+    },
+    "de": {
+      "title": "Offene Rechnungen",
+      "description": "Anzahl noch nicht vollständig bezahlter Rechnungen."
+    }
+  }
+}

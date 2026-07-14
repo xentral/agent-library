@@ -1,0 +1,21 @@
+{
+  "id": "install-pick-kit",
+  "kind": "prompt",
+  "lane": "partner",
+  "section": "starter-kit",
+  "iconName": "package",
+  "order": 30,
+  "locales": {
+    "de": {
+      "title": "Pick-Kit installieren",
+      "oneLiner": "Bau dir angepasste Pick-Apps für deinen Kommissionier-Prozess — plus ein Dashboard mit Live-Kennzahlen."
+    },
+    "en": {
+      "title": "Install Pick Kit",
+      "oneLiner": "Build tailored picking apps for your process — plus a dashboard with live pick metrics."
+    }
+  },
+  "author": "Xentral",
+  "category": "Kommissionierung",
+  "body": "Richte mir das Pick-Kit ein.\n\nBitte:\n- Installiere das Dashboard „Pick-Kit\" aus der Dashboard-Bibliothek und öffne es. Es enthält die Erklär-Kachel mit meiner MCP-Adresse, Kommissionier-Kennzahlen, meine offene Pick-Warteschlange und einen QR-Code, mit dem ich die Pick-App direkt auf dem Handy öffne.\n- Installiere die fertige Pick-App „Kommissionierung – Alle Pickarten\" aus der App-Bibliothek (Studio) — eine anpassbare Vorlage für Einzel-, Multi- und Sammel-Kommissionierung. Bau KEINE neue App von Grund auf; nimm die Bibliotheks-App.\n- Erkläre mir kurz, wie ich sie an meinen Prozess anpasse (z. B. Batch- oder Zonen-Picking) und wie ich per Sprache weitere Varianten daraus ableite.\nLeg direkt los."
+}

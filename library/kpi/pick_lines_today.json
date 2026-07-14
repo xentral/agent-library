@@ -1,0 +1,24 @@
+{
+  "id": "pick_lines_today",
+  "version": 1,
+  "icon": "check",
+  "category": "logistics",
+  "order": 330,
+  "kpi": {
+    "key": "pick_lines_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "logistics",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Lines picked today",
+      "description": "Order lines picked today."
+    },
+    "de": {
+      "title": "Positionen heute",
+      "description": "Heute kommissionierte Auftragspositionen."
+    }
+  }
+}

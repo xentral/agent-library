@@ -1,0 +1,24 @@
+{
+  "id": "carrier_labels_today",
+  "version": 1,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 310,
+  "kpi": {
+    "key": "carrier_labels_today",
+    "unit": "count",
+    "value_type": "number",
+    "group": "shipping",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Labels today",
+      "description": "Shipping labels created today via the Carrier Kit."
+    },
+    "de": {
+      "title": "Paketmarken heute",
+      "description": "Heute über das Carrier-Kit erzeugte Versandlabels."
+    }
+  }
+}

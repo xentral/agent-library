@@ -1,0 +1,24 @@
+{
+  "id": "invoice_dso_days",
+  "version": 1,
+  "icon": "check",
+  "category": "finance",
+  "order": 323,
+  "kpi": {
+    "key": "invoice_dso_days",
+    "unit": "days",
+    "value_type": "number",
+    "group": "finance",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "DSO (days)",
+      "description": "Average days sales outstanding."
+    },
+    "de": {
+      "title": "DSO (Tage)",
+      "description": "Durchschnittliche Zahlungsdauer in Tagen."
+    }
+  }
+}

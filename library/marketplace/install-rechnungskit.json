@@ -1,0 +1,21 @@
+{
+  "id": "install-rechnungskit",
+  "kind": "prompt",
+  "lane": "partner",
+  "section": "starter-kit",
+  "iconName": "invoice",
+  "order": 20,
+  "locales": {
+    "de": {
+      "title": "Rechnungskit installieren",
+      "oneLiner": "Ein Dashboard über Rechnungen, offene Posten und Mahnwesen — samt deiner MCP-Adresse."
+    },
+    "en": {
+      "title": "Install Invoice Kit",
+      "oneLiner": "A dashboard for invoices, open items and dunning — plus your MCP address."
+    }
+  },
+  "author": "Xentral",
+  "category": "Finanzen",
+  "body": "Richte mir das Rechnungskit ein.\n\nBitte:\n- Installiere das Dashboard „Rechnungskit\" aus der Dashboard-Bibliothek und öffne es. Es enthält die Erklär-Kachel mit meiner MCP-Adresse, offene Posten, DSO, überfällige Rechnungen und die Rechnungslisten.\n- Installiere außerdem die PDF-Vorlage „Rechnungskit — Rechnung\" aus der Vorlagen-Bibliothek, damit ich sofort eine saubere, allgemeine Rechnungsvorlage habe.\n- Erkläre mir kurz, wie ich es nutze: die MCP-Adresse als Connector eintragen und dann nach Rechnungen, offenen Posten und Mahnungen fragen.\n- Nenne mir zwei Beispiel-Sätze: einen zum Anzeigen überfälliger Rechnungen und einen zum Erstellen einer Rechnung in meinem CI.\nLeg direkt los."
+}

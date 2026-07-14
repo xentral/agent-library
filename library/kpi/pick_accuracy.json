@@ -1,0 +1,24 @@
+{
+  "id": "pick_accuracy",
+  "version": 1,
+  "icon": "check",
+  "category": "logistics",
+  "order": 332,
+  "kpi": {
+    "key": "pick_accuracy",
+    "unit": "%",
+    "value_type": "percent",
+    "group": "logistics",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Pick accuracy",
+      "description": "Share of lines picked without error."
+    },
+    "de": {
+      "title": "Pick-Genauigkeit",
+      "description": "Anteil fehlerfrei kommissionierter Positionen."
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "pick_active_pickers",
+  "version": 1,
+  "icon": "package",
+  "category": "logistics",
+  "order": 334,
+  "kpi": {
+    "key": "pick_active_pickers",
+    "unit": "count",
+    "value_type": "number",
+    "group": "logistics",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Active pickers",
+      "description": "Staff currently picking."
+    },
+    "de": {
+      "title": "Aktive Picker",
+      "description": "Aktuell kommissionierende Mitarbeiter."
+    }
+  }
+}
