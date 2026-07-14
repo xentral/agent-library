@@ -1,0 +1,53 @@
+{
+  "order": 12,
+  "slug": "erp-suppliers",
+  "source": "builtin",
+  "name": "Lieferanten",
+  "category": "master-data",
+  "category_label": "Stammdaten",
+  "summary": "Lieferanten suchen, ansehen und bearbeiten — Konditionen, Lieferzeiten und Kontakt.",
+  "locales": {
+    "de": {
+      "name": "Lieferanten",
+      "summary": "Lieferanten suchen, ansehen und bearbeiten — Konditionen, Lieferzeiten und Kontakt."
+    },
+    "en": {
+      "name": "Suppliers",
+      "summary": "Search, view and edit suppliers — terms, lead times and contact."
+    },
+    "nl": {
+      "name": "Leveranciers",
+      "summary": "Leveranciers zoeken, bekijken en bewerken — voorwaarden, levertijden en contact."
+    }
+  },
+  "accent": "#6D7CFF",
+  "platform": "web",
+  "icon": "truck",
+  "entities": [],
+  "linked_entities": [
+    "Supplier"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Lieferanten",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "Supplier"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

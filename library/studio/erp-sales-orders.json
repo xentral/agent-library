@@ -1,0 +1,53 @@
+{
+  "order": 14,
+  "slug": "erp-sales-orders",
+  "source": "builtin",
+  "name": "Aufträge",
+  "category": "sales",
+  "category_label": "Vertrieb",
+  "summary": "Aufträge ansehen, bearbeiten, freigeben, stornieren und abschließen — inklusive Positionen und Lieferbarkeit.",
+  "locales": {
+    "de": {
+      "name": "Aufträge",
+      "summary": "Aufträge ansehen, bearbeiten, freigeben, stornieren und abschließen — inklusive Positionen und Lieferbarkeit."
+    },
+    "en": {
+      "name": "Sales Orders",
+      "summary": "View, edit, release, cancel and complete sales orders — including line items and availability."
+    },
+    "nl": {
+      "name": "Orders",
+      "summary": "Orders bekijken, bewerken, vrijgeven, annuleren en afronden — inclusief regels en beschikbaarheid."
+    }
+  },
+  "accent": "#2B6CB0",
+  "platform": "web",
+  "icon": "cart",
+  "entities": [],
+  "linked_entities": [
+    "SalesOrder"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Aufträge",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "SalesOrder"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

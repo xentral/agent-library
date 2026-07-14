@@ -1,0 +1,53 @@
+{
+  "order": 11,
+  "slug": "erp-customers",
+  "source": "builtin",
+  "name": "Kunden",
+  "category": "master-data",
+  "category_label": "Stammdaten",
+  "summary": "Kunden suchen, ansehen und bearbeiten — Adressen, Konditionen und Ansprechpartner.",
+  "locales": {
+    "de": {
+      "name": "Kunden",
+      "summary": "Kunden suchen, ansehen und bearbeiten — Adressen, Konditionen und Ansprechpartner."
+    },
+    "en": {
+      "name": "Customers",
+      "summary": "Search, view and edit customers — addresses, terms and contacts."
+    },
+    "nl": {
+      "name": "Klanten",
+      "summary": "Klanten zoeken, bekijken en bewerken — adressen, voorwaarden en contactpersonen."
+    }
+  },
+  "accent": "#6D7CFF",
+  "platform": "web",
+  "icon": "users",
+  "entities": [],
+  "linked_entities": [
+    "Customer"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Kunden",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "Customer"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

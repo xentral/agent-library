@@ -1,0 +1,53 @@
+{
+  "order": 10,
+  "slug": "erp-products",
+  "source": "builtin",
+  "name": "Produkte",
+  "category": "master-data",
+  "category_label": "Stammdaten",
+  "summary": "Produkte suchen, ansehen, anlegen und bearbeiten — Bestand, Preise und Klassifizierung auf einen Blick.",
+  "locales": {
+    "de": {
+      "name": "Produkte",
+      "summary": "Produkte suchen, ansehen, anlegen und bearbeiten — Bestand, Preise und Klassifizierung auf einen Blick."
+    },
+    "en": {
+      "name": "Products",
+      "summary": "Search, view, create and edit products — stock, prices and classification at a glance."
+    },
+    "nl": {
+      "name": "Producten",
+      "summary": "Producten zoeken, bekijken, aanmaken en bewerken — voorraad, prijzen en classificatie in één oogopslag."
+    }
+  },
+  "accent": "#6D7CFF",
+  "platform": "web",
+  "icon": "box",
+  "entities": [],
+  "linked_entities": [
+    "Product"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Produkte",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "Product"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

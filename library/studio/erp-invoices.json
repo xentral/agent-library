@@ -1,0 +1,53 @@
+{
+  "order": 16,
+  "slug": "erp-invoices",
+  "source": "builtin",
+  "name": "Rechnungen",
+  "category": "finance",
+  "category_label": "Finanzen",
+  "summary": "Rechnungen ansehen, bearbeiten, freigeben und versenden — Beträge, Fälligkeiten und Zahlstatus.",
+  "locales": {
+    "de": {
+      "name": "Rechnungen",
+      "summary": "Rechnungen ansehen, bearbeiten, freigeben und versenden — Beträge, Fälligkeiten und Zahlstatus."
+    },
+    "en": {
+      "name": "Invoices",
+      "summary": "View, edit, release and send invoices — amounts, due dates and payment status."
+    },
+    "nl": {
+      "name": "Facturen",
+      "summary": "Facturen bekijken, bewerken, vrijgeven en versturen — bedragen, vervaldata en betaalstatus."
+    }
+  },
+  "accent": "#2F855A",
+  "platform": "web",
+  "icon": "invoice",
+  "entities": [],
+  "linked_entities": [
+    "SalesInvoice"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Rechnungen",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "SalesInvoice"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
