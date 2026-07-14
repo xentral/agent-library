@@ -1,0 +1,53 @@
+{
+  "order": 23,
+  "slug": "erp-production-orders",
+  "source": "builtin",
+  "name": "Produktionsaufträge",
+  "category": "production",
+  "category_label": "Produktion",
+  "summary": "Produktionsaufträge ansehen und bearbeiten — Positionen, Mengen und Status.",
+  "locales": {
+    "de": {
+      "name": "Produktionsaufträge",
+      "summary": "Produktionsaufträge ansehen und bearbeiten — Positionen, Mengen und Status."
+    },
+    "en": {
+      "name": "Production Orders",
+      "summary": "View and edit production orders — line items, quantities and status."
+    },
+    "nl": {
+      "name": "Productieorders",
+      "summary": "Productieorders bekijken en bewerken — regels, aantallen en status."
+    }
+  },
+  "accent": "#805AD5",
+  "platform": "web",
+  "icon": "layers",
+  "entities": [],
+  "linked_entities": [
+    "ProductionOrder"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Produktionsaufträge",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "ProductionOrder"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

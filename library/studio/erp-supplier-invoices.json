@@ -1,0 +1,53 @@
+{
+  "order": 18,
+  "slug": "erp-supplier-invoices",
+  "source": "builtin",
+  "name": "Eingangsrechnungen",
+  "category": "finance",
+  "category_label": "Einkauf",
+  "summary": "Eingangsrechnungen (Verbindlichkeiten) ansehen und bearbeiten — Beträge, Fälligkeiten und Lieferant.",
+  "locales": {
+    "de": {
+      "name": "Eingangsrechnungen",
+      "summary": "Eingangsrechnungen (Verbindlichkeiten) ansehen und bearbeiten — Beträge, Fälligkeiten und Lieferant."
+    },
+    "en": {
+      "name": "Supplier Invoices",
+      "summary": "View and edit supplier invoices (liabilities) — amounts, due dates and supplier."
+    },
+    "nl": {
+      "name": "Inkoopfacturen",
+      "summary": "Inkoopfacturen (verplichtingen) bekijken en bewerken — bedragen, vervaldata en leverancier."
+    }
+  },
+  "accent": "#2F855A",
+  "platform": "web",
+  "icon": "payment",
+  "entities": [],
+  "linked_entities": [
+    "supplierInvoice"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Eingangsrechnungen",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "supplierInvoice"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
