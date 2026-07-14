@@ -1,0 +1,21 @@
+{
+  "id": "prompt-mini-erp",
+  "kind": "prompt",
+  "lane": "community",
+  "iconName": "grid",
+  "order": 120,
+  "flagship": true,
+  "category": "ERP",
+  "locales": {
+    "de": {
+      "title": "Mini-ERP einrichten",
+      "oneLiner": "Richtet in einem Rutsch acht schlanke Arbeitsflächen ein — Produkte, Kunden, Lieferanten, Angebote, Aufträge, Lieferscheine, Rechnungen und Bestellungen — alle aus deinen Live-Daten."
+    },
+    "en": {
+      "title": "Mini-ERP einrichten",
+      "oneLiner": "Richtet in einem Rutsch acht schlanke Arbeitsflächen ein — Produkte, Kunden, Lieferanten, Angebote, Aufträge, Lieferscheine, Rechnungen und Bestellungen — alle aus deinen Live-Daten."
+    }
+  },
+  "author": "Xentral",
+  "body": "Richte mir ein schlankes Mini-ERP ein, mit dem ein Sachbearbeiter schnell in die wichtigsten Geschäftsobjekte springen kann.\n\nInstalliere dafür aus der App-Bibliothek diese acht Arbeitsflächen als eigene Studio-Apps und aktiviere sie, sodass sie in der Seitenleiste unter „Cockpits\" erscheinen:\n- Produkte (erp-products)\n- Kunden (erp-customers)\n- Lieferanten (erp-suppliers)\n- Angebote (erp-offers)\n- Aufträge (erp-sales-orders)\n- Lieferscheine (erp-delivery-notes)\n- Rechnungen (erp-invoices)\n- Bestellungen (erp-purchase-orders)\n\nJede App zeigt genau eine Entity als volle Arbeitsfläche: durchsuchbare Liste, Detailmaske mit Reitern, Bearbeiten und die entitätseigenen Aktionen — alles direkt aus meinen Live-Daten, ohne dass du pro Entity etwas nachbauen musst. Lege die Apps an, bestätige mir kurz, welche installiert wurden, und sag mir, dass ich sie ab sofort links unter „Cockpits\" finde."
+}
