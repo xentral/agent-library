@@ -1,0 +1,24 @@
+{
+  "id": "invoice_open_receivables",
+  "version": 1,
+  "icon": "coin",
+  "category": "finance",
+  "order": 320,
+  "kpi": {
+    "key": "invoice_open_receivables",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Open receivables",
+      "description": "Total outstanding receivables from invoices."
+    },
+    "de": {
+      "title": "Offene Posten",
+      "description": "Summe der offenen Forderungen aus Rechnungen."
+    }
+  }
+}

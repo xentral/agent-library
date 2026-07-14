@@ -1,0 +1,21 @@
+{
+  "id": "install-carrier-kit",
+  "kind": "prompt",
+  "lane": "partner",
+  "section": "starter-kit",
+  "iconName": "truck",
+  "order": 10,
+  "locales": {
+    "de": {
+      "title": "Carrier-Kit installieren",
+      "oneLiner": "Ein Dashboard über alle Paketdienste — samt der MCP-Adresse, mit der du Versandlabels erzeugst."
+    },
+    "en": {
+      "title": "Install Carrier Kit",
+      "oneLiner": "A dashboard across every carrier — plus the MCP address to create shipping labels."
+    }
+  },
+  "author": "Xentral",
+  "category": "Versand",
+  "body": "Richte mir das Carrier-Kit ein.\n\nBitte:\n- Installiere das Dashboard „Carrier-Kit\" aus der Dashboard-Bibliothek und öffne es. Es enthält die Erklär-Kachel mit meiner MCP-Adresse, Versand-Kennzahlen und meine offenen Lieferaufträge.\n- Erkläre mir in zwei, drei Sätzen, wie ich es nutze: die MCP-Adresse oben in Claude, Codex & Co. als Connector eintragen und dann in normaler Sprache Paketmarken erzeugen.\n- Zeig mir zum Schluss einen konkreten Beispiel-Satz, mit dem ich meine erste DHL-Sandbox-Marke ziehe.\nLeg direkt los."
+}

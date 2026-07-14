@@ -1,0 +1,24 @@
+{
+  "id": "carrier_active",
+  "version": 1,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 313,
+  "kpi": {
+    "key": "carrier_active",
+    "unit": "count",
+    "value_type": "number",
+    "group": "shipping",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Active carriers",
+      "description": "Carriers you have created labels for."
+    },
+    "de": {
+      "title": "Aktive Carrier",
+      "description": "Paketdienste, für die du bereits Labels erzeugt hast."
+    }
+  }
+}

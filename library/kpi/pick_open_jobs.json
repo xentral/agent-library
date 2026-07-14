@@ -1,0 +1,24 @@
+{
+  "id": "pick_open_jobs",
+  "version": 1,
+  "icon": "package",
+  "category": "logistics",
+  "order": 331,
+  "kpi": {
+    "key": "pick_open_jobs",
+    "unit": "count",
+    "value_type": "number",
+    "group": "logistics",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Open pick jobs",
+      "description": "Pick jobs waiting to be processed."
+    },
+    "de": {
+      "title": "Offene Pickaufträge",
+      "description": "Wartende Kommissionieraufträge."
+    }
+  }
+}

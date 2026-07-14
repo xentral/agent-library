@@ -1,0 +1,24 @@
+{
+  "id": "invoice_overdue_amount",
+  "version": 1,
+  "icon": "invoice",
+  "category": "finance",
+  "order": 321,
+  "kpi": {
+    "key": "invoice_overdue_amount",
+    "unit": "EUR",
+    "value_type": "currency",
+    "group": "finance",
+    "value_source": "push"
+  },
+  "locales": {
+    "en": {
+      "title": "Overdue",
+      "description": "Outstanding amount from overdue invoices."
+    },
+    "de": {
+      "title": "Überfällig",
+      "description": "Offener Betrag aus überfälligen Rechnungen."
+    }
+  }
+}

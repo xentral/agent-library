@@ -1,0 +1,88 @@
+{
+  "id": "carrier_kit",
+  "version": 1,
+  "icon": "truck",
+  "category": "logistics",
+  "order": 200,
+  "recommended_kpis": [
+    "carrier_labels_today",
+    "carrier_labels_mtd",
+    "carrier_labels_total",
+    "carrier_active",
+    "carrier_returns_total"
+  ],
+  "widgets": [
+    {
+      "id": "explainer",
+      "type": "HtmlBox",
+      "config": {
+        "htmlContent": {
+          "de": "<div style=\"max-width: 660px; padding: 6px 8px 12px;\"><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 16px;\">Carrier-Kit · Versand</div><h1 style=\"font-size: 28px; font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; color: var(--text); margin: 0 0 12px;\">Paketmarken für jeden Carrier — aus einem Gespräch.</h1><p style=\"font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 20px; max-width: 520px;\">Verbinde deinen KI-Client mit der Adresse unten und erzeuge Versandlabels für DHL, DPD, UPS, FedEx, GLS, Sendcloud und mehr. Ein Format, jeder Dienst — du bringst nur dein Carrier-Konto.</p><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">Deine MCP-Adresse</div><div style=\"background: var(--surface-hover); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 4px 0 22px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;\"><code style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--text); word-break: break-all; line-height: 1.45;\">{{mcp_url}}</code><button data-copy=\"{{mcp_url}}\" aria-label=\"Kopieren\" style=\"background: transparent; color: var(--brand); border: 1px solid var(--brand-border); border-radius: 6px; padding: 5px 7px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; line-height: 0;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg></button></div><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">So ziehst du deine erste Marke</div><ol style=\"margin: 0 0 22px; padding-left: 20px;\"><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Trag die Adresse oben in Claude, Codex &amp; Co. als Connector ein.</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Sag z. B.: „Erzeuge ein DHL-Sandbox-Label für ein 2-kg-Paket an Erika Beispiel, München\".</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Du bekommst Tracking-Nummer und PDF-Label zurück — fertig zum Drucken.</li></ol><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">Unterstützte Carrier</div><div style=\"margin-bottom: 4px;\"><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">DHL</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">DPD</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">UPS</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">FedEx</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">GLS</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">Sendcloud</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">Shipcloud</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">DHL Retoure</span></div></div>",
+          "en": "<div style=\"max-width: 660px; padding: 6px 8px 12px;\"><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 16px;\">Carrier Kit · Shipping</div><h1 style=\"font-size: 28px; font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; color: var(--text); margin: 0 0 12px;\">Shipping labels for any carrier — from one conversation.</h1><p style=\"font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 20px; max-width: 520px;\">Connect your AI client to the address below and create shipping labels for DHL, DPD, UPS, FedEx, GLS, Sendcloud and more. One format, any carrier — you bring only your carrier account.</p><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">Your MCP address</div><div style=\"background: var(--surface-hover); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 4px 0 22px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;\"><code style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--text); word-break: break-all; line-height: 1.45;\">{{mcp_url}}</code><button data-copy=\"{{mcp_url}}\" aria-label=\"Copy\" style=\"background: transparent; color: var(--brand); border: 1px solid var(--brand-border); border-radius: 6px; padding: 5px 7px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; line-height: 0;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg></button></div><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">Create your first label</div><ol style=\"margin: 0 0 22px; padding-left: 20px;\"><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Add the address above as a connector in Claude, Codex &amp; co.</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">Say e.g.: \"Create a DHL sandbox label for a 2 kg parcel to Erika Beispiel, Munich\".</li><li style=\"font-size: 13.5px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 7px;\">You get back a tracking number and a PDF label — ready to print.</li></ol><div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); margin: 6px 0 10px;\">Supported carriers</div><div style=\"margin-bottom: 4px;\"><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">DHL</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">DPD</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">UPS</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">FedEx</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">GLS</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">Sendcloud</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">Shipcloud</span><span style=\"display: inline-block; font-size: 12px; color: var(--text-secondary); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; margin: 0 6px 7px 0;\">DHL Retoure</span></div></div>"
+        }
+      }
+    },
+    {
+      "id": "hero",
+      "type": "HeroStats",
+      "config": {
+        "kpis": [
+          "carrier_labels_today",
+          "carrier_labels_mtd",
+          "carrier_labels_total"
+        ]
+      }
+    },
+    {
+      "id": "kpi_grid",
+      "type": "KpiGrid",
+      "config": {
+        "title_text": {
+          "de": "Carrier",
+          "en": "Carrier"
+        },
+        "kpis": [
+          "carrier_active",
+          "carrier_returns_total"
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "type": "grid",
+    "rows": [
+      {
+        "cols": [
+          5,
+          7
+        ],
+        "cells": [
+          [
+            "explainer"
+          ],
+          [
+            "hero",
+            "kpi_grid"
+          ]
+        ]
+      }
+    ]
+  },
+  "linked_kpis": [
+    "carrier_labels_today",
+    "carrier_labels_mtd",
+    "carrier_labels_total",
+    "carrier_active",
+    "carrier_returns_total"
+  ],
+  "locales": {
+    "en": {
+      "title": "Carrier Kit",
+      "description": "Shipping labels across every carrier, plus your MCP address to create them."
+    },
+    "de": {
+      "title": "Carrier-Kit",
+      "description": "Paketmarken über alle Carrier — samt deiner MCP-Adresse, mit der du sie erzeugst."
+    }
+  }
+}
