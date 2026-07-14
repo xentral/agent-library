@@ -1,0 +1,53 @@
+{
+  "order": 20,
+  "slug": "erp-returns",
+  "source": "builtin",
+  "name": "Retouren",
+  "category": "sales",
+  "category_label": "Vertrieb",
+  "summary": "Retouren ansehen, bearbeiten und abschließen — Positionen, Grund und Belegstatus.",
+  "locales": {
+    "de": {
+      "name": "Retouren",
+      "summary": "Retouren ansehen, bearbeiten und abschließen — Positionen, Grund und Belegstatus."
+    },
+    "en": {
+      "name": "Returns",
+      "summary": "View, edit and process returns — line items, reason and document status."
+    },
+    "nl": {
+      "name": "Retouren",
+      "summary": "Retouren bekijken, bewerken en verwerken — regels, reden en documentstatus."
+    }
+  },
+  "accent": "#2B6CB0",
+  "platform": "web",
+  "icon": "return",
+  "entities": [],
+  "linked_entities": [
+    "ReturnOrder"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Retouren",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "ReturnOrder"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

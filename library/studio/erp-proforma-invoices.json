@@ -1,0 +1,53 @@
+{
+  "order": 21,
+  "slug": "erp-proforma-invoices",
+  "source": "builtin",
+  "name": "Proforma-Rechnungen",
+  "category": "sales",
+  "category_label": "Vertrieb",
+  "summary": "Proforma-Rechnungen ansehen, bearbeiten und versenden — Positionen und Beträge.",
+  "locales": {
+    "de": {
+      "name": "Proforma-Rechnungen",
+      "summary": "Proforma-Rechnungen ansehen, bearbeiten und versenden — Positionen und Beträge."
+    },
+    "en": {
+      "name": "Proforma Invoices",
+      "summary": "View, edit and send proforma invoices — line items and amounts."
+    },
+    "nl": {
+      "name": "Proformafacturen",
+      "summary": "Proformafacturen bekijken, bewerken en versturen — regels en bedragen."
+    }
+  },
+  "accent": "#2B6CB0",
+  "platform": "web",
+  "icon": "file",
+  "entities": [],
+  "linked_entities": [
+    "ProformaInvoice"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Proforma-Rechnungen",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "ProformaInvoice"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

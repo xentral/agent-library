@@ -1,0 +1,53 @@
+{
+  "order": 24,
+  "slug": "erp-price-inquiries",
+  "source": "builtin",
+  "name": "Preisanfragen",
+  "category": "logistics",
+  "category_label": "Einkauf",
+  "summary": "Preisanfragen an Lieferanten ansehen und bearbeiten — Positionen und Status.",
+  "locales": {
+    "de": {
+      "name": "Preisanfragen",
+      "summary": "Preisanfragen an Lieferanten ansehen und bearbeiten — Positionen und Status."
+    },
+    "en": {
+      "name": "Price Inquiries",
+      "summary": "View and edit supplier price inquiries — line items and status."
+    },
+    "nl": {
+      "name": "Prijsaanvragen",
+      "summary": "Prijsaanvragen aan leveranciers bekijken en bewerken — regels en status."
+    }
+  },
+  "accent": "#B7791F",
+  "platform": "web",
+  "icon": "catalog",
+  "entities": [],
+  "linked_entities": [
+    "PriceInquiry"
+  ],
+  "mcp_tools": [],
+  "files": [],
+  "form": {
+    "home": "main",
+    "screens": [
+      {
+        "id": "main",
+        "name": "Preisanfragen",
+        "type": "screen",
+        "inMenu": true,
+        "components": [
+          {
+            "id": "eb_main",
+            "type": "entitybrowser",
+            "props": {
+              "label": "",
+              "dataSource": "PriceInquiry"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
