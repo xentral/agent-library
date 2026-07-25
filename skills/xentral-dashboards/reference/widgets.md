@@ -80,7 +80,7 @@ Each tab's `view` is a built-in renderer; the available values are:
 **Embedding an arbitrary BusinessEntity (e.g. Kostenstellen) — the
 one explicit consumption path from the foundation layer:** use
 `view: 'entity', entity_key: '<key>'`. The valid `entity_key` values
-come live from Xentral's metadata — call `xentral_entities` with
+come live from Xentral's metadata — call `xentral_erp_core` with
 `action='list'` to enumerate them per instance. This is the only
 place across all dashboard widgets where a raw `entity_key` is
 accepted; everywhere else use the named views above. The entity
