@@ -54,7 +54,7 @@ intent.
 `xentral_schedules` · `xentral_business_model` ·
 `xentral_groups` · `xentral_dashboards` · `xentral_kpi` ·
 `xentral_reports` · `xentral_pdf_templates` · `xentral_connections` ·
-`xentral_erp_settings` · `xentral_entities` (customizing only) ·
+`xentral_erp_settings` · `xentral_erp_core` (customizing only) ·
 `xentral_fileshare` · `xentral_knowledge_base`
 
 Common tool recipes:
