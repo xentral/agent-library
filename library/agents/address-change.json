@@ -9,7 +9,7 @@
     "agent_type": "form",
     "tools": [
       "xentral_copilot",
-      "xentral_crm",
+      "xentral_erp_core",
       "xentral_email"
     ],
     "model": "sonnet-4-6",

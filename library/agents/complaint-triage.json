@@ -9,7 +9,7 @@
     "agent_type": "chat",
     "tools": [
       "xentral_copilot",
-      "xentral_crm",
+      "xentral_erp_core",
       "xentral_decisions",
       "xentral_knowledge_base"
     ],
