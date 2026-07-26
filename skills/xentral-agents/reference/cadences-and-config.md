@@ -49,7 +49,7 @@ intent.
 
 ### Pickable tool slugs (`annotations.agent_pickable=true`)
 
-`xentral_copilot` (ERP read & write) · `xentral_email` · `xentral_crm` ·
+`xentral_copilot` (ERP read & write) · `xentral_email` ·
 `xentral_agent_jobs` · `xentral_decisions` · `xentral_agents` ·
 `xentral_schedules` · `xentral_business_model` ·
 `xentral_groups` · `xentral_dashboards` · `xentral_kpi` ·
@@ -62,7 +62,7 @@ Common tool recipes:
 - **Form agent that produces a CSV** → `['xentral_copilot', 'xentral_fileshare']`
   (Co-Pilot pulls the ERP data, Fileshare drops the CSV).
 - **Chat agent for customer-service questions** →
-  `['xentral_copilot', 'xentral_crm', 'xentral_knowledge_base']`.
+  `['xentral_copilot', 'xentral_erp_core', 'xentral_knowledge_base']`.
 - **Briefing agent for dashboard values** →
   `['xentral_copilot', 'xentral_kpi', 'xentral_decisions']`.
 
