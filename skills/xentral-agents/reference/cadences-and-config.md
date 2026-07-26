@@ -49,7 +49,7 @@ intent.
 
 ### Pickable tool slugs (`annotations.agent_pickable=true`)
 
-`xentral_copilot` (ERP read & write) · `xentral_email` ·
+`xentral_copilot` (ERP read & write) ·
 `xentral_agent_jobs` · `xentral_decisions` · `xentral_agents` ·
 `xentral_schedules` · `xentral_business_model` ·
 `xentral_groups` · `xentral_dashboards` · `xentral_kpi` ·

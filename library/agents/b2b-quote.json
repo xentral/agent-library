@@ -10,7 +10,6 @@
     "tools": [
       "xentral_copilot",
       "xentral_pdf_templates",
-      "xentral_email",
       "xentral_erp_core"
     ],
     "model": "sonnet-4-6",
