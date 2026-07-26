@@ -9,8 +9,7 @@
     "agent_type": "form",
     "tools": [
       "xentral_copilot",
-      "xentral_erp_core",
-      "xentral_email"
+      "xentral_erp_core"
     ],
     "model": "sonnet-4-6",
     "temperature": 0.3
