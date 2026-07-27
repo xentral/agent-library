@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "datasets library item",
+  "description": "A DataSets starter template: a whole set of related tables with typed columns, seeded when a customer creates a DataSet from this template.",
+  "type": "object",
+  "required": [
+    "order",
+    "slug",
+    "source",
+    "name",
+    "category",
+    "category_label",
+    "summary",
+    "tables"
+  ],
+  "properties": {
+    "order": {
+      "type": "integer"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "source": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "category_label": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "locales": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "category_label": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "tables": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "columns"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_]{0,62}$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "type"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]{0,62}$"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "integer",
+                    "number",
+                    "boolean",
+                    "date",
+                    "datetime",
+                    "uuid",
+                    "json",
+                    "select",
+                    "reference"
+                  ]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "references": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
