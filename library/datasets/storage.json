@@ -1,0 +1,70 @@
+{
+  "order": 600,
+  "slug": "storage",
+  "source": "builtin",
+  "name": "Storage",
+  "category": "storage",
+  "category_label": "Storage",
+  "summary": "A blank-ish set for assets and free-form notes.",
+  "locales": {
+    "en": {
+      "name": "Storage",
+      "summary": "A blank-ish set for assets and free-form notes.",
+      "category_label": "Storage"
+    },
+    "de": {
+      "name": "Ablage",
+      "summary": "Eine offene Ablage für Assets und freie Notizen.",
+      "category_label": "Ablage"
+    }
+  },
+  "tables": [
+    {
+      "name": "assets",
+      "label": "Assets",
+      "columns": [
+        {
+          "name": "asset",
+          "type": "text",
+          "label": "Asset"
+        },
+        {
+          "name": "owner",
+          "type": "text",
+          "label": "Owner"
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "label": "Value"
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "label": "Status"
+        }
+      ]
+    },
+    {
+      "name": "notes",
+      "label": "Notes",
+      "columns": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Title"
+        },
+        {
+          "name": "tags",
+          "type": "text",
+          "label": "Tags"
+        },
+        {
+          "name": "payload",
+          "type": "json",
+          "label": "Payload"
+        }
+      ]
+    }
+  ]
+}

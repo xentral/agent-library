@@ -1,0 +1,101 @@
+{
+  "order": 200,
+  "slug": "sales",
+  "source": "builtin",
+  "name": "Sales Pipeline",
+  "category": "sales",
+  "category_label": "Sales",
+  "summary": "Leads, opportunities and quotes to run your sales process.",
+  "locales": {
+    "en": {
+      "name": "Sales Pipeline",
+      "summary": "Leads, opportunities and quotes to run your sales process.",
+      "category_label": "Sales"
+    },
+    "de": {
+      "name": "Vertriebs-Pipeline",
+      "summary": "Leads, Chancen und Angebote für deinen Vertriebsprozess.",
+      "category_label": "Vertrieb"
+    }
+  },
+  "tables": [
+    {
+      "name": "leads",
+      "label": "Leads",
+      "columns": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "source",
+          "type": "select",
+          "label": "Source"
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "label": "Status"
+        },
+        {
+          "name": "owner",
+          "type": "text",
+          "label": "Owner"
+        }
+      ]
+    },
+    {
+      "name": "opportunities",
+      "label": "Opportunities",
+      "columns": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Opportunity"
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "label": "Value"
+        },
+        {
+          "name": "stage",
+          "type": "select",
+          "label": "Stage"
+        },
+        {
+          "name": "close_date",
+          "type": "date",
+          "label": "Close date"
+        }
+      ]
+    },
+    {
+      "name": "quotes",
+      "label": "Quotes",
+      "columns": [
+        {
+          "name": "number",
+          "type": "text",
+          "label": "Quote #"
+        },
+        {
+          "name": "customer",
+          "type": "text",
+          "label": "Customer"
+        },
+        {
+          "name": "amount",
+          "type": "number",
+          "label": "Amount"
+        },
+        {
+          "name": "sent",
+          "type": "boolean",
+          "label": "Sent"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "order": 100,
+  "slug": "crm",
+  "source": "builtin",
+  "name": "CRM",
+  "category": "crm",
+  "category_label": "CRM",
+  "summary": "Contacts, companies, deals and activities — a lightweight CRM.",
+  "locales": {
+    "en": {
+      "name": "CRM",
+      "summary": "Contacts, companies, deals and activities — a lightweight CRM.",
+      "category_label": "CRM"
+    },
+    "de": {
+      "name": "CRM",
+      "summary": "Kontakte, Firmen, Deals und Aktivitäten — ein leichtgewichtiges CRM.",
+      "category_label": "CRM"
+    }
+  },
+  "tables": [
+    {
+      "name": "contacts",
+      "label": "Contacts",
+      "columns": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "company",
+          "type": "text",
+          "label": "Company"
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "label": "Email"
+        },
+        {
+          "name": "phone",
+          "type": "text",
+          "label": "Phone"
+        },
+        {
+          "name": "owner",
+          "type": "text",
+          "label": "Owner"
+        }
+      ]
+    },
+    {
+      "name": "companies",
+      "label": "Companies",
+      "columns": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Company"
+        },
+        {
+          "name": "industry",
+          "type": "select",
+          "label": "Industry"
+        },
+        {
+          "name": "city",
+          "type": "text",
+          "label": "City"
+        },
+        {
+          "name": "revenue",
+          "type": "number",
+          "label": "Revenue"
+        }
+      ]
+    },
+    {
+      "name": "deals",
+      "label": "Deals",
+      "columns": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Deal"
+        },
+        {
+          "name": "company",
+          "type": "text",
+          "label": "Company"
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "label": "Value"
+        },
+        {
+          "name": "stage",
+          "type": "select",
+          "label": "Stage"
+        },
+        {
+          "name": "close_date",
+          "type": "date",
+          "label": "Close date"
+        }
+      ]
+    },
+    {
+      "name": "activities",
+      "label": "Activities",
+      "columns": [
+        {
+          "name": "subject",
+          "type": "text",
+          "label": "Subject"
+        },
+        {
+          "name": "contact",
+          "type": "text",
+          "label": "Contact"
+        },
+        {
+          "name": "date",
+          "type": "datetime",
+          "label": "When"
+        },
+        {
+          "name": "done",
+          "type": "boolean",
+          "label": "Done"
+        }
+      ]
+    }
+  ]
+}
