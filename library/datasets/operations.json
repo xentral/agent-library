@@ -1,0 +1,106 @@
+{
+  "order": 400,
+  "slug": "operations",
+  "source": "builtin",
+  "name": "Operations",
+  "category": "operations",
+  "category_label": "Operations",
+  "summary": "Tasks, projects and suppliers to run day-to-day work.",
+  "locales": {
+    "en": {
+      "name": "Operations",
+      "summary": "Tasks, projects and suppliers to run day-to-day work.",
+      "category_label": "Operations"
+    },
+    "de": {
+      "name": "Betrieb",
+      "summary": "Aufgaben, Projekte und Lieferanten für das Tagesgeschäft.",
+      "category_label": "Betrieb"
+    }
+  },
+  "tables": [
+    {
+      "name": "tasks",
+      "label": "Tasks",
+      "columns": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Task"
+        },
+        {
+          "name": "assignee",
+          "type": "text",
+          "label": "Assignee"
+        },
+        {
+          "name": "due_date",
+          "type": "date",
+          "label": "Due date"
+        },
+        {
+          "name": "priority",
+          "type": "select",
+          "label": "Priority"
+        },
+        {
+          "name": "done",
+          "type": "boolean",
+          "label": "Done"
+        }
+      ]
+    },
+    {
+      "name": "projects",
+      "label": "Projects",
+      "columns": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Project"
+        },
+        {
+          "name": "client",
+          "type": "text",
+          "label": "Client"
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "label": "Status"
+        },
+        {
+          "name": "budget",
+          "type": "number",
+          "label": "Budget"
+        }
+      ]
+    },
+    {
+      "name": "suppliers",
+      "label": "Suppliers",
+      "columns": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Supplier"
+        },
+        {
+          "name": "contact",
+          "type": "text",
+          "label": "Contact"
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "label": "Email"
+        },
+        {
+          "name": "rating",
+          "type": "number",
+          "label": "Rating"
+        }
+      ]
+    }
+  ]
+}

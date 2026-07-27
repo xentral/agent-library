@@ -1,0 +1,96 @@
+{
+  "order": 300,
+  "slug": "inventory",
+  "source": "builtin",
+  "name": "Inventory",
+  "category": "inventory",
+  "category_label": "Inventory",
+  "summary": "Products, stock levels and warehouses.",
+  "locales": {
+    "en": {
+      "name": "Inventory",
+      "summary": "Products, stock levels and warehouses.",
+      "category_label": "Inventory"
+    },
+    "de": {
+      "name": "Lager",
+      "summary": "Produkte, Bestände und Lagerorte.",
+      "category_label": "Lager"
+    }
+  },
+  "tables": [
+    {
+      "name": "products",
+      "label": "Products",
+      "columns": [
+        {
+          "name": "sku",
+          "type": "text",
+          "label": "SKU"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "name": "category",
+          "type": "select",
+          "label": "Category"
+        },
+        {
+          "name": "price",
+          "type": "number",
+          "label": "Price"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "label": "Active"
+        }
+      ]
+    },
+    {
+      "name": "stock",
+      "label": "Stock",
+      "columns": [
+        {
+          "name": "sku",
+          "type": "text",
+          "label": "SKU"
+        },
+        {
+          "name": "warehouse",
+          "type": "text",
+          "label": "Warehouse"
+        },
+        {
+          "name": "quantity",
+          "type": "number",
+          "label": "Quantity"
+        },
+        {
+          "name": "reorder_level",
+          "type": "number",
+          "label": "Reorder level"
+        }
+      ]
+    },
+    {
+      "name": "warehouses",
+      "label": "Warehouses",
+      "columns": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Warehouse"
+        },
+        {
+          "name": "location",
+          "type": "text",
+          "label": "Location"
+        }
+      ]
+    }
+  ]
+}

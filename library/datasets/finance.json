@@ -1,0 +1,106 @@
+{
+  "order": 500,
+  "slug": "finance",
+  "source": "builtin",
+  "name": "Finance",
+  "category": "finance",
+  "category_label": "Finance",
+  "summary": "Expenses, invoices and budgets for quick tallies.",
+  "locales": {
+    "en": {
+      "name": "Finance",
+      "summary": "Expenses, invoices and budgets for quick tallies.",
+      "category_label": "Finance"
+    },
+    "de": {
+      "name": "Finanzen",
+      "summary": "Ausgaben, Rechnungen und Budgets für schnelle Auswertungen.",
+      "category_label": "Finanzen"
+    }
+  },
+  "tables": [
+    {
+      "name": "expenses",
+      "label": "Expenses",
+      "columns": [
+        {
+          "name": "date",
+          "type": "date",
+          "label": "Date"
+        },
+        {
+          "name": "category",
+          "type": "select",
+          "label": "Category"
+        },
+        {
+          "name": "amount",
+          "type": "number",
+          "label": "Amount"
+        },
+        {
+          "name": "vendor",
+          "type": "text",
+          "label": "Vendor"
+        }
+      ]
+    },
+    {
+      "name": "invoices",
+      "label": "Invoices",
+      "columns": [
+        {
+          "name": "number",
+          "type": "text",
+          "label": "Invoice #"
+        },
+        {
+          "name": "customer",
+          "type": "text",
+          "label": "Customer"
+        },
+        {
+          "name": "amount",
+          "type": "number",
+          "label": "Amount"
+        },
+        {
+          "name": "due_date",
+          "type": "date",
+          "label": "Due date"
+        },
+        {
+          "name": "paid",
+          "type": "boolean",
+          "label": "Paid"
+        }
+      ]
+    },
+    {
+      "name": "budgets",
+      "label": "Budgets",
+      "columns": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Budget"
+        },
+        {
+          "name": "period",
+          "type": "text",
+          "label": "Period"
+        },
+        {
+          "name": "planned",
+          "type": "number",
+          "label": "Planned"
+        },
+        {
+          "name": "actual",
+          "type": "number",
+          "label": "Actual"
+        }
+      ]
+    }
+  ]
+}
