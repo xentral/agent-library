@@ -73,6 +73,28 @@ Duplicate headers are suffixed (`name`, `name_2`), empty or non-alphabetic ones 
 positional names (`col_4`). **No column is ever dropped** — records are copied
 positionally, so losing one would shift everything after it.
 
+## Which set can be imported into
+
+`import` creates a table, and creating a table is DDL. The store allows an agent
+DDL only on objects it **owns** and that are still `draft` — ownership is by
+principal, so "draft" alone is not enough. Importing into a set the customer
+created is refused:
+
+```
+agents may only add tables to their own draft datasets (this one is draft)
+```
+
+The set was draft; it failed purely on ownership. So create the set for the import
+yourself and load into that. Two ways to hand it over afterwards:
+
+- Tell the customer where it landed and let them activate it in the app; or
+- `query` the staged table and `insert` the rows into a table of theirs — no DDL
+  on their object, so this is allowed.
+
+This is the rule working as designed rather than an obstacle: imported raw data is
+unvalidated, and keeping it in a set you own means a human decides when it becomes
+real.
+
 ## Probe and full run
 
 The probe loads the first N rows (default 5) into a **separate** probe table, not

@@ -122,6 +122,21 @@ Default to a DataSet table. Writing ERP entities is the rare case and needs a
 field mapping; a table gets the data somewhere queryable *now*, and promoting it
 later is a normal SQL job.
 
+**Import into a set you created yourself.** `import` creates a table, which is
+DDL, and you may only do DDL on your own draft objects (see *Lifecycle*). Trying
+to import into a set the customer built returns:
+
+```
+Error: agents cannot do this
+       (agents may only add tables to their own draft datasets)
+```
+
+So `create_set` a draft set for the import — name it after the source, e.g.
+`crm_import` — and load into that. Then tell the customer where the data landed so
+they can activate it, or copy from it with `query` + `insert` into a table of
+theirs. That is the intended shape, not a workaround: raw imported data belongs in
+a staging area you own until a human has looked at it.
+
 ### 4 · Probe the first rows
 
 `import` with `limit_rows=5` loads into `<table>_probe` — never the target table.
