@@ -6,8 +6,11 @@ description: >
   a Supabase project), isolated per tenant in a managed Postgres. Covers starting
   from a template (CRM, sales pipeline, inventory, operations, finance, storage)
   versus a blank set, adding/renaming/dropping typed columns, reading/writing
-  rows, read-only SQL, and the guided CSV import — upload to Fileshare, analyse,
-  agree the destination, probe the first rows, confirm, load the rest, clean up.
+  rows (including rows_bulk for many at once), read-only SQL, and the two ways to
+  get a CSV in: the guided server-side import (upload to Fileshare, analyse, agree
+  the destination, probe the first rows, confirm, load the rest, clean up), or —
+  when you have local file tools — cleaning and repairing the file yourself and
+  writing it with rows_bulk.
   Use when the user wants an ad-hoc list, an import target, working data, or an
   agent scratch table — NOT for ERP master data (customers/orders/products/
   invoices), which belongs to xentral_erp_core.
@@ -75,7 +78,52 @@ with "relation does not exist".
 Writes and cross-tenant reads are rejected by the database, not by a filter — so
 SELECT and `information_schema` work, nothing else does.
 
+## Two ways to get data in — pick one first
+
+Before anything else, work out which situation you are in. It changes the whole
+procedure.
+
+**Do you have local file tools?** Can you read a path, run a script, inspect bytes?
+
+- **No** (you are the in-app Advisor): the customer's file is not reachable by you.
+  Have them put it in Fileshare and run **the guided CSV import** below. The server
+  does the parsing; you never see the rows.
+- **Yes** (you are Claude Code or similar, on the customer's machine): the file is
+  already in front of you, and you can do something the server cannot — **repair
+  it**. Use the local path below.
+
+Neither is a fallback for the other. They differ in who holds the data, and that
+decides everything downstream.
+
+### The local path
+
+1. **Profile and clean the file with your own tools.** Read it, check the header
+   against the values, fix what is broken, normalise types. Do this in a script —
+   never by loading the file into your context.
+2. **Get the target shape**: `describe_table` gives you the columns and their
+   types. A few KB.
+3. **Write it with `rows_bulk`** — batches of up to 500, positional value arrays.
+   Values may be strings; they are coerced per column type.
+4. **Say what you changed.** If you repaired a column shift, dropped rows, or
+   converted dates, list it. The customer cannot see your script.
+
+**Where the local path stops.** Every value you send is something you have to
+write out. A 5000-row × 12-column export is roughly 300k tokens of output — slow,
+expensive, and the wrong tool. Past about a thousand rows, upload the cleaned file
+to Fileshare and switch to the guided import: the data then never passes through
+you at all.
+
+So: repair locally, and decide by size whether to *send rows* or *send a file*.
+
+**Run `import_analyze` even after a local repair.** You believe you fixed the
+file; the server checking it independently is how you find out. If the analysis
+comes back clean, say that — it is the evidence your repair worked, not a
+formality.
+
 ## The guided CSV import
+
+Use this when the file is in Fileshare — either because the customer put it there,
+or because you cleaned it locally and uploaded it.
 
 Six phases. Each ends in something the customer can reject, and no phase silently
 enables the next. Full detail — warning semantics, the failure mode this guards
