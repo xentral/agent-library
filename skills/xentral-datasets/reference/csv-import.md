@@ -88,8 +88,8 @@ often as the mapping needs.
 ## Session cleanup
 
 A guided import creates several artifacts: the uploaded file, the probe table, the
-target table, sometimes workflows. All of them carry one `import_session` id, and
-`action='session_cleanup'` removes them together.
+target table, sometimes workflows. All of them carry one `import_session` id, so
+they can be dealt with together rather than one by one.
 
 Rules:
 
@@ -99,11 +99,34 @@ Rules:
 - **Ask, don't assume.** Recurring imports keep their table and workflow; one-offs
   leave nothing. Both are correct outcomes.
 - **Partial failure is reported.** If one artifact cannot be removed, the rest
-  still are, and the response says what remains.
-- **Idempotent.** Running cleanup twice is safe.
+  still are, and the response says what remains, per artifact, with the reason.
+- **Idempotent.** Running cleanup twice is safe; an artifact that is already gone
+  counts as removed.
+
+### What an agent may actually remove
+
+`session_cleanup` performs a **hard delete**, and agents are locked out of hard
+deletes by the store — every artifact comes back `failed` with
+`DatasetForbidden: agents cannot hard-delete; archive instead`.
+
+The caller's identity is what decides this: a human admin acting through the app
+cleans up completely; an agent does not. The service passes the real actor rather
+than assuming system privileges, so the refusal is deliberate.
+
+Practical routes for an agent:
+
+- **Archive instead.** Imported tables are created as `draft`, and archiving your
+  own draft is allowed and reversible. This is usually what "undo the import"
+  should mean anyway.
+- **Hand it back.** Report which artifacts remain and let the customer remove them
+  in the app.
+
+Workflow artifacts are reported as `unsupported` for an unrelated reason: cleanup
+has no way to remove them yet. Either way, do not present a cleanup as complete
+when the response says it is not.
 
 If the customer wants to keep the data but drop the scaffolding, that is a normal
-request — keep the target table, remove the probe table and the uploaded file.
+request — keep the target table, archive the probe table, delete the uploaded file.
 
 ## Raw mode
 
