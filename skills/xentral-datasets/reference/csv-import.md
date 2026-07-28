@@ -1,0 +1,160 @@
+# CSV import — reference
+
+Loaded on demand from `SKILL.md`. Covers the failure mode the flow is built
+around, warning semantics, probe and cleanup mechanics, and the quirks real
+customer exports contain.
+
+## The failure mode this flow exists for
+
+A real customer export omitted one field on 95.6% of its rows and padded the line
+end with an empty field. Every row therefore still carried the header's field
+count, and every CSV parser accepted the file without complaint.
+
+But each value sat one column to the left of its label:
+
+```
+header:  … ;Kundennummer;Typ        ;Firmenname ;Strasse    ;PLZ  ;Ort    ;Land ;Telefon
+row:     … ;            Kunde      ;Acme GmbH  ;Hauptstr. 1;10115;Berlin ;DE   ;+49 30 …  ;
+                        ^ Typ         ^ Firmenname            ^ PLZ  ^ Ort   ^ Land  ^ Telefon
+```
+
+A positional import writes company names into `type`, postal codes into `street`,
+and phone numbers into `country`. Nothing downstream can detect it: every value is
+a valid string, every row has the right arity, no constraint is violated. The
+customer discovers it weeks later when a report is wrong.
+
+**This is why analysis precedes loading, and why a probe precedes the full run.**
+Neither step is ceremony.
+
+## Detection is by value domain, not position
+
+The analyser classifies each column's values into a signature — `email`, `phone`,
+`iso_country`, `zip`, `date`, `money`, `percent`, `url`, `integer` — and compares
+it against what the *header* implies. When several columns independently contradict
+their own header but match a neighbour's at the same offset, that is a shift.
+
+In the example above: `Land` holds phone numbers, `Ort` holds country codes, `PLZ`
+holds city names. Three independent columns agreeing on offset 1 is evidence; one
+odd column is not, and does not raise a warning.
+
+## Warning semantics
+
+| Code | Meaning | How to treat it |
+|---|---|---|
+| `column_shift` | Values are offset against the header. | **Stop.** Report it and get an explicit decision. Fixing the export is nearly always right. |
+| `ragged_rows` | Some rows have a different field count. | Report the count. Short rows import as empty, long rows are truncated. |
+| `empty_columns` | Columns with no data at all. | Mention it; usually harmless, sometimes a sign the wrong export was run. |
+
+A `column_shift` warning blocks the import. Overriding it is possible but must be
+a deliberate, stated choice — never a default and never silent.
+
+## What the analysis returns
+
+Per column: normalized name, verbatim source header, position, fill count,
+distinct count, max length, signature, up to five example values. Plus the
+detected delimiter and encoding, and the row count.
+
+A few KB regardless of file size. **The bulk data is never returned**, which is
+what keeps cost bounded, makes hallucinated cell values impossible, and keeps
+personal data out of the transcript.
+
+## Column naming
+
+Headers are folded to SQL-safe names: lowercased, umlauts transliterated
+(`Straße` → `strasse`), everything else collapsed to underscores.
+
+```
+"Externe Nummer (lead_id)"       → externe_nummer_lead_id
+"Top-Opp Wahrsch. %"             → top_opp_wahrsch
+"Opportunity-Wert gesamt (EUR)"  → opportunity_wert_gesamt_eur
+```
+
+Duplicate headers are suffixed (`name`, `name_2`), empty or non-alphabetic ones get
+positional names (`col_4`). **No column is ever dropped** — records are copied
+positionally, so losing one would shift everything after it.
+
+## Probe and full run
+
+The probe loads the first N rows (default 5) into a **separate** probe table, not
+the target table.
+
+Separate on purpose: loading 5 rows into the real table and later appending the
+rest makes "were the probe rows imported twice?" unanswerable. A distinct probe
+table keeps the answer trivial — it is dropped, and the full run starts clean.
+
+Re-probing is cheap: the probe table is dropped and rewritten each time. Loop as
+often as the mapping needs.
+
+## Session cleanup
+
+A guided import creates several artifacts: the uploaded file, the probe table, the
+target table, sometimes workflows. All of them carry one `import_session` id, and
+`action='session_cleanup'` removes them together.
+
+Rules:
+
+- **Explicit only.** Cleanup never runs on a timer, and never as a side effect of
+  an error. A failed import is precisely when the customer needs to see what was
+  written.
+- **Ask, don't assume.** Recurring imports keep their table and workflow; one-offs
+  leave nothing. Both are correct outcomes.
+- **Partial failure is reported.** If one artifact cannot be removed, the rest
+  still are, and the response says what remains.
+- **Idempotent.** Running cleanup twice is safe.
+
+If the customer wants to keep the data but drop the scaffolding, that is a normal
+request — keep the target table, remove the probe table and the uploaded file.
+
+## Raw mode
+
+Every column becomes `text`; names are normalized from the header. Practically
+cannot fail.
+
+This is the right default. Typing a customer's export at load time means guessing,
+and a wrong guess *rejects rows*. Getting the data into a queryable table first
+turns every subsequent problem into a SQL problem:
+
+```sql
+-- inspect before committing to types
+SELECT angelegt_am, count(*) FROM t_abc GROUP BY 1 ORDER BY 2 DESC LIMIT 20;
+
+-- German dates and currency, converted in place
+SELECT to_date(angelegt_am, 'DD.MM.YY')                              AS created,
+       replace(replace(wert, '.', ''), ' €', '')::numeric            AS value
+FROM   t_abc
+WHERE  angelegt_am ~ '^\d{2}\.\d{2}\.\d{2}$';
+```
+
+Blank cells import as SQL `NULL`, not empty string — collapsing the two would
+break `IS NULL` filters on every imported table.
+
+## Not yet available: typed mode
+
+A mapping document with per-column types, transforms and per-row validation is
+designed but not implemented. **Do not offer it.** The honest answer today is that
+everything lands as `text` and the shaping happens in SQL — which is also faster
+than negotiating a mapping.
+
+## Things real exports do
+
+Recognise these from the analysis and mention them:
+
+- **Sentinel dates.** `01.01.99` for "happened, date unknown". Import as `NULL`,
+  not as 1999.
+- **`-` as a null placeholder.** Common in exports from reporting tools.
+- **Non-breaking spaces.** `Hauptstraße  4` — from pasting through Excel.
+  Breaks every exact-match join until stripped.
+- **Excel-mangled numbers.** `9,72E+11` was once an order number or a phone
+  number. **Not recoverable** — the original digits are gone. Say so plainly and
+  ask for a re-export with the column formatted as text.
+- **UTF-8 BOM.** Handled automatically, but it is why the first header sometimes
+  looks like `﻿Name` elsewhere.
+- **Semicolon delimiters with decimal commas.** German exports. Delimiter sniffing
+  scores by field-count consistency rather than character frequency for exactly
+  this reason.
+
+## Size
+
+The import parses the file in memory to profile it, so there is an upper bound
+(50 MB by default). Beyond that, ask for the file split — a larger limit would
+only move the failure.

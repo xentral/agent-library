@@ -35,7 +35,12 @@ If the decision is **always the same** → workflow. If the step **depends on th
 * Workflow needs change (new step, different cron) → `update`.
 
 **Don't** call:
-* For one-off operations (Excel import, manual cleanup) — workflows are for recurring work.
+* For one-off operations (a single CSV import, manual cleanup) — workflows are for recurring work.
+  A *first* CSV import is a guided conversation with confirmation gates (see the
+  `xentral-datasets` skill); build a workflow only once that import is established
+  as recurring. When you do, keep bulk rows out of the graph: `loop` and `worklist`
+  cap at 1000 items and still report success, so use `dataset-import` (returns
+  counts) and aggregate in a `dataset` SQL node.
 * When the decision logic needs LLM reasoning — then a custom agent (`xentral_agents`) is the right tool.
 
 ## Start from the library, not a blank canvas
