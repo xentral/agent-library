@@ -94,7 +94,8 @@ fragment is useless here: any row count or total computed from it is wrong.
 ### 1 · Open a session
 
 `import_session` with the `dataset` and `file_key` → a `session_id`. Pass it to
-every later call, so a single `session_cleanup` can undo the whole import.
+every later call, so everything the import creates is recorded in one place and
+can be undone together.
 
 ### 2 · Analyse before anything else
 
@@ -135,18 +136,45 @@ dropped and rewritten, so looping is cheap.
 Only after an explicit confirmation: `import` **without** `limit_rows`. Never skip
 to the full run because the profile "looked fine".
 
-### 6 · Offer to clean up
-
-`session_cleanup` removes everything the session created — the probe table, the
-target table, the uploaded file — reports each artifact's outcome, and is safe to
-run twice. Workflow artifacts are reported as `unsupported` rather than removed;
-read that back instead of calling the cleanup complete.
+### 6 · Offer to clean up — and know what you can actually do
 
 Ask which the customer wants. Both are correct: a recurring import keeps its
 table, a one-off leaves nothing. **Never clean up on your own**, and never after
 a failure — that is exactly when the customer needs to inspect what was written.
 
-`import_status` / `import_sessions` show what a session created.
+`import_status` / `import_sessions` list what a session created.
+
+**You cannot hard-delete.** `session_cleanup` is a hard delete, and the store
+locks agents out of those (see *Lifecycle* below), so it will come back with each
+artifact `failed` and the store's reason attached. That is correct behaviour, not
+a bug to route around. So:
+
+- Report the refusal and what is still there, and let the customer remove it in
+  the app; **or**
+- `archive_table` the tables yourself — freshly imported tables are `draft`, which
+  you are allowed to archive, and archiving is reversible.
+
+Do not call `session_cleanup` repeatedly hoping it takes. Workflow artifacts are
+reported as `unsupported` for a different reason: cleanup cannot remove them at
+all yet.
+
+## Lifecycle: draft → active → archived
+
+Every set and table carries a status, and it governs what you may do:
+
+- **`draft`** — while it is being built. You can edit it and `archive_table` /
+  `archive_set` it. New tables, including the ones an import creates, start here.
+- **`active`** — a human published it. Protected: it must be archived before it
+  can be removed, and that is a human action.
+- **`archived`** — reversible soft-delete. Purging is a human action.
+
+As an agent you may create and edit, and archive **your own drafts**. You can
+never hard-delete, never purge, and never touch an active or locked object. There
+is no `drop_set` / `drop_table` on this tool for that reason.
+
+This is why the cleanup step above reads the way it does — and it is a good
+default: an import you just made is a draft, so it stays yours to undo, while data
+the customer has committed to is not something you can remove by accident.
 
 ## Every import is raw — and that is deliberate
 
