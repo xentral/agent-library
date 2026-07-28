@@ -73,6 +73,56 @@ Duplicate headers are suffixed (`name`, `name_2`), empty or non-alphabetic ones 
 positional names (`col_4`). **No column is ever dropped** — records are copied
 positionally, so losing one would shift everything after it.
 
+## Writing rows yourself: rows_bulk
+
+When you already hold the data — you generated it, or you cleaned a file locally —
+`rows_bulk` is the write path. One COPY per call instead of one round trip per row.
+
+```json
+{
+  "action": "rows_bulk",
+  "dataset": "crm_import",
+  "table": "leads",
+  "column_names": ["sku", "menge", "preis", "aktiv", "angelegt"],
+  "rows": [
+    ["A-1", "5",  "1.50",  "true",  "2026-01-12"],
+    ["A-2", "12", "99.99", "false", "2026-02-01"]
+  ]
+}
+```
+
+Positional, not a list of objects. Repeating the keys on every row roughly doubles
+what you have to emit — measured on a 5235-row export mapped to 12 columns: 523k
+tokens as objects, 293k as arrays.
+
+Rules worth knowing before you build a payload:
+
+- **Strings are fine.** Values are coerced per column type, so `"5"` into an
+  `integer` and `"2026-01-12"` into a `date` both work. A value that cannot convert
+  is an error naming the column and the value.
+- **A batch is atomic.** One bad row and none of that batch lands. Fix and resend
+  the batch; nothing is half-written.
+- **`null` stays NULL** — not an empty string.
+- **Max 500 rows per call.** Send batches in sequence.
+- **System columns are refused.** `id`, `created_at`, `updated_at` are managed.
+- **Width is checked.** Every row must have exactly one value per `column_names`
+  entry; a short row is an error, not a padded row.
+
+### When to stop using it
+
+Every value is model output. Rough sizes for a 12-column table:
+
+| rows | output tokens |
+|---|---|
+| 100 | 6k |
+| 500 | 30k |
+| 2000 | 118k |
+| 5235 | 293k |
+
+Up to a few hundred rows this is comfortable. Past about a thousand, upload the
+cleaned file to Fileshare and use the CSV import instead — the data then never
+passes through you, and the server does one COPY over the whole file.
+
 ## Which set can be imported into
 
 `import` creates a table, and creating a table is DDL. The store allows an agent
