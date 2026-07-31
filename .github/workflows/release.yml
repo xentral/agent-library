@@ -1,6 +1,6 @@
 name: release
 
-# Auto-release on every merge to main. The backend (xentral/agent-hub-labs)
+# Auto-release on every merge to main. The backend (xentral/agent-os)
 # pins an explicit tag via LIBRARY_VERSION and downloads that tag's tarball, so
 # library/skill content only reaches staging/prod once a NEW tag exists. This
 # workflow removes the "remember to cut a tag" step.
@@ -95,16 +95,16 @@ jobs:
         env:
           # Cross-repo dispatch needs a token with access to the (private)
           # consumer repo — the default GITHUB_TOKEN is scoped to this repo only.
-          # Set AGENT_HUB_DISPATCH_TOKEN (org PAT / GitHub-App) as a secret.
-          GH_TOKEN: ${{ secrets.AGENT_HUB_DISPATCH_TOKEN }}
+          # Set AGENT_OS_DISPATCH_TOKEN (org PAT / GitHub-App) as a secret.
+          GH_TOKEN: ${{ secrets.AGENT_OS_DISPATCH_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "${GH_TOKEN:-}" ]; then
-            echo "AGENT_HUB_DISPATCH_TOKEN not set — skipping cross-repo dispatch."
-            echo "Tag ${{ steps.ver.outputs.version }} is published; run 'make bump-library' in agent-hub-labs or set the secret."
+            echo "AGENT_OS_DISPATCH_TOKEN not set — skipping cross-repo dispatch."
+            echo "Tag ${{ steps.ver.outputs.version }} is published; run 'make bump-library' in agent-os or set the secret."
             exit 0
           fi
           printf '{"event_type":"agent-library-release","client_payload":{"version":"%s"}}' \
             "${{ steps.ver.outputs.version }}" \
-            | gh api repos/xentral/agent-hub-labs/dispatches --method POST --input -
-          echo "Dispatched agent-library-release (${{ steps.ver.outputs.version }}) to agent-hub-labs."
+            | gh api repos/xentral/agent-os/dispatches --method POST --input -
+          echo "Dispatched agent-library-release (${{ steps.ver.outputs.version }}) to agent-os."
