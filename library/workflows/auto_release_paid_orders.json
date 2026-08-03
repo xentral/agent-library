@@ -234,7 +234,8 @@
     {
       "id": "e6",
       "source": "n_park",
-      "target": "n_notify"
+      "target": "n_notify",
+      "sourceHandle": "data:update"
     }
   ]
 }

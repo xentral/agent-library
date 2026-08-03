@@ -491,7 +491,8 @@
     {
       "id": "e12",
       "source": "n_write",
-      "target": "n_out"
+      "target": "n_out",
+      "sourceHandle": "data:product.updateV2"
     },
     {
       "id": "e13",

@@ -88,11 +88,20 @@ Edges leaving a **branch node** must set `sourceHandle` to pick which output the
 | `rule-group` | `else` | no rule matched |
 | `judgment` | `a` | the **Confident** branch (verdict sound) |
 | `judgment` | `b` | the **Doubtful** branch (verdict uncertain) |
+| `call-workflow` | `a` | the **Success** branch — the called workflow finished |
+| `call-workflow` | `b` | the **Error** branch |
 | `business-entity` | `data:<op>` | the data produced by operation `<op>` (e.g. `data:list`, `data:read`, `data:create`, `data:update`) |
 | `business-entity` | `status:<value>` | a lifecycle-status branch (e.g. `status:released`) — see caveat below |
+| `xentral-api` | `data:<op>` | same op-handle model, with the raw OpenAPI operation id (e.g. `data:product.updateV2`) |
 | `kpi` / `fileshare` | `data:<op>` | same op-handle model as `business-entity` — one output per operation |
 
 A plain (non-branch) action node has a single implicit output; its outgoing edges need no `sourceHandle`.
+
+Getting this wrong on a **branch** node is silent: the renderer routes only through the named
+handles, and an edge carrying anything else lands in a bucket nothing reads — the target and its
+whole downstream chain are simply left out of the generated script, with no error at run time.
+On an **op node** (`data:` / `status:`) it is a rendering problem only: the run is unaffected, but
+the canvas cannot anchor the line.
 
 ### Selecting the operation on a resource node (`targetHandle`) — REQUIRED
 

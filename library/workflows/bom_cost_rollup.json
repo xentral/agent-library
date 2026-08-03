@@ -157,7 +157,7 @@
         "config": {
           "title": "Berechnete EK-Werte an die Produkte zurückschreiben",
           "varName": "writeBack",
-          "code": "for pid, cost in context.get('cost', {}).items():\n    business_entity_op('Product', 'update', {'path': {'uuid': pid}, 'body': {'calculatedPurchasePrice': round(cost, 4)}})\nlog(f\"Updated {len(context.get('cost', {}))} product cost(s).\")\n"
+          "code": "for pid, cost in context.get('cost', {}).items():\n    payload = {'path': {'uuid': pid}, 'body': {'calculatedPurchasePrice': round(cost, 4)}}\n    business_entity_op('Product', 'update', payload)\nlog(f\"Updated {len(context.get('cost', {}))} product cost(s).\")"
         }
       }
     }
