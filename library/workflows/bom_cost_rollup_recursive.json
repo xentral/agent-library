@@ -440,7 +440,7 @@
         "config": {
           "title": "Standard-Lieferantenpreis (Basis-Staffel) ermitteln",
           "varName": "leafEk",
-          "code": "rows = (preise.get('data') or []) if isinstance(preise, dict) else []\nsid = str(((artikel.get('data') or {}).get('standardSupplier') or {}).get('id') or '')\n# Prefer the standard supplier; if none matches, weigh all rows.\ncandidates = [r for r in rows if str((r.get('supplier') or {}).get('id')) == sid] or rows\n# Base tier = smallest staffel quantity (the qty-1 entry price).\nbest = min(candidates, key=lambda r: float(r.get('amount') or 1)) if candidates else {}\nresult = float((best.get('price') or {}).get('amount') or 0)\nlog(f\"EK {result} (standard supplier {sid or '?'}, {len(candidates)} of {len(rows)} row(s))\")\n"
+          "code": "rows = (preise.get('data') or []) if isinstance(preise, dict) else []\nsid = str(((artikel.get('data') or {}).get('standardSupplier') or {}).get('id') or '')\n# Prefer the standard supplier and fall back to weighing all rows.\ncandidates = [r for r in rows if str((r.get('supplier') or {}).get('id')) == sid] or rows\n# Base tier = the row with the smallest staffel quantity (the qty-1 entry price).\nbest = {}\nbest_qty = None\nfor row in candidates:\n    qty = float(row.get('amount') or 1)\n    if best_qty is None or qty < best_qty:\n        best_qty = qty\n        best = row\nresult = float((best.get('price') or {}).get('amount') or 0)\nlog(f\"EK {result} (standard supplier {sid or '?'}, {len(candidates)} of {len(rows)} row(s))\")"
         }
       }
     },
@@ -531,7 +531,8 @@
     {
       "id": "e12",
       "source": "n_write",
-      "target": "n_out"
+      "target": "n_out",
+      "sourceHandle": "data:product.updateV2"
     },
     {
       "id": "e13",

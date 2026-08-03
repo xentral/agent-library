@@ -178,7 +178,8 @@
     {
       "id": "e4",
       "source": "n_create",
-      "target": "n_mail"
+      "target": "n_mail",
+      "sourceHandle": "data:create"
     }
   ]
 }
