@@ -5,7 +5,7 @@
   "icon": "send",
   "order": 160,
   "popular": true,
-  "trigger_type": "erp-event",
+  "trigger_type": "in-erp",
   "orientation": "horizontal",
   "locales": {
     "de": {
