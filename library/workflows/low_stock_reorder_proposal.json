@@ -93,7 +93,7 @@
         "config": {
           "title": "Artikel nach Hauptlieferant gruppieren",
           "varName": "supplierGroups",
-          "code": "rows = lowStockProducts.get('data', []) if isinstance(lowStockProducts, dict) else (lowStockProducts or [])\ngroups = {}\nfor p in rows:\n    groups.setdefault(p.get('mainSupplierId'), []).append(p)\nresult = [{'supplierId': k, 'items': v} for k, v in groups.items()]\nlog(f\"{len(result)} supplier group(s)\")\n"
+          "code": "# The entity node hands back the gateway envelope; rows sit at body.data.\nenvelope = lowStockProducts if isinstance(lowStockProducts, dict) else {}\nrows = (envelope.get('body') or {}).get('data') or []\ngroups = {}\nfor p in rows:\n    groups.setdefault(p.get('mainSupplierId'), []).append(p)\nresult = [{'supplierId': k, 'items': v} for k, v in groups.items()]\nlog(f\"{len(result)} supplier group(s)\")\n"
         }
       }
     },

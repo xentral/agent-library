@@ -95,7 +95,7 @@
         "config": {
           "title": "Arbeitsliste aller Stücklisten aufbauen",
           "varName": "seedStack",
-          "code": "rows = bomProducts.get('data', []) if isinstance(bomProducts, dict) else (bomProducts or [])\ncontext['stack'] = [p['id'] for p in rows]\ncontext['cost'] = {}\nlog(f\"{len(context['stack'])} root BOM(s)\")\n"
+          "code": "# The entity node hands back the gateway envelope; rows sit at body.data.\nenvelope = bomProducts if isinstance(bomProducts, dict) else {}\nrows = (envelope.get('body') or {}).get('data') or []\ncontext['stack'] = [p['id'] for p in rows]\ncontext['cost'] = {}\nlog(f\"{len(context['stack'])} root BOM(s)\")\n"
         }
       }
     },
