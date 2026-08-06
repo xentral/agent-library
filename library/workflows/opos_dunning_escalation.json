@@ -97,7 +97,7 @@
         "config": {
           "title": "Für jede überfällige Rechnung einzeln",
           "varName": "invoice",
-          "items": "{{ overdueInvoices.data }}"
+          "items": "{{ overdueInvoices }}"
         }
       }
     },

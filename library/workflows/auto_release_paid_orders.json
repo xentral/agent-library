@@ -93,7 +93,7 @@
         "config": {
           "title": "Für jeden Auftrag einzeln",
           "varName": "order",
-          "items": "{{ ordersAwaitingRelease.data }}"
+          "items": "{{ ordersAwaitingRelease }}"
         }
       }
     },

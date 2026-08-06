@@ -92,7 +92,7 @@
         "config": {
           "title": "Für jeden Lieferschein einzeln",
           "varName": "deliveryNote",
-          "items": "{{ shippedDeliveryNotes.data }}"
+          "items": "{{ shippedDeliveryNotes }}"
         }
       }
     },
