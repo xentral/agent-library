@@ -92,7 +92,7 @@
         "config": {
           "title": "Für jede geprüfte Retoure einzeln",
           "varName": "returnOrder",
-          "items": "{{ checkedReturns.data }}"
+          "items": "{{ checkedReturns }}"
         }
       }
     },

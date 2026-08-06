@@ -100,7 +100,7 @@
           "title": "Zusammenfassung der offenen Posten verfassen",
           "varName": "composeDigest",
           "model": "gpt-5.1",
-          "prompt": "Build an accounting digest from this open-items list: {{ openItems.data }}\nGroup by overdue bucket (0-14, 15-30, 31-60, 60+ days), give count and sum per bucket, list the top-10 items by amount. Factual and compact, no prose padding. Return the finished text only.\n"
+          "prompt": "Build an accounting digest from this open-items list: {{ openItems }}\nGroup by overdue bucket (0-14, 15-30, 31-60, 60+ days), give count and sum per bucket, list the top-10 items by amount. Factual and compact, no prose padding. Return the finished text only.\n"
         }
       }
     },
