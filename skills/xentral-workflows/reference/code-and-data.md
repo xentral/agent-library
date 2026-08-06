@@ -18,8 +18,6 @@
 
 **Size limit:** max. **500 non-empty lines** and **100,000 characters** per code box. Larger code must be split across multiple code boxes or visible workflow nodes.
 
-**A Python workflow gets the same allowlist**, applied to the whole file rather than one box, plus exactly three additions: `with` over `step(...)`, `from xentral.workflow import …`, and the `@workflow` entry point. Nothing else in the "not allowed" list is relaxed — in particular `import` of any other module stays rejected, because the scaffold that holds the credentials is added by the compiler and an author who could import could replace it. See [python-workflows.md](python-workflows.md).
-
 **Readability limit:** Write code so a workflow builder can read it in the inspector. No semicolon compression, no one-letter helper functions, no nested mini-parsers, and no hidden fixed ERP reads/writes. Longer code is okay when it is cleanly structured, has English comments on the important sections, and `description`/`algorithm` explain the flow without requiring the reader to inspect the Python.
 
 **Lambda replacement patterns:**

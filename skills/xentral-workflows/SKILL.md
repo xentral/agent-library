@@ -6,8 +6,6 @@ description: >
   starting from the template library (init_from_template) instead of a blank
   graph, the workflow envelope/graph shape, trigger and schedule setup, node
   operation selection, stable varName references, and debugging failed runs.
-  Also covers writing a workflow as a Python file (init_python) instead of a
-  graph, and when that is the better choice.
   Use when the user wants to automate a recurring business routine — dunning /
   OPOS escalation, low-stock reorder, document validation, prepayment-order
   cleanup, return-to-credit-note, BOM cost rollup, invoice-after-shipment.
@@ -44,28 +42,6 @@ If the decision is **always the same** → workflow. If the step **depends on th
   cap at 1000 items and still report success, so use `dataset-import` (returns
   counts) and aggregate in a `dataset` SQL node.
 * When the decision logic needs LLM reasoning — then a custom agent (`xentral_agents`) is the right tool.
-
-## Two ways to write one
-
-A workflow can be **a graph** (`init` / `init_from_template`, nodes and edges)
-or **a Python file** (`init_python`, one `@workflow` function whose boxes are
-`with step("…"):` blocks). Same runtime, same triggers, same run log.
-
-Pick the graph when a non-technical user has to read the flow on the canvas,
-or when the workflow is a short linear list of ERP steps. Pick Python when the
-logic is the point — nested loops, many conditions, intricate aggregation — or
-when the graph would end up carrying that logic in `code` boxes anyway. A
-Python workflow still appears on the canvas, derived from the source, but
-read-only.
-
-Rule of thumb: **if you are about to build a graph whose real work sits inside
-`code` boxes, write it as Python instead.** If someone in operations has to
-maintain it by clicking, build the graph.
-
-Everything below this section describes the graph path. For the Python path —
-the file shape, the callable surface, what the sandbox rejects, and converting
-an existing graph with `draft_python` — read
-[reference/python-workflows.md](reference/python-workflows.md).
 
 ## Start from the library, not a blank canvas
 
@@ -140,6 +116,3 @@ Load only the file you need for the step you are on:
   [reference/code-and-data.md](reference/code-and-data.md)
 - **Worked examples, idempotency, debugging a run**:
   [reference/examples-and-debugging.md](reference/examples-and-debugging.md)
-- **Writing the workflow as Python instead of a graph** — file shape, triggers,
-  the callable surface, sandbox limits, converting an existing graph:
-  [reference/python-workflows.md](reference/python-workflows.md)
