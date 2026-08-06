@@ -92,7 +92,7 @@
         "config": {
           "title": "Für jeden Lieferschein einzeln",
           "varName": "deliveryNote",
-          "items": "{{ shippedDeliveryNotes.data }}"
+          "items": "{{ shippedDeliveryNotes.body.data }}"
         }
       }
     },
@@ -150,7 +150,7 @@
           "title": "Kunden-Mail zur Rechnung entwerfen",
           "varName": "invoiceMail",
           "model": "gpt-5.1",
-          "prompt": "Draft a short, friendly mail to the customer for delivery note {{ deliveryNote.number }}: thank them for the order, mention that invoice {{ createInvoice.documentNumber }} is attached. Return the mail text only.\n"
+          "prompt": "Draft a short, friendly mail to the customer for delivery note {{ deliveryNote.number }}: thank them for the order, mention that invoice {{ createInvoice.body.data.documentNumber }} is attached. Return the mail text only.\n"
         }
       }
     }

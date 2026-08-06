@@ -97,7 +97,7 @@
         "config": {
           "title": "Für jeden Vorkasse-Auftrag einzeln",
           "varName": "order",
-          "items": "{{ openPrepayments.data }}"
+          "items": "{{ openPrepayments.body.data }}"
         }
       }
     },

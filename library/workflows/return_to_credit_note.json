@@ -92,7 +92,7 @@
         "config": {
           "title": "Für jede geprüfte Retoure einzeln",
           "varName": "returnOrder",
-          "items": "{{ checkedReturns.data }}"
+          "items": "{{ checkedReturns.body.data }}"
         }
       }
     },
@@ -150,7 +150,7 @@
           "title": "Kunden-Mail zur Gutschrift entwerfen",
           "varName": "mailEntwurf",
           "model": "gpt-5.1",
-          "prompt": "Draft a short mail to the customer: the return was checked, credit note {{ createCreditNote.documentNumber }} is attached, refund in 3-5 business days. Return the mail text only.\n"
+          "prompt": "Draft a short mail to the customer: the return was checked, credit note {{ createCreditNote.body.data.documentNumber }} is attached, refund in 3-5 business days. Return the mail text only.\n"
         }
       }
     }
