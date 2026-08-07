@@ -28,7 +28,7 @@
       ],
       "node_titles": {
         "n_trig": "Every business day at 07:00",
-        "n_query": "Load open items from Xentral",
+        "n_query": "Load unpaid invoices",
         "n_compose": "Compose the open-items digest",
         "n_out": "Return the digest draft"
       }
@@ -70,7 +70,7 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Offene Posten aus Xentral laden",
+          "title": "Unbezahlte Rechnungen laden",
           "varName": "openItems",
           "entityKey": "SalesInvoice",
           "entityLabel": "Sales invoice",
@@ -80,7 +80,11 @@
           "params": {
             "list": {
               "query": {
-                "paymentStatus": "open"
+                "filter[0][key]": "payment.status",
+                "filter[0][op]": "equals",
+                "filter[0][value]": "unpaid",
+                "page[number]": 1,
+                "page[size]": 100
               }
             }
           }
