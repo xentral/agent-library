@@ -28,11 +28,12 @@
         "Credit note"
       ],
       "node_titles": {
-        "n_trig": "When a return is marked as checked",
-        "n_query": "Load checked returns without a credit note",
-        "n_loop": "For each checked return, one by one",
-        "n_create": "Create a credit note with the checked positions",
-        "n_mail": "Draft the customer mail for the credit note"
+        "n_trig": "When a return is checked",
+        "n_query": "Load checked returns",
+        "n_loop": "Check each return",
+        "n_offen": "No credit note yet?",
+        "n_create": "Create the credit note from the return",
+        "n_schon": "Already credited — skipped"
       }
     }
   },
@@ -62,18 +63,21 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Geprüfte Retouren ohne Gutschrift laden",
-          "varName": "checkedReturns",
-          "entityKey": "SalesReturn",
-          "entityLabel": "Sales return",
+          "title": "Geprüfte Rücksendungen laden",
+          "varName": "gepruefteRuecksendungen",
+          "entityKey": "Return",
+          "entityLabel": "Return",
           "operations": [
             "list"
           ],
           "params": {
             "list": {
               "query": {
-                "status": "checked",
-                "creditNoteCreated": false
+                "filter[0][key]": "progress",
+                "filter[0][op]": "equals",
+                "filter[0][value]": "checked",
+                "page[number]": 1,
+                "page[size]": 100
               }
             }
           }
@@ -90,9 +94,24 @@
       "data": {
         "typeId": "loop",
         "config": {
-          "title": "Für jede geprüfte Retoure einzeln",
-          "varName": "returnOrder",
-          "items": "{{ checkedReturns }}"
+          "title": "Jede Rücksendung prüfen",
+          "varName": "Ruecksendung",
+          "items": "{{ gepruefteRuecksendungen }}"
+        }
+      }
+    },
+    {
+      "id": "n_offen",
+      "type": "wfNode",
+      "position": {
+        "x": 1280,
+        "y": 300
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Noch keine Gutschrift erzeugt?",
+          "expression": "not ((ruecksendung.get('resolution') or {}).get('creditNote'))"
         }
       }
     },
@@ -100,36 +119,26 @@
       "id": "n_create",
       "type": "wfNode",
       "position": {
-        "x": 1280,
-        "y": 300
+        "x": 1680,
+        "y": 160
       },
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Gutschrift mit geprüften Positionen anlegen",
-          "varName": "createCreditNote",
-          "entityKey": "SalesCreditNote",
-          "entityLabel": "Sales credit note",
+          "title": "Gutschrift aus der Rücksendung erzeugen",
+          "varName": "gutschrift",
+          "entityKey": "Return",
+          "entityLabel": "Return",
           "operations": [
-            "create"
+            "createCreditNote"
           ],
           "params": {
-            "create": {
-              "body": {
-                "customerId": {
+            "createCreditNote": {
+              "path": {
+                "uuid": {
                   "mode": "ref",
                   "from": "n_loop",
-                  "path": "customerId"
-                },
-                "positions": {
-                  "mode": "ref",
-                  "from": "n_loop",
-                  "path": "checkedPositions"
-                },
-                "invoiceRef": {
-                  "mode": "ref",
-                  "from": "n_loop",
-                  "path": "invoiceId"
+                  "path": "id"
                 }
               }
             }
@@ -138,19 +147,18 @@
       }
     },
     {
-      "id": "n_mail",
+      "id": "n_schon",
       "type": "wfNode",
       "position": {
         "x": 1680,
-        "y": 300
+        "y": 480
       },
       "data": {
-        "typeId": "agent",
+        "typeId": "output",
         "config": {
-          "title": "Kunden-Mail zur Gutschrift entwerfen",
-          "varName": "mailEntwurf",
-          "model": "gpt-5.1",
-          "prompt": "Draft a short mail to the customer: the return was checked, credit note {{ createCreditNote.documentNumber }} is attached, refund in 3-5 business days. Return the mail text only.\n"
+          "title": "Bereits gutgeschrieben — übersprungen",
+          "varName": "bereitsGutgeschrieben",
+          "value": "Zu dieser Rücksendung existiert schon eine Gutschrift."
         }
       }
     }
@@ -165,21 +173,27 @@
     {
       "id": "e2",
       "source": "n_query",
-      "target": "n_loop",
-      "sourceHandle": "data:list"
+      "sourceHandle": "data:list",
+      "target": "n_loop"
     },
     {
       "id": "e3",
       "source": "n_loop",
-      "target": "n_create",
       "sourceHandle": "a",
-      "targetHandle": "in:create"
+      "target": "n_offen"
     },
     {
       "id": "e4",
-      "source": "n_create",
-      "target": "n_mail",
-      "sourceHandle": "data:create"
+      "source": "n_offen",
+      "sourceHandle": "a",
+      "target": "n_create",
+      "targetHandle": "in:createCreditNote"
+    },
+    {
+      "id": "e5",
+      "source": "n_offen",
+      "sourceHandle": "b",
+      "target": "n_schon"
     }
   ]
 }
