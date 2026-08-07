@@ -8,7 +8,7 @@
 
 **Allowed:** `if`/`elif`/`else`, `for`, `while`, `break`, `continue`, `pass`; `def` + `return` (use a named function where you'd reach for a lambda); assignments and augmented assignments; comprehensions (list/set/dict/generator); f-strings; slicing and subscripts (`x[1:3]`, `d["k"]`); attribute access and method calls (`row.get(...)`, `items.append(...)`); all arithmetic/boolean/comparison/bitwise operators and the ternary `a if c else b`.
 
-**Allowed builtins (these only):** `abs bool dict enumerate float int len list max min print range round set sorted str sum tuple zip` plus `True False None` and the exceptions `ValueError TypeError KeyError IndexError ZeroDivisionError Exception`. Anything else (`map`, `filter`, `any`, `all`, `reversed`, `sorted`'s `reverse=` aside, `re`, `json`, …) is **not** in scope at runtime. The workflow helpers `business_entity_op`, `xentral_op`, `xentral_request`, `log`, and the JSON helpers `to_json` / `parse_json` (see below) are also in scope.
+**Allowed builtins (these only):** `abs bool dict enumerate float int len list max min print range round set sorted str sum tuple zip` plus `True False None` and the exceptions `ValueError TypeError KeyError IndexError ZeroDivisionError Exception`. Anything else (`map`, `filter`, `any`, `all`, `reversed`, `sorted`'s `reverse=` aside, `re`, `json`, …) is **not** in scope at runtime. The workflow helpers `business_entity_op`, `log`, and the JSON helpers `to_json` / `parse_json` (see below) are also in scope.
 
 **Not allowed (hard reject):**
 - `lambda` — use a named `def` instead (`sorted(rows, key=by_qty)` with `def by_qty(r): return r["min_qty"]`), or an explicit loop.
@@ -59,7 +59,7 @@ result = to_json({"meta": {"generatedAt": now(), "count": len(items)}, "products
 ERP automations almost always filter by date: "older than 7 days", "last month", "overdue". The engine ships **date helpers** for this — ready functions resolved at **run time** in the **instance timezone** (no hardcoded ISO strings, no freezing on scheduled runs). Point-in-time helpers return **ISO strings** (so a value drops straight into a filter), duration/comparison helpers return `int`/`bool`, and range helpers return a `{gte, lte}` dict.
 
 **Where you use them:**
-- **Filters / write values** (`business-entity` / `xentral-api` `params.<op>.{path,query,body}`): as a binding `{ "mode": "date", "expr": "<call>" }` (the 90% case).
+- **Filters / write values** (`business-entity` `params.<op>.{path,query,body}`): as a binding `{ "mode": "date", "expr": "<call>" }` (the 90% case).
 - **Compute-value node** (`expression`): in a `{{ }}` hole, e.g. `"{{ start_of('month', -1) }}"`.
 - **Condition / code** (`condition` / `code`): call directly — `is_overdue(order['dueDate'])`, `days_since(inv['date']) > 30`.
 
@@ -120,15 +120,19 @@ ERP automations almost always filter by date: "older than 7 days", "last month",
 Decide deliberately where each data access lives. Don't cram everything into one code block, and don't force every fetch into its own node either — pick per access.
 
 **Source preference (in this order):**
-1. Is there a `business-entity` for it? → use the **business-entity** node. Friendliest, catalog-backed, real labels.
-2. No matching business entity? → use a **`xentral-api`** node against the raw Xentral endpoint.
-3. Not a Xentral call — is it a third-party service (shop, CRM, mail, messaging — e.g. Shopify, HubSpot, Slack)? → use an **`integration-action`** node (provider-neutral registry; see "Integrations in workflows" in `SKILL.md`). This holds even when the integration is not connected yet — author the node provisionally, do **not** fall back to raw HTTP.
-4. A plain REST endpoint with no integration behind it → **`http-request`** (raw escape hatch only).
+1. Anything in Xentral → the **business-entity** node. This is the only way in. There is no second one: the raw Xentral API is not available for authoring, and a graph that reaches for it is rejected at save.
+2. Not a Xentral call — is it a third-party service (shop, CRM, mail, messaging — e.g. Shopify, HubSpot, Slack)? → use an **`integration-action`** node (provider-neutral registry; see "Integrations in workflows" in `SKILL.md`). This holds even when the integration is not connected yet — author the node provisionally, do **not** fall back to raw HTTP.
+3. A plain REST endpoint on some *other* host, with no integration behind it → **`http-request`**. Never point it at Xentral.
+
+**When the entity core cannot express what you need**, stop and say so. Do not
+route around it — the gap is reported automatically so the core can gain the
+capability. A workflow built around the core's blind spot looks finished and
+quietly does the wrong thing; that is the failure this rule exists to prevent.
 
 **Where the access lives:**
-- **Default — one node per access.** Each fetch/write is its own `business-entity`/`xentral-api` node. It streams started/finished, shows as a box in the run timeline, and is rewireable and reusable.
+- **Default — one node per access.** Each fetch/write is its own `business-entity` node. It streams started/finished, shows as a box in the run timeline, and is rewireable and reusable.
 - **Code/logic nodes are glue only** — transform, decide, aggregate over data that was *already* fetched.
-- **Exception — fetch inside code when the number or depth of accesses is data-dependent** (recursion, unknown nesting, paging). Then call `business_entity_op(...)` / `xentral_op(...)` directly inside a `code` node (or a loop body). It's the same call as the node — it just won't appear as its own box (logs only). That's the only trade-off, and in this case it's worth it.
+- **Exception — fetch inside code when the number or depth of accesses is data-dependent** (recursion, unknown nesting, paging). Then call `business_entity_op(...)` directly inside a `code` node (or a loop body). It's the same call as the node — it just won't appear as its own box (logs only). That's the only trade-off, and in this case it's worth it.
 
 **One-line rule:** Do you know the number of accesses while building? → one node per access. Does it depend on the data? → fetch in code.
 
