@@ -28,13 +28,14 @@
         "Prepayment"
       ],
       "node_titles": {
-        "n_trig": "When a payment is booked",
-        "n_query": "Load paid orders awaiting release",
-        "n_loop": "For each order, one by one",
-        "n_cond": "Does stock cover the order?",
-        "n_release": "Release the order for picking",
-        "n_park": "Park the order until stock arrives",
-        "n_notify": "Draft a shortage note for inventory planning"
+        "n_trig": "When an order is paid",
+        "n_query": "Load orders not yet released",
+        "n_loop": "Check each order",
+        "n_bezahlt": "Fully paid?",
+        "n_frei": "No hold (stock, credit limit, delivery block)?",
+        "n_release": "Release the order",
+        "n_blockiert": "Paid but held — not released",
+        "n_offen": "Not paid yet — nothing to do"
       }
     }
   },
@@ -64,8 +65,8 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Bezahlte Aufträge laden, die auf Freigabe warten",
-          "varName": "ordersAwaitingRelease",
+          "title": "Noch nicht freigegebene Aufträge laden",
+          "varName": "offeneAuftraege",
           "entityKey": "SalesOrder",
           "entityLabel": "Sales order",
           "operations": [
@@ -74,7 +75,11 @@
           "params": {
             "list": {
               "query": {
-                "status": "paid_awaiting_release"
+                "filter[0][key]": "status",
+                "filter[0][op]": "equals",
+                "filter[0][value]": "draft",
+                "page[number]": 1,
+                "page[size]": 100
               }
             }
           }
@@ -91,14 +96,14 @@
       "data": {
         "typeId": "loop",
         "config": {
-          "title": "Für jeden Auftrag einzeln",
-          "varName": "order",
-          "items": "{{ ordersAwaitingRelease }}"
+          "title": "Jeden Auftrag prüfen",
+          "varName": "Auftrag",
+          "items": "{{ offeneAuftraege }}"
         }
       }
     },
     {
-      "id": "n_cond",
+      "id": "n_bezahlt",
       "type": "wfNode",
       "position": {
         "x": 1280,
@@ -107,8 +112,23 @@
       "data": {
         "typeId": "condition",
         "config": {
-          "title": "Reicht der Bestand für den Auftrag?",
-          "expression": "bool(order.get('stockAvailable'))"
+          "title": "Vollständig bezahlt?",
+          "expression": "any(t.get('id') == 'payment' and t.get('state') == 'fullyPaid' for t in (auftrag.get('trafficLights') or []))"
+        }
+      }
+    },
+    {
+      "id": "n_frei",
+      "type": "wfNode",
+      "position": {
+        "x": 1680,
+        "y": 160
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Keine Sperre (Bestand, Kreditlimit, Liefersperre)?",
+          "expression": "not (auftrag.get('holds') or [])"
         }
       }
     },
@@ -116,30 +136,27 @@
       "id": "n_release",
       "type": "wfNode",
       "position": {
-        "x": 1680,
-        "y": 160
+        "x": 2080,
+        "y": 60
       },
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Auftrag zur Pickliste freigeben",
-          "varName": "releaseOrder",
+          "title": "Auftrag freigeben",
+          "varName": "freigegeben",
           "entityKey": "SalesOrder",
           "entityLabel": "Sales order",
           "operations": [
-            "update"
+            "release"
           ],
           "params": {
-            "update": {
+            "release": {
               "path": {
                 "uuid": {
                   "mode": "ref",
                   "from": "n_loop",
                   "path": "id"
                 }
-              },
-              "body": {
-                "status": "released_for_picking"
               }
             }
           }
@@ -147,53 +164,34 @@
       }
     },
     {
-      "id": "n_park",
-      "type": "wfNode",
-      "position": {
-        "x": 1680,
-        "y": 440
-      },
-      "data": {
-        "typeId": "business-entity",
-        "config": {
-          "title": "Auftrag bis zum Wareneingang parken",
-          "varName": "parkOrder",
-          "entityKey": "SalesOrder",
-          "entityLabel": "Sales order",
-          "operations": [
-            "update"
-          ],
-          "params": {
-            "update": {
-              "path": {
-                "uuid": {
-                  "mode": "ref",
-                  "from": "n_loop",
-                  "path": "id"
-                }
-              },
-              "body": {
-                "status": "paid_awaiting_stock"
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "n_notify",
+      "id": "n_blockiert",
       "type": "wfNode",
       "position": {
         "x": 2080,
-        "y": 300
+        "y": 380
       },
       "data": {
-        "typeId": "agent",
+        "typeId": "output",
         "config": {
-          "title": "Notiz zum Fehlbestand entwerfen",
-          "varName": "shortageNote",
-          "model": "gpt-5.1",
-          "prompt": "Draft a concise note for inventory planning: which items are short for order {{ order.number }} and how many units. Plain, factual, no fluff.\n"
+          "title": "Bezahlt, aber gesperrt — nicht freigegeben",
+          "varName": "blockiert",
+          "value": "Auftrag ist bezahlt, aber eine Ampel blockiert die Freigabe."
+        }
+      }
+    },
+    {
+      "id": "n_offen",
+      "type": "wfNode",
+      "position": {
+        "x": 1680,
+        "y": 560
+      },
+      "data": {
+        "typeId": "output",
+        "config": {
+          "title": "Noch nicht bezahlt — nichts zu tun",
+          "varName": "nochOffen",
+          "value": "Auftrag ist noch nicht vollständig bezahlt."
         }
       }
     }
@@ -208,34 +206,39 @@
     {
       "id": "e2",
       "source": "n_query",
-      "target": "n_loop",
-      "sourceHandle": "data:list"
+      "sourceHandle": "data:list",
+      "target": "n_loop"
     },
     {
       "id": "e3",
       "source": "n_loop",
-      "target": "n_cond",
-      "sourceHandle": "a"
+      "sourceHandle": "a",
+      "target": "n_bezahlt"
     },
     {
       "id": "e4",
-      "source": "n_cond",
-      "target": "n_release",
+      "source": "n_bezahlt",
       "sourceHandle": "a",
-      "targetHandle": "in:update"
+      "target": "n_frei"
     },
     {
       "id": "e5",
-      "source": "n_cond",
-      "target": "n_park",
+      "source": "n_bezahlt",
       "sourceHandle": "b",
-      "targetHandle": "in:update"
+      "target": "n_offen"
     },
     {
       "id": "e6",
-      "source": "n_park",
-      "target": "n_notify",
-      "sourceHandle": "data:update"
+      "source": "n_frei",
+      "sourceHandle": "a",
+      "target": "n_release",
+      "targetHandle": "in:release"
+    },
+    {
+      "id": "e7",
+      "source": "n_frei",
+      "sourceHandle": "b",
+      "target": "n_blockiert"
     }
   ]
 }

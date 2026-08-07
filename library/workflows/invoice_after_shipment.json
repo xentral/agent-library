@@ -29,10 +29,11 @@
       ],
       "node_titles": {
         "n_trig": "When a delivery note is shipped",
-        "n_query": "Load shipped, uninvoiced delivery notes",
-        "n_loop": "For each delivery note, one by one",
-        "n_invoice": "Create the invoice for the delivery note",
-        "n_mail": "Draft the customer mail for the invoice"
+        "n_query": "Load shipped delivery notes",
+        "n_loop": "Check each delivery note",
+        "n_offen": "Not invoiced yet?",
+        "n_invoice": "Create the invoice from the delivery note",
+        "n_schon": "Already invoiced — skipped"
       }
     }
   },
@@ -62,8 +63,8 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Versendete, nicht fakturierte Lieferscheine laden",
-          "varName": "shippedDeliveryNotes",
+          "title": "Versendete Lieferscheine laden",
+          "varName": "versendeteLieferscheine",
           "entityKey": "DeliveryNote",
           "entityLabel": "Delivery note",
           "operations": [
@@ -72,8 +73,11 @@
           "params": {
             "list": {
               "query": {
-                "status": "shipped",
-                "invoiced": false
+                "filter[0][key]": "status",
+                "filter[0][op]": "equals",
+                "filter[0][value]": "shipped",
+                "page[number]": 1,
+                "page[size]": 100
               }
             }
           }
@@ -90,9 +94,24 @@
       "data": {
         "typeId": "loop",
         "config": {
-          "title": "Für jeden Lieferschein einzeln",
-          "varName": "deliveryNote",
-          "items": "{{ shippedDeliveryNotes }}"
+          "title": "Jeden Lieferschein prüfen",
+          "varName": "Lieferschein",
+          "items": "{{ versendeteLieferscheine }}"
+        }
+      }
+    },
+    {
+      "id": "n_offen",
+      "type": "wfNode",
+      "position": {
+        "x": 1280,
+        "y": 300
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Noch nicht fakturiert?",
+          "expression": "not ((lieferschein.get('documents') or {}).get('salesInvoices'))"
         }
       }
     },
@@ -100,33 +119,23 @@
       "id": "n_invoice",
       "type": "wfNode",
       "position": {
-        "x": 1280,
-        "y": 300
+        "x": 1680,
+        "y": 160
       },
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Rechnung zum Lieferschein erstellen",
-          "varName": "createInvoice",
-          "entityKey": "SalesInvoice",
-          "entityLabel": "Sales invoice",
+          "title": "Rechnung zum Lieferschein erzeugen",
+          "varName": "rechnung",
+          "entityKey": "DeliveryNote",
+          "entityLabel": "Delivery note",
           "operations": [
-            "create"
+            "createSalesInvoice"
           ],
           "params": {
-            "create": {
-              "body": {
-                "customerId": {
-                  "mode": "ref",
-                  "from": "n_loop",
-                  "path": "customerId"
-                },
-                "positions": {
-                  "mode": "ref",
-                  "from": "n_loop",
-                  "path": "positions"
-                },
-                "deliveryNoteRef": {
+            "createSalesInvoice": {
+              "path": {
+                "uuid": {
                   "mode": "ref",
                   "from": "n_loop",
                   "path": "id"
@@ -138,19 +147,18 @@
       }
     },
     {
-      "id": "n_mail",
+      "id": "n_schon",
       "type": "wfNode",
       "position": {
         "x": 1680,
-        "y": 300
+        "y": 480
       },
       "data": {
-        "typeId": "agent",
+        "typeId": "output",
         "config": {
-          "title": "Kunden-Mail zur Rechnung entwerfen",
-          "varName": "invoiceMail",
-          "model": "gpt-5.1",
-          "prompt": "Draft a short, friendly mail to the customer for delivery note {{ deliveryNote.number }}: thank them for the order, mention that invoice {{ createInvoice.documentNumber }} is attached. Return the mail text only.\n"
+          "title": "Bereits fakturiert — übersprungen",
+          "varName": "bereitsFakturiert",
+          "value": "Zu diesem Lieferschein existiert schon eine Rechnung."
         }
       }
     }
@@ -165,21 +173,27 @@
     {
       "id": "e2",
       "source": "n_query",
-      "target": "n_loop",
-      "sourceHandle": "data:list"
+      "sourceHandle": "data:list",
+      "target": "n_loop"
     },
     {
       "id": "e3",
       "source": "n_loop",
-      "target": "n_invoice",
       "sourceHandle": "a",
-      "targetHandle": "in:create"
+      "target": "n_offen"
     },
     {
       "id": "e4",
-      "source": "n_invoice",
-      "target": "n_mail",
-      "sourceHandle": "data:create"
+      "source": "n_offen",
+      "sourceHandle": "a",
+      "target": "n_invoice",
+      "targetHandle": "in:createSalesInvoice"
+    },
+    {
+      "id": "e5",
+      "source": "n_offen",
+      "sourceHandle": "b",
+      "target": "n_schon"
     }
   ]
 }

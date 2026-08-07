@@ -28,11 +28,14 @@
         "Order cleanup"
       ],
       "node_titles": {
-        "n_trig": "Every day at 09:00",
-        "n_query": "Load open prepayment orders",
-        "n_loop": "For each prepayment order, one by one",
-        "n_guard": "Is the order not yet cancelled?",
-        "n_cancel": "Cancel the order with a reason"
+        "n_trig": "Start every day at 09:00",
+        "n_zahlarten": "Load the payment methods",
+        "n_vorkasse": "Id of the 'prepayment' method (adjust here)",
+        "n_query": "Load old orders that were never released",
+        "n_loop": "Check each order",
+        "n_guard": "Prepayment and still unpaid?",
+        "n_cancel": "Cancel the order",
+        "n_behalten": "Paid or a different method — left alone"
       }
     }
   },
@@ -56,7 +59,7 @@
       }
     },
     {
-      "id": "n_query",
+      "id": "n_zahlarten",
       "type": "wfNode",
       "position": {
         "x": 480,
@@ -65,8 +68,51 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Offene Vorkasse-Aufträge laden",
-          "varName": "openPrepayments",
+          "title": "Zahlungsarten laden",
+          "varName": "zahlarten",
+          "entityKey": "PaymentMethod",
+          "entityLabel": "Payment method",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "page[size]": 100
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_vorkasse",
+      "type": "wfNode",
+      "position": {
+        "x": 880,
+        "y": 300
+      },
+      "data": {
+        "typeId": "expression",
+        "config": {
+          "title": "ID der Zahlungsart 'Vorkasse' (hier anpassen)",
+          "varName": "vorkasseId",
+          "expression": "next((z.get('id') for z in (zahlarten or []) if (z.get('name') or '').strip().lower() == 'vorkasse'), None)"
+        }
+      }
+    },
+    {
+      "id": "n_query",
+      "type": "wfNode",
+      "position": {
+        "x": 1280,
+        "y": 300
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Alte, nie freigegebene Aufträge laden",
+          "varName": "offeneAuftraege",
           "entityKey": "SalesOrder",
           "entityLabel": "Sales order",
           "operations": [
@@ -75,10 +121,17 @@
           "params": {
             "list": {
               "query": {
-                "paymentMethod": "prepayment",
-                "status": "open",
-                "paymentStatus": "unpaid",
-                "maxAgeDays": 7
+                "filter[0][key]": "status",
+                "filter[0][op]": "equals",
+                "filter[0][value]": "draft",
+                "filter[1][key]": "dates.issued",
+                "filter[1][op]": "lessThan",
+                "filter[1][value]": {
+                  "mode": "date",
+                  "expr": "today(-7)"
+                },
+                "page[number]": 1,
+                "page[size]": 100
               }
             }
           }
@@ -89,15 +142,15 @@
       "id": "n_loop",
       "type": "wfNode",
       "position": {
-        "x": 880,
+        "x": 1680,
         "y": 300
       },
       "data": {
         "typeId": "loop",
         "config": {
-          "title": "Für jeden Vorkasse-Auftrag einzeln",
-          "varName": "order",
-          "items": "{{ openPrepayments }}"
+          "title": "Jeden Auftrag prüfen",
+          "varName": "Auftrag",
+          "items": "{{ offeneAuftraege }}"
         }
       }
     },
@@ -105,14 +158,14 @@
       "id": "n_guard",
       "type": "wfNode",
       "position": {
-        "x": 1280,
+        "x": 2080,
         "y": 300
       },
       "data": {
         "typeId": "condition",
         "config": {
-          "title": "Ist der Auftrag noch nicht storniert?",
-          "expression": "order.get('status') != 'cancelled'"
+          "title": "Vorkasse und noch nicht bezahlt?",
+          "expression": "bool(vorkasseId) and ((auftrag.get('payment') or {}).get('method') or {}).get('id') == vorkasseId and not any(t.get('id') == 'payment' and t.get('state') == 'fullyPaid' for t in (auftrag.get('trafficLights') or []))"
         }
       }
     },
@@ -120,34 +173,46 @@
       "id": "n_cancel",
       "type": "wfNode",
       "position": {
-        "x": 1680,
-        "y": 300
+        "x": 2480,
+        "y": 140
       },
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Auftrag mit Begründung stornieren",
-          "varName": "stornieren",
+          "title": "Auftrag stornieren",
+          "varName": "storniert",
           "entityKey": "SalesOrder",
           "entityLabel": "Sales order",
           "operations": [
-            "update"
+            "cancel"
           ],
           "params": {
-            "update": {
+            "cancel": {
               "path": {
                 "uuid": {
                   "mode": "ref",
                   "from": "n_loop",
                   "path": "id"
                 }
-              },
-              "body": {
-                "status": "cancelled",
-                "cancellationReason": "No prepayment received within 7 days"
               }
             }
           }
+        }
+      }
+    },
+    {
+      "id": "n_behalten",
+      "type": "wfNode",
+      "position": {
+        "x": 2480,
+        "y": 620
+      },
+      "data": {
+        "typeId": "output",
+        "config": {
+          "title": "Bezahlt oder andere Zahlungsart — unverändert",
+          "varName": "behalten",
+          "value": "Auftrag bleibt bestehen (bezahlt oder keine Vorkasse)."
         }
       }
     }
@@ -156,27 +221,45 @@
     {
       "id": "e1",
       "source": "n_trig",
-      "target": "n_query",
+      "target": "n_zahlarten",
       "targetHandle": "in:list"
     },
     {
       "id": "e2",
-      "source": "n_query",
-      "target": "n_loop",
-      "sourceHandle": "data:list"
+      "source": "n_zahlarten",
+      "sourceHandle": "data:list",
+      "target": "n_vorkasse"
     },
     {
       "id": "e3",
-      "source": "n_loop",
-      "target": "n_guard",
-      "sourceHandle": "a"
+      "source": "n_vorkasse",
+      "target": "n_query",
+      "targetHandle": "in:list"
     },
     {
       "id": "e4",
-      "source": "n_guard",
-      "target": "n_cancel",
+      "source": "n_query",
+      "sourceHandle": "data:list",
+      "target": "n_loop"
+    },
+    {
+      "id": "e5",
+      "source": "n_loop",
       "sourceHandle": "a",
-      "targetHandle": "in:update"
+      "target": "n_guard"
+    },
+    {
+      "id": "e6",
+      "source": "n_guard",
+      "sourceHandle": "a",
+      "target": "n_cancel",
+      "targetHandle": "in:cancel"
+    },
+    {
+      "id": "e7",
+      "source": "n_guard",
+      "sourceHandle": "b",
+      "target": "n_behalten"
     }
   ]
 }
