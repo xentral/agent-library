@@ -27,11 +27,18 @@
         "Stock"
       ],
       "node_titles": {
-        "n_trig": "Every day at 06:00",
-        "n_query": "Load products below minimum stock",
-        "n_group": "Group products by main supplier",
-        "n_loop": "For each supplier, one by one",
-        "n_po": "Create a draft purchase order"
+        "n_trig": "Start every night",
+        "n_query": "Load active articles",
+        "n_loop": "Check each article",
+        "n_hat_min": "Is a minimum stock maintained at all?",
+        "n_bestand": "Load the article's stock",
+        "n_unter": "Below minimum?",
+        "n_hat_lief": "Is a supplier set?",
+        "n_merken": "Collect the shortfall per supplier",
+        "n_ohne_lief": "Below minimum but no supplier",
+        "n_gruppen": "Build one proposal per supplier",
+        "n_loop2": "One order per supplier",
+        "n_po": "Create the purchase order as a draft"
       }
     }
   },
@@ -64,8 +71,8 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Artikel unter Mindestbestand laden",
-          "varName": "lowStockProducts",
+          "title": "Aktive Artikel laden",
+          "varName": "artikelListe",
           "entityKey": "Product",
           "entityLabel": "Product",
           "operations": [
@@ -74,7 +81,11 @@
           "params": {
             "list": {
               "query": {
-                "belowMinStock": true
+                "filter[0][key]": "status",
+                "filter[0][op]": "equals",
+                "filter[0][value]": "active",
+                "page[number]": 1,
+                "page[size]": 100
               }
             }
           }
@@ -82,34 +93,162 @@
       }
     },
     {
-      "id": "n_group",
+      "id": "n_loop",
       "type": "wfNode",
       "position": {
         "x": 880,
         "y": 300
       },
       "data": {
-        "typeId": "code",
+        "typeId": "loop",
         "config": {
-          "title": "Artikel nach Hauptlieferant gruppieren",
-          "varName": "supplierGroups",
-          "code": "rows = lowStockProducts if isinstance(lowStockProducts, list) else []\ngroups = {}\nfor p in rows:\n    groups.setdefault(p.get('mainSupplierId'), []).append(p)\nresult = [{'supplierId': k, 'items': v} for k, v in groups.items()]\nlog(f\"{len(result)} supplier group(s)\")\n"
+          "title": "Jeden Artikel prüfen",
+          "varName": "Artikel",
+          "items": "{{ artikelListe }}"
         }
       }
     },
     {
-      "id": "n_loop",
+      "id": "n_hat_min",
       "type": "wfNode",
       "position": {
         "x": 1280,
-        "y": 300
+        "y": 140
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Ist überhaupt ein Mindestbestand gepflegt?",
+          "expression": "float(((artikel.get('logistics') or {}).get('minimumStockQuantity')) or 0) > 0"
+        }
+      }
+    },
+    {
+      "id": "n_bestand",
+      "type": "wfNode",
+      "position": {
+        "x": 1680,
+        "y": 60
+      },
+      "data": {
+        "typeId": "business-entity",
+        "config": {
+          "title": "Bestand des Artikels laden",
+          "varName": "bestand",
+          "entityKey": "StockLevel",
+          "entityLabel": "Stock level",
+          "operations": [
+            "list"
+          ],
+          "params": {
+            "list": {
+              "query": {
+                "filter[0][key]": "product",
+                "filter[0][op]": "equals",
+                "filter[0][value]": {
+                  "mode": "ref",
+                  "from": "n_loop",
+                  "path": "id"
+                },
+                "page[number]": 1,
+                "page[size]": 50
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_unter",
+      "type": "wfNode",
+      "position": {
+        "x": 2080,
+        "y": 60
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Unter Mindestbestand?",
+          "expression": "sum(float(((s.get('available') or {}).get('value')) or 0) for s in (bestand or [])) < float(((artikel.get('logistics') or {}).get('minimumStockQuantity')) or 0)"
+        }
+      }
+    },
+    {
+      "id": "n_hat_lief",
+      "type": "wfNode",
+      "position": {
+        "x": 2480,
+        "y": 0
+      },
+      "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Ist ein Lieferant hinterlegt?",
+          "expression": "bool(((artikel.get('suppliers') or [{}])[0].get('supplier') or {}).get('id'))"
+        }
+      }
+    },
+    {
+      "id": "n_merken",
+      "type": "wfNode",
+      "position": {
+        "x": 2880,
+        "y": 0
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Fehlmenge je Lieferant sammeln",
+          "varName": "gesammelt",
+          "code": "# Group what is missing by supplier — one purchase order per supplier, not per\n# article. `bedarf` is keyed by supplier id and survives the loop in `context`.\nverfuegbar = sum(float(((s.get('available') or {}).get('value')) or 0) for s in (bestand or []))\nminimum = float(((artikel.get('logistics') or {}).get('minimumStockQuantity')) or 0)\nfehlmenge = max(1.0, minimum - verfuegbar)\nlieferant = ((artikel.get('suppliers') or [{}])[0].get('supplier') or {}).get('id')\ncontext.setdefault('bedarf', {}).setdefault(lieferant, []).append({\n    'product': artikel.get('id'),\n    'quantity': fehlmenge,\n})\nlog(f\"{artikel.get('id')}: {verfuegbar} von {minimum} -> {fehlmenge} nachbestellen\")\nresult = fehlmenge\n"
+        }
+      }
+    },
+    {
+      "id": "n_ohne_lief",
+      "type": "wfNode",
+      "position": {
+        "x": 2880,
+        "y": 260
+      },
+      "data": {
+        "typeId": "output",
+        "config": {
+          "title": "Unter Mindestbestand, aber kein Lieferant",
+          "varName": "ohneLieferant",
+          "value": "Artikel liegt unter Mindestbestand, hat aber keinen hinterlegten Lieferanten — es kann keine Bestellung erzeugt werden."
+        }
+      }
+    },
+    {
+      "id": "n_gruppen",
+      "type": "wfNode",
+      "position": {
+        "x": 1280,
+        "y": 620
+      },
+      "data": {
+        "typeId": "code",
+        "config": {
+          "title": "Bestellvorschläge je Lieferant bilden",
+          "varName": "vorschlaege",
+          "code": "# One entry per supplier, in the shape the create node writes.\nresult = [\n    {'supplier': sid, 'items': items}\n    for sid, items in (context.get('bedarf') or {}).items()\n]\nlog(f\"{len(result)} Bestellvorschlag/-vorschlaege\")\n"
+        }
+      }
+    },
+    {
+      "id": "n_loop2",
+      "type": "wfNode",
+      "position": {
+        "x": 1680,
+        "y": 620
       },
       "data": {
         "typeId": "loop",
         "config": {
-          "title": "Für jeden Lieferanten einzeln",
-          "varName": "supplierGroup",
-          "items": "{{ supplierGroups }}"
+          "title": "Je Lieferant eine Bestellung",
+          "varName": "Vorschlag",
+          "items": "{{ vorschlaege }}"
         }
       }
     },
@@ -117,13 +256,13 @@
       "id": "n_po",
       "type": "wfNode",
       "position": {
-        "x": 1680,
-        "y": 300
+        "x": 2080,
+        "y": 620
       },
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Bestellvorschlag als Entwurf anlegen",
+          "title": "Bestellung im Entwurf anlegen",
           "varName": "bestellung",
           "entityKey": "PurchaseOrder",
           "entityLabel": "Purchase order",
@@ -133,15 +272,14 @@
           "params": {
             "create": {
               "body": {
-                "supplierId": {
+                "supplier": {
                   "mode": "ref",
-                  "from": "n_loop",
-                  "path": "supplierId"
+                  "from": "n_loop2",
+                  "path": "supplier"
                 },
-                "status": "draft",
-                "positions": {
+                "items": {
                   "mode": "ref",
-                  "from": "n_loop",
+                  "from": "n_loop2",
                   "path": "items"
                 }
               }
@@ -161,19 +299,62 @@
     {
       "id": "e2",
       "source": "n_query",
-      "target": "n_group",
-      "sourceHandle": "data:list"
-    },
-    {
-      "id": "e3",
-      "source": "n_group",
+      "sourceHandle": "data:list",
       "target": "n_loop"
     },
     {
-      "id": "e4",
+      "id": "e3",
       "source": "n_loop",
-      "target": "n_po",
       "sourceHandle": "a",
+      "target": "n_hat_min"
+    },
+    {
+      "id": "e4",
+      "source": "n_hat_min",
+      "sourceHandle": "a",
+      "target": "n_bestand",
+      "targetHandle": "in:list"
+    },
+    {
+      "id": "e5",
+      "source": "n_bestand",
+      "sourceHandle": "data:list",
+      "target": "n_unter"
+    },
+    {
+      "id": "e6",
+      "source": "n_unter",
+      "sourceHandle": "a",
+      "target": "n_hat_lief"
+    },
+    {
+      "id": "e7",
+      "source": "n_hat_lief",
+      "sourceHandle": "a",
+      "target": "n_merken"
+    },
+    {
+      "id": "e8",
+      "source": "n_hat_lief",
+      "sourceHandle": "b",
+      "target": "n_ohne_lief"
+    },
+    {
+      "id": "e9",
+      "source": "n_loop",
+      "sourceHandle": "b",
+      "target": "n_gruppen"
+    },
+    {
+      "id": "e10",
+      "source": "n_gruppen",
+      "target": "n_loop2"
+    },
+    {
+      "id": "e11",
+      "source": "n_loop2",
+      "sourceHandle": "a",
+      "target": "n_po",
       "targetHandle": "in:create"
     }
   ]
