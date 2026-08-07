@@ -10,7 +10,7 @@
   "locales": {
     "de": {
       "name": "Mahnstufen automatisch eskalieren",
-      "description": "Geht jeden Morgen die Liste der offenen Posten durch und setzt für\njede überfällige Rechnung die passende Mahnstufe abhängig von der\nÜberfälligkeit (30/60 Tage) — so eskaliert das Mahnwesen von selbst\nund kein offener Posten bleibt unbemerkt liegen.\n\n**So funktioniert der Algorithmus**\n\n```\nOffene Rechnungen (mind. 14 Tage überfällig)\n └─ für jede Rechnung → wie lange überfällig?\n      ├─ ab 60 Tagen      → Mahnstufe 3 setzen\n      ├─ ab 30 Tagen      → Mahnstufe 2 setzen\n      └─ sonst (14–29 T.) → Mahnstufe 1 setzen\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Der Workflow startet jeden Tag um 07:30 Uhr.\n2. Alle offenen Rechnungen, die mindestens 14 Tage überfällig\n   sind, werden geladen.\n3. Für jede überfällige Rechnung einzeln wird geprüft, wie lange\n   sie überfällig ist.\n4. Ab 60 Tagen wird Mahnstufe 3 gesetzt, ab 30 Tagen Mahnstufe 2,\n   darunter (14 bis 29 Tage) Mahnstufe 1.\n\n**Was verändert wird**\n\n- Ausschließlich das Feld „Mahnstufe\" an den betroffenen\n  Rechnungen wird gesetzt.\n- Es werden keine Mahnungen verschickt und keine Belege erzeugt —\n  der Versand bleibt beim regulären Mahnlauf bzw. den\n  Mitarbeitenden.\n\n**Voraussetzungen und Grenzen**\n\n- Zahlungsstatus und Fälligkeitsdaten der Rechnungen müssen\n  gepflegt sein.\n- Rechnungen, die weniger als 14 Tage überfällig sind, werden\n  bewusst nicht angefasst.\n- Die Mahnstufe wird absolut gesetzt (nicht „+1\") —\n  Wiederholungsläufe sind dadurch unkritisch, eine manuell höher\n  gesetzte Stufe kann aber wieder heruntergestuft werden.\n",
+      "description": "Geht jeden Morgen die Liste der offenen Posten durch und setzt für\njede überfällige Rechnung die passende Mahnstufe abhängig von der\nÜberfälligkeit (30/60 Tage) — so eskaliert das Mahnwesen von selbst\nund kein offener Posten bleibt unbemerkt liegen.\n\n**So funktioniert der Algorithmus**\n\n```\nOffene Rechnungen (mind. 14 Tage überfällig)\n └─ für jede Rechnung → wie lange überfällig?\n      ├─ ab 60 Tagen      → Mahnstufe 3 setzen\n      ├─ ab 30 Tagen      → Mahnstufe 2 setzen\n      └─ sonst (14–29 T.) → Mahnstufe 1 setzen\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Der Workflow startet jeden Tag um 07:30 Uhr.\n2. Alle offenen Rechnungen, die mindestens 14 Tage überfällig\n   sind, werden geladen.\n3. Für jede überfällige Rechnung einzeln wird geprüft, wie lange\n   sie überfällig ist.\n4. Ab 60 Tagen wird Mahnstufe 3 gesetzt, ab 30 Tagen Mahnstufe 2,\n   darunter (14 bis 29 Tage) Mahnstufe 1.\n\n**Was verändert wird**\n\n- Ausschließlich das Feld „Mahnstufe\" an den betroffenen\n  Rechnungen wird gesetzt.\n- Es werden keine Mahnungen verschickt und keine Belege erzeugt —\n  der Versand bleibt beim regulären Mahnlauf bzw. den\n  Mitarbeitenden.\n\n**Voraussetzungen und Grenzen**\n\n- Zahlungsstatus und Fälligkeitsdaten der Rechnungen müssen\n  gepflegt sein.\n- Rechnungen, die weniger als 14 Tage überfällig sind, werden\n  bewusst nicht angefasst.\n- Die Mahnstufe wird absolut gesetzt (nicht „+1\") —\n  Wiederholungsläufe sind dadurch unkritisch, eine manuell höher\n  gesetzte Stufe kann aber wieder heruntergestuft werden.\n\n**Was dieser Workflow NICHT tut**\n\nEr hebt die Mahnstufe an der Rechnung an — er **versendet keine Mahnung**.\nDafür gibt es keinen öffentlichen Endpunkt. Der Versand bleibt der\nregulären Mahnläufe-Funktion in Xentral überlassen; dieser Workflow hält\nnur den Stand fest.\n\nDie Fälligkeit wird aus Belegdatum und Zahlungsziel der Rechnung\ngerechnet, weil `payment.dueDate` auf einer Liste leer zurückkommt.\nRechnungen mit gesetzter Mahnsperre werden übersprungen.\n",
       "recommended_when": "Sobald regelmäßig offene Posten anfallen",
       "tags": [
         "Finanzen",
@@ -20,7 +20,7 @@
     },
     "en": {
       "name": "Auto-escalate dunning levels",
-      "description": "Walks the open-items list every morning and sets the appropriate\ndunning level on each overdue invoice depending on how long it has\nbeen overdue (30/60 days) — dunning escalates on its own and no open\nitem goes unnoticed.\n\n**How the algorithm works**\n\n```\nOpen invoices (at least 14 days overdue)\n └─ for each invoice → how long overdue?\n      ├─ 60+ days          → set dunning level 3\n      ├─ 30+ days          → set dunning level 2\n      └─ else (14–29 days) → set dunning level 1\n```\n\n**What happens step by step**\n\n1. The workflow starts every day at 07:30.\n2. All open invoices that are at least 14 days overdue are\n   loaded.\n3. Each overdue invoice is checked individually for how long it\n   has been overdue.\n4. From 60 days on dunning level 3 is set, from 30 days on\n   dunning level 2, below that (14 to 29 days) dunning level 1.\n\n**What gets changed**\n\n- Only the \"dunning level\" field on the affected invoices is set.\n- No dunning letters are sent and no documents are created —\n  sending remains with the regular dunning run or with the staff.\n\n**Prerequisites and limits**\n\n- Payment status and due dates of the invoices must be\n  maintained.\n- Invoices less than 14 days overdue are deliberately left\n  untouched.\n- The dunning level is set absolutely (not \"+1\") — re-runs are\n  therefore harmless, but a manually raised level may be lowered\n  again.\n",
+      "description": "Walks the open-items list every morning and sets the appropriate\ndunning level on each overdue invoice depending on how long it has\nbeen overdue (30/60 days) — dunning escalates on its own and no open\nitem goes unnoticed.\n\n**How the algorithm works**\n\n```\nOpen invoices (at least 14 days overdue)\n └─ for each invoice → how long overdue?\n      ├─ 60+ days          → set dunning level 3\n      ├─ 30+ days          → set dunning level 2\n      └─ else (14–29 days) → set dunning level 1\n```\n\n**What happens step by step**\n\n1. The workflow starts every day at 07:30.\n2. All open invoices that are at least 14 days overdue are\n   loaded.\n3. Each overdue invoice is checked individually for how long it\n   has been overdue.\n4. From 60 days on dunning level 3 is set, from 30 days on\n   dunning level 2, below that (14 to 29 days) dunning level 1.\n\n**What gets changed**\n\n- Only the \"dunning level\" field on the affected invoices is set.\n- No dunning letters are sent and no documents are created —\n  sending remains with the regular dunning run or with the staff.\n\n**Prerequisites and limits**\n\n- Payment status and due dates of the invoices must be\n  maintained.\n- Invoices less than 14 days overdue are deliberately left\n  untouched.\n- The dunning level is set absolutely (not \"+1\") — re-runs are\n  therefore harmless, but a manually raised level may be lowered\n  again.\n\n**What this workflow does NOT do**\n\nIt raises the dunning level on the invoice — it does **not send a\nreminder**. There is no public endpoint for that. Sending stays with\nXentral's own dunning run; this workflow only records the step.\n\nDue date is computed from the document date and the payment terms,\nbecause `payment.dueDate` comes back empty on a list. Invoices with a\ndunning block are skipped.\n",
       "recommended_when": "As soon as open items accumulate regularly",
       "tags": [
         "Finance",
@@ -28,13 +28,13 @@
         "Open items"
       ],
       "node_titles": {
-        "n_trig": "Every day at 07:30",
-        "n_query": "Load overdue open invoices",
-        "n_loop": "For each overdue invoice, one by one",
-        "n_rules": "How long has the invoice been overdue?",
-        "n_dun_3": "Set dunning level 3 (60+ days)",
-        "n_dun_2": "Set dunning level 2 (30+ days)",
-        "n_dun_1": "Set dunning level 1 (14+ days)"
+        "n_trig": "Start every day",
+        "n_query": "Load unpaid, overdue invoices",
+        "n_loop": "Check each invoice",
+        "n_pruefen": "Overdue? Then work out the next dunning level",
+        "n_moeglich": "Is there a next level?",
+        "n_set": "Raise the dunning level",
+        "n_nichts": "No escalation needed"
       }
     }
   },
@@ -67,8 +67,8 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Überfällige offene Rechnungen laden",
-          "varName": "overdueInvoices",
+          "title": "Unbezahlte, ueberfaellige Rechnungen laden",
+          "varName": "rechnungen",
           "entityKey": "SalesInvoice",
           "entityLabel": "Sales invoice",
           "operations": [
@@ -77,8 +77,17 @@
           "params": {
             "list": {
               "query": {
-                "paymentStatus": "open",
-                "minOverdueDays": 14
+                "filter[0][key]": "payment.status",
+                "filter[0][op]": "equals",
+                "filter[0][value]": "unpaid",
+                "filter[1][key]": "dates.issued",
+                "filter[1][op]": "lessThan",
+                "filter[1][value]": {
+                  "mode": "date",
+                  "expr": "today(-14)"
+                },
+                "page[number]": 1,
+                "page[size]": 100
               }
             }
           }
@@ -95,82 +104,55 @@
       "data": {
         "typeId": "loop",
         "config": {
-          "title": "Für jede überfällige Rechnung einzeln",
-          "varName": "invoice",
-          "items": "{{ overdueInvoices }}"
+          "title": "Jede Rechnung pruefen",
+          "varName": "Rechnung",
+          "items": "{{ rechnungen }}"
         }
       }
     },
     {
-      "id": "n_rules",
+      "id": "n_pruefen",
       "type": "wfNode",
       "position": {
         "x": 1280,
         "y": 300
       },
       "data": {
-        "typeId": "rule-group",
+        "typeId": "code",
         "config": {
-          "title": "Wie lange ist die Rechnung überfällig?",
-          "rules": [
-            {
-              "label": "60+ days",
-              "expression": "invoice.get('overdueDays', 0) >= 60"
-            },
-            {
-              "label": "30+ days",
-              "expression": "invoice.get('overdueDays', 0) >= 30"
-            }
-          ]
+          "title": "Faellig? Dann die naechste Mahnstufe bestimmen",
+          "varName": "naechsteStufe",
+          "code": "# Faellig? `payment.dueDate` kommt auf der Liste leer zurueck, also aus dem\n# Belegdatum und dem Zahlungsziel der Rechnung selbst rechnen. `days_since` ist\n# der Datums-Helfer der Laufzeit - ein eigener Import waere nicht erlaubt.\nausgestellt = ((rechnung.get('dates') or {}).get('issued')) or ''\nziel = int((((rechnung.get('payment') or {}).get('terms') or {}).get('dueDays')) or 0)\nueberfaellig = (days_since(ausgestellt) - ziel) if ausgestellt else None\n\nstufen = ['paymentReminder1', 'reminder1', 'reminder2', 'reminder3',\n          'debtCollection', 'lossOfReceivables']\naktuell = (rechnung.get('dunning') or {}).get('level')\nnummer = rechnung.get('number')\n\nresult = None\nif bool((rechnung.get('dunning') or {}).get('blocked')):\n    log(f\"{nummer}: Mahnsperre gesetzt - uebersprungen\")\nelif ueberfaellig is None or ueberfaellig <= 0:\n    log(f\"{nummer}: noch nicht faellig\")\nelif not aktuell:\n    result = {'level': stufen[0]}\nelif aktuell in stufen and stufen.index(aktuell) + 1 < len(stufen):\n    result = {'level': stufen[stufen.index(aktuell) + 1]}\nelse:\n    log(f\"{nummer}: hoechste Stufe ({aktuell}) bereits erreicht\")\nif result:\n    log(f\"{nummer}: {ueberfaellig} Tage ueberfaellig, {aktuell or 'keine'} -> {result['level']}\")\n"
         }
       }
     },
     {
-      "id": "n_dun_3",
-      "type": "wfNode",
-      "position": {
-        "x": 1680,
-        "y": 580
-      },
-      "data": {
-        "typeId": "business-entity",
-        "config": {
-          "title": "Mahnstufe 3 setzen (ab 60 Tagen)",
-          "varName": "mahnstufe3",
-          "entityKey": "SalesInvoice",
-          "entityLabel": "Sales invoice",
-          "operations": [
-            "update"
-          ],
-          "params": {
-            "update": {
-              "path": {
-                "uuid": {
-                  "mode": "ref",
-                  "from": "n_loop",
-                  "path": "id"
-                }
-              },
-              "body": {
-                "dunningLevel": 3
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "n_dun_2",
+      "id": "n_moeglich",
       "type": "wfNode",
       "position": {
         "x": 1680,
         "y": 300
       },
       "data": {
+        "typeId": "condition",
+        "config": {
+          "title": "Gibt es eine naechste Stufe?",
+          "expression": "bool(naechsteStufe)"
+        }
+      }
+    },
+    {
+      "id": "n_set",
+      "type": "wfNode",
+      "position": {
+        "x": 2080,
+        "y": 160
+      },
+      "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Mahnstufe 2 setzen (ab 30 Tagen)",
-          "varName": "mahnstufe2",
+          "title": "Mahnstufe hochsetzen",
+          "varName": "gemahnt",
           "entityKey": "SalesInvoice",
           "entityLabel": "Sales invoice",
           "operations": [
@@ -186,7 +168,11 @@
                 }
               },
               "body": {
-                "dunningLevel": 2
+                "dunning": {
+                  "mode": "ref",
+                  "from": "n_pruefen",
+                  "path": ""
+                }
               }
             }
           }
@@ -194,36 +180,18 @@
       }
     },
     {
-      "id": "n_dun_1",
+      "id": "n_nichts",
       "type": "wfNode",
       "position": {
-        "x": 1680,
-        "y": 20
+        "x": 2080,
+        "y": 520
       },
       "data": {
-        "typeId": "business-entity",
+        "typeId": "output",
         "config": {
-          "title": "Mahnstufe 1 setzen (ab 14 Tagen)",
-          "varName": "mahnstufe1",
-          "entityKey": "SalesInvoice",
-          "entityLabel": "Sales invoice",
-          "operations": [
-            "update"
-          ],
-          "params": {
-            "update": {
-              "path": {
-                "uuid": {
-                  "mode": "ref",
-                  "from": "n_loop",
-                  "path": "id"
-                }
-              },
-              "body": {
-                "dunningLevel": 1
-              }
-            }
-          }
+          "title": "Keine Eskalation noetig",
+          "varName": "keineEskalation",
+          "value": "Rechnung nicht faellig, gesperrt oder bereits auf der hoechsten Mahnstufe."
         }
       }
     }
@@ -238,35 +206,32 @@
     {
       "id": "e2",
       "source": "n_query",
-      "target": "n_loop",
-      "sourceHandle": "data:list"
+      "sourceHandle": "data:list",
+      "target": "n_loop"
     },
     {
       "id": "e3",
       "source": "n_loop",
-      "target": "n_rules",
-      "sourceHandle": "a"
+      "sourceHandle": "a",
+      "target": "n_pruefen"
     },
     {
       "id": "e4",
-      "source": "n_rules",
-      "target": "n_dun_3",
-      "sourceHandle": "r0",
-      "targetHandle": "in:update"
+      "source": "n_pruefen",
+      "target": "n_moeglich"
     },
     {
       "id": "e5",
-      "source": "n_rules",
-      "target": "n_dun_2",
-      "sourceHandle": "r1",
+      "source": "n_moeglich",
+      "sourceHandle": "a",
+      "target": "n_set",
       "targetHandle": "in:update"
     },
     {
       "id": "e6",
-      "source": "n_rules",
-      "target": "n_dun_1",
-      "sourceHandle": "else",
-      "targetHandle": "in:update"
+      "source": "n_moeglich",
+      "sourceHandle": "b",
+      "target": "n_nichts"
     }
   ]
 }
