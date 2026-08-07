@@ -9,7 +9,7 @@
   "locales": {
     "de": {
       "name": "Nächtliche Stücklisten-EK-Kalkulation",
-      "description": "Berechnet jede Nacht den Einkaufspreis jeder Stückliste rekursiv von\nunten nach oben neu und schreibt das Ergebnis als kalkulierten EK an\ndie Produkte zurück. Verschachtelte Stücklisten beliebiger Tiefe\nwerden über eine While-Schleife mit Arbeitsliste abgearbeitet — eine\nStückliste wird erst bewertet, wenn alle ihre Unter-Stücklisten\nfertig sind. Zugekaufte Artikel (Blätter) nehmen ihren eigenen\nEinkaufspreis.\n\n**So funktioniert der Algorithmus**\n\n```\nArbeitsliste = alle Stücklisten\nsolange die Arbeitsliste nicht leer ist:\n ├─ oberste Stückliste hat ungerechnete Unter-Stücklisten\n │    └─ Unter-Stücklisten zuerst auf die Liste → zurückstellen\n └─ sonst bewerten → Σ ( Stückpreis(Bauteil) × Menge ) → merken\ndanach: alle EK-Werte in einem Schritt zurückschreiben\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Der Zeitplan startet den Lauf jede Nacht um 02:00 Uhr.\n2. Alle Stücklisten-Produkte werden geladen und als Arbeitsliste\n   vorgemerkt.\n3. Die Schleife läuft, solange noch Stücklisten zu bewerten sind:\n   In jedem Durchgang wird die oberste Stückliste der Arbeitsliste\n   betrachtet.\n4. Hat sie noch ungerechnete Unter-Stücklisten, werden diese zuerst\n   auf die Arbeitsliste gelegt und die Stückliste zurückgestellt.\n5. Sonst wird sie bewertet, indem für jedes Bauteil der Stückpreis\n   (bei bereits gerechneten Unter-Stücklisten deren Summe, bei\n   zugekauften Artikeln der eigene Einkaufspreis) mit der Menge\n   multipliziert und aufsummiert wird.\n6. Sobald die Arbeitsliste leer ist, stoppt die Schleife sofort,\n   und alle berechneten EK-Werte werden in einem Schritt an die\n   Produkte zurückgeschrieben.\n\n**Was verändert wird**\n\n- Überschreibt das Feld „Kalkulierter EK\" (auf 4 Nachkommastellen\n  gerundet) an jeder bewerteten Stückliste.\n- Zugekaufte Artikel werden nur gelesen, nie verändert.\n\n**Voraussetzungen und Grenzen**\n\n- Nutzt die Business-Entities „Product\" und „BillOfMaterials\" —\n  diese sind nicht auf jeder Instanz verfügbar; in dem Fall die\n  Schwester-Vorlagen „Stücklisten-EK rekursiv kalkulieren\n  (Self-Call)\" bzw. „Stücklisten-EK rekursiv (nur kalkulierter EK)\"\n  verwenden, die die rohe Xentral-API nutzen.\n- Ein zugekaufter Artikel ohne gepflegten Einkaufspreis zählt als 0.\n- Die Schleife ist auf 1000 Durchläufe begrenzt — das begrenzt die\n  Gesamtzahl der pro Lauf verarbeiteten Stücklisten-Knoten, nicht\n  die Verschachtelungstiefe; sehr große Kataloge über die\n  Startliste seitenweise abarbeiten.\n",
+      "description": "Berechnet jede Nacht den Einkaufspreis jeder Stückliste von unten nach\noben neu und schreibt das Ergebnis als kalkulierten EK an die Produkte\nzurück. Verschachtelte Stücklisten beliebiger Tiefe werden über eine\nWhile-Schleife mit Arbeitsliste abgearbeitet — eine Stückliste wird\nerst bewertet, wenn alle ihre Unter-Stücklisten fertig sind.\nZugekaufte Artikel (Blätter) nehmen ihren eigenen Einkaufspreis. Läuft\nvollständig über den Entity-Kern.\n\n**So funktioniert der Algorithmus**\n\n```\nArbeitsliste = die als Stückliste markierten Produkte\nsolange die Arbeitsliste nicht leer ist:\n ├─ oberstes Produkt hat keine Bauteile  → eigener EK → merken\n ├─ hat ungerechnete Bauteile            → Bauteile zuerst → zurückstellen\n └─ sonst bewerten → Σ ( Stückpreis(Bauteil) × Menge ) → merken\ndanach: die EK-Werte aller Stücklisten zurückschreiben\n```\n\n**Was Schritt für Schritt passiert**\n\n1. Der Zeitplan startet den Lauf jede Nacht um 02:00 Uhr.\n2. Die Produkte werden geladen; die als Stückliste markierten kommen\n   auf die Arbeitsliste.\n3. Die Schleife läuft, solange noch etwas zu bewerten ist: In jedem\n   Durchgang wird das oberste Produkt der Arbeitsliste betrachtet.\n4. Ist es ein zugekaufter Artikel, gilt sein gepflegter Einkaufspreis\n   als Stückpreis — stand er schon in der Liste, ohne weiteren Aufruf.\n5. Hat es ungerechnete Bauteile, werden diese zuerst auf die\n   Arbeitsliste gelegt und das Produkt zurückgestellt.\n6. Sonst wird es bewertet: je Bauteil Stückpreis × verbaute Menge,\n   aufsummiert.\n7. Sobald die Arbeitsliste leer ist, stoppt die Schleife, und die\n   EK-Werte werden an die Stücklisten zurückgeschrieben.\n\n**Was verändert wird**\n\n- Überschreibt das Feld „Kalkulierter EK\" (auf 4 Nachkommastellen\n  gerundet) an jeder bewerteten Stückliste.\n- Zugekaufte Artikel werden nur gelesen, nie verändert.\n\n**Voraussetzungen und Grenzen**\n\n- Es gibt keinen Filter „ist Stückliste\", aber die Produktliste\n  liefert je Produkt schon `production.hasBillOfMaterials` und den\n  Einkaufspreis mit. Deshalb startet die Arbeitsliste nur mit den\n  Stücklisten, und die meisten Bauteile müssen gar nicht einzeln\n  gelesen werden. Über `page[size]` am ersten Schritt wird die\n  Portionsgröße gesteuert — Stücklisten außerhalb dieser Seite kommen\n  im Lauf nicht vor.\n- Ein zugekaufter Artikel ohne gepflegten Einkaufspreis zählt als 0.\n- Eine zyklische Stückliste (eine Stückliste, die sich selbst\n  enthält) wird erkannt und protokolliert; der Lauf hängt sich daran\n  nicht auf. Sie wird NICHT geschrieben, und auch nichts, was auf ihr\n  aufbaut — einen gepflegten EK mit einer Zahl zu überschreiben, von\n  der wir wissen, dass sie falsch ist, wäre schlimmer als nichts zu\n  tun.\n- Die Schleife ist auf 1000 Durchläufe begrenzt. Ein Produkt-Lesen\n  holt Bestand, Stückliste, Verkaufspreise und Eigenschaften\n  zusammen — parallel, aber es sind mehrere Aufrufe gegen das\n  Rate-Limit statt einem. Wegen des Lauf-Zeitlimits (Small 65 s /\n  Large 305 s) große Kataloge portionsweise abarbeiten.\n- Wer die Kalkulation lieber je Produkt einzeln und ohne\n  Arbeitsliste anstoßen will, nimmt die Schwester-Vorlagen\n  „Stücklisten-EK rekursiv kalkulieren (Self-Call)\" bzw.\n  „Stücklisten-EK rekursiv (nur kalkulierter EK)\".\n",
       "recommended_when": "Sobald mehrstufige Stücklisten gepflegt werden",
       "tags": [
         "Logistik",
@@ -19,7 +19,7 @@
     },
     "en": {
       "name": "Nightly BOM cost rollup",
-      "description": "Recomputes the purchase cost of every bill of materials bottom-up\neach night and writes the result back to the products as their\ncalculated purchase price. Nested BOMs of any depth are processed\nvia a while loop over a work list — a BOM is costed only after all\nits sub-BOMs are done. Purchased articles (leaves) take their own\npurchase price.\n\n**How the algorithm works**\n\n```\nwork list = all BOMs\nwhile the work list is not empty:\n ├─ topmost BOM still has uncosted sub-BOMs\n │    └─ push the sub-BOMs onto the list first → defer the BOM\n └─ otherwise cost it → Σ ( unit price(component) × qty ) → record\nafterwards: write all computed costs back in one step\n```\n\n**What happens step by step**\n\n1. The schedule starts the run every night at 02:00.\n2. All BOM products are loaded and queued on a work list.\n3. The loop runs while any BOMs are left to cost: each pass looks\n   at the topmost BOM on the work list.\n4. If it still has uncosted sub-BOMs, those are pushed onto the\n   work list first and the BOM is deferred.\n5. Otherwise it is costed by multiplying each component's unit\n   price (the rolled-up total for already costed sub-BOMs, the\n   article's own purchase price for purchased parts) by its\n   quantity and summing up.\n6. The instant the work list is empty the loop stops, and all\n   computed costs are written back to the products in one step.\n\n**What gets changed**\n\n- Overwrites the \"calculated purchase price\" field (rounded to 4\n  decimal places) on every costed bill of materials.\n- Purchased articles are only read, never modified.\n\n**Prerequisites and limits**\n\n- Uses the \"Product\" and \"BillOfMaterials\" business entities —\n  these are not available on every instance; in that case use the\n  sibling templates \"Recursive BOM cost rollup (self-call)\" or\n  \"Recursive BOM cost rollup (calculated EK only)\", which use the\n  raw Xentral API.\n- A purchased article with no maintained purchase price counts\n  as 0.\n- The loop is capped at 1000 iterations — that bounds the total\n  number of BOM nodes processed per run, not the nesting depth;\n  page the seed list for very large catalogs.\n",
+      "description": "Recomputes the purchase cost of every bill of materials bottom-up each\nnight and writes the result back to the products as their calculated\npurchase price. Arbitrarily deep nesting is handled by a while loop over\na work list — a bill is only costed once all its sub-assemblies are\ndone. Purchased articles (leaves) contribute their own purchase price.\nRuns entirely through the entity core.\n\n**How the algorithm works**\n\n```\nwork list = the products marked as bills of materials\nwhile the work list is not empty:\n ├─ top product has no components  → its own price → remember\n ├─ has uncosted components        → push components → defer it\n └─ otherwise cost it → Σ ( unit cost(component) × quantity ) → remember\nafterwards: write the costs back to every bill of materials\n```\n\n**What happens step by step**\n\n1. The schedule starts the run every night at 02:00.\n2. The products are loaded; the ones marked as bills of materials go on\n   the work list.\n3. The loop runs while anything is left: each pass takes the product on\n   top of the work list.\n4. A purchased article contributes its maintained purchase price — with\n   no further call at all when the list already carried it.\n5. With uncosted components, those go on the work list first and the\n   product is deferred.\n6. Otherwise it is costed: per component, unit cost × quantity used,\n   summed up.\n7. Once the work list is empty the loop stops and the costs are written\n   back to the bills of materials.\n\n**What gets changed**\n\n- Overwrites the \"calculated purchase price\" field (rounded to 4\n  decimals) on every costed bill of materials.\n- Purchased articles are only read, never modified.\n\n**Prerequisites and limits**\n\n- There is no \"is a bill of materials\" filter, but the product list\n  already carries `production.hasBillOfMaterials` and the purchase price\n  per product. So the work list starts with the bills alone and most\n  components never need a read. `page[size]` on the first step controls\n  the batch — bills outside that page do not take part in the run.\n- A purchased article with no maintained purchase price counts as 0.\n- A cyclic bill of materials (one containing itself) is detected and\n  logged; the run does not hang on it. It is NOT written, and neither\n  is anything built on top of it — overwriting a maintained purchase\n  price with a number we know is wrong is worse than leaving it alone.\n- The loop is capped at 1000 passes. One product read fetches stock,\n  bill of materials, sale prices and properties together — in parallel,\n  but that is several calls against the rate limit instead of one.\n  Because of the per-run time limit (Small 65 s / Large 305 s), process\n  large catalogs in batches.\n- To drive the calculation per product instead, without a work list,\n  use the sibling templates \"Recursive BOM cost rollup (self-call)\" or\n  \"Recursive BOM cost rollup (calculated EK only)\".\n",
       "recommended_when": "Once multi-level bills of materials are maintained",
       "tags": [
         "Logistics",
@@ -28,12 +28,12 @@
       ],
       "node_titles": {
         "n_trig": "Start every night at 02:00",
-        "n_query": "Load all BOM products from Xentral",
-        "n_seed": "Build the work list of all BOMs",
-        "n_while": "While BOMs are still waiting to be costed",
-        "n_test": "Is any BOM left on the work list?",
-        "n_step": "Cost one BOM or defer it behind its sub-BOMs",
-        "n_write": "Write the computed costs back to the products"
+        "n_query": "Load products from Xentral",
+        "n_seed": "Pick out the bills of materials",
+        "n_while": "While products are still waiting to be costed",
+        "n_test": "Is anything left on the work list?",
+        "n_step": "Cost one product or defer it behind its components",
+        "n_write": "Write the computed costs back to the bills of materials"
       }
     }
   },
@@ -66,8 +66,8 @@
       "data": {
         "typeId": "business-entity",
         "config": {
-          "title": "Alle Stücklisten-Produkte aus Xentral laden",
-          "varName": "bomProducts",
+          "title": "Produkte aus Xentral laden",
+          "varName": "produkte",
           "entityKey": "Product",
           "entityLabel": "Product",
           "operations": [
@@ -76,7 +76,7 @@
           "params": {
             "list": {
               "query": {
-                "isBom": true
+                "page[size]": 100
               }
             }
           }
@@ -93,9 +93,9 @@
       "data": {
         "typeId": "code",
         "config": {
-          "title": "Arbeitsliste aller Stücklisten aufbauen",
+          "title": "Die Stücklisten heraussuchen",
           "varName": "seedStack",
-          "code": "rows = bomProducts if isinstance(bomProducts, list) else []\ncontext['stack'] = [p['id'] for p in rows]\ncontext['cost'] = {}\nlog(f\"{len(context['stack'])} root BOM(s)\")\n"
+          "code": "rows = produkte if isinstance(produkte, list) else []\ncontext['cost'] = {}\ncontext['assembly'] = {}\ncontext['deferred'] = {}\ncontext['bad'] = {}\ncontext['items'] = {}\ncontext['isbom'] = {}\ncontext['price'] = {}\nfor p in rows:\n    pid = p.get('id')\n    if not pid:\n        continue\n    context['isbom'][pid] = bool((p.get('production') or {}).get('hasBillOfMaterials'))\n    amount = ((p.get('prices') or {}).get('purchase') or {}).get('amount')\n    context['price'][pid] = float(amount or 0)\ncontext['stack'] = [pid for pid in context['isbom'] if context['isbom'][pid]]\nlog(f\"{len(context['stack'])} bill(s) of materials among {len(rows)} product(s)\")\nresult = len(context['stack'])\n"
         }
       }
     },
@@ -109,7 +109,7 @@
       "data": {
         "typeId": "while",
         "config": {
-          "title": "Solange noch Stücklisten zu bewerten sind"
+          "title": "Solange noch Produkte zu bewerten sind"
         }
       }
     },
@@ -123,9 +123,9 @@
       "data": {
         "typeId": "code",
         "config": {
-          "title": "Ist noch eine Stückliste auf der Arbeitsliste?",
+          "title": "Ist noch etwas auf der Arbeitsliste?",
           "varName": "workLeft",
-          "code": "result = len(context.get('stack', [])) > 0\n"
+          "code": "result = len(context.get('stack') or []) > 0\n"
         }
       }
     },
@@ -139,9 +139,9 @@
       "data": {
         "typeId": "code",
         "config": {
-          "title": "Eine Stückliste bewerten oder zurückstellen",
+          "title": "Ein Produkt bewerten oder hinter seine Bauteile zurückstellen",
           "varName": "costOneBom",
-          "code": "node_id = context['stack'][-1]\ncomps = (business_entity_op('BillOfMaterials', 'list', {'query': {'parentId': node_id}}).get('data') or [])\npending = [c for c in comps if c.get('isBom') and c['componentId'] not in context['cost']]\nif pending:\n    for c in pending:\n        context['stack'].append(c['componentId'])\nelse:\n    context['stack'].pop()\n    total = 0.0\n    for c in comps:\n        cid = c['componentId']\n        unit = context['cost'].get(cid)\n        if unit is None:\n            prod = business_entity_op('Product', 'read', {'path': {'uuid': cid}})\n            unit = float(prod.get('purchasePrice') or 0)\n            context['cost'][cid] = unit\n        total += unit * float(c.get('quantity') or 0)\n    context['cost'][node_id] = total\n"
+          "code": "pid = context['stack'][-1]\nif pid in context['cost']:\n    # Reached again through another parent - already costed.\n    context['stack'].pop()\nelif context['isbom'].get(pid) is False:\n    # The list already said this is a purchased article AND carried its price,\n    # so it costs nothing to resolve.\n    context['cost'][pid] = context['price'].get(pid, 0.0)\n    context['stack'].pop()\nelse:\n    if pid in context['items']:\n        # Second visit of a deferred bill. Its components were read on the first\n        # visit; re-reading would cost another round trip for nothing.\n        items = context['items'][pid]\n    else:\n        prod = business_entity_op('Product', 'read', {'path': {'uuid': pid}})\n        items = ((prod.get('bom') or {}).get('items')) or []\n        context['items'][pid] = items\n        context['isbom'][pid] = bool(items)\n        if not items:\n            amount = ((prod.get('prices') or {}).get('purchase') or {}).get('amount')\n            context['cost'][pid] = float(amount or 0)\n            context['stack'].pop()\n            items = None\n    if items:\n        pending = []\n        for item in items:\n            cid = (item.get('product') or {}).get('id')\n            if cid and cid not in context['cost']:\n                pending.append(cid)\n        if not pending:\n            total = 0.0\n            poisoned = False\n            for item in items:\n                cid = (item.get('product') or {}).get('id')\n                if cid in context['bad']:\n                    poisoned = True\n                total += context['cost'].get(cid, 0.0) * float(item.get('quantity') or 0)\n            context['cost'][pid] = total\n            context['assembly'][pid] = True\n            if poisoned:\n                # Built on a component we could not cost, so this total is not a\n                # fact. Remember it and write nothing - see the last step.\n                context['bad'][pid] = True\n            context['stack'].pop()\n        else:\n            seen = context['deferred'].get(pid, 0) + 1\n            context['deferred'][pid] = seen\n            if seen > 1:\n                # Its components did not resolve after a full pass, so the bill\n                # contains itself. Give up on it rather than looping until the\n                # run's time limit kills the whole job.\n                log(f\"Cyclic bill of materials at {pid} - not costed.\")\n                context['cost'][pid] = 0.0\n                context['assembly'][pid] = True\n                context['bad'][pid] = True\n                context['stack'].pop()\n            else:\n                for cid in pending:\n                    context['stack'].append(cid)\nresult = pid\n"
         }
       }
     },
@@ -155,9 +155,9 @@
       "data": {
         "typeId": "code",
         "config": {
-          "title": "Berechnete EK-Werte an die Produkte zurückschreiben",
+          "title": "Berechnete EK-Werte an die Stücklisten zurückschreiben",
           "varName": "writeBack",
-          "code": "for pid, cost in context.get('cost', {}).items():\n    payload = {'path': {'uuid': pid}, 'body': {'calculatedPurchasePrice': round(cost, 4)}}\n    business_entity_op('Product', 'update', payload)\nlog(f\"Updated {len(context.get('cost', {}))} product cost(s).\")"
+          "code": "written = 0\nskipped = 0\nfor pid, cost in (context.get('cost') or {}).items():\n    # Only bills of materials are written. A purchased article's price is an\n    # input to this calculation, never an output of it.\n    if pid not in (context.get('assembly') or {}):\n        continue\n    if pid in (context.get('bad') or {}):\n        # A cycle, or something built on one. Overwriting a maintained purchase\n        # price with a number we know is wrong is worse than leaving it alone.\n        skipped += 1\n        continue\n    business_entity_op('Product', 'update', {\n        'path': {'uuid': pid},\n        'body': {'prices': {'purchase': {\n            'amount': str(round(cost, 4)),\n            'currency': 'EUR',\n            # The one value that makes Xentral treat this as a CALCULATED\n            # purchase price rather than a manually maintained one.\n            'source': 'calculated',\n        }}},\n    })\n    written += 1\nlog(f\"Updated {written} bill(s) of materials; left {skipped} untouched.\")\nresult = written\n"
         }
       }
     }
