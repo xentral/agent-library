@@ -351,7 +351,9 @@
           "params": {
             "list": {
               "query": {
-                "product": {
+                "filter[0][key]": "product",
+                "filter[0][op]": "equals",
+                "filter[0][value]": {
                   "mode": "ref",
                   "from": "n_pid",
                   "path": ""
