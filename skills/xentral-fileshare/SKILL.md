@@ -2,8 +2,8 @@
 name: xentral-fileshare
 description: >
   Work with the tenant's files — the Shared Drive / Datenaustausch — using the
-  xentral_fileshare tool: list what is there, read a file, drop an artifact back,
-  delete an obsolete one. Covers what a file_key is and why you always quote it,
+  xentral_fileshare tool: list what is there, read a file whole or in line windows,
+  search inside one, edit it in place, drop an artifact back, delete an obsolete one. Covers what a file_key is and why you always quote it,
   where a file came from (source: chat, inbox, slack, advisor, api), the inline
   read caps and what to do instead when a file is over them, and the boundaries
   to the tools that own other things: tabular data belongs to xentral_datasets,
@@ -89,26 +89,44 @@ Do **not** invoke when:
   (default 50, max 500). Do this before any per-file action so you hold a real key.
 - **`metadata`** — everything about one file without its bytes. Cheaper than
   `read` when you only need name, size, type, tags.
-- **`read`** — the contents. Text returns inline (`encoding: 'text'`); small
-  binary returns base64. Over the cap you get `error:
-  'too_large_for_inline'` / `'binary_too_large_for_inline'` and no content.
+- **`read`** — the contents. Without `offset` you get the whole file (text inline;
+  small binary as base64), or `error: 'too_large_for_inline'` if it does not fit.
+  **With `offset`** (1-based line) plus `limit` (lines, default 200) you get a
+  *window*, streamed — this is how a large file is read at all. The response says
+  which lines you got, whether more follows, and the `offset` to continue from.
+- **`find`** — search a text file line by line without loading it: `pattern`
+  (substring, or `regex=true`), plus optional `ignore_case`, `context` (lines
+  around each hit, max 5) and `max_hits` (default 50). Returns line numbers you
+  feed straight back into `read` as `offset`.
 - **`upload`** — `filename` plus **exactly one** of `content` (text) or
   `content_b64` (binary). Optional `mime_type` (guessed from the filename),
   `description`, `tags`. Lands as `source='advisor'`.
+- **`update`** — change a text file in place, keeping its `file_key`: `content`
+  replaces the body, `old_string` + `new_string` patches one occurrence. Read
+  *Overwriting* below before using it.
 - **`delete`** — one file by key. Irreversible: no trash, no undo.
 
-## When `read` will not give you the file
+## A big file: window it, search it, or profile it
 
-A file over the inline cap cannot be read through this tool at all. Do not tell
-the user "it is too large" and stop — that is a dead end they cannot act on.
-Instead:
+Never say "the file is too large" and stop — that is a dead end for the user, and
+these three routes exist precisely so it is never true:
 
-- **CSV / TSV** → `xentral_datasets(action='import_analyze', file_key=…)`. It
-  profiles **every** row — column names, fill rates, distinct counts, value
-  signatures, warnings — and comes back in a few KB whatever the file size. This
-  is also the right move for a *small* table the moment a figure is wanted.
-- **Anything else** → say what the file is (from `metadata`) and point the user at
-  the Datenaustausch UI, where they can open or download it.
+- **You know roughly where to look** → `read` with `offset` / `limit`. Continue from
+  the `to_line` the response reports.
+- **You do not know where to look** → `find` with a pattern, then window around a
+  hit's line number. Locating something in a 50 MB log costs a few hundred tokens.
+- **A figure is wanted** — how many rows, what is the sum, which values occur — →
+  `xentral_datasets(action='import_analyze', file_key=…)`. It reads **every** row
+  and returns a few KB whatever the file size. This is also the right move for a
+  *small* table: a window is a window, and a count taken from one is wrong.
+
+Two things a response will tell you, and you must pass on rather than paper over:
+a window says whether more follows, and `find` says when it stopped at `max_hits`.
+Reporting "3 matches" for a file that has 900 is the same class of wrong answer as
+counting rows from a sample.
+
+Only a *binary* file over the cap has no route: say what it is (from `metadata`) and
+point the user at the Datenaustausch UI.
 
 ## Rules that bite
 
@@ -126,18 +144,39 @@ Instead:
 5. **`uploaded_at` is server wall clock.** Fine for ordering, not for legal claims
    about when something happened.
 
-## What this tool cannot do
+## Overwriting
 
-Say so plainly rather than pretending otherwise, and reach for the alternative:
+`update` is irreversible: there is no version history, no trash, and the `file_key`
+stays the same — so everything that referred to this file now sees the new bytes.
+Which is why the server, not your judgement, decides:
+
+| The file | What you may do |
+|---|---|
+| You uploaded it (`source='advisor'`) | `update` freely — it is your own output |
+| The user attached or uploaded it (`chat`, `api`, …) | **Upload a new file** beside it (`kunden-bereinigt.csv`) so the original survives. Only if the user explicitly asks to overwrite *that* file: repeat its name and size, say it cannot be undone, then `update` with `confirmed=true` |
+| An inbound email attachment (`source='inbox'`) | Never. It is the record of what a supplier sent, and refusal is not negotiable |
+
+And regardless of the file:
+
+- **An overwrite is its own step, never a stage in a bigger task.** "Import this CSV"
+  does not license writing a cleaned version back over it.
+- **Patch anchors are exact.** `old_string` must occur once; two occurrences are
+  refused with the count, because a first-match replace changes the wrong line
+  silently. Include surrounding lines until the anchor is unique.
+- **You cannot replace the body of a file you could not read whole.** Over the read
+  cap the server refuses it — you would drop everything you never saw. Patch it
+  instead; an anchor does not require having read the file.
+- An edit that would leave the file empty is refused: `delete` is the separate,
+  confirmed step for that.
+
+## What this tool still cannot do
 
 | Missing | Do this instead |
 |---|---|
-| Read part of a file (offset/limit) | Whole-file `read` under the cap; for a table, `import_analyze` |
-| Search inside a file | For tabular data: `import` it, then SQL via `xentral_datasets(action='query')` |
-| Edit a file in place | `upload` a new file (name it so the relation is obvious) and, if the user agrees, `delete` the old one |
 | Folders | The store is flat — group with `tags` |
-| Versions / diffs | Upload dated copies; there is no history |
+| Versions / diffs / undo | Upload dated copies; an overwrite is final |
 | Extract xlsx / docx | Ask for a CSV export, or hand the file to a workflow |
+| Edit a binary file | Upload a corrected copy with `content_b64` |
 
 Recipes, pre-flight checks and the pitfalls that cost the most time:
 `reference/recipes-and-pitfalls.md`.
