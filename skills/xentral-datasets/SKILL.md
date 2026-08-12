@@ -132,12 +132,18 @@ against, cleanup mechanics, and the quirks real exports contain:
 
 ### 0 · Get the file in
 
-`xentral_fileshare` `action='upload'` → keep the `file_key`.
+Both routes end in a `file_key`, and it is the same store either way:
 
-**Never ask for the CSV as a chat attachment.** Attachments cap at 512 KB and
-inlined text truncates at 20 000 characters — a few percent of a typical export.
-The truncation is labelled, so you will know you only got a fragment, but a
-fragment is useless here: any row count or total computed from it is wrong.
+- **The customer attached it in the chat.** It is already in Fileshare — the
+  message you received carries its `file_key`. Use that key. Never ask them to
+  upload the file a second time.
+- **Otherwise:** `xentral_fileshare` `action='upload'` → keep the `file_key`.
+
+**Never answer from what you can see of the file.** Anything too big to inline
+reaches you as a `file_key` plus, at most, a labelled sample of the first lines. A
+row count, a sum or a "the file contains…" taken from that sample is wrong, and
+specific enough to be believed. `import_analyze` reads every row and comes back in
+a few KB — that is the only honest source for a statement about the whole file.
 
 ### 1 · Open a session
 
